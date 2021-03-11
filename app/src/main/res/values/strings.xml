@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">owntrainer</string>
+    <string name="text_navbar_1">Home</string>
+    <string name="text_navbar_2">Pedometer</string>
+    <string name="text_navbar_3">Meals</string>
+    <string name="text_navbar_4">Progress</string>
 </resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navbar_item_1"
+        android:enabled="true"
+        android:icon="@drawable/baseline_home_black_24"
+        android:title="@string/text_navbar_1"/>
+    <item
+        android:id="@+id/navbar_item_2"
+        android:enabled="true"
+        android:icon="@drawable/baseline_directions_walk_black_24"
+        android:title="@string/text_navbar_2"/>
+    <item
+        android:id="@+id/navbar_item_3"
+        android:enabled="true"
+        android:icon="@drawable/baseline_local_dining_black_24"
+        android:title="@string/text_navbar_3"/>
+    <item
+        android:id="@+id/navbar_item_4"
+        android:enabled="true"
+        android:icon="@drawable/baseline_auto_graph_black_24"
+        android:title="@string/text_navbar_4"/>
+</menu>

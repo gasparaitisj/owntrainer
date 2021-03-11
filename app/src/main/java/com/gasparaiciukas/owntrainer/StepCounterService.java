@@ -1,14 +1,11 @@
 package com.gasparaiciukas.owntrainer;
 
-import android.app.Notification;
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -19,21 +16,25 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
+
+import static androidx.core.app.ActivityCompat.requestPermissions;
 
 public class StepCounterService extends Service implements SensorEventListener {
 
     // Initialize variables
     private SensorManager sensorManager = null;
-
     private float totalSteps;
     private float previousTotalSteps;
     private int currentSteps;
+    private int countedSteps;
+    private boolean firstTrigger = true;
     private Intent broadcastIntent;
     public static final String BROADCAST_ACTION = "secretCode123";
     private final Handler handler = new Handler();
-    private boolean serviceStopped;
     private NotificationManagerCompat notificationManager;
     private NotificationCompat.Builder builder;
 
@@ -45,9 +46,7 @@ public class StepCounterService extends Service implements SensorEventListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Load data
-        totalSteps = intent.getFloatExtra("totalSteps", 0);
-        previousTotalSteps = intent.getFloatExtra("previousTotalSteps", 0);
-        currentSteps = (int) totalSteps - (int) previousTotalSteps;
+        currentSteps = intent.getIntExtra("currentSteps", 0);
 
         // Show notification
         showNotification();
@@ -62,14 +61,9 @@ public class StepCounterService extends Service implements SensorEventListener {
             sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
-        // Set up service handler
-        serviceStopped = false;
-
-        // remove any existing callbacks to the handler
+        // Set up handler
         handler.removeCallbacks(updateBroadcastData);
-
-        // call our handler with or without delay.
-        handler.post(updateBroadcastData); // 0 seconds
+        handler.post(updateBroadcastData);
 
         return START_STICKY;
     }
@@ -77,37 +71,45 @@ public class StepCounterService extends Service implements SensorEventListener {
     // Runnable for updating broadcast data
     private final Runnable updateBroadcastData = new Runnable() {
         public void run() {
-            if (!serviceStopped) {
-                broadcastIntent.putExtra("totalSteps", totalSteps);
+                // Update total steps
+                broadcastIntent.putExtra("countedSteps", countedSteps);
                 sendBroadcast(broadcastIntent);
 
                 // Call "handler.postDelayed" again, after a specified delay.
-                handler.postDelayed(this, 1000);
-            }
+                //handler.post(this);
+                Log.d("test", "Counted " + countedSteps + " steps.");
         }
     };
 
-    // Stop service and dismiss notification on destroy
+    // Stop service
     @Override
     public void onDestroy() {
         super.onDestroy();
-        serviceStopped = true;
         dismissNotification();
+        sensorManager.unregisterListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER));
+        handler.removeCallbacks(updateBroadcastData);
         Log.d("test", "Service stopped.");
     }
 
-    // Binding not implemented
     @Override
     public IBinder onBind(Intent intent) {
+        // do nothing
         return null;
     }
 
     // Update counted steps on sensor change
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Log.d("test", "Sensor triggered!");
+        if (firstTrigger) {
+            previousTotalSteps = event.values[0];
+            firstTrigger = false;
+        }
         totalSteps = event.values[0];
+        countedSteps = (int) totalSteps - (int) previousTotalSteps;
+        currentSteps += countedSteps;
+        Log.d("test", "Sensor triggered!");
         updateNotification();
+        handler.post(updateBroadcastData);
     }
 
 
@@ -116,41 +118,40 @@ public class StepCounterService extends Service implements SensorEventListener {
         // do nothing
     }
 
-    // Show notification
+    // Create and show notification
     private void showNotification() {
+        // Create notification channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "myNotification";
-            String description = "channel_description";
-            int importance = NotificationManager.IMPORTANCE_LOW;
-            NotificationChannel channel = new NotificationChannel("myNotification", name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
+            NotificationChannel channel = new NotificationChannel("serviceNotification",
+                    "serviceNotification", NotificationManager.IMPORTANCE_LOW);
+            channel.setDescription("Foreground service notification");
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
 
+        // Build notification
         builder = new NotificationCompat.Builder(this, "myNotification")
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle("Your current step count:")
                 .setContentText(String.valueOf(currentSteps))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOngoing(true);
-
         notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(1, builder.build());
-        //Log.d("test", "Notification shown!");
+        Log.d("test", "Notification shown!");
+        // TODO: go to app, when notification pressed
     }
 
+    // Update notification step count
     private void updateNotification() {
-        currentSteps = (int) totalSteps - (int) previousTotalSteps;
         builder.setContentText(String.valueOf(currentSteps));
         notificationManager.notify(1, builder.build());
-        // Log.d("test", "Notification updated!");
+        Log.d("test", "Notification updated!");
     }
 
+    // Dismiss notification
     private void dismissNotification() {
         notificationManager.cancel(1);
-        // Log.d("test", "Notification dismissed!");
+        Log.d("test", "Notification dismissed!");
     }
 }
