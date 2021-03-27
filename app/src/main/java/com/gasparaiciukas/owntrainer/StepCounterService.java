@@ -3,6 +3,7 @@ package com.gasparaiciukas.owntrainer;
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -25,45 +27,52 @@ import static androidx.core.app.ActivityCompat.requestPermissions;
 
 public class StepCounterService extends Service implements SensorEventListener {
 
-    // Initialize variables
-    private SensorManager sensorManager = null;
+    // Variables
     private float totalSteps;
-    private float previousTotalSteps;
+    private float previousTotalSteps = 0;
     private int currentSteps;
     private int countedSteps;
-    private boolean firstTrigger = true;
+    private int previousCountedSteps = 0;
+
+    // Sensor
+    private SensorManager sensorManager = null;
+    private Sensor stepSensor;
+
+    // Broadcasting
     private Intent broadcastIntent;
     public static final String BROADCAST_ACTION = "secretCode123";
-    private final Handler handler = new Handler();
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
+    // Notification
     private NotificationManagerCompat notificationManager;
     private NotificationCompat.Builder builder;
-
 
     @Override
     public void onCreate() {
         broadcastIntent = new Intent(BROADCAST_ACTION);
+        //Log.d("test", "Service created!");
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Load data
         currentSteps = intent.getIntExtra("currentSteps", 0);
 
-        // Show notification
-        showNotification();
+        // Create and show notification
+        createNotification();
 
         // Set up sensor
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        Sensor stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         if (stepSensor == null) {
             Toast.makeText(this, "No step sensor detected!", Toast.LENGTH_SHORT).show();
         }
         else {
-            sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI);
         }
 
         // Set up handler
         handler.removeCallbacks(updateBroadcastData);
-        handler.post(updateBroadcastData);
+        //handler.post(updateBroadcastData);
 
         return START_STICKY;
     }
@@ -71,13 +80,11 @@ public class StepCounterService extends Service implements SensorEventListener {
     // Runnable for updating broadcast data
     private final Runnable updateBroadcastData = new Runnable() {
         public void run() {
-                // Update total steps
+                // Send counted steps
                 broadcastIntent.putExtra("countedSteps", countedSteps);
                 sendBroadcast(broadcastIntent);
 
-                // Call "handler.postDelayed" again, after a specified delay.
-                //handler.post(this);
-                Log.d("test", "Counted " + countedSteps + " steps.");
+                //Log.d("test", "Counted " + countedSteps + " steps.");
         }
     };
 
@@ -86,9 +93,9 @@ public class StepCounterService extends Service implements SensorEventListener {
     public void onDestroy() {
         super.onDestroy();
         dismissNotification();
-        sensorManager.unregisterListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER));
+        sensorManager.unregisterListener(this, stepSensor);
         handler.removeCallbacks(updateBroadcastData);
-        Log.d("test", "Service stopped.");
+        //Log.d("test", "Service destroyed.");
     }
 
     @Override
@@ -97,19 +104,23 @@ public class StepCounterService extends Service implements SensorEventListener {
         return null;
     }
 
-    // Update counted steps on sensor change
+    // Broadcast counted steps and update notification
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (firstTrigger) {
+        if (previousTotalSteps == 0) {
             previousTotalSteps = event.values[0];
-            firstTrigger = false;
         }
-        totalSteps = event.values[0];
-        countedSteps = (int) totalSteps - (int) previousTotalSteps;
-        currentSteps += countedSteps;
-        Log.d("test", "Sensor triggered!");
-        updateNotification();
-        handler.post(updateBroadcastData);
+        else {
+            totalSteps = event.values[0];
+            //Log.d("test", "Previous total steps: " + String.valueOf(previousTotalSteps));
+            //Log.d("test", "Total steps: " + event.values[0]);
+            countedSteps = (int) totalSteps - (int) previousTotalSteps;
+            currentSteps += (countedSteps - previousCountedSteps);
+            previousCountedSteps = countedSteps;
+            //Log.d("test", "Sensor triggered!");
+            updateNotification();
+            handler.post(updateBroadcastData);
+        }
     }
 
 
@@ -119,39 +130,41 @@ public class StepCounterService extends Service implements SensorEventListener {
     }
 
     // Create and show notification
-    private void showNotification() {
-        // Create notification channel
+    private void createNotification() {
+        // Create notification channel for new Android versions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("serviceNotification",
-                    "serviceNotification", NotificationManager.IMPORTANCE_LOW);
+                    "serviceNotification", NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("Foreground service notification");
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
 
+        // Open app on notification click
+        Intent myIntent = new Intent(this, StepActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         // Build notification
-        builder = new NotificationCompat.Builder(this, "myNotification")
+        builder = new NotificationCompat.Builder(getApplicationContext(), "serviceNotification")
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle("Your current step count:")
                 .setContentText(String.valueOf(currentSteps))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setOngoing(true);
+                .setOngoing(true)
+                .setContentIntent(pendingIntent);
         notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(1, builder.build());
-        Log.d("test", "Notification shown!");
-        // TODO: go to app, when notification pressed
+        //Log.d("test", "Notification shown!");
     }
 
-    // Update notification step count
     private void updateNotification() {
         builder.setContentText(String.valueOf(currentSteps));
         notificationManager.notify(1, builder.build());
-        Log.d("test", "Notification updated!");
+        Log.d("test", "Notification updated! (Steps: " + currentSteps + ")");
     }
 
-    // Dismiss notification
     private void dismissNotification() {
         notificationManager.cancel(1);
-        Log.d("test", "Notification dismissed!");
+        //Log.d("test", "Notification dismissed!");
     }
 }
