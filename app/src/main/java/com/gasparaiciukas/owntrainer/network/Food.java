@@ -26,6 +26,7 @@ public class Food {
     @SerializedName("image")
     @Expose
     private String image;
+    private int position;
 
     public String getFoodId() {
         return foodId;
@@ -83,4 +84,11 @@ public class Food {
         this.image = image;
     }
 
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
 }

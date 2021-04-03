@@ -1,7 +1,51 @@
 <resources>
-    <string name="app_name">owntrainer</string>
-    <string name="text_navbar_1">Home</string>
-    <string name="text_navbar_2">Pedometer</string>
-    <string name="text_navbar_3">Meals</string>
-    <string name="text_navbar_4">Progress</string>
+    <string name="app_name">"owntrainer"</string>
+    <string name="text_navbar_1">"Home"</string>
+    <string name="text_navbar_2">"Pedometer"</string>
+    <string name="text_navbar_3">"Meals"</string>
+    <string name="text_navbar_4">"Progress"</string>
+    <string name="stop">"Stop"</string>
+    <string name="start">"Start"</string>
+    <string name="food_weight">"Food weight"</string>
+    <string name="protein">"Protein"</string>
+    <string name="g">" (g)"</string>
+    <string name="fat">"Fat"</string>
+    <string name="carbs">"Carbs"</string>
+    <string name="kcal">" kCal"</string>
+    <string name="add_to_meal">"Add to meal"</string>
+    <string name="calories">"Calories"</string>
+    <string name="steps">" steps"</string>
+    <string name="km">" km"</string>
+    <string name="daily_goal">"Daily goal:"</string>
+    <string name="food_search">"Food search"</string>
+    <string name="age">"Age"</string>
+    <string name="height">"Height"</string>
+    <string name="weight">"Weight"</string>
+    <string name="lifestyle">"Lifestyle"</string>
+    <string name="enter_some_details">"Enter some details"</string>
+    <string name="sex">"Sex"</string>
+    <string name="s">" s"</string>
+    <string name="daily_goal_description">Daily goal</string>
+    <string name="m">" m"</string>
+    <string name="h">" h "</string>
+    <string name="settings">Settings</string>
+    <string name="settings_description">Settings</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="back">Back</string>
+    <string name="back_button">Back button</string>
 </resources>

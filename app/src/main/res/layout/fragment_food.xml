@@ -2,11 +2,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorSmokeDark">
-    <TextView
-        android:layout_width="wrap_content"
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/foodInputLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="Food ! IS good !"
-        android:textSize="30sp"/>
+        android:hint="@string/food_search"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/baseline_search_24"
+        app:endIconContentDescription="Search">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/food_input_text"
+            android:inputType="textShortMessage"
+            android:imeOptions="actionSearch"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/food_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/foodInputLayout"
+        android:layout_marginTop="10dp"
+        app:layout_constrainedHeight="true" />
 </RelativeLayout>
