@@ -7,7 +7,7 @@
     tools:context=".fragment.IntroDetailsFragment">
 
     <LinearLayout
-        android:id="@+id/linearLayout9"
+        android:id="@+id/intro_details_title_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -18,13 +18,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/enter_some_details"
+            android:text="@string/basic_information"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp" />
+            style="@style/TextAppearance.MaterialComponents.Headline4"/>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout8"
+        android:id="@+id/intro_details_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout9">
+        app:layout_constraintTop_toBottomOf="@+id/intro_details_title_layout">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/intro_details_sex_layout"

@@ -7,14 +7,14 @@ public class Hint {
 
     @SerializedName("food")
     @Expose
-    private Food food;
+    private FoodApi foodApi;
 
-    public Food getFood() {
-        return food;
+    public FoodApi getFoodApi() {
+        return foodApi;
     }
 
-    public void setFood(Food food) {
-        this.food = food;
+    public void setFoodApi(FoodApi foodApi) {
+        this.foodApi = foodApi;
     }
 
 }

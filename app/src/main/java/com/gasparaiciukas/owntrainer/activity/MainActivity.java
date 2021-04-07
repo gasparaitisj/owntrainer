@@ -4,10 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -26,46 +24,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Database
-        Realm.init(this);
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().
-                allowWritesOnUiThread(true)
-                .build();
-        Realm.setDefaultConfiguration(realmConfiguration);
-
-        // Start app intro, if app launched for the first time
-        //  Declare a new thread to do a preference check
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //  Initialize SharedPreferences
-                SharedPreferences getPrefs = PreferenceManager
-                        .getDefaultSharedPreferences(getBaseContext());
-
-                //  Create a new boolean and preference and set it to true
-                boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
-
-                //  If the activity has never started before...
-                if (isFirstStart) {
-
-                    //  Launch app intro
-                    final Intent i = new Intent(MainActivity.this, IntroActivity.class);
-
-                    runOnUiThread(new Runnable() {
-                        @Override public void run() {
-                            startActivity(i);
-                        }
-                    });
-                }
-            }
-        });
-
-        // Start the thread
-        t.start();
-
+        initDatabase();
+        initAppIntroThread();
         setContentView(R.layout.activity_main);
+        initUi();
+    }
 
+    private void initUi() {
         // Settings (top app bar)
         MaterialToolbar toolbar = findViewById(R.id.top_app_bar);
         toolbar.setOnMenuItemClickListener(item -> {
@@ -76,9 +41,8 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-
         // Bottom navigation bar
-        BottomNavigationView bottomNavigation = findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNavigation = findViewById(R.id.main_bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             switch (item.getItemId()) {
@@ -101,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     return false;
             }
+
+            // Show selected fragment
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.main_fragment_frame_layout, selectedFragment);
             transaction.commit();
@@ -111,6 +77,38 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_fragment_frame_layout, MainFragment.newInstance());
         transaction.commit();
+    }
+
+    private void initAppIntroThread() {
+        // Start app intro, if app launched for the first time
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SharedPreferences getPrefs = PreferenceManager
+                        .getDefaultSharedPreferences(getBaseContext());
+
+                boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
+
+                if (isFirstStart) {
+                    final Intent i = new Intent(MainActivity.this, IntroActivity.class);
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            startActivity(i);
+                        }
+                    });
+                }
+            }
+        });
+        t.start();
+    }
+
+    private void initDatabase() {
+        // Initialize Realm database
+        Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().
+                allowWritesOnUiThread(true)
+                .build();
+        Realm.setDefaultConfiguration(realmConfiguration);
     }
 
     @Override

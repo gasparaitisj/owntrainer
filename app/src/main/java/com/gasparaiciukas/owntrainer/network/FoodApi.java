@@ -3,7 +3,7 @@ package com.gasparaiciukas.owntrainer.network;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Food {
+public class FoodApi {
 
     @SerializedName("foodId")
     @Expose

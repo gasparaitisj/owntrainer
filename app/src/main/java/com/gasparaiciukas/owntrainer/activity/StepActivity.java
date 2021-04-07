@@ -63,6 +63,7 @@ public class StepActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
 
+        // Get views
         stepProgressBar = findViewById(R.id.step_counter);
         tStepProgress = findViewById(R.id.step_current_count);
         toggleStepCounterButton = findViewById(R.id.toggle_step_counter_button);

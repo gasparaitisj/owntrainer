@@ -1,34 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorSmokeDark">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/foodInputLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/food_search"
-        app:endIconMode="custom"
-        app:endIconDrawable="@drawable/baseline_search_24"
-        app:endIconContentDescription="Search">
+        android:layout_height="match_parent">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/food_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/food_input_text"
-            android:inputType="textShortMessage"
-            android:imeOptions="actionSearch"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tabMode="fixed">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/food_tab_foods"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/foods" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/food_tab_meals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/meals" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/food_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/food_search"
+            app:endIconContentDescription="Search"
+            app:endIconDrawable="@drawable/baseline_search_24"
+            app:endIconMode="custom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/food_tab_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/food_input_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionSearch"
+                android:inputType="textShortMessage" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/food_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/foodInputLayout"
-        android:layout_marginTop="10dp"
-        app:layout_constrainedHeight="true" />
-</RelativeLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/food_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/food_input_layout" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

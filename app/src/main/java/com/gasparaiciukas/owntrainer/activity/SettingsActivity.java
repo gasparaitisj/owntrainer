@@ -46,7 +46,11 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        initUi();
+        loadData();
+    }
 
+    private void initUi() {
         // Back button
         MaterialToolbar toolbar = findViewById(R.id.settings_top_app_bar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
@@ -57,12 +61,15 @@ public class SettingsActivity extends AppCompatActivity {
         tHeight = findViewById(R.id.settings_height_text);
         tWeight = findViewById(R.id.settings_weight_text);
         lifestyleMenu = findViewById(R.id.settings_lifestyle_menu);
-        loadData();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        writeUserToDatabase();
+    }
+
+    private void writeUserToDatabase() {
         // Write to database
         realm = Realm.getDefaultInstance();
         User user = new User();
@@ -86,15 +93,6 @@ public class SettingsActivity extends AppCompatActivity {
                 realm.insertOrUpdate(user);
             }
         });
-//        User u = realm.where(User.class)
-//                .equalTo("userId", "user")
-//                .findFirst();
-//
-//        Log.d("database", u.getSex() + " " + u.getAge() + " " +
-//                u.getHeight() + " " + u.getWeight() + " " + u.getLifestyle() + " " +
-//                u.getAvgWalkingSpeed() + " " + u.getBmr() + " " + u.getKcalBurnedPerStep() + " " +
-//                u.getDailyKcalIntake() + " " + u.getDailyProteinIntake() + " " +
-//                u.getDailyCarbsIntake() + " " + u.getDailyFatIntake());
         realm.close();
     }
 

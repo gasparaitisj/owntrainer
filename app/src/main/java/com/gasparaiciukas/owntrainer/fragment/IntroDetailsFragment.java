@@ -54,14 +54,25 @@ public class IntroDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_intro_details, container, false);
-        sexMenu = rootView.findViewById(R.id.intro_details_sex_menu);
+        initUi(rootView);
+        return rootView;
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        writeUserToDatabase();
+    }
+
+    private void initUi(View rootView) {
+        // Get views
+        sexMenu = rootView.findViewById(R.id.intro_details_sex_menu);
         tAge = rootView.findViewById(R.id.intro_details_age_text);
         tHeight = rootView.findViewById(R.id.intro_details_height_text);
         tWeight = rootView.findViewById(R.id.intro_details_weight_text);
         lifestyleMenu = rootView.findViewById(R.id.intro_details_lifestyle_menu);
 
-        // Set up text fields
+        // Sex menu input listener
         List<String> sexList = new ArrayList<>(Arrays.asList("Male", "Female"));
         ArrayAdapter sexAdapter = new ArrayAdapter(requireContext(), R.layout.details_list_item, sexList);
         sexMenu.setAdapter(sexAdapter);
@@ -71,6 +82,8 @@ public class IntroDetailsFragment extends Fragment {
                 sex = sexMenu.getText().toString();
             }
         });
+
+        // Age field text listener
         tAge.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -88,6 +101,8 @@ public class IntroDetailsFragment extends Fragment {
                     age = Integer.parseInt(s.toString());
             }
         });
+
+        // Height field text listener
         tHeight.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -105,6 +120,8 @@ public class IntroDetailsFragment extends Fragment {
                     height = Integer.parseInt(s.toString());
             }
         });
+
+        // Weight field text listener
         tWeight.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -122,13 +139,14 @@ public class IntroDetailsFragment extends Fragment {
                     weight = Double.parseDouble(s.toString());
             }
         });
+
+        // Lifestyle menu input listener
         lifestyleMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 lifestyle = lifestyleMenu.getText().toString();
             }
         });
-
         List<String> lifestyleList = new ArrayList<>(Arrays.asList(
                 "Sedentary",
                 "Lightly active",
@@ -137,13 +155,9 @@ public class IntroDetailsFragment extends Fragment {
                 "Extra active"));
         ArrayAdapter lifestyleAdapter = new ArrayAdapter(requireContext(), R.layout.details_list_item, lifestyleList);
         lifestyleMenu.setAdapter(lifestyleAdapter);
-        return rootView;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
+    private void writeUserToDatabase() {
         // Write to database
         realm = Realm.getDefaultInstance();
         User user = new User();
@@ -167,15 +181,6 @@ public class IntroDetailsFragment extends Fragment {
                 realm.insertOrUpdate(user);
             }
         });
-//        User u = realm.where(User.class)
-//                .equalTo("userId", "user")
-//                .findFirst();
-//
-//        Log.d("database", u.getSex() + " " + u.getAge() + " " +
-//                u.getHeight() + " " + u.getWeight() + " " + u.getLifestyle() + " " +
-//                u.getAvgWalkingSpeed() + " " + u.getBmr() + " " + u.getKcalBurnedPerStep() + " " +
-//                u.getDailyKcalIntake() + " " + u.getDailyProteinIntake() + " " +
-//                u.getDailyCarbsIntake() + " " + u.getDailyFatIntake());
         realm.close();
     }
 }

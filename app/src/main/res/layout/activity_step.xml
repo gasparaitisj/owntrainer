@@ -53,6 +53,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/step_daily_goal_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -73,11 +74,7 @@
             android:layout_marginStart="5dp"
             android:text="@string/daily_goal"
             android:textColor="@color/colorPrimary"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/step_counter"
-            app:layout_constraintEnd_toEndOf="@+id/step_counter"
-            app:layout_constraintHorizontal_bias="0.113"
-            app:layout_constraintStart_toStartOf="@+id/step_counter" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/step_daily_goal_count"
@@ -86,11 +83,7 @@
             android:layout_marginBottom="24dp"
             android:layout_marginStart="5dp"
             android:textColor="@color/colorAccent"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/step_counter"
-            app:layout_constraintEnd_toStartOf="@+id/step_counter"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/step_daily_goal_count" />
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -98,11 +91,7 @@
             android:layout_marginBottom="24dp"
             android:text="@string/steps"
             android:textColor="@color/colorPrimary"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/step_counter"
-            app:layout_constraintEnd_toEndOf="@+id/step_counter"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/step_daily_goal_count" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <Button
@@ -128,7 +117,6 @@
         app:layout_constraintTop_toBottomOf="@+id/step_counter">
 
         <LinearLayout
-            android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 

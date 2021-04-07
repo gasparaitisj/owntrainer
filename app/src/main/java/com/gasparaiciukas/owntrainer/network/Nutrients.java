@@ -7,58 +7,31 @@ public class Nutrients {
 
     @SerializedName("ENERC_KCAL")
     @Expose
-    private double eNERCKCAL;
+    private double calories;
     @SerializedName("CHOCDF")
     @Expose
-    private double cHOCDF;
+    private double carbs;
     @SerializedName("FAT")
     @Expose
-    private double fAT;
+    private double fat;
     @SerializedName("PROCNT")
     @Expose
-    private double pROCNT;
-    @SerializedName("SUGAR")
-    @Expose
-    private double sUGAR;
+    private double protein;
 
-    public double getENERCKCAL() {
-        return eNERCKCAL;
+    public double getCalories() {
+        return calories;
     }
 
-    public void setENERCKCAL(double eNERCKCAL) {
-        this.eNERCKCAL = eNERCKCAL;
+    public double getCarbs() {
+        return carbs;
     }
 
-    public double getCHOCDF() {
-        return cHOCDF;
+    public double getFat() {
+        return fat;
     }
 
-    public void setCHOCDF(double cHOCDF) {
-        this.cHOCDF = cHOCDF;
-    }
-
-    public double getFAT() {
-        return fAT;
-    }
-
-    public void setFAT(double fAT) {
-        this.fAT = fAT;
-    }
-
-    public double getPROCNT() {
-        return pROCNT;
-    }
-
-    public void setPROCNT(double pROCNT) {
-        this.pROCNT = pROCNT;
-    }
-
-    public double getSUGAR() {
-        return sUGAR;
-    }
-
-    public void setSUGAR(double sUGAR) {
-        this.sUGAR = sUGAR;
+    public double getProtein() {
+        return protein;
     }
 
 }

@@ -8,7 +8,7 @@ import java.text.DecimalFormat;
 public class NutrientValueFormatter extends ValueFormatter {
     @Override
     public String getPieLabel(float value, PieEntry pieEntry) {
-        pieEntry.setLabel("");
+        pieEntry.setLabel(""); // remove labels
         return super.getPieLabel(value, pieEntry);
     }
 

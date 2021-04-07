@@ -3,7 +3,11 @@ package com.gasparaiciukas.owntrainer.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.gasparaiciukas.owntrainer.database.User;
@@ -14,13 +18,14 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
 
-import static com.gasparaiciukas.owntrainer.adapter.FoodAdapter.foods;
+import static com.gasparaiciukas.owntrainer.adapter.FoodApiAdapter.foodsApi;
 
 public class FoodItemActivity extends AppCompatActivity {
 
@@ -53,7 +58,8 @@ public class FoodItemActivity extends AppCompatActivity {
     private TextView tProteinDailyIntake;
     private TextView tCalorieCount;
     private TextView tCalorieDailyIntake;
-
+    private Button addToMealButton;
+    private TextInputEditText inputFoodWeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,17 +81,30 @@ public class FoodItemActivity extends AppCompatActivity {
         tCalorieCount = findViewById(R.id.food_calories_count);
         tCalorieDailyIntake = findViewById(R.id.food_calories_percentage);
         tFoodTitle = findViewById(R.id.food_item_title);
+        addToMealButton = findViewById(R.id.food_add_to_meal_button);
+        inputFoodWeight = findViewById(R.id.food_weight_input_text);
     }
 
     private void getData() {
         position = getIntent().getIntExtra("position", 0); // get clicked item position
 
+        // Set up button
+        addToMealButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), SelectMealItemActivity.class);
+                intent.putExtra("position", position);
+                intent.putExtra("quantity", Integer.parseInt(inputFoodWeight.getText().toString()));
+                startActivity(intent);
+            }
+        });
+
         // Get nutrients from food item
-        Nutrients nutrients = foods.get(position).getNutrients();
-        carbs = (float) nutrients.getCHOCDF();
-        calories = (float) nutrients.getENERCKCAL();
-        fat = (float) nutrients.getFAT();
-        protein = (float) nutrients.getPROCNT();
+        Nutrients nutrients = foodsApi.get(position).getNutrients();
+        carbs = (float) nutrients.getCarbs();
+        calories = (float) nutrients.getCalories();
+        fat = (float) nutrients.getFat();
+        protein = (float) nutrients.getProtein();
 
         // Calculate percentage of each item
         float sum = carbs + fat + protein;
@@ -107,7 +126,7 @@ public class FoodItemActivity extends AppCompatActivity {
 
     private void initUi() {
         // Set up text views
-        tFoodTitle.setText(foods.get(position).getLabel());
+        tFoodTitle.setText(foodsApi.get(position).getLabel());
         tCarbsWeight.setText(String.valueOf((int) carbs));
         tCarbsDailyIntake.setText(String.format("%s %%", (int) ((carbs / carbsDailyIntake) * 100)));
         tFatWeight.setText(String.valueOf((int) fat));

@@ -19,14 +19,40 @@ import org.jetbrains.annotations.Nullable;
 
 public class IntroActivity extends AppIntro {
 
-    private IntroDetailsFragment detailsFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        addSlides();
+        getPermissions();
+    }
 
-        detailsFragment = IntroDetailsFragment.newInstance();
-        // Add slides
+    @Override
+    protected void onDonePressed(@Nullable Fragment currentFragment) {
+        super.onDonePressed(currentFragment);
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // If app intro is completed, don't show it again
+        SharedPreferences getPrefs = PreferenceManager
+                .getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor e = getPrefs.edit();
+        e.putBoolean("firstStart", false);
+        e.apply();
+    }
+
+    private void getPermissions() {
+        // Ask for permissions on the 2nd slide
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            askForPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION, Manifest.permission.FOREGROUND_SERVICE}, 2, false);
+        }
+    }
+
+    private void addSlides() {
+        IntroDetailsFragment detailsFragment = IntroDetailsFragment.newInstance();
         addSlide(AppIntroFragment.newInstance(
                 "Welcome to owntrainer!",
                 "Welcome to the all-in-one fitness app - " +
@@ -57,31 +83,13 @@ public class IntroActivity extends AppIntro {
                 R.drawable.intro_battery,
                 ContextCompat.getColor(this, R.color.colorGold)));
 
+        // Add fade transition
         setTransformer(AppIntroPageTransformerType.Fade.INSTANCE);
+
+        // Enable back button instead of skip
         setWizardMode(true);
+
+        // Lock system back button
         setSystemBackButtonLocked(true);
-
-        // Ask for permissions on the 2nd slide
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            askForPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION, Manifest.permission.FOREGROUND_SERVICE}, 2, false);
-        }
-    }
-
-    @Override
-    protected void onDonePressed(@Nullable Fragment currentFragment) {
-        super.onDonePressed(currentFragment);
-        finish();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        // If app intro is completed, don't show it again
-        SharedPreferences getPrefs = PreferenceManager
-                .getDefaultSharedPreferences(getBaseContext());
-        SharedPreferences.Editor e = getPrefs.edit();
-        e.putBoolean("firstStart", false);
-        e.apply();
     }
 }
