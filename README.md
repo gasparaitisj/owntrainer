@@ -1,2 +1,3 @@
 # owntrainer
-A trainer app for self-improvement
+- Fitness tracker app that enables the user to effortlessly track their diet.
+- Also includes a pedometer =)
