@@ -15,57 +15,67 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <ImageButton
             android:id="@+id/diary_back_button"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:contentDescription="Previous day button"
+            android:contentDescription="@string/previous_day_button"
             android:src="@drawable/outline_arrow_back_ios_24"
             android:layout_gravity="start"/>
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="10"
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content">
+            android:layout_weight="8"
+            android:gravity="center"
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/diary_current_day_of_week"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Monday" />
+                android:text="Monday"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Headline6"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=", " />
+                android:text=", "
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Headline6"/>
 
             <TextView
                 android:id="@+id/diary_current_month_of_year"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="March" />
+                android:text="March"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Headline6"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" " />
+                android:text=" "
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Headline6"/>
 
             <TextView
                 android:id="@+id/diary_current_day_of_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="29" />
+                android:text="29"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Headline6"/>
         </LinearLayout>
 
-        <ImageView
+        <ImageButton
             android:id="@+id/diary_forward_button"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:contentDescription="Next day button"
+            android:contentDescription="@string/next_day_button"
             android:src="@drawable/outline_arrow_forward_ios_24" />
 
     </LinearLayout>
@@ -82,177 +92,280 @@
         <LinearLayout
             android:id="@+id/diary_daily_goal_calories_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="75dp"
+                android:gravity="end"
                 android:layout_height="wrap_content"
-                android:text="Calories " />
+                android:text="Calories "
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/diary_daily_goal_calories_percentage"
-                android:layout_width="wrap_content"
+                android:layout_width="30dp"
+                android:gravity="end"
                 android:layout_height="wrap_content"
-                android:text="@string/_50" />
+                android:text="@string/_50"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="% " />
+                android:text="% "
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/diary_daily_goal_calories_consumed"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
+                android:gravity="end"
                 android:layout_height="wrap_content"
-                android:text="@string/_50" />
+                android:text="@string/_50"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="/" />
+                android:text="/"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/diary_daily_goal_calories_intake"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:text="@string/_50" />
+                android:text="@string/_50"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="35dp"
                 android:layout_height="wrap_content"
-                android:text=" kCal" />
+                android:text=" kCal"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/diary_daily_goal_protein_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="75dp"
+                android:gravity="end"
                 android:layout_height="wrap_content"
-                android:text="Protein " />
+                android:text="Protein "
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/diary_daily_goal_protein_percentage"
-                android:layout_width="wrap_content"
+                android:layout_width="30dp"
+                android:gravity="end"
                 android:layout_height="wrap_content"
-                android:text="@string/_50" />
+                android:text="@string/_50"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="% " />
+                android:text="% "
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/diary_daily_goal_protein_consumed"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
+                android:gravity="end"
                 android:layout_height="wrap_content"
-                android:text="@string/_50" />
+                android:text="@string/_50"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="/" />
+                android:text="/"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/diary_daily_goal_protein_intake"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:text="@string/_50" />
+                android:text="@string/_50"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="35dp"
                 android:layout_height="wrap_content"
-                android:text=" g" />
+                android:gravity="start"
+                android:text=" g"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/diary_daily_goal_carbs_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="75dp"
+                android:gravity="end"
                 android:layout_height="wrap_content"
-                android:text="Carbs " />
+                android:text="Carbs "
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/diary_daily_goal_carbs_percentage"
-                android:layout_width="wrap_content"
+                android:layout_width="30dp"
+                android:gravity="end"
                 android:layout_height="wrap_content"
-                android:text="@string/_50" />
+                android:text="@string/_50"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="% " />
+                android:text="% "
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/diary_daily_goal_carbs_consumed"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
+                android:gravity="end"
                 android:layout_height="wrap_content"
-                android:text="@string/_50" />
+                android:text="@string/_50"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="/" />
+                android:text="/"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/diary_daily_goal_carbs_intake"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:text="@string/_50" />
+                android:text="@string/_50"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="35dp"
                 android:layout_height="wrap_content"
-                android:text=" g" />
+                android:gravity="start"
+                android:text=" g"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/diary_daily_goal_fat_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="75dp"
+                android:gravity="end"
                 android:layout_height="wrap_content"
-                android:text="Fat " />
+                android:text="Fat "
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/diary_daily_goal_fat_percentage"
-                android:layout_width="wrap_content"
+                android:layout_width="30dp"
+                android:gravity="end"
                 android:layout_height="wrap_content"
-                android:text="@string/_50" />
+                android:text="@string/_50"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="% " />
+                android:text="% "
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/diary_daily_goal_fat_consumed"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
+                android:gravity="end"
                 android:layout_height="wrap_content"
-                android:text="@string/_50" />
+                android:text="@string/_50"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="/" />
+                android:text="/"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/diary_daily_goal_fat_intake"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:text="@string/_50" />
+                android:text="@string/_50"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="35dp"
                 android:layout_height="wrap_content"
-                android:text=" g" />
+                android:gravity="start"
+                android:text=" g"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textStyle="bold"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -271,7 +384,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Meals eaten today" />
+            android:text="Meals eaten"
+            android:textColor="@color/colorPrimaryDark"
+            style="@style/TextAppearance.MaterialComponents.Headline6"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/diary_meal_recycler_view"

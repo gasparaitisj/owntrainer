@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,8 +48,8 @@ public class DiaryFragment extends Fragment {
     }
 
     // Navigation UI
-    private ImageView backButton;
-    private ImageView forwardButton;
+    private ImageButton backButton;
+    private ImageButton forwardButton;
     private TextView tDayOfWeek;
     private TextView tMonthOfYear;
     private TextView tDayOfMonth;

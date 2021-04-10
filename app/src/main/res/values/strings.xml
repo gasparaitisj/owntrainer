@@ -47,4 +47,6 @@
     <string name="recipe_instructions">Recipe instructions</string>
     <string name="calories_space">Calories</string>
     <string name="_50">50</string>
+    <string name="previous_day_button">Previous day button</string>
+    <string name="next_day_button">Next day button</string>
 </resources>
