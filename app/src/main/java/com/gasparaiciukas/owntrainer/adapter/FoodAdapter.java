@@ -13,6 +13,7 @@ import com.gasparaiciukas.owntrainer.R;
 import com.gasparaiciukas.owntrainer.database.Food;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {

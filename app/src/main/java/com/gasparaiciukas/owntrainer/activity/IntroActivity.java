@@ -8,7 +8,9 @@ import android.preference.PreferenceManager;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.gasparaiciukas.owntrainer.fragment.DiaryFragment;
 import com.gasparaiciukas.owntrainer.fragment.IntroDetailsFragment;
 import com.gasparaiciukas.owntrainer.R;
 import com.github.appintro.AppIntro;
@@ -72,13 +74,6 @@ public class IntroActivity extends AppIntro {
         addSlide(AppIntroFragment.newInstance(
                 "Welcome to owntrainer!",
                 "In order for the app to work correctly,\n" +
-                        "it is recommended to turn off battery saver",
-                R.drawable.intro_battery,
-                ContextCompat.getColor(this, R.color.colorGold)));
-
-        addSlide(AppIntroFragment.newInstance(
-                "Welcome to owntrainer!",
-                "In order to work correctly,\n" +
                         "it is recommended to turn off battery saver",
                 R.drawable.intro_battery,
                 ContextCompat.getColor(this, R.color.colorGold)));

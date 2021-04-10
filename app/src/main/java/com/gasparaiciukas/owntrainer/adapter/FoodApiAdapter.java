@@ -16,6 +16,7 @@ import com.gasparaiciukas.owntrainer.activity.FoodItemActivity;
 import com.gasparaiciukas.owntrainer.network.FoodApi;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FoodApiAdapter extends RecyclerView.Adapter<FoodApiAdapter.FoodApiViewHolder> {

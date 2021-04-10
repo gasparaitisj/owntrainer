@@ -45,4 +45,6 @@
     <string name="sample_text">Sample Text</string>
     <string name="ingredient_list">Ingredient list</string>
     <string name="recipe_instructions">Recipe instructions</string>
+    <string name="calories_space">Calories</string>
+    <string name="_50">50</string>
 </resources>

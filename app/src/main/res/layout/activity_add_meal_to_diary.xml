@@ -4,23 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.SelectMealItemActivity">
+    tools:context=".activity.AddMealToDiaryActivity">
 
     <TextView
-        android:id="@+id/select_meal_item_title"
-        style="@style/TextAppearance.MaterialComponents.Headline5"
+        android:id="@+id/add_meal_to_diary_title"
+        style="@style/TextAppearance.MaterialComponents.Headline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add food to selected meal"
+        android:text="Select meal to be added"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/select_meal_item_recycler_view"
+        android:id="@+id/add_meal_to_diary_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -28,6 +27,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/select_meal_item_title" />
+        app:layout_constraintTop_toBottomOf="@+id/add_meal_to_diary_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

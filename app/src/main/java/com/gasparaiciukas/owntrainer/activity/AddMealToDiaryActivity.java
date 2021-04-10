@@ -5,40 +5,40 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.gasparaiciukas.owntrainer.R;
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter;
 import com.gasparaiciukas.owntrainer.database.Meal;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
 
 import io.realm.Realm;
 
-public class SelectMealItemActivity extends AppCompatActivity {
+public class AddMealToDiaryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private MealAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private int position;
-    private int quantity;
+    private String primaryKey;
     private Realm realm;
+    private TextInputEditText portionSizeInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_meal_item);
+        setContentView(R.layout.activity_add_meal_to_diary);
 
-        // Get selected food position
-        position = getIntent().getIntExtra("position", 0);
-        quantity = getIntent().getIntExtra("quantity", 0);
+        primaryKey = getIntent().getStringExtra("primaryKey");
 
         // Get meals from database
         realm = Realm.getDefaultInstance();
         List<Meal> meals = realm.where(Meal.class).findAll();
 
         // Set up recycler view
-        recyclerView = findViewById(R.id.select_meal_item_recycler_view);
-        adapter = new MealAdapter(2, position, meals, quantity);
+        recyclerView = findViewById(R.id.add_meal_to_diary_recycler_view);
+        adapter = new MealAdapter(3, meals, primaryKey);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);

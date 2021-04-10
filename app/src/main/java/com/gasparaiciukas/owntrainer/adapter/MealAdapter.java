@@ -3,6 +3,7 @@ package com.gasparaiciukas.owntrainer.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +14,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gasparaiciukas.owntrainer.R;
+import com.gasparaiciukas.owntrainer.activity.MainActivity;
 import com.gasparaiciukas.owntrainer.activity.MealItemActivity;
+import com.gasparaiciukas.owntrainer.database.DiaryEntry;
 import com.gasparaiciukas.owntrainer.database.Food;
 import com.gasparaiciukas.owntrainer.database.Meal;
 import com.gasparaiciukas.owntrainer.network.FoodApi;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.realm.Realm;
@@ -46,20 +51,35 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
 
     public static List<Meal> meals = new ArrayList<>();
     private Context activityContext;
-    private boolean mIsSelectable = false;
+    private int mAdapterType = 1; // default
     private int mfoodPosition;
+    private String mDiaryPrimaryKey;
     private double mQuantity;
+    private int mPortionSize;
 
-    // Constructor for selectable food rows
-    public MealAdapter(boolean isSelectable, int foodPosition, List<Meal> mealList, double quantity) {
-        mIsSelectable = isSelectable;
+    // Type 1 constructor (transfer to meal item activity)
+    public MealAdapter(List<Meal> mealList) {
+        meals = mealList;
+    }
+
+    // Type 2 constructor (add selected food to selected meal)
+    public MealAdapter(int adapterType, int foodPosition, List<Meal> mealList, double quantity) {
+        mAdapterType = adapterType;
         mfoodPosition = foodPosition;
         meals = mealList;
         mQuantity = quantity;
     }
 
-    // Constructor for non-selectable food rows
-    public MealAdapter(List<Meal> mealList) {
+    // Type 3 constructor (add meal to diary)
+    public MealAdapter(int adapterType, List<Meal> mealList, String diaryPrimaryKey) {
+        mAdapterType = adapterType;
+        meals = mealList;
+        mDiaryPrimaryKey = diaryPrimaryKey;
+    }
+
+    // Type 4 constructor (only view)
+    public MealAdapter(int adapterType, List<Meal> mealList) {
+        mAdapterType = adapterType;
         meals = mealList;
     }
 
@@ -89,13 +109,13 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
             @Override
             public void onClick(View v) {
                 // If not selectable, start new activity on row clicked
-                if (!mIsSelectable) {
+                if (mAdapterType == 1) {
                     Intent intent = new Intent(v.getContext(), MealItemActivity.class);
                     intent.putExtra("position", position);
                     activityContext.startActivity(intent);
                 }
                 // If selectable, add selected food to selected meal
-                else {
+                else if (mAdapterType == 2) {
                     RealmList<Food> foodList = meals.get(position).getFoodList();
                     Food food = new Food();
                     FoodApi foodApi = foodsApi.get(mfoodPosition);
@@ -123,6 +143,27 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
 
                     // Finish activity
                     ((Activity) activityContext).finish();
+                }
+                // If added meal to diary
+                else if (mAdapterType == 3) {
+                    // Write to database
+                    Realm realm = Realm.getDefaultInstance();
+                    DiaryEntry diaryEntry = realm.where(DiaryEntry.class)
+                            .equalTo("yearAndDayOfYear", mDiaryPrimaryKey)
+                            .findFirst();
+                    RealmList<Meal> mealList = diaryEntry.getMeals();
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(@NotNull Realm realm) {
+                            mealList.add(meals.get(position));
+                            diaryEntry.setMeals(mealList);
+                        }
+                    });
+                    realm.close();
+
+                    // Finish activity
+                    Intent intent = new Intent(v.getContext(), MainActivity.class);
+                    activityContext.startActivity(intent);
                 }
             }
         });
