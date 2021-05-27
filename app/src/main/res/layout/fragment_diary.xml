@@ -1,414 +1,417 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/diary_fragment_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorSmokeDark">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:id="@+id/diary_navigation_layout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/diary_fragment_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageButton
-            android:id="@+id/diary_back_button"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/previous_day_button"
-            android:src="@drawable/outline_arrow_back_ios_24"
-            android:layout_gravity="start"/>
+        android:layout_height="match_parent"
+        android:background="@color/colorSmokeDark">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="8"
-            android:gravity="center"
+            android:id="@+id/diary_navigation_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/diary_back_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_weight="1"
+                android:contentDescription="@string/previous_day_button"
+                android:src="@drawable/outline_arrow_back_ios_24" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/diary_current_day_of_week"
+                    style="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/monday"
+                    android:textColor="@color/colorPrimaryDark" />
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/comma"
+                    android:textColor="@color/colorPrimaryDark" />
+
+                <TextView
+                    android:id="@+id/diary_current_month_of_year"
+                    style="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/march"
+                    android:textColor="@color/colorPrimaryDark" />
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/space"
+                    android:textColor="@color/colorPrimaryDark" />
+
+                <TextView
+                    android:id="@+id/diary_current_day_of_month"
+                    style="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_29"
+                    android:textColor="@color/colorPrimaryDark" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/diary_forward_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_weight="1"
+                android:contentDescription="@string/next_day_button"
+                android:src="@drawable/outline_arrow_forward_ios_24" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/diary_daily_goal_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/diary_navigation_layout">
+
+            <LinearLayout
+                android:id="@+id/diary_daily_goal_calories_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="Calories "
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/diary_daily_goal_calories_percentage"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="% "
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/diary_daily_goal_calories_consumed"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/diary_daily_goal_calories_intake"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_50"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:text=" kCal"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/diary_daily_goal_protein_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="Protein "
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/diary_daily_goal_protein_percentage"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="% "
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/diary_daily_goal_protein_consumed"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/diary_daily_goal_protein_intake"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_50"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text=" g"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/diary_daily_goal_carbs_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="Carbs "
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/diary_daily_goal_carbs_percentage"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="% "
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/diary_daily_goal_carbs_consumed"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/diary_daily_goal_carbs_intake"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_50"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text=" g"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/diary_daily_goal_fat_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="Fat "
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/diary_daily_goal_fat_percentage"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="% "
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/diary_daily_goal_fat_consumed"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/diary_daily_goal_fat_intake"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_50"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text=" g"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/diary_meal_text_layout"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/diary_daily_goal_layout">
+
+            <TextView
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Meals eaten"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/diary_meal_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="5dp"
+                app:layout_constrainedHeight="true" />
+        </LinearLayout>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/diary_current_day_of_week"
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/diary_fab_add_meal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Monday"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Headline6"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=", "
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Headline6"/>
-
-            <TextView
-                android:id="@+id/diary_current_month_of_year"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="March"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Headline6"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" "
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Headline6"/>
-
-            <TextView
-                android:id="@+id/diary_current_day_of_month"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="29"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Headline6"/>
-        </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/diary_forward_button"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:contentDescription="@string/next_day_button"
-            android:src="@drawable/outline_arrow_forward_ios_24" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/diary_daily_goal_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/diary_navigation_layout">
-
-        <LinearLayout
-            android:id="@+id/diary_daily_goal_calories_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="75dp"
-                android:gravity="end"
-                android:layout_height="wrap_content"
-                android:text="Calories "
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/diary_daily_goal_calories_percentage"
-                android:layout_width="30dp"
-                android:gravity="end"
-                android:layout_height="wrap_content"
-                android:text="@string/_50"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="% "
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/diary_daily_goal_calories_consumed"
-                android:layout_width="50dp"
-                android:gravity="end"
-                android:layout_height="wrap_content"
-                android:text="@string/_50"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="/"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/diary_daily_goal_calories_intake"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:text="@string/_50"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:text=" kCal"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/diary_daily_goal_protein_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="75dp"
-                android:gravity="end"
-                android:layout_height="wrap_content"
-                android:text="Protein "
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/diary_daily_goal_protein_percentage"
-                android:layout_width="30dp"
-                android:gravity="end"
-                android:layout_height="wrap_content"
-                android:text="@string/_50"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="% "
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/diary_daily_goal_protein_consumed"
-                android:layout_width="50dp"
-                android:gravity="end"
-                android:layout_height="wrap_content"
-                android:text="@string/_50"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="/"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/diary_daily_goal_protein_intake"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:text="@string/_50"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:text=" g"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/diary_daily_goal_carbs_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="75dp"
-                android:gravity="end"
-                android:layout_height="wrap_content"
-                android:text="Carbs "
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/diary_daily_goal_carbs_percentage"
-                android:layout_width="30dp"
-                android:gravity="end"
-                android:layout_height="wrap_content"
-                android:text="@string/_50"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="% "
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/diary_daily_goal_carbs_consumed"
-                android:layout_width="50dp"
-                android:gravity="end"
-                android:layout_height="wrap_content"
-                android:text="@string/_50"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="/"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/diary_daily_goal_carbs_intake"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:text="@string/_50"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:text=" g"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/diary_daily_goal_fat_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="75dp"
-                android:gravity="end"
-                android:layout_height="wrap_content"
-                android:text="Fat "
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/diary_daily_goal_fat_percentage"
-                android:layout_width="30dp"
-                android:gravity="end"
-                android:layout_height="wrap_content"
-                android:text="@string/_50"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="% "
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/diary_daily_goal_fat_consumed"
-                android:layout_width="50dp"
-                android:gravity="end"
-                android:layout_height="wrap_content"
-                android:text="@string/_50"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="/"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/diary_daily_goal_fat_intake"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:text="@string/_50"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:text=" g"
-                android:textColor="@color/colorPrimaryDark"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:textStyle="bold"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/diary_meal_text_layout"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/diary_daily_goal_layout">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Meals eaten"
-            android:textColor="@color/colorPrimaryDark"
-            style="@style/TextAppearance.MaterialComponents.Headline6"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/diary_meal_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginTop="5dp"
-            app:layout_constrainedHeight="true" />
-    </LinearLayout>
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/diary_fab_add_meal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_margin="32dp"
-            android:contentDescription="@string/add_new_meal"
-            app:srcCompat="@drawable/baseline_add_24"/>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                android:layout_gravity="bottom|right"
+                android:layout_margin="32dp"
+                android:contentDescription="@string/add_new_meal"
+                app:srcCompat="@drawable/baseline_add_24" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

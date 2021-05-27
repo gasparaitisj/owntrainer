@@ -3,9 +3,9 @@
 
     <item
         android:id="@+id/top_app_bar_settings"
+        android:contentDescription="@string/settings_description"
         android:icon="@drawable/baseline_settings_24"
         android:title="@string/settings"
-        android:contentDescription="@string/settings_description"
         app:showAsAction="always" />
 
 </menu>

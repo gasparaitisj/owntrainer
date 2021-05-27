@@ -2,9 +2,9 @@ package com.gasparaiciukas.owntrainer.activity
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
@@ -12,8 +12,8 @@ import com.gasparaiciukas.owntrainer.adapter.FoodAdapter
 import com.gasparaiciukas.owntrainer.database.Food
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.User
+import com.gasparaiciukas.owntrainer.databinding.ActivityMealItemBinding
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
-import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -22,8 +22,8 @@ import java.util.*
 import kotlin.math.roundToInt
 
 class MealItemActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMealItemBinding
     // Pie chart
-    private lateinit var pieChart: PieChart
     private lateinit var pieDataSet: PieDataSet
     private lateinit var pieData: PieData
 
@@ -42,45 +42,17 @@ class MealItemActivity : AppCompatActivity() {
     private var proteinDailyIntake = 0f
     private val quantity = 0
 
-    // Text views
-    private lateinit var tMealTitle: TextView
-    private lateinit var tMealInstructions: TextView
-    private lateinit var tCarbsWeight: TextView
-    private lateinit var tCarbsDailyIntake: TextView
-    private lateinit var tFatWeight: TextView
-    private lateinit var tFatDailyIntake: TextView
-    private lateinit var tProteinWeight: TextView
-    private lateinit var tProteinDailyIntake: TextView
-    private lateinit var tCalorieCount: TextView
-    private lateinit var tCalorieDailyIntake: TextView
-
     // Recycler view
-    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: FoodAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var realm: Realm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_meal_item)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_meal_item)
 
         // Get selected food position
         position = intent.getIntExtra("position", 0)
-
-        // Views
-        pieChart = findViewById(R.id.meal_item_pie_chart)
-        tCarbsWeight = findViewById(R.id.meal_item_carbs_weight)
-        tCarbsDailyIntake = findViewById(R.id.meal_item_carbs_percentage)
-        tFatWeight = findViewById(R.id.meal_item_fat_weight)
-        tFatDailyIntake = findViewById(R.id.meal_item_fat_percentage)
-        tProteinWeight = findViewById(R.id.meal_item_protein_weight)
-        tProteinDailyIntake = findViewById(R.id.meal_item_protein_percentage)
-        tCalorieCount = findViewById(R.id.meal_item_calories_count)
-        tCalorieDailyIntake = findViewById(R.id.meal_item_calories_percentage)
-        tMealTitle = findViewById(R.id.meal_item_title)
-        tMealInstructions = findViewById(R.id.meal_item_instructions)
-        tMealInstructions.movementMethod = ScrollingMovementMethod()
-        recyclerView = findViewById(R.id.meal_item_recycler_view)
 
         // Recycler view
         realm = Realm.getDefaultInstance()
@@ -89,8 +61,8 @@ class MealItemActivity : AppCompatActivity() {
         realm.close()
         adapter = FoodAdapter(foodList)
         layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = layoutManager
+        binding.mealItemRecyclerView.adapter = adapter
+        binding.mealItemRecyclerView.layoutManager = layoutManager
 
 
         // Get nutrients from food item
@@ -120,19 +92,20 @@ class MealItemActivity : AppCompatActivity() {
         realm.close()
 
         // Set up text views
-        tMealTitle.text = meals[position].title
-        tMealInstructions.text = meals[position].instructions
-        tCarbsWeight.text = carbs.roundToInt().toString()
-        tCarbsDailyIntake.text =
+        binding.mealItemTitle.text = meals[position].title
+        binding.mealItemInstructions.text = meals[position].instructions
+        binding.mealItemInstructions.movementMethod = ScrollingMovementMethod()
+        binding.mealItemCarbsWeight.text = carbs.roundToInt().toString()
+        binding.mealItemCarbsPercentage.text =
             String.format("%s %%", (carbs / carbsDailyIntake * 100).roundToInt())
-        tFatWeight.text = fat.roundToInt().toString()
-        tFatDailyIntake.text =
+        binding.mealItemFatWeight.text = fat.roundToInt().toString()
+        binding.mealItemFatPercentage.text =
             String.format("%s %%", (fat / fatDailyIntake * 100).roundToInt())
-        tProteinWeight.text = protein.roundToInt().toString()
-        tProteinDailyIntake.text =
+        binding.mealItemProteinWeight.text = protein.roundToInt().toString()
+        binding.mealItemProteinPercentage.text =
             String.format("%s %%", (protein / proteinDailyIntake * 100).roundToInt())
-        tCalorieCount.text = calories.roundToInt().toString()
-        tCalorieDailyIntake.text =
+        binding.mealItemCaloriesCount.text = calories.roundToInt().toString()
+        binding.mealItemCaloriesPercentage.text =
             String.format("%s %%", (calories / calorieDailyIntake * 100).roundToInt())
 
         // Create colors representing nutrients
@@ -153,18 +126,18 @@ class MealItemActivity : AppCompatActivity() {
         pieData = PieData(pieDataSet)
         pieData.setValueFormatter(NutrientValueFormatter()) // adjust labels
         pieData.setValueTextSize(12f)
-        pieChart.data = pieData
-        pieChart.centerText = "${calories.roundToInt()}\nkCal" // calorie text inside inner circle
-        pieChart.setCenterTextSize(14f)
-        pieChart.setCenterTextColor(ContextCompat.getColor(this, R.color.colorWhite))
-        pieChart.centerTextRadiusPercent = 100f
-        pieChart.setHoleColor(ContextCompat.getColor(this, R.color.colorRed))
-        pieChart.holeRadius = 30f
-        pieChart.transparentCircleRadius = 0f
-        pieChart.legend.isEnabled = false
-        pieChart.description.isEnabled = false
-        pieChart.setTouchEnabled(false)
-        pieChart.invalidate()
+        binding.mealItemPieChart.data = pieData
+        binding.mealItemPieChart.centerText = "${calories.roundToInt()}\nkCal" // calorie text inside inner circle
+        binding.mealItemPieChart.setCenterTextSize(14f)
+        binding.mealItemPieChart.setCenterTextColor(ContextCompat.getColor(this, R.color.colorWhite))
+        binding.mealItemPieChart.centerTextRadiusPercent = 100f
+        binding.mealItemPieChart.setHoleColor(ContextCompat.getColor(this, R.color.colorRed))
+        binding.mealItemPieChart.holeRadius = 30f
+        binding.mealItemPieChart.transparentCircleRadius = 0f
+        binding.mealItemPieChart.legend.isEnabled = false
+        binding.mealItemPieChart.description.isEnabled = false
+        binding.mealItemPieChart.setTouchEnabled(false)
+        binding.mealItemPieChart.invalidate()
     }
 
     override fun onResume() {

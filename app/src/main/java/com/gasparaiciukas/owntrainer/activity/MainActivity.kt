@@ -5,8 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.gasparaiciukas.owntrainer.R
+import com.gasparaiciukas.owntrainer.databinding.ActivityMainBinding
 import com.gasparaiciukas.owntrainer.fragment.DiaryFragment
 import com.gasparaiciukas.owntrainer.fragment.FoodFragment
 import com.gasparaiciukas.owntrainer.fragment.ProgressFragment
@@ -17,18 +19,19 @@ import io.realm.RealmConfiguration
 import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initDatabase()
         initAppIntroThread()
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         initUi()
     }
 
     private fun initUi() {
         // Settings (top app bar)
-        val toolbar = findViewById<MaterialToolbar>(R.id.top_app_bar)
-        toolbar.setOnMenuItemClickListener { item: MenuItem ->
+        binding.topAppBar.setOnMenuItemClickListener { item: MenuItem ->
             if (item.itemId == R.id.top_app_bar_settings) {
                 startActivity(Intent(baseContext, SettingsActivity::class.java))
                 return@setOnMenuItemClickListener true
@@ -37,8 +40,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Bottom navigation bar
-        val bottomNavigation = findViewById<BottomNavigationView>(R.id.main_bottom_navigation)
-        bottomNavigation.setOnNavigationItemSelectedListener { item: MenuItem ->
+        binding.mainBottomNavigation.setOnNavigationItemSelectedListener { item: MenuItem ->
             val selectedFragment: Fragment
             val selectedFragmentTag: String
             when (item.itemId) {

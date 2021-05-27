@@ -49,4 +49,12 @@
     <string name="_50">50</string>
     <string name="previous_day_button">Previous day button</string>
     <string name="next_day_button">Next day button</string>
+    <string name="select_meal_to_be_added">Select meal to be added</string>
+    <string name="add_food_to_selected_meal">Add food to selected meal</string>
+    <string name="kcal_per_100g">kcal per 100g</string>
+    <string name="monday">Monday</string>
+    <string name="march">March</string>
+    <string name="comma">,</string>
+    <string name="space" />
+    <string name="_29">29</string>
 </resources>

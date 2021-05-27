@@ -1,137 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activity.SettingsActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/settings_top_app_bar_layout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        tools:context=".activity.SettingsActivity">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/settings_top_app_bar"
-            style="@style/Widget.MaterialComponents.Toolbar.Primary"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/baseline_arrow_back_24"
-            app:title="@string/settings" />
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settings_top_app_bar_layout">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/settings_sex_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/settings_top_app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/sex"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="30dp"
-            app:startIconContentDescription="Sex"
-            app:startIconDrawable="@drawable/outline_male_24">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <AutoCompleteTextView
-                android:id="@+id/settings_sex_menu"
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/settings_top_app_bar"
+                style="@style/Widget.MaterialComponents.Toolbar.Primary"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="?attr/actionBarSize"
+                app:navigationIcon="@drawable/baseline_arrow_back_24"
+                app:title="@string/settings" />
+        </com.google.android.material.appbar.AppBarLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/settings_age_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/age"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="30dp"
-            app:startIconContentDescription="Age"
-            app:startIconDrawable="@drawable/outline_accessibility_new_24"
-            app:suffixText="years">
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/settings_top_app_bar_layout">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/settings_age_text"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/settings_sex_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                android:maxLength="3" />
+                android:hint="@string/sex"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="30dp"
+                app:startIconContentDescription="Sex"
+                app:startIconDrawable="@drawable/outline_male_24">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <AutoCompleteTextView
+                    android:id="@+id/settings_sex_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/settings_height_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/height"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="30dp"
-            app:startIconContentDescription="Height"
-            app:startIconDrawable="@drawable/baseline_height_24"
-            app:suffixText="(cm)">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/settings_height_text"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/settings_age_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                android:maxLength="3" />
+                android:hint="@string/age"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="30dp"
+                app:startIconContentDescription="Age"
+                app:startIconDrawable="@drawable/outline_accessibility_new_24"
+                app:suffixText="years">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/settings_age_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="3" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/settings_weight_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/weight"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="30dp"
-            app:startIconContentDescription="Weight"
-            app:startIconDrawable="@drawable/baseline_monitor_weight_24"
-            app:suffixText="(kg)">
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/settings_weight_text"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/settings_height_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:maxLength="5" />
+                android:hint="@string/height"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="30dp"
+                app:startIconContentDescription="Height"
+                app:startIconDrawable="@drawable/baseline_height_24"
+                app:suffixText="(cm)">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/settings_height_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="3" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/settings_lifestyle_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/lifestyle"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="30dp"
-            app:startIconContentDescription="Lifestyle"
-            app:startIconDrawable="@drawable/outline_run_circle_24">
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <AutoCompleteTextView
-                android:id="@+id/settings_lifestyle_menu"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/settings_weight_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="none" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
+                android:hint="@string/weight"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="30dp"
+                app:startIconContentDescription="Weight"
+                app:startIconDrawable="@drawable/baseline_monitor_weight_24"
+                app:suffixText="(kg)">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/settings_weight_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:maxLength="5" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/settings_lifestyle_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lifestyle"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="30dp"
+                app:startIconContentDescription="Lifestyle"
+                app:startIconDrawable="@drawable/outline_run_circle_24">
+
+                <AutoCompleteTextView
+                    android:id="@+id/settings_lifestyle_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

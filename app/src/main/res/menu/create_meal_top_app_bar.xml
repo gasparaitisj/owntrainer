@@ -3,9 +3,9 @@
 
     <item
         android:id="@+id/create_meal_top_app_bar_save"
+        android:contentDescription="@string/save_button"
         android:icon="@drawable/baseline_save_24"
         android:title="@string/save"
-        android:contentDescription="@string/save_button"
         app:showAsAction="always" />
 
 </menu>

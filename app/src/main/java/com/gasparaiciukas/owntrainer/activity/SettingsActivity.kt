@@ -7,14 +7,18 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.User
+import com.gasparaiciukas.owntrainer.databinding.ActivitySettingsBinding
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import io.realm.Realm
 import java.util.*
 
 class SettingsActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySettingsBinding
+
     // Variables
     private lateinit var sex: String
     private var age = 0
@@ -22,34 +26,14 @@ class SettingsActivity : AppCompatActivity() {
     private var weight = 0.0
     private lateinit var lifestyle: String
 
-    // Text views
-    private lateinit var sexMenu: AutoCompleteTextView
-    private lateinit var tAge: TextInputEditText
-    private lateinit var tHeight: TextInputEditText
-    private lateinit var tWeight: TextInputEditText
-    private lateinit var lifestyleMenu: AutoCompleteTextView
-
     // Database
     private lateinit var realm: Realm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
-        initUi()
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_settings)
+        binding.settingsTopAppBar.setNavigationOnClickListener { onBackPressed() }
         loadData()
-    }
-
-    private fun initUi() {
-        // Back button
-        val toolbar = findViewById<MaterialToolbar>(R.id.settings_top_app_bar)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
-
-        // Options
-        sexMenu = findViewById(R.id.settings_sex_menu)
-        tAge = findViewById(R.id.settings_age_text)
-        tHeight = findViewById(R.id.settings_height_text)
-        tWeight = findViewById(R.id.settings_weight_text)
-        lifestyleMenu = findViewById(R.id.settings_lifestyle_menu)
     }
 
     override fun onDestroy() {
@@ -94,20 +78,20 @@ class SettingsActivity : AppCompatActivity() {
         realm.close()
 
         // Insert current data into fields
-        sexMenu.setText(sex)
-        tAge.setText(age.toString())
-        tHeight.setText(height.toString())
-        tWeight.setText(weight.toString())
-        lifestyleMenu.setText(lifestyle)
+        binding.settingsSexMenu.setText(sex)
+        binding.settingsAgeText.setText(age.toString())
+        binding.settingsHeightText.setText(height.toString())
+        binding.settingsWeightText.setText(weight.toString())
+        binding.settingsLifestyleMenu.setText(lifestyle)
 
         // Set up listeners
         val sexList: List<String?> = ArrayList(listOf("Male", "Female"))
         val sexAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, R.layout.details_list_item, sexList)
-        sexMenu.setAdapter(sexAdapter)
-        sexMenu.onItemClickListener =
-            OnItemClickListener { _, _, _, _ -> sex = sexMenu.text.toString() }
-        tAge.addTextChangedListener(object : TextWatcher {
+        binding.settingsSexMenu.setAdapter(sexAdapter)
+        binding.settingsSexMenu.onItemClickListener =
+            OnItemClickListener { _, _, _, _ -> sex = binding.settingsSexMenu.text.toString() }
+        binding.settingsAgeText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // do nothing
             }
@@ -120,7 +104,7 @@ class SettingsActivity : AppCompatActivity() {
                 if (s.toString().isNotEmpty()) age = s.toString().toInt()
             }
         })
-        tHeight.addTextChangedListener(object : TextWatcher {
+        binding.settingsHeightText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // do nothing
             }
@@ -133,7 +117,7 @@ class SettingsActivity : AppCompatActivity() {
                 if (s.toString().isNotEmpty()) height = s.toString().toInt()
             }
         })
-        tWeight.addTextChangedListener(object : TextWatcher {
+        binding.settingsWeightText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // do nothing
             }
@@ -146,8 +130,8 @@ class SettingsActivity : AppCompatActivity() {
                 if (s.toString().isNotEmpty()) weight = s.toString().toDouble()
             }
         })
-        lifestyleMenu.onItemClickListener = OnItemClickListener { _, _, _, _ ->
-            lifestyle = lifestyleMenu.text.toString()
+        binding.settingsLifestyleMenu.onItemClickListener = OnItemClickListener { _, _, _, _ ->
+            lifestyle = binding.settingsLifestyleMenu.text.toString()
         }
         val lifestyleList: List<String?> = ArrayList(
             listOf(
@@ -160,6 +144,6 @@ class SettingsActivity : AppCompatActivity() {
         )
         val lifestyleAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, R.layout.details_list_item, lifestyleList)
-        lifestyleMenu.setAdapter(lifestyleAdapter)
+        binding.settingsLifestyleMenu.setAdapter(lifestyleAdapter)
     }
 }

@@ -1,139 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/food_row"
-    android:paddingTop="5dp"
-    android:paddingStart="5dp"
-    android:paddingEnd="5dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:background="?android:attr/selectableItemBackground"
-    android:orientation="vertical">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/food_row_text"
-        android:textColor="@color/colorPrimary"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"/>
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/food_row_quantity"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" g "
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="("
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/food_row_calories"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" kCal)"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Protein "
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/food_row_protein"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" g "
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Carbs "
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/food_row_carbs"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" g "
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Fat "
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/food_row_fat"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" g"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <View
+        android:id="@+id/food_row"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorAccent"
-        android:layout_marginTop="10dp"/>
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:paddingStart="5dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="5dp">
+
+        <TextView
+            android:id="@+id/food_row_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textColor="@color/colorPrimary" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/food_row_quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" g "
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="("
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/food_row_calories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" kCal)"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Protein "
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/food_row_protein"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" g "
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Carbs "
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/food_row_carbs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" g "
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fat "
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/food_row_fat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" g"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorAccent" />
+    </LinearLayout>
+</layout>

@@ -9,21 +9,21 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.PedometerEntry
 import com.gasparaiciukas.owntrainer.database.User
+import com.gasparaiciukas.owntrainer.databinding.ActivityStepBinding
 import com.gasparaiciukas.owntrainer.service.StepCounterService
-import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import io.realm.Realm
 import java.time.LocalDate
 
 class StepActivity : AppCompatActivity() {
-    // Variables
+    private lateinit var binding: ActivityStepBinding
+
     private var currentSteps = 0
     private var countedSteps = 0
     private var previousCountedSteps = 0
@@ -39,30 +39,11 @@ class StepActivity : AppCompatActivity() {
     private var stopTimeInS: Long = 0
     private var totalTimeElapsedInS = 0
 
-    // UI
-    private lateinit var stepProgressBar: CircularProgressBar
-    private lateinit var tStepProgress: TextView
-    private lateinit var toggleStepCounterButton: Button
-    private lateinit var tCalories: TextView
-    private lateinit var tDistance: TextView
-    private lateinit var tDailyStepGoal: TextView
-    private lateinit var tTimeElapsedH: TextView
-    private lateinit var tTimeElapsedM: TextView
     private lateinit var serviceIntent: Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_step)
-
-        // Get views
-        stepProgressBar = findViewById(R.id.step_counter)
-        tStepProgress = findViewById(R.id.step_current_count)
-        toggleStepCounterButton = findViewById(R.id.toggle_step_counter_button)
-        tCalories = findViewById(R.id.step_calorie_count)
-        tDistance = findViewById(R.id.step_distance_count)
-        tDailyStepGoal = findViewById(R.id.step_daily_goal_count)
-        tTimeElapsedH = findViewById(R.id.step_time_count_h)
-        tTimeElapsedM = findViewById(R.id.step_time_count_m)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_step)
 
         // Load data
         loadData()
@@ -79,23 +60,23 @@ class StepActivity : AppCompatActivity() {
         //Log.d("test", "Service is running:" + isServiceRunning);
 
         // Show data
-        stepProgressBar.progress = currentSteps.toFloat()
-        tStepProgress.text = currentSteps.toString()
-        tCalories.text = calories.toString()
-        tDistance.text = String.format("%.2f", distance)
-        tDailyStepGoal.text = dailyStepGoal.toString()
-        tTimeElapsedH.text = (totalTimeElapsedInS / 3600).toString()
-        tTimeElapsedM.text = (totalTimeElapsedInS % 3600 / 60).toString()
+        binding.stepCounter.progress = currentSteps.toFloat()
+        binding.stepCurrentCount.text = currentSteps.toString()
+        binding.stepCalorieCount.text = calories.toString()
+        binding.stepDistanceCount.text = String.format("%.2f", distance)
+        binding.stepDailyGoalCount.text = dailyStepGoal.toString()
+        binding.stepTimeCountH.text = (totalTimeElapsedInS / 3600).toString()
+        binding.stepTimeCountM.text = (totalTimeElapsedInS % 3600 / 60).toString()
         if (isStepCounterServiceRunning) {
-            toggleStepCounterButton.setText(R.string.stop)
+            binding.toggleStepCounterButton.setText(R.string.stop)
         } else {
-            toggleStepCounterButton.setText(R.string.start)
+            binding.toggleStepCounterButton.setText(R.string.start)
         }
 
         // Set up intent
         serviceIntent = Intent(this, StepCounterService::class.java)
         serviceIntent.putExtra("currentSteps", currentSteps)
-        toggleStepCounterButton.setOnClickListener {
+        binding.toggleStepCounterButton.setOnClickListener {
             if (isStepCounterServiceRunning) onStopButtonClicked()
             else onStartButtonClicked()
         }
@@ -114,10 +95,10 @@ class StepActivity : AppCompatActivity() {
             saveSteps()
             calories = (currentSteps * kcalBurnedPerStep).toInt()
             distance = currentSteps * (stepLengthInCm / 100000)
-            stepProgressBar.setProgressWithAnimation(currentSteps.toFloat())
-            tStepProgress.text = currentSteps.toString()
-            tCalories.text = calories.toString()
-            tDistance.text = String.format("%.2f", distance)
+            binding.stepCounter.setProgressWithAnimation(currentSteps.toFloat())
+            binding.stepCurrentCount.text = currentSteps.toString()
+            binding.stepCalorieCount.text = calories.toString()
+            binding.stepDistanceCount.text = String.format("%.2f", distance)
             //Log.d("test", "Bar updated! (Steps: " + currentSteps + ")");
         }
     }
@@ -130,19 +111,19 @@ class StepActivity : AppCompatActivity() {
         totalTimeElapsedInS = 0
 
         // Reset UI
-        stepProgressBar.setProgressWithAnimation(currentSteps.toFloat())
-        tStepProgress.text = currentSteps.toString()
-        tCalories.text = calories.toString()
-        tDistance.text = String.format("%.2f", distance)
-        tTimeElapsedH.text = (totalTimeElapsedInS / 3600).toString()
-        tTimeElapsedM.text = (totalTimeElapsedInS % 3600 / 60).toString()
+        binding.stepCounter.setProgressWithAnimation(currentSteps.toFloat())
+        binding.stepCurrentCount.text = currentSteps.toString()
+        binding.stepCalorieCount.text = calories.toString()
+        binding.stepDistanceCount.text = String.format("%.2f", distance)
+        binding.stepTimeCountH.text = (totalTimeElapsedInS / 3600).toString()
+        binding.stepTimeCountM.text = (totalTimeElapsedInS % 3600 / 60).toString()
         saveSteps()
         //Log.d("test", "Steps reset!");
     }
 
     // Resets step counter, when long clicked on step counter
     private fun resetStepsOnClick() {
-        stepProgressBar.setOnLongClickListener {
+        binding.stepCounter.setOnLongClickListener {
             resetSteps()
             true
         }
@@ -181,8 +162,8 @@ class StepActivity : AppCompatActivity() {
         //        RealmResults<PedometerEntry> entries = realm.where(PedometerEntry.class).findAll();
 //        for (PedometerEntry entry : entries) {
 //            Log.d(TAG, entry.getYear() + " " + entry.getDayOfYear() + " " +
-//                    entry.getSteps() + " " + entry.getCalories() + " " +
-//                    entry.getDistanceInKm() + " " + entry.getTimeElapsedInS());
+//                    entry.getSteps() + " " + entry.gebinding.stepCalorieCount() + " " +
+//                    entry.gebinding.stepDistanceCountInKm() + " " + entry.getTimeElapsedInS());
 //        }
         realm.close()
 
@@ -238,7 +219,7 @@ class StepActivity : AppCompatActivity() {
         startService(serviceIntent)
         isStepCounterServiceRunning = true
         registerReceiver(broadcastReceiver, IntentFilter(StepCounterService.BROADCAST_PEDOMETER))
-        toggleStepCounterButton.setText(R.string.stop)
+        binding.toggleStepCounterButton.setText(R.string.stop)
         startTimeInS = System.currentTimeMillis() / 1000
     }
 
@@ -256,7 +237,7 @@ class StepActivity : AppCompatActivity() {
         stopService(serviceIntent)
         saveSteps()
         isStepCounterServiceRunning = false
-        toggleStepCounterButton.setText(R.string.start)
+        binding.toggleStepCounterButton.setText(R.string.start)
     }
 
     private val isServiceRunning: Boolean
