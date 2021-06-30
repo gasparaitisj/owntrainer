@@ -5,12 +5,11 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.activity.FoodItemActivity
 import com.gasparaiciukas.owntrainer.adapter.FoodApiAdapter.FoodApiViewHolder
+import com.gasparaiciukas.owntrainer.databinding.FoodapiRowBinding
 import com.gasparaiciukas.owntrainer.network.FoodApi
 
 class FoodApiAdapter(foods: List<FoodApi>) : RecyclerView.Adapter<FoodApiViewHolder>() {
@@ -19,9 +18,7 @@ class FoodApiAdapter(foods: List<FoodApi>) : RecyclerView.Adapter<FoodApiViewHol
     private var foodsApi = foods
 
     class FoodApiViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
-        val containerView: LinearLayout = view.findViewById(R.id.foodapi_row)
-        val tFoodLabel: TextView = view.findViewById(R.id.foodapi_row_text)
-        val tFoodCalories: TextView = view.findViewById(R.id.foodapi_row_calories)
+        val binding = FoodapiRowBinding.bind(view)
     }
     fun reload(foods: List<FoodApi>) {
         foodsApi = foods
@@ -41,11 +38,11 @@ class FoodApiAdapter(foods: List<FoodApi>) : RecyclerView.Adapter<FoodApiViewHol
         val label = foodsApi[position].label
 
         // Display information of each row
-        holder.tFoodLabel.text = label
-        holder.tFoodCalories.text = calories.toString()
+        holder.binding.tvTitle.text = label
+        holder.binding.tvCalories.text = calories.toString()
 
         // Start new activity on row clicked
-        holder.containerView.setOnClickListener {
+        holder.binding.layoutItem.setOnClickListener {
             val intent = Intent(viewContext, FoodItemActivity::class.java)
             intent.putExtra("position", position)
             intent.putExtra("foodItem", foodsApi[position])

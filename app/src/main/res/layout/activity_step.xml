@@ -10,7 +10,7 @@
         tools:context=".activity.StepActivity">
 
         <com.mikhaellopez.circularprogressbar.CircularProgressBar
-            android:id="@+id/step_counter"
+            android:id="@+id/progress_bar"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_marginTop="100dp"
@@ -32,14 +32,14 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@+id/step_counter"
-            app:layout_constraintEnd_toEndOf="@+id/step_counter"
-            app:layout_constraintStart_toStartOf="@+id/step_counter"
-            app:layout_constraintTop_toTopOf="@+id/step_counter"
+            app:layout_constraintBottom_toBottomOf="@+id/progress_bar"
+            app:layout_constraintEnd_toEndOf="@+id/progress_bar"
+            app:layout_constraintStart_toStartOf="@+id/progress_bar"
+            app:layout_constraintTop_toTopOf="@+id/progress_bar"
             app:layout_constraintVertical_bias="0.513">
 
             <TextView
-                android:id="@+id/step_current_count"
+                android:id="@+id/tv_step_count_current"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
@@ -55,13 +55,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/step_daily_goal_layout"
+            android:id="@+id/layout_daily_goal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/step_counter"
-            app:layout_constraintEnd_toEndOf="@+id/step_counter"
-            app:layout_constraintStart_toStartOf="@+id/step_counter">
+            app:layout_constraintBottom_toTopOf="@+id/progress_bar"
+            app:layout_constraintEnd_toEndOf="@+id/progress_bar"
+            app:layout_constraintStart_toStartOf="@+id/progress_bar">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -79,7 +79,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/step_daily_goal_count"
+                android:id="@+id/tv_step_count_daily"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -97,7 +97,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/toggle_step_counter_button"
+            android:id="@+id/btn_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -106,17 +106,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/step_counter_stats" />
+            app:layout_constraintTop_toBottomOf="@+id/layout_statistics" />
 
         <LinearLayout
-            android:id="@+id/step_counter_stats"
+            android:id="@+id/layout_statistics"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:layout_constraintEnd_toEndOf="@+id/step_counter"
+            app:layout_constraintEnd_toEndOf="@+id/progress_bar"
             app:layout_constraintHorizontal_bias="0.514"
-            app:layout_constraintStart_toStartOf="@+id/step_counter"
-            app:layout_constraintTop_toBottomOf="@+id/step_counter">
+            app:layout_constraintStart_toStartOf="@+id/progress_bar"
+            app:layout_constraintTop_toBottomOf="@+id/progress_bar">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -139,7 +139,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:id="@+id/step_calorie_count"
+                            android:id="@+id/tv_calories_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
@@ -178,7 +178,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:id="@+id/step_distance_count"
+                            android:id="@+id/tv_distance_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
@@ -217,7 +217,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:id="@+id/step_time_count_h"
+                            android:id="@+id/tv_time_count_h"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
@@ -232,7 +232,7 @@
                             android:textSize="16sp" />
 
                         <TextView
-                            android:id="@+id/step_time_count_m"
+                            android:id="@+id/tv_time_count_m"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"

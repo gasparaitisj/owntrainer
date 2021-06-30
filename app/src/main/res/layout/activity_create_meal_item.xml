@@ -18,12 +18,12 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/create_meal_top_app_bar_layout"
+                android:id="@+id/layout_app_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/create_meal_top_app_bar"
+                    android:id="@+id/app_bar"
                     style="@style/Widget.MaterialComponents.Toolbar.Primary"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
@@ -33,13 +33,13 @@
             </com.google.android.material.appbar.AppBarLayout>
 
             <LinearLayout
-                android:id="@+id/create_meal_title_layout"
+                android:id="@+id/layout_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/create_meal_title_input_layout"
+                    android:id="@+id/layout_et_title"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
                     app:startIconDrawable="@drawable/outline_title_24">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/create_meal_title_input_text"
+                        android:id="@+id/et_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textShortMessage"
@@ -60,7 +60,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/create_meal_instructions_layout"
+                    android:id="@+id/layout_et_instructions"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
                     app:startIconDrawable="@drawable/outline_description_24">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/create_meal_instructions_text"
+                        android:id="@+id/et_instructions"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textMultiLine"

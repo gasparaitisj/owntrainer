@@ -3,24 +3,16 @@ package com.gasparaiciukas.owntrainer.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.FoodAdapter.FoodViewHolder
 import com.gasparaiciukas.owntrainer.database.Food
-import java.util.*
+import com.gasparaiciukas.owntrainer.databinding.FoodRowBinding
 
 class FoodAdapter(foodList: List<Food>) : RecyclerView.Adapter<FoodViewHolder>() {
     private val foods: List<Food> = foodList
     class FoodViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
-        private val containerView: LinearLayout = view.findViewById(R.id.food_row)
-        val tFoodTitle: TextView = view.findViewById(R.id.food_row_text)
-        val tFoodCalories: TextView = view.findViewById(R.id.food_row_calories)
-        val tFoodCarbs: TextView = view.findViewById(R.id.food_row_carbs)
-        val tFoodFat: TextView = view.findViewById(R.id.food_row_fat)
-        val tFoodProtein: TextView = view.findViewById(R.id.food_row_protein)
-        val tFoodQuantity: TextView = view.findViewById(R.id.food_row_quantity)
+        val binding = FoodRowBinding.bind(view)
     }
 
     fun reload() {
@@ -42,12 +34,12 @@ class FoodAdapter(foodList: List<Food>) : RecyclerView.Adapter<FoodViewHolder>()
         val title = foods[position].title
 
         // Display information of each row
-        holder.tFoodTitle.text = title
-        holder.tFoodCalories.text = calories.toString()
-        holder.tFoodQuantity.text = quantity.toString()
-        holder.tFoodCarbs.text = carbs.toString()
-        holder.tFoodProtein.text = protein.toString()
-        holder.tFoodFat.text = fat.toString()
+        holder.binding.tvTitle.text = title
+        holder.binding.tvCalories.text = calories.toString()
+        holder.binding.tvQuantity.text = quantity.toString()
+        holder.binding.tvCarbs.text = carbs.toString()
+        holder.binding.tvProtein.text = protein.toString()
+        holder.binding.tvFat.text = fat.toString()
     }
 
     override fun getItemCount(): Int {

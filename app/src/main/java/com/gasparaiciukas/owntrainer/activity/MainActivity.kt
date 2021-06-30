@@ -5,15 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.ActivityMainBinding
 import com.gasparaiciukas.owntrainer.fragment.DiaryFragment
 import com.gasparaiciukas.owntrainer.fragment.FoodFragment
 import com.gasparaiciukas.owntrainer.fragment.ProgressFragment
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import java.time.LocalDate
@@ -23,15 +20,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         initDatabase()
         initAppIntroThread()
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        setContentView(binding.root)
         initUi()
     }
 
     private fun initUi() {
         // Settings (top app bar)
-        binding.topAppBar.setOnMenuItemClickListener { item: MenuItem ->
+        binding.appBar.setOnMenuItemClickListener { item: MenuItem ->
             if (item.itemId == R.id.top_app_bar_settings) {
                 startActivity(Intent(baseContext, SettingsActivity::class.java))
                 return@setOnMenuItemClickListener true
@@ -40,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Bottom navigation bar
-        binding.mainBottomNavigation.setOnNavigationItemSelectedListener { item: MenuItem ->
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { item: MenuItem ->
             val selectedFragment: Fragment
             val selectedFragmentTag: String
             when (item.itemId) {
@@ -65,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
             // Show selected fragment
             val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.main_fragment_frame_layout, selectedFragment, selectedFragmentTag)
+            transaction.replace(R.id.layout_frame_fragment, selectedFragment, selectedFragmentTag)
             transaction.commit()
             true
         }
@@ -90,7 +88,7 @@ class MainActivity : AppCompatActivity() {
                 // Show home fragment
                 val transaction = supportFragmentManager.beginTransaction()
                 transaction.replace(
-                        R.id.main_fragment_frame_layout,
+                        R.id.layout_frame_fragment,
                         DiaryFragment.newInstance(),
                         "DIARY_FRAGMENT")
                 transaction.commit()

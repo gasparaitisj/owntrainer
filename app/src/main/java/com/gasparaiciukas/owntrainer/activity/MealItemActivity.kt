@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
@@ -49,7 +48,8 @@ class MealItemActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_meal_item)
+        binding = ActivityMealItemBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Get selected food position
         position = intent.getIntExtra("position", 0)
@@ -61,8 +61,8 @@ class MealItemActivity : AppCompatActivity() {
         realm.close()
         adapter = FoodAdapter(foodList)
         layoutManager = LinearLayoutManager(this)
-        binding.mealItemRecyclerView.adapter = adapter
-        binding.mealItemRecyclerView.layoutManager = layoutManager
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = layoutManager
 
 
         // Get nutrients from food item
@@ -92,20 +92,20 @@ class MealItemActivity : AppCompatActivity() {
         realm.close()
 
         // Set up text views
-        binding.mealItemTitle.text = meals[position].title
-        binding.mealItemInstructions.text = meals[position].instructions
-        binding.mealItemInstructions.movementMethod = ScrollingMovementMethod()
-        binding.mealItemCarbsWeight.text = carbs.roundToInt().toString()
-        binding.mealItemCarbsPercentage.text =
+        binding.tvTitle.text = meals[position].title
+        binding.tvInstructions.text = meals[position].instructions
+        binding.tvInstructions.movementMethod = ScrollingMovementMethod()
+        binding.tvCarbsWeight.text = carbs.roundToInt().toString()
+        binding.tvCarbsPercentage.text =
             String.format("%s %%", (carbs / carbsDailyIntake * 100).roundToInt())
-        binding.mealItemFatWeight.text = fat.roundToInt().toString()
-        binding.mealItemFatPercentage.text =
+        binding.tvFatWeight.text = fat.roundToInt().toString()
+        binding.tvFatPercentage.text =
             String.format("%s %%", (fat / fatDailyIntake * 100).roundToInt())
-        binding.mealItemProteinWeight.text = protein.roundToInt().toString()
-        binding.mealItemProteinPercentage.text =
+        binding.tvProteinWeight.text = protein.roundToInt().toString()
+        binding.tvProteinPercentage.text =
             String.format("%s %%", (protein / proteinDailyIntake * 100).roundToInt())
-        binding.mealItemCaloriesCount.text = calories.roundToInt().toString()
-        binding.mealItemCaloriesPercentage.text =
+        binding.tvProteinWeight.text = calories.roundToInt().toString()
+        binding.tvProteinPercentage.text =
             String.format("%s %%", (calories / calorieDailyIntake * 100).roundToInt())
 
         // Create colors representing nutrients
@@ -126,18 +126,18 @@ class MealItemActivity : AppCompatActivity() {
         pieData = PieData(pieDataSet)
         pieData.setValueFormatter(NutrientValueFormatter()) // adjust labels
         pieData.setValueTextSize(12f)
-        binding.mealItemPieChart.data = pieData
-        binding.mealItemPieChart.centerText = "${calories.roundToInt()}\nkCal" // calorie text inside inner circle
-        binding.mealItemPieChart.setCenterTextSize(14f)
-        binding.mealItemPieChart.setCenterTextColor(ContextCompat.getColor(this, R.color.colorWhite))
-        binding.mealItemPieChart.centerTextRadiusPercent = 100f
-        binding.mealItemPieChart.setHoleColor(ContextCompat.getColor(this, R.color.colorRed))
-        binding.mealItemPieChart.holeRadius = 30f
-        binding.mealItemPieChart.transparentCircleRadius = 0f
-        binding.mealItemPieChart.legend.isEnabled = false
-        binding.mealItemPieChart.description.isEnabled = false
-        binding.mealItemPieChart.setTouchEnabled(false)
-        binding.mealItemPieChart.invalidate()
+        binding.pieChart.data = pieData
+        binding.pieChart.centerText = "${calories.roundToInt()}\nkCal" // calorie text inside inner circle
+        binding.pieChart.setCenterTextSize(14f)
+        binding.pieChart.setCenterTextColor(ContextCompat.getColor(this, R.color.colorWhite))
+        binding.pieChart.centerTextRadiusPercent = 100f
+        binding.pieChart.setHoleColor(ContextCompat.getColor(this, R.color.colorRed))
+        binding.pieChart.holeRadius = 30f
+        binding.pieChart.transparentCircleRadius = 0f
+        binding.pieChart.legend.isEnabled = false
+        binding.pieChart.description.isEnabled = false
+        binding.pieChart.setTouchEnabled(false)
+        binding.pieChart.invalidate()
     }
 
     override fun onResume() {

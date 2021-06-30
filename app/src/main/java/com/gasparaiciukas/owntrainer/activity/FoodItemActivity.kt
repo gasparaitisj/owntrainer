@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.databinding.ActivityFoodItemBinding
@@ -19,7 +18,7 @@ import kotlin.math.roundToInt
 
 class FoodItemActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFoodItemBinding
-    // Data
+
     private var position = 0
     private var carbs = 0f
     private var carbsPercentage = 0f
@@ -34,24 +33,26 @@ class FoodItemActivity : AppCompatActivity() {
     private var proteinDailyIntake = 0f
     private lateinit var foodItem: FoodApi
 
-    // Pie chart
+
     private lateinit var pieDataSet: PieDataSet
     private lateinit var pieData: PieData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_food_item)
+        binding = ActivityFoodItemBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         fetchData()
         initUi()
     }
+
     private fun fetchData() {
         // Get clicked item position
         foodItem = intent.getParcelableExtra("foodItem")!!
 
-        binding.foodAddToMealButton.setOnClickListener {
+        binding.btnAddToMeal.setOnClickListener {
             val intent = Intent(baseContext, SelectMealItemActivity::class.java)
             intent.putExtra("foodItem", foodItem)
-            intent.putExtra("quantity", binding.foodWeightInputText.text.toString().toInt())
+            intent.putExtra("quantity", binding.etWeight.text.toString().toInt())
             startActivity(intent)
         }
 
@@ -84,16 +85,18 @@ class FoodItemActivity : AppCompatActivity() {
 
     private fun initUi() {
         // Set up text views
-        binding.foodItemTitle.text = foodItem.label
-        binding.foodCarbsWeight.text = carbs.roundToInt().toString()
-        binding.foodCarbsPercentage.text = String.format("%s %%", (carbs / carbsDailyIntake * 100).roundToInt())
-        binding.foodFatWeight.text = fat.roundToInt().toString()
-        binding.foodFatPercentage.text = String.format("%s %%", (fat / fatDailyIntake * 100).roundToInt())
-        binding.foodProteinWeight.text = protein.roundToInt().toString()
-        binding.foodProteinPercentage.text =
+        binding.tvTitle.text = foodItem.label
+        binding.tvCarbsWeight.text = carbs.roundToInt().toString()
+        binding.tvCarbsPercentage.text =
+            String.format("%s %%", (carbs / carbsDailyIntake * 100).roundToInt())
+        binding.tvFatWeight.text = fat.roundToInt().toString()
+        binding.tvFatPercentage.text =
+            String.format("%s %%", (fat / fatDailyIntake * 100).roundToInt())
+        binding.tvProteinWeight.text = protein.roundToInt().toString()
+        binding.tvProteinPercentage.text =
             String.format("%s %%", (protein / proteinDailyIntake * 100).roundToInt())
-        binding.foodCaloriesCount.text = calories.roundToInt().toString()
-        binding.foodCaloriesPercentage.text =
+        binding.tvCaloriesCount.text = calories.roundToInt().toString()
+        binding.tvCaloriesPercentage.text =
             String.format("%s %%", (calories / calorieDailyIntake * 100).roundToInt())
 
         // Create colors representing nutrients
@@ -115,17 +118,18 @@ class FoodItemActivity : AppCompatActivity() {
         pieData = PieData(pieDataSet)
         pieData.setValueFormatter(NutrientValueFormatter()) // adjust labels
         pieData.setValueTextSize(12f)
-        binding.foodPieChart.data = pieData
-        binding.foodPieChart.centerText = "${calories.roundToInt()}\nkCal" // calorie text inside inner circle
-        binding.foodPieChart.setCenterTextSize(14f)
-        binding.foodPieChart.setCenterTextColor(ContextCompat.getColor(this, R.color.colorWhite))
-        binding.foodPieChart.centerTextRadiusPercent = 100f
-        binding.foodPieChart.setHoleColor(ContextCompat.getColor(this, R.color.colorRed))
-        binding.foodPieChart.holeRadius = 30f
-        binding.foodPieChart.transparentCircleRadius = 0f
-        binding.foodPieChart.legend.isEnabled = false
-        binding.foodPieChart.description.isEnabled = false
-        binding.foodPieChart.setTouchEnabled(false)
-        binding.foodPieChart.invalidate()
+        binding.pieChart.data = pieData
+        binding.pieChart.centerText =
+            "${calories.roundToInt()}\nkCal" // calorie text inside inner circle
+        binding.pieChart.setCenterTextSize(14f)
+        binding.pieChart.setCenterTextColor(ContextCompat.getColor(this, R.color.colorWhite))
+        binding.pieChart.centerTextRadiusPercent = 100f
+        binding.pieChart.setHoleColor(ContextCompat.getColor(this, R.color.colorRed))
+        binding.pieChart.holeRadius = 30f
+        binding.pieChart.transparentCircleRadius = 0f
+        binding.pieChart.legend.isEnabled = false
+        binding.pieChart.description.isEnabled = false
+        binding.pieChart.setTouchEnabled(false)
+        binding.pieChart.invalidate()
     }
 }

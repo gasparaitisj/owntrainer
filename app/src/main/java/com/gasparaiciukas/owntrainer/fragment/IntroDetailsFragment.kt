@@ -8,15 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.User
-import com.google.android.material.textfield.TextInputEditText
+import com.gasparaiciukas.owntrainer.databinding.FragmentIntroDetailsBinding
 import io.realm.Realm
 import java.util.*
 
 class IntroDetailsFragment : Fragment() {
+    private var _binding: FragmentIntroDetailsBinding? = null
+    private val binding get() = _binding!!
     private var sex = "Male"
     private var age = 25
     private var height = 180
@@ -24,32 +25,30 @@ class IntroDetailsFragment : Fragment() {
     private var lifestyle = "Lightly active"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_intro_details, container, false)
-        initUi(rootView)
-        return rootView
+                              savedInstanceState: Bundle?): View {
+        _binding = FragmentIntroDetailsBinding.inflate(inflater, container, false)
+        initUi()
+        return binding.root
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         writeUserToDatabase()
+        _binding = null
     }
+    //deleted onDestroy() for writeUserToDatabase()
 
-    private fun initUi(rootView: View) {
-        val sexMenu = rootView.findViewById<AutoCompleteTextView>(R.id.intro_details_sex_menu)
-        val tAge = rootView.findViewById<TextInputEditText>(R.id.intro_details_age_text)
-        val tHeight = rootView.findViewById<TextInputEditText>(R.id.intro_details_height_text)
-        val tWeight = rootView.findViewById<TextInputEditText>(R.id.intro_details_weight_text)
-        val lifestyleMenu = rootView.findViewById<AutoCompleteTextView>(R.id.intro_details_lifestyle_menu)
-
+    private fun initUi() {
         // Sex menu input listener
         val sexList: List<String> = ArrayList(listOf("Male", "Female"))
-        val sexAdapter: ArrayAdapter<*> = ArrayAdapter<Any>(requireContext(), R.layout.details_list_item, sexList)
-        sexMenu.setAdapter(sexAdapter)
-        sexMenu.onItemClickListener = OnItemClickListener { _, _, _, _ -> sex = sexMenu.text.toString() }
+        val sexAdapter: ArrayAdapter<*> =
+            ArrayAdapter<Any>(requireContext(), R.layout.details_list_item, sexList)
+        binding.etSex.setAdapter(sexAdapter)
+        binding.etSex.onItemClickListener =
+            OnItemClickListener { _, _, _, _ -> sex = binding.etSex.text.toString() }
 
         // Age field text listener
-        tAge.addTextChangedListener(object : TextWatcher {
+        binding.etAge.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // do nothing
             }
@@ -64,7 +63,7 @@ class IntroDetailsFragment : Fragment() {
         })
 
         // Height field text listener
-        tHeight.addTextChangedListener(object : TextWatcher {
+        binding.etHeight.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // do nothing
             }
@@ -79,7 +78,7 @@ class IntroDetailsFragment : Fragment() {
         })
 
         // Weight field text listener
-        tWeight.addTextChangedListener(object : TextWatcher {
+        binding.etWeight.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // do nothing
             }
@@ -94,15 +93,17 @@ class IntroDetailsFragment : Fragment() {
         })
 
         // Lifestyle menu input listener
-        lifestyleMenu.onItemClickListener = OnItemClickListener { _, _, _, _ -> lifestyle = lifestyleMenu.text.toString() }
+        binding.etLifestyle.onItemClickListener =
+            OnItemClickListener { _, _, _, _ -> lifestyle = binding.etLifestyle.text.toString() }
         val lifestyleList: List<String> = ArrayList(listOf(
                 "Sedentary",
                 "Lightly active",
                 "Moderately active",
                 "Very active",
                 "Extra active"))
-        val lifestyleAdapter: ArrayAdapter<*> = ArrayAdapter<Any>(requireContext(), R.layout.details_list_item, lifestyleList)
-        lifestyleMenu.setAdapter(lifestyleAdapter)
+        val lifestyleAdapter: ArrayAdapter<*> =
+            ArrayAdapter<Any>(requireContext(), R.layout.details_list_item, lifestyleList)
+        binding.etLifestyle.setAdapter(lifestyleAdapter)
     }
 
     private fun writeUserToDatabase() {
@@ -117,10 +118,8 @@ class IntroDetailsFragment : Fragment() {
         user.lifestyle = lifestyle
         user.stepLengthInCm = user.calculateStepLengthInCm(height.toDouble(), sex)
         user.bmr = user.calculateBmr(weight, height.toDouble(), age, sex)
-        user.kcalBurnedPerStep = user.calculateKcalBurnedPerStep(
-                weight,
-                height.toDouble(),
-                user.avgWalkingSpeedInKmH)
+        user.kcalBurnedPerStep =
+            user.calculateKcalBurnedPerStep(weight, height.toDouble(), user.avgWalkingSpeedInKmH)
         user.dailyKcalIntake = user.calculateDailyKcalIntake(user.bmr, lifestyle)
         user.dailyCarbsIntakeInG = user.calculateDailyCarbsIntake(user.dailyKcalIntake)
         user.dailyFatIntakeInG = user.calculateDailyFatIntake(user.dailyKcalIntake)

@@ -9,7 +9,7 @@
         tools:context=".activity.MealItemActivity">
 
         <LinearLayout
-            android:id="@+id/meal_item_title_layout"
+            android:id="@+id/layout_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -22,7 +22,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/meal_item_title"
+                android:id="@+id/tv_title"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/meal_item_pie_chart_layout"
+            android:id="@+id/layout_pie_chart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -40,22 +40,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/meal_item_title_layout">
+            app:layout_constraintTop_toBottomOf="@+id/layout_title">
 
             <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/meal_item_pie_chart"
+                android:id="@+id/pie_chart"
                 android:layout_width="200dp"
                 android:layout_height="200dp" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/meal_item_nutrition_layout"
+            android:id="@+id/layout_nutrition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/meal_item_pie_chart_layout">
+            app:layout_constraintTop_toBottomOf="@+id/layout_pie_chart">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -81,7 +81,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:id="@+id/meal_item_protein_weight"
+                            android:id="@+id/tv_protein_weight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="80,3"
@@ -98,7 +98,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/meal_item_protein_percentage"
+                        android:id="@+id/tv_protein_percentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorPrimaryDark"
@@ -124,7 +124,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:id="@+id/meal_item_fat_weight"
+                            android:id="@+id/tv_fat_weight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/colorPrimaryDark"
@@ -139,7 +139,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/meal_item_fat_percentage"
+                        android:id="@+id/tv_fat_percentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorPrimaryDark"
@@ -165,7 +165,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:id="@+id/meal_item_carbs_weight"
+                            android:id="@+id/tv_carbs_weight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/colorPrimaryDark"
@@ -180,7 +180,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/meal_item_carbs_percentage"
+                        android:id="@+id/tv_carbs_percentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorPrimaryDark"
@@ -206,7 +206,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/meal_item_calories_count"
+                        android:id="@+id/tv_calories_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorPrimaryDark"
@@ -221,7 +221,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/meal_item_calories_percentage"
+                    android:id="@+id/tv_calories_percentage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorPrimaryDark"
@@ -231,7 +231,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/meal_item_instructions_layout"
+            android:id="@+id/layout_instructions"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:orientation="vertical"
@@ -239,7 +239,7 @@
             android:paddingTop="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/meal_item_nutrition_layout">
+            app:layout_constraintTop_toBottomOf="@+id/layout_nutrition">
 
             <TextView
                 style="@style/TextAppearance.MaterialComponents.Body1"
@@ -251,7 +251,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/meal_item_instructions"
+                android:id="@+id/tv_instructions"
                 style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -263,14 +263,14 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/meal_item_ingredients_layout"
+            android:id="@+id/layout_ingredients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            app:layout_constraintBottom_toTopOf="@+id/meal_item_recycler_view"
+            app:layout_constraintBottom_toTopOf="@+id/recycler_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/meal_item_instructions_layout">
+            app:layout_constraintTop_toBottomOf="@+id/layout_instructions">
 
             <TextView
                 style="@style/TextAppearance.MaterialComponents.Body1"
@@ -283,7 +283,7 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/meal_item_recycler_view"
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
@@ -291,6 +291,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/meal_item_ingredients_layout" />
+            app:layout_constraintTop_toBottomOf="@+id/layout_ingredients" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

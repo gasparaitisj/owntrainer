@@ -1,12 +1,10 @@
 package com.gasparaiciukas.owntrainer.activity
 
-import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.gasparaiciukas.owntrainer.R
+import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.databinding.ActivitySelectMealItemBinding
 import com.gasparaiciukas.owntrainer.network.FoodApi
@@ -23,7 +21,8 @@ class SelectMealItemActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_select_meal_item)
+        binding = ActivitySelectMealItemBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Get selected food position
         foodItem = intent.getParcelableExtra("foodItem")!!
@@ -38,8 +37,8 @@ class SelectMealItemActivity : AppCompatActivity() {
         // Set up recycler view
         adapter = MealAdapter(2, foodItem, meals, quantity.toDouble())
         layoutManager = LinearLayoutManager(this)
-        binding.selectMealItemRecyclerView.adapter = adapter
-        binding.selectMealItemRecyclerView.layoutManager = layoutManager
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = layoutManager
     }
 
     override fun onResume() {

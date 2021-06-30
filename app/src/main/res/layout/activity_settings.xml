@@ -9,7 +9,7 @@
         tools:context=".activity.SettingsActivity">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/settings_top_app_bar_layout"
+            android:id="@+id/layout_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -17,7 +17,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/settings_top_app_bar"
+                android:id="@+id/app_bar"
                 style="@style/Widget.MaterialComponents.Toolbar.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -33,10 +33,10 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/settings_top_app_bar_layout">
+            app:layout_constraintTop_toBottomOf="@+id/layout_app_bar">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/settings_sex_layout"
+                android:id="@+id/layout_et_sex"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -47,14 +47,14 @@
                 app:startIconDrawable="@drawable/outline_male_24">
 
                 <AutoCompleteTextView
-                    android:id="@+id/settings_sex_menu"
+                    android:id="@+id/et_sex"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/settings_age_layout"
+                android:id="@+id/layout_et_age"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                 app:suffixText="years">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/settings_age_text"
+                    android:id="@+id/et_age"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
@@ -75,7 +75,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/settings_height_layout"
+                android:id="@+id/layout_et_height"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
                 app:suffixText="(cm)">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/settings_height_text"
+                    android:id="@+id/et_height"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
@@ -96,7 +96,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/settings_weight_layout"
+                android:id="@+id/layout_et_weight"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
                 app:suffixText="(kg)">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/settings_weight_text"
+                    android:id="@+id/et_weight"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
@@ -117,7 +117,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/settings_lifestyle_layout"
+                android:id="@+id/layout_et_lifestyle"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
                 app:startIconDrawable="@drawable/outline_run_circle_24">
 
                 <AutoCompleteTextView
-                    android:id="@+id/settings_lifestyle_menu"
+                    android:id="@+id/et_lifestyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none" />

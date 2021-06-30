@@ -6,8 +6,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.activity.MainActivity
@@ -15,6 +13,7 @@ import com.gasparaiciukas.owntrainer.activity.MealItemActivity
 import com.gasparaiciukas.owntrainer.database.DiaryEntry
 import com.gasparaiciukas.owntrainer.database.Food
 import com.gasparaiciukas.owntrainer.database.Meal
+import com.gasparaiciukas.owntrainer.databinding.MealRowBinding
 import com.gasparaiciukas.owntrainer.network.FoodApi
 import io.realm.Realm
 import java.util.*
@@ -28,9 +27,7 @@ class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder> {
     private val mPortionSize = 0
 
     class MealViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
-        val containerView: LinearLayout = view.findViewById(R.id.meal_row)
-        val tMealTitle: TextView = view.findViewById(R.id.meal_row_text)
-        val tMealCalories: TextView = view.findViewById(R.id.meal_row_calories)
+        val binding = MealRowBinding.bind(view)
     }
 
     // Type 1 constructor (transfer to meal item activity)
@@ -75,9 +72,9 @@ class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder> {
         val title = meals[position].title
 
         // Display information of each row
-        holder.tMealTitle.text = title
-        holder.tMealCalories.text = calories.toString()
-        holder.containerView.setOnClickListener { v ->
+        holder.binding.tvTitle.text = title
+        holder.binding.tvCalories.text = calories.toString()
+        holder.binding.layoutItem.setOnClickListener { v ->
             // If not selectable, start new activity on row clicked
             when (mAdapterType) {
                 1 -> {

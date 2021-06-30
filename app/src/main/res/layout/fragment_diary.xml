@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/diary_fragment_layout"
+        android:id="@+id/layout_fragment_diary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorSmokeDark">
 
         <LinearLayout
-            android:id="@+id/diary_navigation_layout"
+            android:id="@+id/layout_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -18,7 +18,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
-                android:id="@+id/diary_back_button"
+                android:id="@+id/btn_back"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
@@ -33,7 +33,7 @@
                 android:gravity="center">
 
                 <TextView
-                    android:id="@+id/diary_current_day_of_week"
+                    android:id="@+id/tv_day_of_week"
                     style="@style/TextAppearance.MaterialComponents.Headline6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                     android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
-                    android:id="@+id/diary_current_month_of_year"
+                    android:id="@+id/tv_month_of_year"
                     style="@style/TextAppearance.MaterialComponents.Headline6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
                     android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
-                    android:id="@+id/diary_current_day_of_month"
+                    android:id="@+id/tv_day_of_month"
                     style="@style/TextAppearance.MaterialComponents.Headline6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
             </LinearLayout>
 
             <ImageButton
-                android:id="@+id/diary_forward_button"
+                android:id="@+id/btn_forward"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
@@ -83,16 +83,16 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/diary_daily_goal_layout"
+            android:id="@+id/layout_statistics"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/diary_navigation_layout">
+            app:layout_constraintTop_toBottomOf="@+id/layout_navigation">
 
             <LinearLayout
-                android:id="@+id/diary_daily_goal_calories_layout"
+                android:id="@+id/layout_calories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -107,7 +107,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/diary_daily_goal_calories_percentage"
+                    android:id="@+id/tv_calories_percentage"
                     style="@style/TextAppearance.MaterialComponents.Caption"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/diary_daily_goal_calories_consumed"
+                    android:id="@+id/tv_calories_consumed"
                     style="@style/TextAppearance.MaterialComponents.Caption"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
@@ -143,7 +143,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/diary_daily_goal_calories_intake"
+                    android:id="@+id/tv_calories_intake"
                     style="@style/TextAppearance.MaterialComponents.Caption"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
@@ -161,7 +161,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/diary_daily_goal_protein_layout"
+                android:id="@+id/layout_protein"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -176,7 +176,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/diary_daily_goal_protein_percentage"
+                    android:id="@+id/tv_protein_percentage"
                     style="@style/TextAppearance.MaterialComponents.Caption"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
@@ -194,7 +194,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/diary_daily_goal_protein_consumed"
+                    android:id="@+id/tv_protein_consumed"
                     style="@style/TextAppearance.MaterialComponents.Caption"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
@@ -212,7 +212,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/diary_daily_goal_protein_intake"
+                    android:id="@+id/tv_protein_intake"
                     style="@style/TextAppearance.MaterialComponents.Caption"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
@@ -231,7 +231,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/diary_daily_goal_carbs_layout"
+                android:id="@+id/layout_carbs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -246,7 +246,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/diary_daily_goal_carbs_percentage"
+                    android:id="@+id/tv_carbs_percentage"
                     style="@style/TextAppearance.MaterialComponents.Caption"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
@@ -264,7 +264,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/diary_daily_goal_carbs_consumed"
+                    android:id="@+id/tv_carbs_consumed"
                     style="@style/TextAppearance.MaterialComponents.Caption"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
@@ -282,7 +282,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/diary_daily_goal_carbs_intake"
+                    android:id="@+id/tv_carbs_intake"
                     style="@style/TextAppearance.MaterialComponents.Caption"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
@@ -301,7 +301,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/diary_daily_goal_fat_layout"
+                android:id="@+id/layout_fat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -316,7 +316,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/diary_daily_goal_fat_percentage"
+                    android:id="@+id/tv_fat_percentage"
                     style="@style/TextAppearance.MaterialComponents.Caption"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
@@ -334,7 +334,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/diary_daily_goal_fat_consumed"
+                    android:id="@+id/tv_fat_consumed"
                     style="@style/TextAppearance.MaterialComponents.Caption"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
@@ -352,7 +352,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/diary_daily_goal_fat_intake"
+                    android:id="@+id/tv_fat_intake"
                     style="@style/TextAppearance.MaterialComponents.Caption"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
@@ -372,7 +372,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/diary_meal_text_layout"
+            android:id="@+id/layout_meals"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginTop="20dp"
@@ -381,7 +381,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/diary_daily_goal_layout">
+            app:layout_constraintTop_toBottomOf="@+id/layout_statistics">
 
             <TextView
                 style="@style/TextAppearance.MaterialComponents.Headline6"
@@ -391,7 +391,7 @@
                 android:textColor="@color/colorPrimaryDark" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/diary_meal_recycler_view"
+                android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginTop="5dp"
@@ -403,7 +403,7 @@
             android:layout_height="match_parent">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/diary_fab_add_meal"
+                android:id="@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"

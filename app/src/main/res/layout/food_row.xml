@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-        android:id="@+id/food_row"
+        android:id="@+id/layout_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
@@ -16,7 +16,7 @@
         android:paddingEnd="5dp">
 
         <TextView
-            android:id="@+id/food_row_text"
+            android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/food_row_quantity"
+                    android:id="@+id/tv_quantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
@@ -52,7 +52,7 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:id="@+id/food_row_calories"
+                    android:id="@+id/tv_calories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
@@ -77,7 +77,7 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:id="@+id/food_row_protein"
+                    android:id="@+id/tv_protein"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
@@ -97,7 +97,7 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:id="@+id/food_row_carbs"
+                    android:id="@+id/tv_carbs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
@@ -117,7 +117,7 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:id="@+id/food_row_fat"
+                    android:id="@+id/tv_fat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />

@@ -9,7 +9,7 @@
         tools:context=".activity.FoodItemActivity">
 
         <LinearLayout
-            android:id="@+id/food_title_layout"
+            android:id="@+id/layout_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -21,7 +21,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/food_item_title"
+                android:id="@+id/tv_title"
                 style="@style/TextAppearance.MaterialComponents.Headline4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -33,17 +33,17 @@
 
 
         <LinearLayout
-            android:id="@+id/food_weight_layout"
+            android:id="@+id/layout_weight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/food_title_layout">
+            app:layout_constraintTop_toBottomOf="@+id/layout_title">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/food_weight_input_layout"
+                android:id="@+id/layout_et_weight"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                 app:suffixText="(g)">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/food_weight_input_text"
+                    android:id="@+id/et_weight"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
@@ -65,7 +65,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/food_pie_chart_layout"
+            android:id="@+id/layout_pie_chart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -73,23 +73,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/food_weight_layout">
+            app:layout_constraintTop_toBottomOf="@+id/layout_weight">
 
             <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/food_pie_chart"
+                android:id="@+id/pie_chart"
                 android:layout_width="200dp"
                 android:layout_height="200dp" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/food_nutrition_layout"
+            android:id="@+id/layout_nutrition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/food_pie_chart_layout">
+            app:layout_constraintTop_toBottomOf="@+id/layout_pie_chart">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -115,7 +115,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:id="@+id/food_protein_weight"
+                            android:id="@+id/tv_protein_weight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="80,3"
@@ -132,7 +132,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/food_protein_percentage"
+                        android:id="@+id/tv_protein_percentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorPrimaryDark"
@@ -159,7 +159,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:id="@+id/food_fat_weight"
+                            android:id="@+id/tv_fat_weight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/colorPrimaryDark"
@@ -174,7 +174,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/food_fat_percentage"
+                        android:id="@+id/tv_fat_percentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorPrimaryDark"
@@ -201,7 +201,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:id="@+id/food_carbs_weight"
+                            android:id="@+id/tv_carbs_weight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/colorPrimaryDark"
@@ -216,7 +216,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/food_carbs_percentage"
+                        android:id="@+id/tv_carbs_percentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorPrimaryDark"
@@ -242,7 +242,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/food_calories_count"
+                        android:id="@+id/tv_calories_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorPrimaryDark"
@@ -257,7 +257,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/food_calories_percentage"
+                    android:id="@+id/tv_calories_percentage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorPrimaryDark"
@@ -272,10 +272,10 @@
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/food_nutrition_layout">
+            app:layout_constraintTop_toBottomOf="@+id/layout_nutrition">
 
             <Button
-                android:id="@+id/food_add_to_meal_button"
+                android:id="@+id/btn_add_to_meal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add_to_meal" />

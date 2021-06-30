@@ -13,7 +13,7 @@
             android:layout_height="match_parent">
 
             <com.google.android.material.tabs.TabLayout
-                android:id="@+id/food_tab_layout"
+                android:id="@+id/layout_tab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -22,20 +22,20 @@
                 app:tabMode="fixed">
 
                 <com.google.android.material.tabs.TabItem
-                    android:id="@+id/food_tab_foods"
+                    android:id="@+id/tab_foods"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/foods" />
 
                 <com.google.android.material.tabs.TabItem
-                    android:id="@+id/food_tab_meals"
+                    android:id="@+id/tab_meals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/meals" />
             </com.google.android.material.tabs.TabLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/food_input_layout"
+                android:id="@+id/layout_et_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/food_search"
@@ -44,10 +44,10 @@
                 app:endIconMode="custom"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/food_tab_layout">
+                app:layout_constraintTop_toBottomOf="@+id/layout_tab">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/food_input_text"
+                    android:id="@+id/et_search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionSearch"
@@ -57,7 +57,7 @@
 
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/food_recycler_view"
+                android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -65,7 +65,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/food_input_layout" />
+                app:layout_constraintTop_toBottomOf="@+id/layout_et_search" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </FrameLayout>

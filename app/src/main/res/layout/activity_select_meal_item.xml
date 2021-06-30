@@ -9,7 +9,7 @@
         tools:context=".activity.SelectMealItemActivity">
 
         <TextView
-            android:id="@+id/select_meal_item_title"
+            android:id="@+id/tv_title"
             style="@style/TextAppearance.MaterialComponents.Headline5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/select_meal_item_recycler_view"
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -30,7 +30,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/select_meal_item_title" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

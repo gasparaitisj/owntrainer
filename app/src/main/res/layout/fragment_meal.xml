@@ -8,7 +8,7 @@
         tools:context=".fragment.MealFragment">
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/meal_tab_layout"
+            android:id="@+id/layout_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -17,34 +17,34 @@
             app:tabMode="fixed">
 
             <com.google.android.material.tabs.TabItem
-                android:id="@+id/meal_tab_foods"
+                android:id="@+id/tab_foods"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/foods" />
 
             <com.google.android.material.tabs.TabItem
-                android:id="@+id/meal_tab_meals"
+                android:id="@+id/tab_meals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/meals" />
         </com.google.android.material.tabs.TabLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/meal_recycler_view"
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constrainedHeight="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/meal_tab_layout" />
+            app:layout_constraintTop_toBottomOf="@+id/layout_tab" />
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/meal_fab_add"
+                android:id="@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"

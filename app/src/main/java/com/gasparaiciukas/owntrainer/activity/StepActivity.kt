@@ -12,7 +12,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.PedometerEntry
 import com.gasparaiciukas.owntrainer.database.User
@@ -43,7 +42,8 @@ class StepActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_step)
+        binding = ActivityStepBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Load data
         loadData()
@@ -60,23 +60,23 @@ class StepActivity : AppCompatActivity() {
         //Log.d("test", "Service is running:" + isServiceRunning);
 
         // Show data
-        binding.stepCounter.progress = currentSteps.toFloat()
-        binding.stepCurrentCount.text = currentSteps.toString()
-        binding.stepCalorieCount.text = calories.toString()
-        binding.stepDistanceCount.text = String.format("%.2f", distance)
-        binding.stepDailyGoalCount.text = dailyStepGoal.toString()
-        binding.stepTimeCountH.text = (totalTimeElapsedInS / 3600).toString()
-        binding.stepTimeCountM.text = (totalTimeElapsedInS % 3600 / 60).toString()
+        binding.progressBar.progress = currentSteps.toFloat()
+        binding.tvStepCountCurrent.text = currentSteps.toString()
+        binding.tvCaloriesCount.text = calories.toString()
+        binding.tvDistanceCount.text = String.format("%.2f", distance)
+        binding.tvStepCountDaily.text = dailyStepGoal.toString()
+        binding.tvTimeCountH.text = (totalTimeElapsedInS / 3600).toString()
+        binding.tvTimeCountM.text = (totalTimeElapsedInS % 3600 / 60).toString()
         if (isStepCounterServiceRunning) {
-            binding.toggleStepCounterButton.setText(R.string.stop)
+            binding.btnStart.setText(R.string.stop)
         } else {
-            binding.toggleStepCounterButton.setText(R.string.start)
+            binding.btnStart.setText(R.string.start)
         }
 
         // Set up intent
         serviceIntent = Intent(this, StepCounterService::class.java)
         serviceIntent.putExtra("currentSteps", currentSteps)
-        binding.toggleStepCounterButton.setOnClickListener {
+        binding.btnStart.setOnClickListener {
             if (isStepCounterServiceRunning) onStopButtonClicked()
             else onStartButtonClicked()
         }
@@ -95,10 +95,10 @@ class StepActivity : AppCompatActivity() {
             saveSteps()
             calories = (currentSteps * kcalBurnedPerStep).toInt()
             distance = currentSteps * (stepLengthInCm / 100000)
-            binding.stepCounter.setProgressWithAnimation(currentSteps.toFloat())
-            binding.stepCurrentCount.text = currentSteps.toString()
-            binding.stepCalorieCount.text = calories.toString()
-            binding.stepDistanceCount.text = String.format("%.2f", distance)
+            binding.progressBar.setProgressWithAnimation(currentSteps.toFloat())
+            binding.tvStepCountCurrent.text = currentSteps.toString()
+            binding.tvCaloriesCount.text = calories.toString()
+            binding.tvDistanceCount.text = String.format("%.2f", distance)
             //Log.d("test", "Bar updated! (Steps: " + currentSteps + ")");
         }
     }
@@ -111,19 +111,19 @@ class StepActivity : AppCompatActivity() {
         totalTimeElapsedInS = 0
 
         // Reset UI
-        binding.stepCounter.setProgressWithAnimation(currentSteps.toFloat())
-        binding.stepCurrentCount.text = currentSteps.toString()
-        binding.stepCalorieCount.text = calories.toString()
-        binding.stepDistanceCount.text = String.format("%.2f", distance)
-        binding.stepTimeCountH.text = (totalTimeElapsedInS / 3600).toString()
-        binding.stepTimeCountM.text = (totalTimeElapsedInS % 3600 / 60).toString()
+        binding.progressBar.setProgressWithAnimation(currentSteps.toFloat())
+        binding.tvStepCountCurrent.text = currentSteps.toString()
+        binding.tvCaloriesCount.text = calories.toString()
+        binding.tvDistanceCount.text = String.format("%.2f", distance)
+        binding.tvTimeCountH.text = (totalTimeElapsedInS / 3600).toString()
+        binding.tvTimeCountH.text = (totalTimeElapsedInS % 3600 / 60).toString()
         saveSteps()
         //Log.d("test", "Steps reset!");
     }
 
     // Resets step counter, when long clicked on step counter
     private fun resetStepsOnClick() {
-        binding.stepCounter.setOnLongClickListener {
+        binding.progressBar.setOnLongClickListener {
             resetSteps()
             true
         }
@@ -219,7 +219,7 @@ class StepActivity : AppCompatActivity() {
         startService(serviceIntent)
         isStepCounterServiceRunning = true
         registerReceiver(broadcastReceiver, IntentFilter(StepCounterService.BROADCAST_PEDOMETER))
-        binding.toggleStepCounterButton.setText(R.string.stop)
+        binding.btnStart.setText(R.string.stop)
         startTimeInS = System.currentTimeMillis() / 1000
     }
 
@@ -237,7 +237,7 @@ class StepActivity : AppCompatActivity() {
         stopService(serviceIntent)
         saveSteps()
         isStepCounterServiceRunning = false
-        binding.toggleStepCounterButton.setText(R.string.start)
+        binding.btnStart.setText(R.string.start)
     }
 
     private val isServiceRunning: Boolean

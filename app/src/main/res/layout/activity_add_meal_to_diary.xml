@@ -9,7 +9,7 @@
         tools:context=".activity.AddMealToDiaryActivity">
 
         <TextView
-            android:id="@+id/add_meal_to_diary_title"
+            android:id="@+id/tv_title"
             style="@style/TextAppearance.MaterialComponents.Headline4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/add_meal_to_diary_recycler_view"
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -29,7 +29,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_meal_to_diary_title" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
