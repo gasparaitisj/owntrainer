@@ -128,10 +128,4 @@ class IntroDetailsFragment : Fragment() {
         realmInstance.executeTransaction { realm -> realm.insertOrUpdate(user) }
         realmInstance.close()
     }
-
-    companion object {
-        fun newInstance(): IntroDetailsFragment {
-            return IntroDetailsFragment()
-        }
-    }
 }

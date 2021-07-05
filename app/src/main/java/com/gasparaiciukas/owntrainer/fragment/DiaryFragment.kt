@@ -1,6 +1,5 @@
 package com.gasparaiciukas.owntrainer.fragment
 
-import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,12 +12,16 @@ import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.activity.AddMealToDiaryActivity
+import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.DiaryEntry
+import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.databinding.FragmentDiaryBinding
+import com.gasparaiciukas.owntrainer.utils.DateFormatter
 import io.realm.Realm
 import java.time.LocalDate
 import kotlin.math.roundToInt
+
 //TODO: Fix FAB action and back button
 class DiaryFragment : Fragment() {
     private var _binding: FragmentDiaryBinding? = null
@@ -101,8 +104,8 @@ class DiaryFragment : Fragment() {
 
     private fun initUi(rootView: View) {
         // Navigation
-        binding.tvDayOfWeek.text = dayOfWeekToString(diaryEntry.dayOfWeek)
-        binding.tvMonthOfYear.text = monthOfYearToString(diaryEntry.monthOfYear)
+        binding.tvDayOfWeek.text = DateFormatter.dayOfWeekToString(diaryEntry.dayOfWeek)
+        binding.tvMonthOfYear.text = DateFormatter.monthOfYearToString(diaryEntry.monthOfYear)
         binding.tvDayOfMonth.text = diaryEntry.dayOfMonth.toString()
 
         // Intakes
@@ -153,7 +156,7 @@ class DiaryFragment : Fragment() {
             // Refresh fragment and show previous day
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                replace(R.id.layout_frame_fragment, newInstance())
+                replace(R.id.layout_frame_fragment, DiaryFragment())
             }
         }
 
@@ -172,7 +175,7 @@ class DiaryFragment : Fragment() {
             // Refresh fragment and show next day
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                replace(R.id.layout_frame_fragment, newInstance())
+                replace(R.id.layout_frame_fragment, DiaryFragment())
             }
         }
     }
@@ -180,45 +183,9 @@ class DiaryFragment : Fragment() {
     private fun initRecyclerView() {
         // Set up recycler view
         val layoutManager = LinearLayoutManager(context)
-        adapter = MealAdapter(4, diaryEntry.meals)
+        val passLambda: (_1: Meal, _2: Int) -> Unit = { _: Meal, _: Int -> }
+        adapter = MealAdapter(diaryEntry.meals, passLambda)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
-    }
-
-    private fun dayOfWeekToString(dayOfWeek: Int): String {
-        return when (dayOfWeek) {
-            1 -> "Mon"
-            2 -> "Tue"
-            3 -> "Wed"
-            4 -> "Thu"
-            5 -> "Fri"
-            6 -> "Sat"
-            7 -> "Sun"
-            else -> ""
-        }
-    }
-
-    private fun monthOfYearToString(monthOfYear: Int): String {
-        return when (monthOfYear) {
-            1 -> " January "
-            2 -> " February "
-            3 -> " March "
-            4 -> " April "
-            5 -> " May "
-            6 -> " June "
-            7 -> " July "
-            8 -> " August "
-            9 -> " September "
-            10 -> " October "
-            11 -> " November "
-            12 -> " December "
-            else -> ""
-        }
-    }
-
-    companion object {
-        fun newInstance(): DiaryFragment {
-            return DiaryFragment()
-        }
     }
 }

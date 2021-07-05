@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
+import com.gasparaiciukas.owntrainer.database.DiaryEntry
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.databinding.ActivityAddMealToDiaryBinding
 import io.realm.Realm
@@ -15,6 +16,21 @@ class AddMealToDiaryActivity : AppCompatActivity() {
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var primaryKey: String
     private lateinit var realm: Realm
+    private val listener: (meal: Meal, position: Int) -> Unit = { meal: Meal, position: Int ->
+        val realm = Realm.getDefaultInstance()
+        val diaryEntry = realm.where(DiaryEntry::class.java)
+            .equalTo("yearAndDayOfYear", primaryKey)
+            .findFirst()
+        if (diaryEntry != null) {
+            val mealList = diaryEntry.meals
+            realm.executeTransaction {
+                mealList.add(meal)
+                diaryEntry.meals = mealList
+            }
+        }
+        realm.close()
+        finish()
+    }
     //private val portionSizeInput: TextInputEditText? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +43,7 @@ class AddMealToDiaryActivity : AppCompatActivity() {
         val meals: List<Meal> = realm.where(Meal::class.java).findAll()
 
         // Set up recycler view
-        adapter = MealAdapter(3, meals, primaryKey)
+        adapter = MealAdapter(meals, listener)
         layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = layoutManager

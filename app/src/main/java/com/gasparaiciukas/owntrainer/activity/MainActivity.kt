@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             val selectedFragmentTag: String
             when (item.itemId) {
                 R.id.navbar_item_1 -> {
-                    selectedFragment = DiaryFragment.newInstance()
+                    selectedFragment = DiaryFragment()
                     selectedFragmentTag = "DIARY_FRAGMENT"
                 }
                 R.id.navbar_item_2 -> {
@@ -51,11 +51,11 @@ class MainActivity : AppCompatActivity() {
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navbar_item_3 -> {
-                    selectedFragment = FoodFragment.newInstance()
+                    selectedFragment = FoodFragment()
                     selectedFragmentTag = "FOOD_FRAGMENT"
                 }
                 R.id.navbar_item_4 -> {
-                    selectedFragment = ProgressFragment.newInstance()
+                    selectedFragment = ProgressFragment()
                     selectedFragmentTag = "PROGRESS_FRAGMENT"
                 }
                 else -> return@setOnNavigationItemSelectedListener false
@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                 val transaction = supportFragmentManager.beginTransaction()
                 transaction.replace(
                         R.id.layout_frame_fragment,
-                        DiaryFragment.newInstance(),
+                        DiaryFragment(),
                         "DIARY_FRAGMENT")
                 transaction.commit()
             }

@@ -1,6 +1,5 @@
 package com.gasparaiciukas.owntrainer.fragment
 
-import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +10,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.activity.CreateMealItemActivity
+import com.gasparaiciukas.owntrainer.activity.MealItemActivity
+import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealBinding
 import com.google.android.material.tabs.TabLayout
@@ -23,6 +24,11 @@ class MealFragment : Fragment() {
     private lateinit var adapter: MealAdapter
     private lateinit var realm: Realm
     private lateinit var supportFragmentManager: FragmentManager
+    private val listener: (meal: Meal, position: Int) -> Unit = { _: Meal, position: Int ->
+        val intent = Intent(context, MealItemActivity::class.java)
+        intent.putExtra("position", position)
+        startActivity(intent)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,11 +70,11 @@ class MealFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if (tab.position == 0) {
                     val transaction = supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.layout_frame_fragment, FoodFragment.newInstance())
+                    transaction.replace(R.id.layout_frame_fragment, FoodFragment())
                     transaction.commit()
                 } else if (tab.position == 1) {
                     val transaction = supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.layout_frame_fragment, newInstance())
+                    transaction.replace(R.id.layout_frame_fragment, MealFragment())
                     transaction.commit()
                 }
             }
@@ -90,14 +96,8 @@ class MealFragment : Fragment() {
 
         // Set up recycler view
         val layoutManager = LinearLayoutManager(context)
-        adapter = MealAdapter(meals)
+        adapter = MealAdapter(meals, listener)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
-    }
-
-    companion object {
-        fun newInstance(): MealFragment {
-            return MealFragment()
-        }
     }
 }

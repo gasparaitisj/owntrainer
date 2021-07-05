@@ -30,7 +30,7 @@ class IntroActivity : AppIntro() {
     }
 
     private fun addSlides() {
-        val detailsFragment = IntroDetailsFragment.newInstance()
+        val detailsFragment = IntroDetailsFragment()
         addSlide(AppIntroFragment.newInstance(
                 title = "Welcome to owntrainer!",
                 description = "Welcome to the all-in-one fitness app - let's get started!",

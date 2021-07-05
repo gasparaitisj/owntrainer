@@ -25,6 +25,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import timber.log.Timber
 
 class FoodFragment : Fragment() {
     private var _binding: FragmentFoodBinding? = null
@@ -81,16 +82,16 @@ class FoodFragment : Fragment() {
             override fun onResponse(call: Call<GetResponse?>, response: Response<GetResponse?>) {
                 getResponse = response.body()!!
                 val hints = getResponse.hints
-                Log.d("testGet", "Sent: " + getResponse.text)
+                Timber.d("Sent: %s", getResponse.text)
                 for (i in hints!!.indices) {
                     (foodsApi as ArrayList<FoodApi>).add(hints[i].foodApi!!)
                 }
-                Log.d("testGet", foodsApi[0].label)
+                Timber.d(foodsApi[0].label)
                 adapter.reload(foodsApi)
             }
             override fun onFailure(call: Call<GetResponse?>, t: Throwable) {
                 Toast.makeText(context, "Search request failed!", Toast.LENGTH_LONG).show()
-                Log.d("testGet", t.toString())
+                Timber.d(t)
             }
         })
     }
@@ -126,11 +127,11 @@ class FoodFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if (tab.position == 0) {
                     val transaction = supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.layout_frame_fragment, newInstance())
+                    transaction.replace(R.id.layout_frame_fragment, FoodFragment())
                     transaction.commit()
                 } else if (tab.position == 1) {
                     val transaction = supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.layout_frame_fragment, MealFragment.newInstance())
+                    transaction.replace(R.id.layout_frame_fragment, MealFragment())
                     transaction.commit()
                 }
             }
@@ -140,10 +141,6 @@ class FoodFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): FoodFragment {
-            return FoodFragment()
-        }
-
         private const val APP_KEY = "30a0c47f24999903266d0171d50b7aa6"
         private const val APP_ID = "0de8a357"
     }
