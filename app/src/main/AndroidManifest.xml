@@ -14,27 +14,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.OwnTrainer">
-        <activity android:name=".activity.AddMealToDiaryActivity" />
-        <activity android:name=".activity.SelectMealItemActivity" />
-        <activity android:name=".activity.CreateMealItemActivity" />
-        <activity android:name=".activity.MealItemActivity" />
         <activity
-            android:name=".activity.SettingsActivity"
-            android:label="@string/title_activity_settings"
+            android:name=".IntroActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.IntroActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.FoodItemActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.StepActivity"
-            android:configChanges="orientation|screenSize"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.MainActivity"
+            android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait">
             <intent-filter>

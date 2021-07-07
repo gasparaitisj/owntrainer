@@ -1,6 +1,5 @@
 package com.gasparaiciukas.owntrainer.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.activity.CreateMealItemActivity
-import com.gasparaiciukas.owntrainer.activity.MealItemActivity
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealBinding
@@ -25,9 +22,15 @@ class MealFragment : Fragment() {
     private lateinit var realm: Realm
     private lateinit var supportFragmentManager: FragmentManager
     private val listener: (meal: Meal, position: Int) -> Unit = { _: Meal, position: Int ->
-        val intent = Intent(context, MealItemActivity::class.java)
-        intent.putExtra("position", position)
-        startActivity(intent)
+        val fragment = MealItemFragment()
+        val args = Bundle()
+        args.putInt("position", position)
+        fragment.arguments = args
+
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.layout_frame_fragment, fragment)
+            .commit()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,16 +55,21 @@ class MealFragment : Fragment() {
         adapter.reload()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        realm.close() // close database
+    override fun onDestroyView() {
+        super.onDestroyView()
+        realm.close()
+        _binding = null
     }
 
     private fun initUi() {
         // Set up FAB
         binding.fab.setOnClickListener {
-            val intent = Intent(requireContext(), CreateMealItemActivity::class.java)
-            requireContext().startActivity(intent)
+            val fragment = CreateMealItemFragment()
+
+            requireActivity().supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.layout_frame_fragment, fragment)
+                .commit()
         }
 
         // Tabs (foods or meals)

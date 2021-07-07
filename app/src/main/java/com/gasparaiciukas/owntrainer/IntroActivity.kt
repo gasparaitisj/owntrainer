@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.activity
+package com.gasparaiciukas.owntrainer
 
 import android.Manifest
 import android.os.Build

@@ -1,9 +1,12 @@
-package com.gasparaiciukas.owntrainer.activity
+package com.gasparaiciukas.owntrainer.fragment
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
@@ -11,17 +14,19 @@ import com.gasparaiciukas.owntrainer.adapter.FoodAdapter
 import com.gasparaiciukas.owntrainer.database.Food
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.User
-import com.gasparaiciukas.owntrainer.databinding.ActivityMealItemBinding
+import com.gasparaiciukas.owntrainer.databinding.FragmentMealItemBinding
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import io.realm.Realm
-import java.util.*
+import java.util.ArrayList
 import kotlin.math.roundToInt
 
-class MealItemActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMealItemBinding
+class MealItemFragment : Fragment() {
+    private var _binding: FragmentMealItemBinding? = null
+    private val binding get() = _binding!!
+
     // Pie chart
     private lateinit var pieDataSet: PieDataSet
     private lateinit var pieData: PieData
@@ -40,27 +45,36 @@ class MealItemActivity : AppCompatActivity() {
     private var proteinPercentage = 0f
     private var proteinDailyIntake = 0f
     private val quantity = 0
+    private lateinit var meals: List<Meal>
+    private lateinit var foodList: List<Food>
 
     // Recycler view
     private lateinit var adapter: FoodAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var realm: Realm
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMealItemBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentMealItemBinding.inflate(inflater, container, false)
 
         // Get selected food position
-        position = intent.getIntExtra("position", 0)
+        position = requireArguments().getInt("position", 0)
 
         // Recycler view
         realm = Realm.getDefaultInstance()
-        val meals: List<Meal> = realm.where(Meal::class.java).findAll()
-        val foodList: List<Food> = meals[position].foodList
-        realm.close()
+        meals = realm.where(Meal::class.java).findAll()
+        foodList = meals[position].foodList
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         adapter = FoodAdapter(foodList)
-        layoutManager = LinearLayoutManager(this)
+        layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = layoutManager
 
@@ -110,9 +124,9 @@ class MealItemActivity : AppCompatActivity() {
 
         // Create colors representing nutrients
         val colors: MutableList<Int> = ArrayList()
-        colors.add(ContextCompat.getColor(this, R.color.colorGold)) // carbs
-        colors.add(ContextCompat.getColor(this, R.color.colorOrange)) // fat
-        colors.add(ContextCompat.getColor(this, R.color.colorSmokeDark)) // protein
+        colors.add(ContextCompat.getColor(requireContext(), R.color.colorGold)) // carbs
+        colors.add(ContextCompat.getColor(requireContext(), R.color.colorOrange)) // fat
+        colors.add(ContextCompat.getColor(requireContext(), R.color.colorSmokeDark)) // protein
 
         // Add data to pie chart
         val entries: MutableList<PieEntry> = ArrayList()
@@ -129,9 +143,9 @@ class MealItemActivity : AppCompatActivity() {
         binding.pieChart.data = pieData
         binding.pieChart.centerText = "${calories.roundToInt()}\nkCal" // calorie text inside inner circle
         binding.pieChart.setCenterTextSize(14f)
-        binding.pieChart.setCenterTextColor(ContextCompat.getColor(this, R.color.colorWhite))
+        binding.pieChart.setCenterTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
         binding.pieChart.centerTextRadiusPercent = 100f
-        binding.pieChart.setHoleColor(ContextCompat.getColor(this, R.color.colorRed))
+        binding.pieChart.setHoleColor(ContextCompat.getColor(requireContext(), R.color.colorRed))
         binding.pieChart.holeRadius = 30f
         binding.pieChart.transparentCircleRadius = 0f
         binding.pieChart.legend.isEnabled = false
@@ -140,8 +154,9 @@ class MealItemActivity : AppCompatActivity() {
         binding.pieChart.invalidate()
     }
 
-    override fun onResume() {
-        super.onResume()
-        adapter.reload()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        realm.close()
+        _binding = null
     }
 }

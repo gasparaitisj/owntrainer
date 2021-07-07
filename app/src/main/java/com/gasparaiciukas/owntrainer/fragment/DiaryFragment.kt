@@ -1,7 +1,6 @@
 package com.gasparaiciukas.owntrainer.fragment
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.activity.AddMealToDiaryActivity
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.DiaryEntry
 import com.gasparaiciukas.owntrainer.database.Meal
@@ -42,9 +40,8 @@ class DiaryFragment : Fragment() {
                               savedInstanceState: Bundle?): View {
         _binding = FragmentDiaryBinding.inflate(inflater, container, false)
         getDiaryEntry()
-        val rootView = binding.root
-        initUi(rootView)
-        return rootView
+        initUi()
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,17 +51,13 @@ class DiaryFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        realm.close()
         _binding = null
     }
 
     override fun onResume() {
         super.onResume()
         adapter.reload()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        realm.close()
     }
 
     private fun getDiaryEntry() {
@@ -102,7 +95,7 @@ class DiaryFragment : Fragment() {
         }
     }
 
-    private fun initUi(rootView: View) {
+    private fun initUi() {
         // Navigation
         binding.tvDayOfWeek.text = DateFormatter.dayOfWeekToString(diaryEntry.dayOfWeek)
         binding.tvMonthOfYear.text = DateFormatter.monthOfYearToString(diaryEntry.monthOfYear)
@@ -136,9 +129,15 @@ class DiaryFragment : Fragment() {
 
         // Add meal to diary on FAB clicked
         binding.fab.setOnClickListener {
-            val intent = Intent(rootView.context, AddMealToDiaryActivity::class.java)
-            intent.putExtra("primaryKey", diaryEntry.yearAndDayOfYear)
-            requireContext().startActivity(intent)
+            val fragment = AddMealToDiaryFragment()
+            val args = Bundle()
+            args.putString("primaryKey", diaryEntry.yearAndDayOfYear)
+            fragment.arguments = args
+
+            requireActivity().supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.layout_frame_fragment, fragment)
+                .commit()
         }
 
         // Navigation (back button)

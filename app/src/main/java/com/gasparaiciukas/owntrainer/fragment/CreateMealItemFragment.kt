@@ -1,25 +1,38 @@
-package com.gasparaiciukas.owntrainer.activity
+package com.gasparaiciukas.owntrainer.fragment
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.Meal
-import com.gasparaiciukas.owntrainer.databinding.ActivityCreateMealItemBinding
+import com.gasparaiciukas.owntrainer.databinding.FragmentCreateMealItemBinding
 import io.realm.Realm
 
-class CreateMealItemActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityCreateMealItemBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityCreateMealItemBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+class CreateMealItemFragment : Fragment() {
+    private var _binding: FragmentCreateMealItemBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentCreateMealItemBinding.inflate(inflater, container, false)
         initUi()
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun initUi() {
         // Back button
-        binding.appBar.setNavigationOnClickListener { onBackPressed() }
+        binding.appBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
 
         // Save button
         binding.appBar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
@@ -49,7 +62,7 @@ class CreateMealItemActivity : AppCompatActivity() {
                 realm.close()
 
                 // Finish activity
-                finish()
+                requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
                 return@OnMenuItemClickListener true
             }
             false

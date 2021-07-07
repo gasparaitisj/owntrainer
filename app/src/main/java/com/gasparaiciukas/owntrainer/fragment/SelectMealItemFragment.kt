@@ -1,22 +1,28 @@
-package com.gasparaiciukas.owntrainer.activity
+package com.gasparaiciukas.owntrainer.fragment
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.Food
 import com.gasparaiciukas.owntrainer.database.Meal
-import com.gasparaiciukas.owntrainer.databinding.ActivitySelectMealItemBinding
+import com.gasparaiciukas.owntrainer.databinding.FragmentSelectMealItemBinding
 import com.gasparaiciukas.owntrainer.network.FoodApi
 import io.realm.Realm
 
-class SelectMealItemActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySelectMealItemBinding
+class SelectMealItemFragment : Fragment() {
+    private var _binding: FragmentSelectMealItemBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var adapter: MealAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private var position = 0
     private var quantity = 0.0
+    private lateinit var meals: List<Meal>
     private lateinit var realm: Realm
     private lateinit var foodItem: FoodApi
     private val listener: (meal: Meal, position: Int) -> Unit = { meal: Meal, _: Int ->
@@ -40,27 +46,30 @@ class SelectMealItemActivity : AppCompatActivity() {
             meal.foodList = foodList
         }
         realm.close()
-        finish()
+        requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySelectMealItemBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSelectMealItemBinding.inflate(inflater, container, false)
 
-        // Get selected food position
-        foodItem = intent.getParcelableExtra("foodItem")!!
-        position = intent.getIntExtra("position", 0)
-        quantity = intent.getIntExtra("quantity", 0).toDouble()
+        foodItem = requireArguments().getParcelable("foodItem")!!
+        position = requireArguments().getInt("position", 0)
+        quantity = requireArguments().getInt("quantity", 0).toDouble()
 
-
-        // Get meals from database
         realm = Realm.getDefaultInstance()
-        val meals: List<Meal> = realm.where(Meal::class.java).findAll()
+        meals = realm.where(Meal::class.java).findAll()
 
-        // Set up recycler view
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         adapter = MealAdapter(meals, listener)
-        layoutManager = LinearLayoutManager(this)
+        layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = layoutManager
     }
@@ -70,8 +79,8 @@ class SelectMealItemActivity : AppCompatActivity() {
         adapter.reload()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        realm.close()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

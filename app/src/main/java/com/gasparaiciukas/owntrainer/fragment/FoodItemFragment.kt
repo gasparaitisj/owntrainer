@@ -1,12 +1,14 @@
-package com.gasparaiciukas.owntrainer.activity
+package com.gasparaiciukas.owntrainer.fragment
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.User
-import com.gasparaiciukas.owntrainer.databinding.ActivityFoodItemBinding
+import com.gasparaiciukas.owntrainer.databinding.FragmentFoodItemBinding
 import com.gasparaiciukas.owntrainer.network.FoodApi
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
 import com.github.mikephil.charting.data.PieData
@@ -16,8 +18,9 @@ import io.realm.Realm
 import java.util.*
 import kotlin.math.roundToInt
 
-class FoodItemActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityFoodItemBinding
+class FoodItemFragment : Fragment() {
+    private var _binding: FragmentFoodItemBinding? = null
+    private val binding get() = _binding!!
 
     private var position = 0
     private var carbs = 0f
@@ -33,27 +36,40 @@ class FoodItemActivity : AppCompatActivity() {
     private var proteinDailyIntake = 0f
     private lateinit var foodItem: FoodApi
 
-
     private lateinit var pieDataSet: PieDataSet
     private lateinit var pieData: PieData
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityFoodItemBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentFoodItemBinding.inflate(inflater, container, false)
         fetchData()
         initUi()
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun fetchData() {
         // Get clicked item position
-        foodItem = intent.getParcelableExtra("foodItem")!!
+        foodItem = requireArguments().getParcelable("foodItem")!!
 
         binding.btnAddToMeal.setOnClickListener {
-            val intent = Intent(baseContext, SelectMealItemActivity::class.java)
-            intent.putExtra("foodItem", foodItem)
-            intent.putExtra("quantity", binding.etWeight.text.toString().toInt())
-            startActivity(intent)
+            val fragment = SelectMealItemFragment()
+            val args = Bundle()
+            args.putParcelable("foodItem", foodItem)
+            args.putInt("quantity", binding.etWeight.text.toString().toInt())
+            fragment.arguments = args
+
+            requireActivity().supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.layout_frame_fragment, fragment)
+                .commit()
         }
 
         // Get nutrients from food item
@@ -101,9 +117,9 @@ class FoodItemActivity : AppCompatActivity() {
 
         // Create colors representing nutrients
         val colors: MutableList<Int> = ArrayList()
-        colors.add(ContextCompat.getColor(this, R.color.colorGold)) // carbs
-        colors.add(ContextCompat.getColor(this, R.color.colorOrange)) // fat
-        colors.add(ContextCompat.getColor(this, R.color.colorSmokeDark)) // protein
+        colors.add(ContextCompat.getColor(requireContext(), R.color.colorGold)) // carbs
+        colors.add(ContextCompat.getColor(requireContext(), R.color.colorOrange)) // fat
+        colors.add(ContextCompat.getColor(requireContext(), R.color.colorSmokeDark)) // protein
 
 
         // Add data to pie chart
@@ -122,9 +138,9 @@ class FoodItemActivity : AppCompatActivity() {
         binding.pieChart.centerText =
             "${calories.roundToInt()}\nkCal" // calorie text inside inner circle
         binding.pieChart.setCenterTextSize(14f)
-        binding.pieChart.setCenterTextColor(ContextCompat.getColor(this, R.color.colorWhite))
+        binding.pieChart.setCenterTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
         binding.pieChart.centerTextRadiusPercent = 100f
-        binding.pieChart.setHoleColor(ContextCompat.getColor(this, R.color.colorRed))
+        binding.pieChart.setHoleColor(ContextCompat.getColor(requireContext(), R.color.colorRed))
         binding.pieChart.holeRadius = 30f
         binding.pieChart.transparentCircleRadius = 0f
         binding.pieChart.legend.isEnabled = false

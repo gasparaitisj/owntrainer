@@ -2,7 +2,6 @@ package com.gasparaiciukas.owntrainer.fragment
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.FoodApiAdapter
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodBinding
@@ -33,9 +31,20 @@ class FoodFragment : Fragment() {
     private lateinit var getResponse: GetResponse
     private lateinit var getService: GetService
     private lateinit var adapter: FoodApiAdapter
-    private lateinit var recyclerView: RecyclerView
     private lateinit var supportFragmentManager: FragmentManager
     private var foodsApi: List<FoodApi> = arrayListOf()
+    private val listener: (food: FoodApi, position: Int) -> Unit = { _: FoodApi, position: Int ->
+        val fragment = FoodItemFragment()
+        val args = Bundle()
+        args.putInt("position", position)
+        args.putParcelable("foodItem", foodsApi[position])
+        fragment.arguments = args
+
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.layout_frame_fragment, fragment)
+            .commit()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +79,7 @@ class FoodFragment : Fragment() {
     private fun initRecyclerView() {
         // Set up recycler view
         val layoutManager = LinearLayoutManager(context)
-        adapter = FoodApiAdapter(foodsApi)
+        adapter = FoodApiAdapter(foodsApi, listener)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
     }

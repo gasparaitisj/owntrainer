@@ -6,8 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorSmokeDark"
-        tools:context=".activity.MainActivity">
+        android:background="@color/colorSmokeDark">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/layout_app_bar"

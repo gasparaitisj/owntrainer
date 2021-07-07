@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.activity
+package com.gasparaiciukas.owntrainer
 
 import android.content.Context
 import android.content.Intent
@@ -6,11 +6,8 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.ActivityMainBinding
-import com.gasparaiciukas.owntrainer.fragment.DiaryFragment
-import com.gasparaiciukas.owntrainer.fragment.FoodFragment
-import com.gasparaiciukas.owntrainer.fragment.ProgressFragment
+import com.gasparaiciukas.owntrainer.fragment.*
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import java.time.LocalDate
@@ -31,7 +28,11 @@ class MainActivity : AppCompatActivity() {
         // Settings (top app bar)
         binding.appBar.setOnMenuItemClickListener { item: MenuItem ->
             if (item.itemId == R.id.top_app_bar_settings) {
-                startActivity(Intent(baseContext, SettingsActivity::class.java))
+                val fragment = SettingsFragment()
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.layout_frame_fragment, fragment)
+                    .commit()
                 return@setOnMenuItemClickListener true
             }
             false
@@ -47,8 +48,10 @@ class MainActivity : AppCompatActivity() {
                     selectedFragmentTag = "DIARY_FRAGMENT"
                 }
                 R.id.navbar_item_2 -> {
-                    this.startActivity(Intent(this, StepActivity::class.java))
-                    return@setOnNavigationItemSelectedListener true
+                    selectedFragment = StepFragment()
+                    selectedFragmentTag = "STEP_FRAGMENT"
+                    //this.startActivity(Intent(this, StepActivity::class.java))
+                    //return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navbar_item_3 -> {
                     selectedFragment = FoodFragment()
