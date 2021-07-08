@@ -63,7 +63,6 @@ class DiaryFragment : Fragment() {
     private fun getDiaryEntry() {
         // Get user from database
         realm = Realm.getDefaultInstance()
-        //TODO: Fix NPE when user doesn't complete app intro
         user = realm.where(User::class.java).findFirst()!!
 
         // Get day to be showed from preferences

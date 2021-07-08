@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity() {
             if (isFirstStart) {
                 // Diary
                 val editor = sharedPref.edit()
-                editor.putBoolean("firstStart", false)
                 editor.putInt("year", LocalDate.now().year)
                 editor.putInt("month", LocalDate.now().monthValue)
                 editor.putInt("day", LocalDate.now().dayOfMonth)
