@@ -1,6 +1,7 @@
 package com.gasparaiciukas.owntrainer
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -26,6 +27,7 @@ class IntroActivity : AppIntro() {
             .edit()
             .putBoolean("firstStart", false)
             .apply()
+        setResult(Activity.RESULT_OK)
         finish()
     }
 

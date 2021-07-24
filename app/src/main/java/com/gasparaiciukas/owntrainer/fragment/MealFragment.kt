@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealBinding
@@ -22,15 +22,8 @@ class MealFragment : Fragment() {
     private lateinit var realm: Realm
     private lateinit var supportFragmentManager: FragmentManager
     private val listener: (meal: Meal, position: Int) -> Unit = { _: Meal, position: Int ->
-        val fragment = MealItemFragment()
-        val args = Bundle()
-        args.putInt("position", position)
-        fragment.arguments = args
-
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.layout_frame_fragment, fragment)
-            .commit()
+        val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(position)
+        findNavController().navigate(action)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,12 +57,8 @@ class MealFragment : Fragment() {
     private fun initUi() {
         // Set up FAB
         binding.fab.setOnClickListener {
-            val fragment = CreateMealItemFragment()
-
-            requireActivity().supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.layout_frame_fragment, fragment)
-                .commit()
+            val action = MealFragmentDirections.actionMealFragmentToCreateMealItemFragment()
+            findNavController().navigate(action)
         }
 
         // Tabs (foods or meals)
@@ -77,13 +66,8 @@ class MealFragment : Fragment() {
         binding.layoutTab.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if (tab.position == 0) {
-                    val transaction = supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.layout_frame_fragment, FoodFragment())
-                    transaction.commit()
-                } else if (tab.position == 1) {
-                    val transaction = supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.layout_frame_fragment, MealFragment())
-                    transaction.commit()
+                    val action = MealFragmentDirections.actionMealFragmentToFoodFragment()
+                    findNavController().navigate(action)
                 }
             }
 

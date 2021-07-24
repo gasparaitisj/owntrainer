@@ -1,15 +1,16 @@
 package com.gasparaiciukas.owntrainer.fragment
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.commit
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.gasparaiciukas.owntrainer.R
+import com.gasparaiciukas.owntrainer.IntroActivity
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.DiaryEntry
 import com.gasparaiciukas.owntrainer.database.Meal
@@ -20,7 +21,6 @@ import io.realm.Realm
 import java.time.LocalDate
 import kotlin.math.roundToInt
 
-//TODO: Fix FAB action and back button
 class DiaryFragment : Fragment() {
     private var _binding: FragmentDiaryBinding? = null
     private val binding get() = _binding!!
@@ -128,15 +128,9 @@ class DiaryFragment : Fragment() {
 
         // Add meal to diary on FAB clicked
         binding.fab.setOnClickListener {
-            val fragment = AddMealToDiaryFragment()
-            val args = Bundle()
-            args.putString("primaryKey", diaryEntry.yearAndDayOfYear)
-            fragment.arguments = args
-
-            requireActivity().supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.layout_frame_fragment, fragment)
-                .commit()
+            val action = DiaryFragmentDirections
+                .actionDiaryFragmentToAddMealToDiaryFragment(diaryEntry.yearAndDayOfYear.toString())
+            findNavController().navigate(action)
         }
 
         // Navigation (back button)
@@ -152,10 +146,8 @@ class DiaryFragment : Fragment() {
             editor.apply()
 
             // Refresh fragment and show previous day
-            supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                replace(R.id.layout_frame_fragment, DiaryFragment())
-            }
+            val action = DiaryFragmentDirections.actionDiaryFragmentSelf()
+            findNavController().navigate(action)
         }
 
         // Navigation (back button)
@@ -171,10 +163,8 @@ class DiaryFragment : Fragment() {
             editor.apply()
 
             // Refresh fragment and show next day
-            supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                replace(R.id.layout_frame_fragment, DiaryFragment())
-            }
+            val action = DiaryFragmentDirections.actionDiaryFragmentSelf()
+            findNavController().navigate(action)
         }
     }
 

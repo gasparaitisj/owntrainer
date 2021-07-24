@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
@@ -53,6 +54,8 @@ class MealItemFragment : Fragment() {
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var realm: Realm
 
+    private val args: MealItemFragmentArgs by navArgs()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,7 +64,7 @@ class MealItemFragment : Fragment() {
         _binding = FragmentMealItemBinding.inflate(inflater, container, false)
 
         // Get selected food position
-        position = requireArguments().getInt("position", 0)
+        position = args.position
 
         // Recycler view
         realm = Realm.getDefaultInstance()

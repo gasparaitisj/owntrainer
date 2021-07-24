@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
@@ -34,8 +36,9 @@ class AddMealToDiaryFragment : Fragment() {
             }
         }
         realm.close()
-        requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
+        findNavController().popBackStack()
     }
+    private val args: AddMealToDiaryFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +47,7 @@ class AddMealToDiaryFragment : Fragment() {
     ): View? {
         _binding = FragmentAddMealToDiaryBinding.inflate(inflater, container, false)
 
-        primaryKey = requireArguments().getString("primaryKey").toString()
+        primaryKey = args.primaryKey
 
         realm = Realm.getDefaultInstance()
         meals = realm.where(Meal::class.java).findAll()

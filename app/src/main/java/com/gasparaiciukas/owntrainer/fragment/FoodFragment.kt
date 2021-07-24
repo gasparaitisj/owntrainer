@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.FoodApiAdapter
@@ -34,16 +35,9 @@ class FoodFragment : Fragment() {
     private lateinit var supportFragmentManager: FragmentManager
     private var foodsApi: List<FoodApi> = arrayListOf()
     private val listener: (food: FoodApi, position: Int) -> Unit = { _: FoodApi, position: Int ->
-        val fragment = FoodItemFragment()
-        val args = Bundle()
-        args.putInt("position", position)
-        args.putParcelable("foodItem", foodsApi[position])
-        fragment.arguments = args
-
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.layout_frame_fragment, fragment)
-            .commit()
+        val action =
+            FoodFragmentDirections.actionFoodFragmentToFoodItemFragment(position, foodsApi[position])
+        findNavController().navigate(action)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -134,14 +128,9 @@ class FoodFragment : Fragment() {
         // Tabs (foods or meals)
         binding.layoutTab.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                if (tab.position == 0) {
-                    val transaction = supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.layout_frame_fragment, FoodFragment())
-                    transaction.commit()
-                } else if (tab.position == 1) {
-                    val transaction = supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.layout_frame_fragment, MealFragment())
-                    transaction.commit()
+                if (tab.position == 1) {
+                    val action = FoodFragmentDirections.actionFoodFragmentToMealFragment()
+                    findNavController().navigate(action)
                 }
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {}

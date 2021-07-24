@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.databinding.FragmentCreateMealItemBinding
@@ -61,8 +62,8 @@ class CreateMealItemFragment : Fragment() {
                 realm.executeTransaction { r -> r.insertOrUpdate(meal) }
                 realm.close()
 
-                // Finish activity
-                requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
+                // Finish fragment
+                findNavController().popBackStack()
                 return@OnMenuItemClickListener true
             }
             false

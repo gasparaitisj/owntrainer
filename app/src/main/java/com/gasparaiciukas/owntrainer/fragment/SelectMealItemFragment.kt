@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
@@ -46,8 +48,9 @@ class SelectMealItemFragment : Fragment() {
             meal.foodList = foodList
         }
         realm.close()
-        requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
+        findNavController().popBackStack()
     }
+    private val args: SelectMealItemFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,9 +59,8 @@ class SelectMealItemFragment : Fragment() {
     ): View {
         _binding = FragmentSelectMealItemBinding.inflate(inflater, container, false)
 
-        foodItem = requireArguments().getParcelable("foodItem")!!
-        position = requireArguments().getInt("position", 0)
-        quantity = requireArguments().getInt("quantity", 0).toDouble()
+        foodItem = args.foodItem
+        quantity = args.quantity.toDouble()
 
         realm = Realm.getDefaultInstance()
         meals = realm.where(Meal::class.java).findAll()

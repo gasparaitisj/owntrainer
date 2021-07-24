@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.PedometerEntry
 import com.gasparaiciukas.owntrainer.database.User
@@ -211,11 +212,8 @@ class StepFragment : Fragment() {
     private fun onStopButtonClicked() {
         // Destroy service and reload fragment
         destroyService()
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .detach(this)
-            .attach(this)
-            .commit()
+        val action = StepFragmentDirections.actionStepFragmentSelf()
+        findNavController().navigate(action)
     }
 
     private fun onStartButtonClicked() {

@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodItemBinding
@@ -38,6 +40,7 @@ class FoodItemFragment : Fragment() {
 
     private lateinit var pieDataSet: PieDataSet
     private lateinit var pieData: PieData
+    private val args: FoodItemFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,20 +59,17 @@ class FoodItemFragment : Fragment() {
     }
 
     private fun fetchData() {
-        // Get clicked item position
-        foodItem = requireArguments().getParcelable("foodItem")!!
+        // Get clicked item
+        position = args.position
+        foodItem = args.foodItem
 
         binding.btnAddToMeal.setOnClickListener {
-            val fragment = SelectMealItemFragment()
-            val args = Bundle()
-            args.putParcelable("foodItem", foodItem)
-            args.putInt("quantity", binding.etWeight.text.toString().toInt())
-            fragment.arguments = args
-
-            requireActivity().supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.layout_frame_fragment, fragment)
-                .commit()
+            val action =
+                FoodItemFragmentDirections.actionFoodItemFragmentToSelectMealItemFragment(
+                    foodItem,
+                    binding.etWeight.text.toString().toInt()
+                )
+            findNavController().navigate(action)
         }
 
         // Get nutrients from food item
