@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gasparaiciukas.owntrainer.R
@@ -13,6 +14,9 @@ import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodItemBinding
 import com.gasparaiciukas.owntrainer.network.FoodApi
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
+import com.gasparaiciukas.owntrainer.viewmodel.AddMealToDiaryViewModel
+import com.gasparaiciukas.owntrainer.viewmodel.BundleViewModelFactory
+import com.gasparaiciukas.owntrainer.viewmodel.FoodItemViewModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -24,31 +28,25 @@ class FoodItemFragment : Fragment() {
     private var _binding: FragmentFoodItemBinding? = null
     private val binding get() = _binding!!
 
-    private var position = 0
-    private var carbs = 0f
-    private var carbsPercentage = 0f
-    private var carbsDailyIntake = 0f
-    private var calories = 0f
-    private var calorieDailyIntake = 0f
-    private var fat = 0f
-    private var fatPercentage = 0f
-    private var fatDailyIntake = 0f
-    private var protein = 0f
-    private var proteinPercentage = 0f
-    private var proteinDailyIntake = 0f
-    private lateinit var foodItem: FoodApi
-
-    private lateinit var pieDataSet: PieDataSet
-    private lateinit var pieData: PieData
     private val args: FoodItemFragmentArgs by navArgs()
+
+    private lateinit var viewModel: FoodItemViewModel
+    private lateinit var viewModelFactory: BundleViewModelFactory
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFoodItemBinding.inflate(inflater, container, false)
-        fetchData()
+
+        val bundle = Bundle().apply {
+            putParcelable("foodItem", args.foodItem)
+            putInt("position", args.position)
+        }
+        viewModelFactory = BundleViewModelFactory(bundle)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(FoodItemViewModel::class.java)
+
         initUi()
         return binding.root
     }
@@ -58,62 +56,31 @@ class FoodItemFragment : Fragment() {
         _binding = null
     }
 
-    private fun fetchData() {
-        // Get clicked item
-        position = args.position
-        foodItem = args.foodItem
-
+    private fun initUi() {
+        // Add to meal button
         binding.btnAddToMeal.setOnClickListener {
             val action =
                 FoodItemFragmentDirections.actionFoodItemFragmentToSelectMealItemFragment(
-                    foodItem,
+                    args.foodItem,
                     binding.etWeight.text.toString().toInt()
                 )
             findNavController().navigate(action)
         }
 
-        // Get nutrients from food item
-        val nutrients = foodItem.nutrients
-        carbs = nutrients.carbs.toFloat()
-        calories = nutrients.calories.toFloat()
-        fat = nutrients.fat.toFloat()
-        protein = nutrients.protein.toFloat()
-
-        // Calculate percentage of each item
-        val sum = carbs + fat + protein
-        carbsPercentage = carbs / sum * 100
-        fatPercentage = fat / sum * 100
-        proteinPercentage = protein / sum * 100
-
-        // Get daily intake percentages
-        val realm = Realm.getDefaultInstance()
-        val user = realm.where(User::class.java)
-            .equalTo("userId", "user")
-            .findFirst()
-        if (user != null) {
-            calorieDailyIntake = user.dailyKcalIntake.toFloat()
-            carbsDailyIntake = user.dailyCarbsIntakeInG.toFloat()
-            fatDailyIntake = user.dailyFatIntakeInG.toFloat()
-            proteinDailyIntake = user.dailyProteinIntakeInG.toFloat()
-        }
-        realm.close()
-    }
-
-    private fun initUi() {
-        // Set up text views
-        binding.tvTitle.text = foodItem.label
-        binding.tvCarbsWeight.text = carbs.roundToInt().toString()
+        // Text views
+        binding.tvTitle.text = args.foodItem.label
+        binding.tvCarbsWeight.text = viewModel.carbs.roundToInt().toString()
         binding.tvCarbsPercentage.text =
-            String.format("%s %%", (carbs / carbsDailyIntake * 100).roundToInt())
-        binding.tvFatWeight.text = fat.roundToInt().toString()
+            String.format("%s %%", (viewModel.carbs / viewModel.carbsDailyIntake * 100).roundToInt())
+        binding.tvFatWeight.text = viewModel.fat.roundToInt().toString()
         binding.tvFatPercentage.text =
-            String.format("%s %%", (fat / fatDailyIntake * 100).roundToInt())
-        binding.tvProteinWeight.text = protein.roundToInt().toString()
+            String.format("%s %%", (viewModel.fat / viewModel.fatDailyIntake * 100).roundToInt())
+        binding.tvProteinWeight.text = viewModel.protein.roundToInt().toString()
         binding.tvProteinPercentage.text =
-            String.format("%s %%", (protein / proteinDailyIntake * 100).roundToInt())
-        binding.tvCaloriesCount.text = calories.roundToInt().toString()
+            String.format("%s %%", (viewModel.protein / viewModel.proteinDailyIntake * 100).roundToInt())
+        binding.tvCaloriesCount.text = viewModel.calories.roundToInt().toString()
         binding.tvCaloriesPercentage.text =
-            String.format("%s %%", (calories / calorieDailyIntake * 100).roundToInt())
+            String.format("%s %%", (viewModel.calories / viewModel.calorieDailyIntake * 100).roundToInt())
 
         // Create colors representing nutrients
         val colors: MutableList<Int> = ArrayList()
@@ -124,19 +91,19 @@ class FoodItemFragment : Fragment() {
 
         // Add data to pie chart
         val entries: MutableList<PieEntry> = ArrayList()
-        entries.add(PieEntry(carbsPercentage, "Carbohydrates"))
-        entries.add(PieEntry(fatPercentage, "Fat"))
-        entries.add(PieEntry(proteinPercentage, "Protein"))
-        pieDataSet = PieDataSet(entries, "Data")
+        entries.add(PieEntry(viewModel.carbsPercentage, "Carbohydrates"))
+        entries.add(PieEntry(viewModel.fatPercentage, "Fat"))
+        entries.add(PieEntry(viewModel.proteinPercentage, "Protein"))
+        val pieDataSet = PieDataSet(entries, "Data")
 
         // Add style to pie chart
         pieDataSet.colors = colors // chart colors
-        pieData = PieData(pieDataSet)
+        val pieData = PieData(pieDataSet)
         pieData.setValueFormatter(NutrientValueFormatter()) // adjust labels
         pieData.setValueTextSize(12f)
         binding.pieChart.data = pieData
         binding.pieChart.centerText =
-            "${calories.roundToInt()}\nkCal" // calorie text inside inner circle
+            "${viewModel.calories.roundToInt()}\nkCal" // calorie text inside inner circle
         binding.pieChart.setCenterTextSize(14f)
         binding.pieChart.setCenterTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
         binding.pieChart.centerTextRadiusPercent = 100f

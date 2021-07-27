@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealBinding
+import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import io.realm.Realm
@@ -18,13 +20,17 @@ import io.realm.Realm
 class MealFragment : Fragment() {
     private var _binding: FragmentMealBinding? = null
     private val binding get() = _binding!!
-    private lateinit var adapter: MealAdapter
-    private lateinit var realm: Realm
+
     private lateinit var supportFragmentManager: FragmentManager
+
+    private lateinit var adapter: MealAdapter
+
     private val listener: (meal: Meal, position: Int) -> Unit = { _: Meal, position: Int ->
         val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(position)
         findNavController().navigate(action)
     }
+
+    private val viewModel: MealViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,14 +49,8 @@ class MealFragment : Fragment() {
         initRecyclerView()
     }
 
-    override fun onResume() {
-        super.onResume()
-        adapter.reload()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
-        realm.close()
         _binding = null
     }
 
@@ -82,13 +82,8 @@ class MealFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        // Get meals from database
-        realm = Realm.getDefaultInstance()
-        val meals: List<Meal> = realm.where(Meal::class.java).findAll()
-
-        // Set up recycler view
         val layoutManager = LinearLayoutManager(context)
-        adapter = MealAdapter(meals, listener)
+        adapter = MealAdapter(viewModel.meals, listener)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
     }

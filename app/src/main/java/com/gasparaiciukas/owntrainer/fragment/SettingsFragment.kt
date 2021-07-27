@@ -9,59 +9,41 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.databinding.FragmentSettingsBinding
-import io.realm.Realm
+import com.gasparaiciukas.owntrainer.viewmodel.SettingsViewModel
 import java.util.ArrayList
 
 class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
-    private lateinit var sex: String
-    private var age = 0
-    private var height = 0
-    private var weight = 0.0
-    private lateinit var lifestyle: String
-    private lateinit var realm: Realm
+
+    private val viewModel: SettingsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
-        //binding.appBar.setNavigationOnClickListener { onBackPressed() }
-        loadData()
+        initUi()
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        writeUserToDatabase()
+        viewModel.writeUserToDatabase()
         _binding = null
     }
 
-    private fun loadData() {
-        realm = Realm.getDefaultInstance()
-        val user = realm.where(User::class.java)
-            .equalTo("userId", "user")
-            .findFirst()
-        if (user != null) {
-            sex = user.sex
-            age = user.ageInYears
-            height = user.heightInCm
-            weight = user.weightInKg
-            lifestyle = user.lifestyle
-        }
-        realm.close()
-
+    private fun initUi() {
         // Insert current data into fields
-        binding.etSex.setText(sex)
-        binding.etAge.setText(age.toString())
-        binding.etHeight.setText(height.toString())
-        binding.etWeight.setText(weight.toString())
-        binding.etLifestyle.setText(lifestyle)
+        binding.etSex.setText(viewModel.sex)
+        binding.etAge.setText(viewModel.age.toString())
+        binding.etHeight.setText(viewModel.height.toString())
+        binding.etWeight.setText(viewModel.weight.toString())
+        binding.etLifestyle.setText(viewModel.lifestyle)
 
         // Set up listeners
         val sexList: List<String?> = ArrayList(listOf("Male", "Female"))
@@ -69,7 +51,7 @@ class SettingsFragment : Fragment() {
             ArrayAdapter<Any?>(requireContext(), R.layout.details_list_item, sexList)
         binding.etSex.setAdapter(sexAdapter)
         binding.etSex.onItemClickListener =
-            AdapterView.OnItemClickListener { _, _, _, _ -> sex = binding.etSex.text.toString() }
+            AdapterView.OnItemClickListener { _, _, _, _ -> viewModel.sex = binding.etSex.text.toString() }
         binding.etAge.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // do nothing
@@ -80,7 +62,7 @@ class SettingsFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable) {
-                if (s.toString().isNotEmpty()) age = s.toString().toInt()
+                if (s.toString().isNotEmpty()) viewModel.age = s.toString().toInt()
             }
         })
         binding.etHeight.addTextChangedListener(object : TextWatcher {
@@ -93,7 +75,7 @@ class SettingsFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable) {
-                if (s.toString().isNotEmpty()) height = s.toString().toInt()
+                if (s.toString().isNotEmpty()) viewModel.height = s.toString().toInt()
             }
         })
         binding.etWeight.addTextChangedListener(object : TextWatcher {
@@ -106,12 +88,12 @@ class SettingsFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable) {
-                if (s.toString().isNotEmpty()) weight = s.toString().toDouble()
+                if (s.toString().isNotEmpty()) viewModel.weight = s.toString().toDouble()
             }
         })
         binding.etLifestyle.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, _, _ ->
-                lifestyle = binding.etLifestyle.text.toString()
+                viewModel.lifestyle = binding.etLifestyle.text.toString()
             }
         val lifestyleList: List<String?> = ArrayList(
             listOf(
@@ -125,26 +107,5 @@ class SettingsFragment : Fragment() {
         val lifestyleAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(requireContext(), R.layout.details_list_item, lifestyleList)
         binding.etLifestyle.setAdapter(lifestyleAdapter)
-    }
-
-    private fun writeUserToDatabase() {
-        realm = Realm.getDefaultInstance()
-        val user = User()
-        user.userId = "user"
-        user.ageInYears = age
-        user.sex = sex
-        user.heightInCm = height
-        user.weightInKg = weight
-        user.lifestyle = lifestyle
-        user.stepLengthInCm = user.calculateStepLengthInCm(height.toDouble(), sex)
-        user.bmr = user.calculateBmr(weight, height.toDouble(), age, sex)
-        user.kcalBurnedPerStep =
-            user.calculateKcalBurnedPerStep(weight, height.toDouble(), user.avgWalkingSpeedInKmH)
-        user.dailyKcalIntake = user.calculateDailyKcalIntake(user.bmr, lifestyle)
-        user.dailyCarbsIntakeInG = user.calculateDailyCarbsIntake(user.dailyKcalIntake)
-        user.dailyFatIntakeInG = user.calculateDailyFatIntake(user.dailyKcalIntake)
-        user.dailyProteinIntakeInG = user.calculateDailyProteinIntakeInG(weight)
-        realm.executeTransaction { r -> r.insertOrUpdate(user) }
-        realm.close()
     }
 }

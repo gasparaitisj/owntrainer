@@ -11,22 +11,18 @@ import com.gasparaiciukas.owntrainer.databinding.MealRowBinding
 class MealAdapter(
     private val meals: List<Meal>,
     private val listener: (meal: Meal, position: Int) -> Unit
-) : RecyclerView.Adapter<MealAdapter.NewMealViewHolder>() {
+) : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
 
-    class NewMealViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
+    class MealViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         val binding = MealRowBinding.bind(view)
     }
 
-    fun reload() {
-        notifyDataSetChanged()
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewMealViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.meal_row, parent, false)
-        return NewMealViewHolder(view)
+        return MealViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: NewMealViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
         // Get information of each row
         val calories = meals[position].calculateCalories().toInt()
         val title = meals[position].title

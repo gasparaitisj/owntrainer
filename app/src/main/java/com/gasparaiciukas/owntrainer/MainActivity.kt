@@ -75,12 +75,6 @@ class MainActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences("diary", Context.MODE_PRIVATE)
         val isFirstStart = sharedPref.getBoolean("firstStart", true)
         if (isFirstStart) {
-            sharedPref.edit()
-                .putInt("year", LocalDate.now().year)
-                .putInt("month", LocalDate.now().monthValue)
-                .putInt("day", LocalDate.now().dayOfMonth)
-                .apply()
-
             val realmInstance = Realm.getDefaultInstance()
             val sex = "Male"
             val age = 25
@@ -103,8 +97,11 @@ class MainActivity : AppCompatActivity() {
             user.dailyCarbsIntakeInG = user.calculateDailyCarbsIntake(user.dailyKcalIntake)
             user.dailyFatIntakeInG = user.calculateDailyFatIntake(user.dailyKcalIntake)
             user.dailyProteinIntakeInG = user.calculateDailyProteinIntakeInG(weight)
+            user.currentYear = LocalDate.now().year
+            user.currentMonth = LocalDate.now().monthValue
+            user.currentDay = LocalDate.now().dayOfMonth
 
-            realmInstance.executeTransaction { realm -> realm.insertOrUpdate(user) }
+            realmInstance.executeTransaction { it.insertOrUpdate(user) }
             realmInstance.close()
         }
     }
@@ -114,13 +111,6 @@ class MainActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences("diary", Context.MODE_PRIVATE)
         val isFirstStart = sharedPref.getBoolean("firstStart", true)
         if (isFirstStart) {
-            // Diary
-            sharedPref.edit().apply {
-                putInt("year", LocalDate.now().year)
-                putInt("month", LocalDate.now().monthValue)
-                putInt("day", LocalDate.now().dayOfMonth)
-                apply()
-            }
             val intent = Intent(this, IntroActivity::class.java)
             appIntroLauncher.launch(intent)
         }

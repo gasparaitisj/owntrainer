@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +15,9 @@ import com.gasparaiciukas.owntrainer.database.Food
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.databinding.FragmentSelectMealItemBinding
 import com.gasparaiciukas.owntrainer.network.FoodApi
+import com.gasparaiciukas.owntrainer.viewmodel.BundleViewModelFactory
+import com.gasparaiciukas.owntrainer.viewmodel.FoodItemViewModel
+import com.gasparaiciukas.owntrainer.viewmodel.SelectMealItemViewModel
 import io.realm.Realm
 
 class SelectMealItemFragment : Fragment() {
@@ -22,35 +26,16 @@ class SelectMealItemFragment : Fragment() {
 
     private lateinit var adapter: MealAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
-    private var position = 0
-    private var quantity = 0.0
-    private lateinit var meals: List<Meal>
-    private lateinit var realm: Realm
-    private lateinit var foodItem: FoodApi
-    private val listener: (meal: Meal, position: Int) -> Unit = { meal: Meal, _: Int ->
-        val foodList = meal.foodList
-        val food = Food()
-        food.title = foodItem.label
-        food.caloriesPer100G = foodItem.nutrients.calories
-        food.carbsPer100G = foodItem.nutrients.carbs
-        food.fatPer100G = foodItem.nutrients.fat
-        food.proteinPer100G = foodItem.nutrients.protein
-        food.quantityInG = quantity
-        food.calories = food.calculateCalories(food.caloriesPer100G, food.quantityInG)
-        food.carbs = food.calculateCarbs(food.carbsPer100G, food.quantityInG)
-        food.fat = food.calculateFat(food.fatPer100G, food.quantityInG)
-        food.protein = food.calculateProtein(food.proteinPer100G, food.quantityInG)
 
-        // Write to database
-        val realm = Realm.getDefaultInstance()
-        realm.executeTransaction {
-            foodList.add(food)
-            meal.foodList = foodList
-        }
-        realm.close()
+    private val listener: (meal: Meal, position: Int) -> Unit = { meal: Meal, _: Int ->
+        viewModel.addFoodToMeal(meal)
         findNavController().popBackStack()
     }
+
     private val args: SelectMealItemFragmentArgs by navArgs()
+
+    private lateinit var viewModel: SelectMealItemViewModel
+    private lateinit var viewModelFactory: BundleViewModelFactory
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,26 +44,22 @@ class SelectMealItemFragment : Fragment() {
     ): View {
         _binding = FragmentSelectMealItemBinding.inflate(inflater, container, false)
 
-        foodItem = args.foodItem
-        quantity = args.quantity.toDouble()
-
-        realm = Realm.getDefaultInstance()
-        meals = realm.where(Meal::class.java).findAll()
+        val bundle = Bundle().apply {
+            putParcelable("foodItem", args.foodItem)
+            putInt("quantity", args.quantity)
+        }
+        viewModelFactory = BundleViewModelFactory(bundle)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(SelectMealItemViewModel::class.java)
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = MealAdapter(meals, listener)
+        adapter = MealAdapter(viewModel.meals, listener)
         layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = layoutManager
-    }
-
-    override fun onResume() {
-        super.onResume()
-        adapter.reload()
     }
 
     override fun onDestroyView() {

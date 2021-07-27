@@ -173,7 +173,7 @@ class StepFragment : Fragment() {
         entry.timeElapsedInS = totalTimeElapsedInS
         entry.year = LocalDate.now().year
         entry.yearAndDayOfYear = LocalDate.now().year.toString() + previousDay.toString()
-        realm.executeTransaction { r: Realm -> r.insertOrUpdate(entry) }
+        realm.executeTransaction { it.insertOrUpdate(entry) }
         //        RealmResults<PedometerEntry> entries = realm.where(PedometerEntry.class).findAll();
 //        for (PedometerEntry entry : entries) {
 //            Log.d(TAG, entry.getYear() + " " + entry.getDayOfYear() + " " +

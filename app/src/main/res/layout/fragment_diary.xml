@@ -32,9 +32,12 @@
                     android:src="@drawable/outline_arrow_back_ios_24" />
 
                 <LinearLayout
+                    android:id="@+id/layout_date"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="8"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center">
 
                     <TextView

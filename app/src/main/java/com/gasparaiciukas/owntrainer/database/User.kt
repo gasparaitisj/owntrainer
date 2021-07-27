@@ -3,6 +3,7 @@ package com.gasparaiciukas.owntrainer.database
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
+import java.time.LocalDate
 
 open class User : RealmObject() {
     @PrimaryKey
@@ -17,6 +18,9 @@ open class User : RealmObject() {
     var lifestyle: String = ""
     var avgWalkingSpeedInKmH: Double = 5.0
     var dailyStepGoal: Int = 10000
+    var currentYear: Int = LocalDate.now().year
+    var currentMonth = LocalDate.now().monthValue
+    var currentDay = LocalDate.now().dayOfMonth
 
     // Calculated information using formulas
     var bmr: Double = 0.0

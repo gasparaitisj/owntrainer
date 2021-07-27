@@ -15,10 +15,6 @@ class FoodAdapter(foodList: List<Food>) : RecyclerView.Adapter<FoodViewHolder>()
         val binding = FoodRowBinding.bind(view)
     }
 
-    fun reload() {
-        notifyDataSetChanged()
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.food_row, parent, false)
         return FoodViewHolder(view)

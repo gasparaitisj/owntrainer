@@ -5,72 +5,57 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
-import com.gasparaiciukas.owntrainer.database.DiaryEntry
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.databinding.FragmentAddMealToDiaryBinding
-import io.realm.Realm
+import com.gasparaiciukas.owntrainer.viewmodel.AddMealToDiaryViewModel
+import com.gasparaiciukas.owntrainer.viewmodel.BundleViewModelFactory
 
 class AddMealToDiaryFragment : Fragment() {
     private var _binding: FragmentAddMealToDiaryBinding? = null
     private val binding get() = _binding!!
+
+    private val args: AddMealToDiaryFragmentArgs by navArgs()
+
+    private lateinit var viewModel: AddMealToDiaryViewModel
+    private lateinit var viewModelFactory: BundleViewModelFactory
+
     private lateinit var adapter: MealAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
-    private lateinit var primaryKey: String
-    private lateinit var realm: Realm
-    private lateinit var meals: List<Meal>
     private val listener: (meal: Meal, position: Int) -> Unit = { meal: Meal, _: Int ->
-        val realm = Realm.getDefaultInstance()
-        val diaryEntry = realm.where(DiaryEntry::class.java)
-            .equalTo("yearAndDayOfYear", primaryKey)
-            .findFirst()
-        if (diaryEntry != null) {
-            val mealList = diaryEntry.meals
-            realm.executeTransaction {
-                mealList.add(meal)
-                diaryEntry.meals = mealList
-            }
-        }
-        realm.close()
+        viewModel.selectMeal(meal)
         findNavController().popBackStack()
     }
-    private val args: AddMealToDiaryFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentAddMealToDiaryBinding.inflate(inflater, container, false)
-
-        primaryKey = args.primaryKey
-
-        realm = Realm.getDefaultInstance()
-        meals = realm.where(Meal::class.java).findAll()
+        val bundle = Bundle().apply {
+            putString("primaryKey", args.primaryKey)
+        }
+        viewModelFactory = BundleViewModelFactory(bundle)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(AddMealToDiaryViewModel::class.java)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        adapter = MealAdapter(meals, listener)
+        adapter = MealAdapter(viewModel.meals, listener)
         layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = layoutManager
     }
 
-    override fun onResume() {
-        super.onResume()
-        adapter.reload()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
-        realm.close()
         _binding = null
     }
 }

@@ -18,11 +18,6 @@ class FoodApiAdapter(
         val binding = FoodapiRowBinding.bind(view)
     }
 
-    fun reload(foods: List<FoodApi>) {
-        this.foods = foods
-        notifyDataSetChanged()
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodApiViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.foodapi_row, parent, false)
         return FoodApiViewHolder(view)
