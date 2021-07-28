@@ -9,23 +9,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
-import com.gasparaiciukas.owntrainer.database.Food
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.databinding.FragmentSelectMealItemBinding
-import com.gasparaiciukas.owntrainer.network.FoodApi
 import com.gasparaiciukas.owntrainer.viewmodel.BundleViewModelFactory
-import com.gasparaiciukas.owntrainer.viewmodel.FoodItemViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.SelectMealItemViewModel
-import io.realm.Realm
 
 class SelectMealItemFragment : Fragment() {
     private var _binding: FragmentSelectMealItemBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var adapter: MealAdapter
-    private lateinit var layoutManager: RecyclerView.LayoutManager
 
     private val listener: (meal: Meal, position: Int) -> Unit = { meal: Meal, _: Int ->
         viewModel.addFoodToMeal(meal)
@@ -57,7 +51,7 @@ class SelectMealItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = MealAdapter(viewModel.meals, listener)
-        layoutManager = LinearLayoutManager(context)
+        val layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = layoutManager
     }

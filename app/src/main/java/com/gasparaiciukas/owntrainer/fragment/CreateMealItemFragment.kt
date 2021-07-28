@@ -4,16 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.databinding.FragmentCreateMealItemBinding
 import com.gasparaiciukas.owntrainer.viewmodel.CreateMealItemViewModel
-import com.gasparaiciukas.owntrainer.viewmodel.DiaryViewModel
-import io.realm.Realm
 
 class CreateMealItemFragment : Fragment() {
     private var _binding: FragmentCreateMealItemBinding? = null
@@ -38,7 +33,10 @@ class CreateMealItemFragment : Fragment() {
 
     private fun initUi() {
         binding.btnSave.setOnClickListener {
-            viewModel.addMealToDatabase(binding.etTitle.text.toString(), binding.etInstructions.text.toString())
+            viewModel.addMealToDatabase(
+                binding.etTitle.text.toString(),
+                binding.etInstructions.text.toString()
+            )
             findNavController().popBackStack()
         }
     }

@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.FoodAdapter
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealItemBinding
@@ -28,7 +27,6 @@ class MealItemFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: FoodAdapter
-    private lateinit var layoutManager: RecyclerView.LayoutManager
 
     private val args: MealItemFragmentArgs by navArgs()
 
@@ -59,7 +57,7 @@ class MealItemFragment : Fragment() {
 
     private fun initUi() {
         adapter = FoodAdapter(viewModel.foodList)
-        layoutManager = LinearLayoutManager(context)
+        val layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = layoutManager
 
@@ -76,15 +74,15 @@ class MealItemFragment : Fragment() {
         binding.tvProteinWeight.text = viewModel.protein.roundToInt().toString()
         binding.tvProteinPercentage.text =
             String.format("%s %%", (viewModel.protein / viewModel.proteinDailyIntake * 100).roundToInt())
-        binding.tvProteinWeight.text = viewModel.calories.roundToInt().toString()
-        binding.tvProteinPercentage.text =
+        binding.tvCaloriesCount.text = viewModel.calories.roundToInt().toString()
+        binding.tvCaloriesPercentage.text =
             String.format("%s %%", (viewModel.calories / viewModel.calorieDailyIntake * 100).roundToInt())
 
         // Create colors representing nutrients
         val colors: MutableList<Int> = ArrayList()
         colors.add(ContextCompat.getColor(requireContext(), R.color.colorGold)) // carbs
         colors.add(ContextCompat.getColor(requireContext(), R.color.colorOrange)) // fat
-        colors.add(ContextCompat.getColor(requireContext(), R.color.colorSmokeDark)) // protein
+        colors.add(ContextCompat.getColor(requireContext(), R.color.colorSmoke)) // protein
 
         // Add data to pie chart
         val entries: MutableList<PieEntry> = ArrayList()

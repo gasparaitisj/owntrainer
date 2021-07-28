@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.databinding.FragmentAddMealToDiaryBinding
@@ -26,7 +25,6 @@ class AddMealToDiaryFragment : Fragment() {
     private lateinit var viewModelFactory: BundleViewModelFactory
 
     private lateinit var adapter: MealAdapter
-    private lateinit var layoutManager: RecyclerView.LayoutManager
     private val listener: (meal: Meal, position: Int) -> Unit = { meal: Meal, _: Int ->
         viewModel.selectMeal(meal)
         findNavController().popBackStack()
@@ -42,14 +40,15 @@ class AddMealToDiaryFragment : Fragment() {
             putString("primaryKey", args.primaryKey)
         }
         viewModelFactory = BundleViewModelFactory(bundle)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(AddMealToDiaryViewModel::class.java)
+        viewModel =
+            ViewModelProvider(this, viewModelFactory).get(AddMealToDiaryViewModel::class.java)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = MealAdapter(viewModel.meals, listener)
-        layoutManager = LinearLayoutManager(context)
+        val layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = layoutManager
     }

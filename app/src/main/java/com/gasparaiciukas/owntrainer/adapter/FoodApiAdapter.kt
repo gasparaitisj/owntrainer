@@ -32,7 +32,6 @@ class FoodApiAdapter(
         holder.binding.tvTitle.text = label
         holder.binding.tvCalories.text = calories.toString()
 
-        // Start new activity on row clicked
         holder.binding.layoutItem.setOnClickListener { listener(foods[position], position) }
     }
 

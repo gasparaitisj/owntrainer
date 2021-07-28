@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.fragment.IntroDetailsFragment
 import com.github.appintro.AppIntro
 import com.github.appintro.AppIntroFragment

@@ -10,17 +10,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodItemBinding
-import com.gasparaiciukas.owntrainer.network.FoodApi
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
-import com.gasparaiciukas.owntrainer.viewmodel.AddMealToDiaryViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.BundleViewModelFactory
 import com.gasparaiciukas.owntrainer.viewmodel.FoodItemViewModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import io.realm.Realm
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -86,7 +82,7 @@ class FoodItemFragment : Fragment() {
         val colors: MutableList<Int> = ArrayList()
         colors.add(ContextCompat.getColor(requireContext(), R.color.colorGold)) // carbs
         colors.add(ContextCompat.getColor(requireContext(), R.color.colorOrange)) // fat
-        colors.add(ContextCompat.getColor(requireContext(), R.color.colorSmokeDark)) // protein
+        colors.add(ContextCompat.getColor(requireContext(), R.color.colorSmoke)) // protein
 
 
         // Add data to pie chart

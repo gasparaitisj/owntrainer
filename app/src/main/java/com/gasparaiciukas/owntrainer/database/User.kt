@@ -8,7 +8,7 @@ import java.time.LocalDate
 open class User : RealmObject() {
     @PrimaryKey
     @Required
-    lateinit var userId: String
+    var userId: String = "user"
 
     // Basic information
     var sex: String = ""

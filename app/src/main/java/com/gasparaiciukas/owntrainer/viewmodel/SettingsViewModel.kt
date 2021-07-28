@@ -3,6 +3,7 @@ package com.gasparaiciukas.owntrainer.viewmodel
 import androidx.lifecycle.ViewModel
 import com.gasparaiciukas.owntrainer.database.User
 import io.realm.Realm
+import timber.log.Timber
 
 class SettingsViewModel : ViewModel() {
     var sex: String = "Male"
@@ -17,9 +18,7 @@ class SettingsViewModel : ViewModel() {
     }
 
     private fun loadData() {
-        val user = realm.where(User::class.java)
-            .equalTo("userId", "user")
-            .findFirst()
+        val user = realm.where(User::class.java).findFirst()
         if (user != null) {
             sex = user.sex
             age = user.ageInYears
@@ -45,7 +44,10 @@ class SettingsViewModel : ViewModel() {
         user.dailyCarbsIntakeInG = user.calculateDailyCarbsIntake(user.dailyKcalIntake)
         user.dailyFatIntakeInG = user.calculateDailyFatIntake(user.dailyKcalIntake)
         user.dailyProteinIntakeInG = user.calculateDailyProteinIntakeInG(weight)
-        realm.executeTransaction { it.insertOrUpdate(user) }
+        realm.executeTransaction {
+            it.insertOrUpdate(user)
+            Timber.d("Transaction ended!")
+        }
     }
 
     override fun onCleared() {

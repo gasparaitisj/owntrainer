@@ -15,13 +15,10 @@ import com.gasparaiciukas.owntrainer.databinding.FragmentMealBinding
 import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import io.realm.Realm
 
 class MealFragment : Fragment() {
     private var _binding: FragmentMealBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var supportFragmentManager: FragmentManager
 
     private lateinit var adapter: MealAdapter
 
@@ -31,11 +28,6 @@ class MealFragment : Fragment() {
     }
 
     private val viewModel: MealViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        supportFragmentManager = requireActivity().supportFragmentManager
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {

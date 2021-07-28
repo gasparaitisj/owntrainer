@@ -7,18 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
-import com.gasparaiciukas.owntrainer.database.DiaryEntry
 import com.gasparaiciukas.owntrainer.database.Meal
-import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.databinding.FragmentDiaryBinding
 import com.gasparaiciukas.owntrainer.utils.DateFormatter
 import com.gasparaiciukas.owntrainer.viewmodel.DiaryViewModel
-import io.realm.Realm
 import timber.log.Timber
-import java.time.LocalDate
 import kotlin.math.roundToInt
 
 class DiaryFragment : Fragment() {
@@ -26,35 +23,35 @@ class DiaryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: MealAdapter
-    private lateinit var supportFragmentManager: FragmentManager
 
     private val viewModel: DiaryViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        supportFragmentManager = requireActivity().supportFragmentManager
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        Timber.d("DiaryFragment is created!")
         _binding = FragmentDiaryBinding.inflate(inflater, container, false)
-        initUi()
+        viewModel.dataChanged.observe(viewLifecycleOwner, Observer {
+            setTextViews()
+        })
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRecyclerView()
+        initUi()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Timber.d("DiaryFragment is destroyed!")
         _binding = null
     }
 
     private fun initUi() {
+        setTextViews()
+        setListeners()
+        initRecyclerView()
+    }
+
+    private fun setTextViews() {
         // Navigation
         binding.tvDayOfWeek.text = DateFormatter.dayOfWeekToString(viewModel.diaryEntry.dayOfWeek)
         binding.tvMonthOfYear.text = DateFormatter.monthOfYearToString(viewModel.diaryEntry.monthOfYear)
@@ -77,12 +74,14 @@ class DiaryFragment : Fragment() {
         binding.tvProteinPercentage.text = viewModel.proteinPercentage.roundToInt().toString()
         binding.tvFatPercentage.text = viewModel.fatPercentage.roundToInt().toString()
         binding.tvCarbsPercentage.text = viewModel.carbsPercentage.roundToInt().toString()
+    }
 
+    private fun setListeners() {
         // Add meal to diary on FAB clicked
         binding.fab.setOnClickListener {
             val action = DiaryFragmentDirections.actionDiaryFragmentToAddMealToDiaryFragment(
-                    viewModel.diaryEntry.yearAndDayOfYear.toString()
-                )
+                viewModel.diaryEntry.yearAndDayOfYear
+            )
             findNavController().navigate(action)
         }
 

@@ -1,9 +1,10 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gasparaiciukas.owntrainer.database.DiaryEntry
 import com.gasparaiciukas.owntrainer.database.User
-import com.gasparaiciukas.owntrainer.utils.DateFormatter
 import io.realm.Realm
 import timber.log.Timber
 import java.time.LocalDate
@@ -24,14 +25,21 @@ class DiaryViewModel : ViewModel() {
     var fatPercentage: Double = 0.0
     var carbsPercentage: Double = 0.0
 
+    private val _dataChanged = MutableLiveData<Boolean>()
+    val dataChanged: LiveData<Boolean>
+        get() = _dataChanged
+
     init {
-        Timber.d("DiaryViewModel is created!")
+        realm.addChangeListener {
+            loadData()
+            _dataChanged.value = _dataChanged.value != true
+            Timber.d("Data changed!")
+        }
         loadData()
     }
 
     override fun onCleared() {
         super.onCleared()
-        Timber.d("DiaryViewModel is destroyed!")
         realm.close()
     }
 

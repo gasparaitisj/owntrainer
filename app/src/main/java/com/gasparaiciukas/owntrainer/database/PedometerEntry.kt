@@ -6,7 +6,7 @@ import io.realm.annotations.Required
 
 open class PedometerEntry
 (
-@PrimaryKey @Required var yearAndDayOfYear: String? = null,
+@PrimaryKey @Required var yearAndDayOfYear: String = "",
 var year: Int = 0,
 var dayOfYear: Int = 0,
 var steps: Int = 0,

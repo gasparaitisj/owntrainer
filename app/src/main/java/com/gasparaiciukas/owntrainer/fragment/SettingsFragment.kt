@@ -13,7 +13,7 @@ import androidx.fragment.app.viewModels
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentSettingsBinding
 import com.gasparaiciukas.owntrainer.viewmodel.SettingsViewModel
-import java.util.ArrayList
+import java.util.*
 
 class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null

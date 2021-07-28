@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
@@ -19,15 +18,12 @@ import com.gasparaiciukas.owntrainer.network.FoodApi
 import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import timber.log.Timber
 
 class FoodFragment : Fragment() {
     private var _binding: FragmentFoodBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var adapter: FoodApiAdapter
-
-    private lateinit var supportFragmentManager: FragmentManager
 
     private var foodsApi: MutableList<FoodApi> = mutableListOf()
 
@@ -42,30 +38,17 @@ class FoodFragment : Fragment() {
 
     private val viewModel: FoodViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        supportFragmentManager = requireActivity().supportFragmentManager
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         _binding = FragmentFoodBinding.inflate(inflater, container, false)
         viewModel.foodsApi.observe(viewLifecycleOwner, Observer { foods ->
-            foodsApi.apply {
-                foodsApi.clear()
-                foodsApi.addAll(foods)
-            }
-            adapter.apply {
-                notifyItemRangeRemoved(0, adapter.itemCount)
-                notifyItemRangeInserted(0, foodsApi.size)
-            }
+            reloadRecyclerView(foods)
         })
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRecyclerView()
         initUi()
     }
 
@@ -74,15 +57,16 @@ class FoodFragment : Fragment() {
         _binding = null
     }
 
-    private fun initRecyclerView() {
-        // Set up recycler view
-        val layoutManager = LinearLayoutManager(context)
-        adapter = FoodApiAdapter(foodsApi, listener)
-        binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = adapter
+    private fun reloadRecyclerView(foods: List<FoodApi>) {
+        val itemCount = adapter.itemCount
+        foodsApi.clear()
+        adapter.notifyItemRangeRemoved(0, itemCount)
+        foodsApi.addAll(foods)
+        adapter.notifyItemRangeInserted(0, foodsApi.size)
     }
 
     private fun initUi() {
+        initRecyclerView()
         // Send get request on end icon clicked
         binding.layoutEtSearch.setEndIconOnClickListener {
             if (!TextUtils.isEmpty(binding.etSearch.text)) {
@@ -113,5 +97,12 @@ class FoodFragment : Fragment() {
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
+    }
+
+    private fun initRecyclerView() {
+        val layoutManager = LinearLayoutManager(context)
+        adapter = FoodApiAdapter(foodsApi, listener)
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.adapter = adapter
     }
 }
