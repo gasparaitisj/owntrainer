@@ -87,5 +87,5 @@ lint/tmp/
 # Android Profiling
 *.hprof
 
-# TODO file
+# To-do file
 TODO.txt

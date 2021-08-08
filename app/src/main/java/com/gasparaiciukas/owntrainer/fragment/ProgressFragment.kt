@@ -12,10 +12,4 @@ class ProgressFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_progress, container, false)
     }
-
-    companion object {
-        fun newInstance(): ProgressFragment {
-            return ProgressFragment()
-        }
-    }
 }

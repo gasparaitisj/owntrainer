@@ -9,14 +9,9 @@ import com.gasparaiciukas.owntrainer.adapter.FoodAdapter.FoodViewHolder
 import com.gasparaiciukas.owntrainer.database.Food
 import com.gasparaiciukas.owntrainer.databinding.FoodRowBinding
 
-class FoodAdapter(foodList: List<Food>) : RecyclerView.Adapter<FoodViewHolder>() {
-    private val foods: List<Food> = foodList
+class FoodAdapter(private val foods: List<Food>) : RecyclerView.Adapter<FoodViewHolder>() {
     class FoodViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         val binding = FoodRowBinding.bind(view)
-    }
-
-    fun reload() {
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodViewHolder {

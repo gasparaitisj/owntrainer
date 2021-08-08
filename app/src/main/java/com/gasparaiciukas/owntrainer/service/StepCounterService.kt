@@ -2,7 +2,6 @@ package com.gasparaiciukas.owntrainer.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.hardware.Sensor
@@ -17,7 +16,6 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.activity.StepActivity
 
 class StepCounterService : Service(), SensorEventListener {
     // Variables
@@ -121,8 +119,8 @@ class StepCounterService : Service(), SensorEventListener {
         }
 
         // Open app on notification click
-        val stepActivityIntent = Intent(this, StepActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 1, stepActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        //val stepActivityIntent = Intent(this, StepActivity::class.java)
+        //val pendingIntent = PendingIntent.getActivity(this, 1, stepActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         // Build notification
         builder = NotificationCompat.Builder(applicationContext, "Pedometer notification")
@@ -131,7 +129,7 @@ class StepCounterService : Service(), SensorEventListener {
                 .setContentText(currentSteps.toString())
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setOngoing(true)
-                .setContentIntent(pendingIntent)
+                //.setContentIntent(pendingIntent)
         notificationManager = NotificationManagerCompat.from(this)
         notificationManager.notify(NOTIFICATION_ID_PEDOMETER, builder.build())
         //Log.d("test", "Notification shown!");

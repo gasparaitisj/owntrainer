@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_main"
+    app:startDestination="@id/diaryFragment">
+    <fragment
+        android:id="@+id/addMealToDiaryFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.AddMealToDiaryFragment"
+        android:label="AddMealToDiaryFragment" >
+        <argument
+            android:name="primaryKey"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/createMealItemFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.CreateMealItemFragment"
+        android:label="CreateMealItemFragment" />
+    <fragment
+        android:id="@+id/diaryFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.DiaryFragment"
+        android:label="DiaryFragment" >
+        <action
+            android:id="@+id/action_diaryFragment_to_addMealToDiaryFragment"
+            app:destination="@id/addMealToDiaryFragment" />
+        <action
+            android:id="@+id/action_diaryFragment_self"
+            app:destination="@id/diaryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/foodFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.FoodFragment"
+        android:label="FoodFragment" >
+        <action
+            android:id="@+id/action_foodFragment_to_mealFragment"
+            app:destination="@id/mealFragment" />
+        <action
+            android:id="@+id/action_foodFragment_to_foodItemFragment"
+            app:destination="@id/foodItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/foodItemFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.FoodItemFragment"
+        android:label="FoodItemFragment" >
+        <argument
+            android:name="position"
+            app:argType="integer" />
+        <argument
+            android:name="foodItem"
+            app:argType="com.gasparaiciukas.owntrainer.network.FoodApi" />
+        <action
+            android:id="@+id/action_foodItemFragment_to_selectMealItemFragment"
+            app:destination="@id/selectMealItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mealFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.MealFragment"
+        android:label="MealFragment" >
+        <action
+            android:id="@+id/action_mealFragment_to_foodFragment"
+            app:destination="@id/foodFragment" />
+        <action
+            android:id="@+id/action_mealFragment_to_mealItemFragment"
+            app:destination="@id/mealItemFragment" />
+        <action
+            android:id="@+id/action_mealFragment_to_createMealItemFragment"
+            app:destination="@id/createMealItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mealItemFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.MealItemFragment"
+        android:label="MealItemFragment" >
+        <argument
+            android:name="position"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/progressFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.ProgressFragment"
+        android:label="ProgressFragment" />
+    <fragment
+        android:id="@+id/selectMealItemFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.SelectMealItemFragment"
+        android:label="SelectMealItemFragment" >
+        <argument
+            android:name="foodItem"
+            app:argType="com.gasparaiciukas.owntrainer.network.FoodApi" />
+        <argument
+            android:name="quantity"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.SettingsFragment"
+        android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/stepFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.StepFragment"
+        android:label="StepFragment" >
+        <action
+            android:id="@+id/action_stepFragment_self"
+            app:destination="@id/stepFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/introActivity"
+        android:name="com.gasparaiciukas.owntrainer.IntroActivity"
+        android:label="IntroActivity" />
+</navigation>

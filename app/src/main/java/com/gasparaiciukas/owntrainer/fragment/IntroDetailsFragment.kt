@@ -36,7 +36,6 @@ class IntroDetailsFragment : Fragment() {
         writeUserToDatabase()
         _binding = null
     }
-    //deleted onDestroy() for writeUserToDatabase()
 
     private fun initUi() {
         // Sex menu input listener
@@ -125,13 +124,7 @@ class IntroDetailsFragment : Fragment() {
         user.dailyFatIntakeInG = user.calculateDailyFatIntake(user.dailyKcalIntake)
         user.dailyProteinIntakeInG = user.calculateDailyProteinIntakeInG(weight)
 
-        realmInstance.executeTransaction { realm -> realm.insertOrUpdate(user) }
+        realmInstance.executeTransaction { it.insertOrUpdate(user) }
         realmInstance.close()
-    }
-
-    companion object {
-        fun newInstance(): IntroDetailsFragment {
-            return IntroDetailsFragment()
-        }
     }
 }

@@ -8,7 +8,7 @@ import io.realm.annotations.Required
 open class DiaryEntry : RealmObject() {
     @PrimaryKey
     @Required
-    var yearAndDayOfYear: String? = null
+    var yearAndDayOfYear: String = ""
     var year: Int = 0
     var dayOfYear: Int = 0
     var dayOfWeek: Int = 0

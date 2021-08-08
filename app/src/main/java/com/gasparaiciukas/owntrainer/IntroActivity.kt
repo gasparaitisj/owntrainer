@@ -1,11 +1,12 @@
-package com.gasparaiciukas.owntrainer.activity
+package com.gasparaiciukas.owntrainer
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.fragment.IntroDetailsFragment
 import com.github.appintro.AppIntro
 import com.github.appintro.AppIntroFragment
@@ -20,17 +21,26 @@ class IntroActivity : AppIntro() {
 
     override fun onDonePressed(currentFragment: Fragment?) {
         super.onDonePressed(currentFragment)
+        // If app intro is completed, do not start the app intro ever again
+        getSharedPreferences("diary", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("firstStart", false)
+            .apply()
+        setResult(Activity.RESULT_OK)
         finish()
     }
 
     private fun getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            askForPermissions(arrayOf(Manifest.permission.ACTIVITY_RECOGNITION, Manifest.permission.FOREGROUND_SERVICE), 2, false)
+            askForPermissions(arrayOf(
+                    Manifest.permission.ACTIVITY_RECOGNITION,
+                    Manifest.permission.FOREGROUND_SERVICE
+            ), 2, false)
         }
     }
 
     private fun addSlides() {
-        val detailsFragment = IntroDetailsFragment.newInstance()
+        val detailsFragment = IntroDetailsFragment()
         addSlide(AppIntroFragment.newInstance(
                 title = "Welcome to owntrainer!",
                 description = "Welcome to the all-in-one fitness app - let's get started!",

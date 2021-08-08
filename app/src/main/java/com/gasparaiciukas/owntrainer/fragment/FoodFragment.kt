@@ -2,58 +2,54 @@ package com.gasparaiciukas.owntrainer.fragment
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.FoodApiAdapter
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodBinding
 import com.gasparaiciukas.owntrainer.network.FoodApi
-import com.gasparaiciukas.owntrainer.network.GetResponse
-import com.gasparaiciukas.owntrainer.network.GetService
+import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class FoodFragment : Fragment() {
     private var _binding: FragmentFoodBinding? = null
     private val binding get() = _binding!!
-    private lateinit var getResponse: GetResponse
-    private lateinit var getService: GetService
+
     private lateinit var adapter: FoodApiAdapter
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var supportFragmentManager: FragmentManager
-    private var foodsApi: List<FoodApi> = arrayListOf()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Get request
-        val retrofitGet = Retrofit.Builder()
-                .baseUrl(GetService.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-        getService = retrofitGet.create(GetService::class.java)
+    private var foodsApi: MutableList<FoodApi> = mutableListOf()
 
-        // Get fragment manager from activity
-        supportFragmentManager = requireActivity().supportFragmentManager
+    private val listener: (food: FoodApi, position: Int) -> Unit = { _: FoodApi, position: Int ->
+        val action =
+            FoodFragmentDirections.actionFoodFragmentToFoodItemFragment(
+                position = position,
+                foodItem = foodsApi[position]
+            )
+        findNavController().navigate(action)
     }
+
+    private val viewModel: FoodViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         _binding = FragmentFoodBinding.inflate(inflater, container, false)
-        initUi()
+        viewModel.foodsApi.observe(viewLifecycleOwner, Observer { foods ->
+            reloadRecyclerView(foods)
+        })
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initUi()
     }
 
     override fun onDestroyView() {
@@ -61,60 +57,29 @@ class FoodFragment : Fragment() {
         _binding = null
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initRecyclerView()
-    }
-
-    private fun initRecyclerView() {
-        // Set up recycler view
-        val layoutManager = LinearLayoutManager(context)
-        adapter = FoodApiAdapter(foodsApi)
-        binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = adapter
-    }
-
-    private fun sendGet(query: String) {
-        foodsApi = arrayListOf()
-        val call = getService.getResponse(APP_ID, APP_KEY, query)
-        call.enqueue(object : Callback<GetResponse?> {
-            override fun onResponse(call: Call<GetResponse?>, response: Response<GetResponse?>) {
-                getResponse = response.body()!!
-                val hints = getResponse.hints
-                Log.d("testGet", "Sent: " + getResponse.text)
-                for (i in hints!!.indices) {
-                    (foodsApi as ArrayList<FoodApi>).add(hints[i].foodApi!!)
-                }
-                Log.d("testGet", foodsApi[0].label)
-                adapter.reload(foodsApi)
-            }
-            override fun onFailure(call: Call<GetResponse?>, t: Throwable) {
-                Toast.makeText(context, "Search request failed!", Toast.LENGTH_LONG).show()
-                Log.d("testGet", t.toString())
-            }
-        })
+    private fun reloadRecyclerView(foods: List<FoodApi>) {
+        val itemCount = adapter.itemCount
+        foodsApi.clear()
+        adapter.notifyItemRangeRemoved(0, itemCount)
+        foodsApi.addAll(foods)
+        adapter.notifyItemRangeInserted(0, foodsApi.size)
     }
 
     private fun initUi() {
+        initRecyclerView()
         // Send get request on end icon clicked
-        binding.layoutEtSearch.setEndIconOnClickListener { v ->
+        binding.layoutEtSearch.setEndIconOnClickListener {
             if (!TextUtils.isEmpty(binding.etSearch.text)) {
-                Toast.makeText(v.context, binding.etSearch.text.toString(), Toast.LENGTH_SHORT).show()
-                sendGet(binding.etSearch.text.toString())
-            } else {
-                Toast.makeText(v.context, "Search query is empty!", Toast.LENGTH_SHORT).show()
+                viewModel.sendGet(binding.etSearch.text.toString())
             }
         }
 
         // Also send get request on keyboard search button clicked
-        binding.etSearch.setOnEditorActionListener { v, actionId, _ ->
+        binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 if (!TextUtils.isEmpty(binding.etSearch.text)) {
-                    Toast.makeText(v.context, binding.etSearch.text.toString(), Toast.LENGTH_SHORT).show()
-                    sendGet(binding.etSearch.text.toString())
-                } else {
-                    Toast.makeText(v.context, "Search query is empty!", Toast.LENGTH_SHORT).show()
+                    viewModel.sendGet(binding.etSearch.text.toString())
                 }
                 handled = true
             }
@@ -124,14 +89,9 @@ class FoodFragment : Fragment() {
         // Tabs (foods or meals)
         binding.layoutTab.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                if (tab.position == 0) {
-                    val transaction = supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.layout_frame_fragment, newInstance())
-                    transaction.commit()
-                } else if (tab.position == 1) {
-                    val transaction = supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.layout_frame_fragment, MealFragment.newInstance())
-                    transaction.commit()
+                if (tab.position == 1) {
+                    val action = FoodFragmentDirections.actionFoodFragmentToMealFragment()
+                    findNavController().navigate(action)
                 }
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {}
@@ -139,12 +99,10 @@ class FoodFragment : Fragment() {
         })
     }
 
-    companion object {
-        fun newInstance(): FoodFragment {
-            return FoodFragment()
-        }
-
-        private const val APP_KEY = "30a0c47f24999903266d0171d50b7aa6"
-        private const val APP_ID = "0de8a357"
+    private fun initRecyclerView() {
+        val layoutManager = LinearLayoutManager(context)
+        adapter = FoodApiAdapter(foodsApi, listener)
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.adapter = adapter
     }
 }
