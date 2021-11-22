@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.adapter.FoodAdapter
+import com.gasparaiciukas.owntrainer.adapter.DatabaseFoodAdapter
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealItemBinding
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
 import com.gasparaiciukas.owntrainer.viewmodel.BundleViewModelFactory
@@ -26,7 +26,7 @@ class MealItemFragment : Fragment() {
     private var _binding: FragmentMealItemBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: FoodAdapter
+    private lateinit var adapter: DatabaseFoodAdapter
 
     private val args: MealItemFragmentArgs by navArgs()
 
@@ -56,7 +56,7 @@ class MealItemFragment : Fragment() {
     }
 
     private fun initUi() {
-        adapter = FoodAdapter(viewModel.foodList)
+        adapter = DatabaseFoodAdapter(viewModel.foodList)
         val layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = layoutManager

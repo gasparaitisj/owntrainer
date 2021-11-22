@@ -6,11 +6,6 @@
         android:icon="@drawable/baseline_home_black_24"
         android:title="@string/text_navbar_1" />
     <item
-        android:id="@+id/stepFragment"
-        android:enabled="true"
-        android:icon="@drawable/baseline_directions_walk_black_24"
-        android:title="@string/text_navbar_2" />
-    <item
         android:id="@+id/mealFragment"
         android:enabled="true"
         android:icon="@drawable/baseline_local_dining_black_24"

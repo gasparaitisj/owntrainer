@@ -7,13 +7,12 @@ import retrofit2.http.Query
 
 interface GetService {
     @Headers("Content-Type: application/json")
-    @GET("parser")
-    fun getResponse(@Query("app_id") appId: String,
-                    @Query("app_key") appKey: String,
-                    @Query("ingr") query: String)
+    @GET("search")
+    fun getResponse(@Query("api_key") apiKey: String,
+                    @Query("query") query: String)
     : Call<GetResponse>
 
     companion object {
-        const val BASE_URL = "https://api.edamam.com/api/food-database/v2/"
+        const val BASE_URL = "https://api.nal.usda.gov/fdc/v1/foods/"
     }
 }

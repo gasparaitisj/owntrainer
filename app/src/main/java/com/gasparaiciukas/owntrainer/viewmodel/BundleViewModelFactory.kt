@@ -10,11 +10,11 @@ class BundleViewModelFactory(private val bundle: Bundle) : ViewModelProvider.Fac
         if (modelClass.isAssignableFrom(AddMealToDiaryViewModel::class.java)) {
             return AddMealToDiaryViewModel(bundle) as T
         }
-        if (modelClass.isAssignableFrom(FoodItemViewModel::class.java)) {
-            return FoodItemViewModel(bundle) as T
-        }
         if (modelClass.isAssignableFrom(MealItemViewModel::class.java)) {
             return MealItemViewModel(bundle) as T
+        }
+        if (modelClass.isAssignableFrom(FoodItemViewModel::class.java)) {
+            return FoodItemViewModel(bundle) as T
         }
         if (modelClass.isAssignableFrom(SelectMealItemViewModel::class.java)) {
             return SelectMealItemViewModel(bundle) as T

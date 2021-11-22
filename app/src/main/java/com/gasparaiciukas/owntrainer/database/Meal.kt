@@ -7,7 +7,7 @@ import io.realm.annotations.Required
 
 open class Meal : RealmObject() {
     @PrimaryKey @Required var title: String = ""
-    var foodList = RealmList<Food>()
+    var foodList = RealmList<FoodEntry>()
     var calories: Double = 0.0
     var carbs: Double = 0.0
     var fat: Double = 0.0

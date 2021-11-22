@@ -3,11 +3,10 @@ package com.gasparaiciukas.owntrainer.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.gasparaiciukas.owntrainer.APIConstants
-import com.gasparaiciukas.owntrainer.network.FoodApi
+import com.gasparaiciukas.owntrainer.BuildConfig
+import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.GetResponse
 import com.gasparaiciukas.owntrainer.network.GetService
-import com.gasparaiciukas.owntrainer.network.Hint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,9 +17,9 @@ import timber.log.Timber
 class FoodViewModel : ViewModel() {
     private lateinit var getResponse: GetResponse
     private lateinit var getService: GetService
-    private val _foodsApi = MutableLiveData<List<FoodApi>>()
-    val foodsApi: LiveData<List<FoodApi>>
-        get() = _foodsApi
+    private val _foods = MutableLiveData<List<Food>>()
+    val foods: LiveData<List<Food>>
+        get() = _foods
 
     init {
         buildGetRequest()
@@ -35,20 +34,18 @@ class FoodViewModel : ViewModel() {
     }
 
     fun sendGet(query: String) {
-        val newFoodsApi = arrayListOf<FoodApi>()
-        val call = getService.getResponse(APIConstants.APP_ID, APIConstants.APP_KEY, query)
+        val call = getService.getResponse(BuildConfig.API_KEY, query)
         call.enqueue(object : Callback<GetResponse> {
             override fun onResponse(call: Call<GetResponse>, response: Response<GetResponse>) {
                 getResponse = response.body()!!
-                val hints: List<Hint> = getResponse.hints ?: listOf()
-                for (i in hints.indices) {
-                    hints[i].foodApi?.let { newFoodsApi.add(it) }
+                Timber.i("API Response: ")
+                val foodsFromResponse = getResponse.foods
+                if (foodsFromResponse != null) {
+                    _foods.value = foodsFromResponse
+                    for (food in foodsFromResponse) {
+                        Timber.i("Description: " + food.description + " | " + food.score)
+                    }
                 }
-                _foodsApi.value = newFoodsApi
-                Timber.d("Sent: %s | Received: %s",
-                    getResponse.text,
-                    newFoodsApi.getOrNull(0)?.label ?: "No results found!"
-                )
             }
             override fun onFailure(call: Call<GetResponse?>, t: Throwable) {
                 Timber.d(t)

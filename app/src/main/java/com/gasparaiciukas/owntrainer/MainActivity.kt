@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         Realm.init(this)
         val realmConfiguration = RealmConfiguration.Builder()
                 .allowWritesOnUiThread(true)
+                .deleteRealmIfMigrationNeeded()
                 .build()
         Realm.setDefaultConfiguration(realmConfiguration)
 

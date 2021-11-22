@@ -2,7 +2,7 @@ package com.gasparaiciukas.owntrainer.viewmodel
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
-import com.gasparaiciukas.owntrainer.database.Food
+import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.User
 import io.realm.Realm
@@ -21,7 +21,7 @@ class MealItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
     var proteinDailyIntake = 0f
     val quantity = 0
     lateinit var meals: List<Meal>
-    lateinit var foodList: List<Food>
+    lateinit var foodList: List<FoodEntry>
     var position: Int = bundle.getInt("position")
 
     init {
