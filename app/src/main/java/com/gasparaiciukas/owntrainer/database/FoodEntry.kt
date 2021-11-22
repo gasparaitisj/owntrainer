@@ -2,7 +2,7 @@ package com.gasparaiciukas.owntrainer.database
 
 import io.realm.RealmObject
 
-open class Food : RealmObject() {
+open class FoodEntry : RealmObject() {
     var title: String = ""
     var caloriesPer100G: Double = 0.0
     var carbsPer100G: Double = 0.0

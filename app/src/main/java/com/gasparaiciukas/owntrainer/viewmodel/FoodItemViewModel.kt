@@ -3,10 +3,11 @@ package com.gasparaiciukas.owntrainer.viewmodel
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import com.gasparaiciukas.owntrainer.database.User
-import com.gasparaiciukas.owntrainer.network.FoodApi
+import com.gasparaiciukas.owntrainer.network.Food
 import io.realm.Realm
 
 class FoodItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
+    var title = ""
     var carbs = 0f
     var carbsPercentage = 0f
     var carbsDailyIntake = 0f
@@ -19,7 +20,7 @@ class FoodItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
     var proteinPercentage = 0f
     var proteinDailyIntake = 0f
 
-    private val foodItem: FoodApi = bundle.getParcelable("foodItem")!!
+    private val foodItem: Food = bundle.getParcelable("foodItem")!!
     private val position: Int = bundle.getInt("position")
 
     init {
@@ -28,10 +29,21 @@ class FoodItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
 
     private fun fetchData() {
         // Get nutrients from food item
-        carbs = foodItem.nutrients.carbs.toFloat()
-        calories = foodItem.nutrients.calories.toFloat()
-        fat = foodItem.nutrients.fat.toFloat()
-        protein = foodItem.nutrients.protein.toFloat()
+        title = foodItem.description.toString()
+        calories = 0.0f
+        protein = 0.0f
+        fat = 0.0f
+        carbs = 0.0f
+
+        val nutrients = foodItem.foodNutrients
+        if (nutrients != null) {
+            for (nutrient in nutrients) {
+                if (nutrient.nutrientId == 1003) protein = (nutrient.value ?: 0.0).toFloat()
+                if (nutrient.nutrientId == 1004) fat = (nutrient.value ?: 0.0).toFloat()
+                if (nutrient.nutrientId == 1005) carbs = (nutrient.value ?: 0.0).toFloat()
+                if (nutrient.nutrientId == 1008) calories = (nutrient.value ?: 0.0).toFloat()
+            }
+        }
 
         // Calculate percentage of each item
         val sum = carbs + fat + protein

@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gasparaiciukas.owntrainer.database.DiaryEntry
 import com.gasparaiciukas.owntrainer.database.User
+import com.gasparaiciukas.owntrainer.network.GetResponse
+import com.gasparaiciukas.owntrainer.network.GetService
 import io.realm.Realm
 import timber.log.Timber
 import java.time.LocalDate
@@ -28,6 +30,9 @@ class DiaryViewModel : ViewModel() {
     private val _dataChanged = MutableLiveData<Boolean>()
     val dataChanged: LiveData<Boolean>
         get() = _dataChanged
+
+    private lateinit var getResponse: GetResponse
+    private lateinit var getService: GetService
 
     init {
         realm.addChangeListener {
@@ -118,4 +123,5 @@ class DiaryViewModel : ViewModel() {
             it.insertOrUpdate(user)
         }
     }
+
 }

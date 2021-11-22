@@ -7,14 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.gasparaiciukas.owntrainer.adapter.FoodApiAdapter
+import com.gasparaiciukas.owntrainer.adapter.NetworkFoodAdapter
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodBinding
-import com.gasparaiciukas.owntrainer.network.FoodApi
+import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -23,15 +22,15 @@ class FoodFragment : Fragment() {
     private var _binding: FragmentFoodBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: FoodApiAdapter
+    private lateinit var adapter: NetworkFoodAdapter
 
-    private var foodsApi: MutableList<FoodApi> = mutableListOf()
+    private var foods: MutableList<Food> = mutableListOf()
 
-    private val listener: (food: FoodApi, position: Int) -> Unit = { _: FoodApi, position: Int ->
+    private val listener: (food: Food, position: Int) -> Unit = { _: Food, position: Int ->
         val action =
             FoodFragmentDirections.actionFoodFragmentToFoodItemFragment(
                 position = position,
-                foodItem = foodsApi[position]
+                foodItem = foods[position]
             )
         findNavController().navigate(action)
     }
@@ -41,7 +40,7 @@ class FoodFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         _binding = FragmentFoodBinding.inflate(inflater, container, false)
-        viewModel.foodsApi.observe(viewLifecycleOwner, Observer { foods ->
+        viewModel.foods.observe(viewLifecycleOwner, Observer { foods ->
             reloadRecyclerView(foods)
         })
         return binding.root
@@ -57,12 +56,12 @@ class FoodFragment : Fragment() {
         _binding = null
     }
 
-    private fun reloadRecyclerView(foods: List<FoodApi>) {
+    private fun reloadRecyclerView(foods: List<Food>) {
         val itemCount = adapter.itemCount
-        foodsApi.clear()
+        this.foods.clear()
         adapter.notifyItemRangeRemoved(0, itemCount)
-        foodsApi.addAll(foods)
-        adapter.notifyItemRangeInserted(0, foodsApi.size)
+        this.foods.addAll(foods)
+        adapter.notifyItemRangeInserted(0, this.foods.size)
     }
 
     private fun initUi() {
@@ -101,7 +100,7 @@ class FoodFragment : Fragment() {
 
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
-        adapter = FoodApiAdapter(foodsApi, listener)
+        adapter = NetworkFoodAdapter(foods, listener)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
     }

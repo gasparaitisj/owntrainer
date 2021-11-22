@@ -64,7 +64,7 @@ class FoodItemFragment : Fragment() {
         }
 
         // Text views
-        binding.tvTitle.text = args.foodItem.label
+        binding.tvTitle.text = viewModel.title
         binding.tvCarbsWeight.text = viewModel.carbs.roundToInt().toString()
         binding.tvCarbsPercentage.text =
             String.format("%s %%", (viewModel.carbs / viewModel.carbsDailyIntake * 100).roundToInt())

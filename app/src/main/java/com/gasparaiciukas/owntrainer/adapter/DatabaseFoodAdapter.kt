@@ -5,21 +5,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.adapter.FoodAdapter.FoodViewHolder
-import com.gasparaiciukas.owntrainer.database.Food
+import com.gasparaiciukas.owntrainer.adapter.DatabaseFoodAdapter.DatabaseFoodViewHolder
+import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.databinding.FoodRowBinding
 
-class FoodAdapter(private val foods: List<Food>) : RecyclerView.Adapter<FoodViewHolder>() {
-    class FoodViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
+class DatabaseFoodAdapter(private val foods: List<FoodEntry>) : RecyclerView.Adapter<DatabaseFoodViewHolder>() {
+    class DatabaseFoodViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         val binding = FoodRowBinding.bind(view)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DatabaseFoodViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.food_row, parent, false)
-        return FoodViewHolder(view)
+        return DatabaseFoodViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: FoodViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: DatabaseFoodViewHolder, position: Int) {
         // Get information of each row
         val calories = foods[position].calories.toInt()
         val protein = foods[position].protein.toInt()
