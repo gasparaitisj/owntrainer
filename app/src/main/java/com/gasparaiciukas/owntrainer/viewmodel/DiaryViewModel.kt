@@ -31,9 +31,6 @@ class DiaryViewModel : ViewModel() {
     val dataChanged: LiveData<Boolean>
         get() = _dataChanged
 
-    private lateinit var getResponse: GetResponse
-    private lateinit var getService: GetService
-
     init {
         realm.addChangeListener {
             loadData()
@@ -124,4 +121,10 @@ class DiaryViewModel : ViewModel() {
         }
     }
 
+    fun deleteMealFromDiary(position: Int) {
+        realm.executeTransaction {
+            diaryEntry.meals.removeAt(position)
+            it.insertOrUpdate(diaryEntry)
+        }
+    }
 }

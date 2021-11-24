@@ -1,23 +1,23 @@
 buildscript {
     ext {
         // SDKs
-        compileSdkVersion = 30
+        compileSdkVersion = 31
         minSdkVersion = 21
-        targetSdkVersion = 30
+        targetSdkVersion = 31
 
         // App dependencies
-        appCompatVersion = '1.3.1'
+        appCompatVersion = '1.4.0'
         appIntroVersion = '6.1.0'
         circularProgressBarVersion = '3.1.0'
-        constraintLayoutVersion = '2.1.0'
+        constraintLayoutVersion = '2.1.2'
         desugaringVersion = '1.1.5'
-        fragmentVersion = '1.3.6'
+        fragmentVersion = '1.4.0'
         gradleVersion = '7.0.1'
         kotlinVersion = '1.5.21'
         ktlintVersion = '0.38.1'
-        ktxVersion = '1.6.0'
-        lifecycleVersion = '2.3.1'
-        materialVersion = '1.4.0'
+        ktxVersion = '1.7.0'
+        lifecycleVersion = '2.4.0'
+        materialVersion = '1.5.0-beta01'
         navigationVersion = '2.3.5'
         pieChartVersion = 'v3.1.0'
         realmVersion = '10.7.1'

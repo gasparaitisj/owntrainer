@@ -7,41 +7,41 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.databinding.FragmentFoodItemBinding
+import com.gasparaiciukas.owntrainer.databinding.FragmentDatabaseFoodItemBinding
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
 import com.gasparaiciukas.owntrainer.viewmodel.BundleViewModelFactory
-import com.gasparaiciukas.owntrainer.viewmodel.FoodItemViewModel
+import com.gasparaiciukas.owntrainer.viewmodel.DatabaseFoodItemViewModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import java.util.*
+import java.util.ArrayList
 import kotlin.math.roundToInt
 
-class FoodItemFragment : Fragment() {
-    private var _binding: FragmentFoodItemBinding? = null
+class DatabaseFoodItemFragment : Fragment() {
+    private var _binding: FragmentDatabaseFoodItemBinding? = null
     private val binding get() = _binding!!
 
-    private val args: FoodItemFragmentArgs by navArgs()
+    private val args: DatabaseFoodItemFragmentArgs by navArgs()
 
-    private lateinit var viewModel: FoodItemViewModel
+    private lateinit var viewModel: DatabaseFoodItemViewModel
     private lateinit var viewModelFactory: BundleViewModelFactory
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentFoodItemBinding.inflate(inflater, container, false)
+    ): View? {
+        _binding = FragmentDatabaseFoodItemBinding.inflate(inflater, container, false)
 
         val bundle = Bundle().apply {
-            putParcelable("foodItem", args.foodItem)
-            putInt("position", args.position)
+            putParcelable("food", args.food)
         }
+
         viewModelFactory = BundleViewModelFactory(bundle)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(FoodItemViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(DatabaseFoodItemViewModel::class.java)
 
         initUi()
         return binding.root
@@ -53,30 +53,21 @@ class FoodItemFragment : Fragment() {
     }
 
     private fun initUi() {
-        // Add to meal button
-        binding.btnAddToMeal.setOnClickListener {
-            val action =
-                FoodItemFragmentDirections.actionFoodItemFragmentToSelectMealItemFragment(
-                    args.foodItem,
-                    binding.etWeight.text.toString().toInt()
-                )
-            findNavController().navigate(action)
-        }
-
         // Text views
-        binding.tvTitle.text = viewModel.title
-        binding.tvCarbsWeight.text = viewModel.carbs.roundToInt().toString()
+        binding.tvTitle.text = viewModel.food.title
+        binding.tvQuantityCount.text = viewModel.food.quantityInG.toString()
+        binding.tvCarbsWeight.text = viewModel.food.carbs.roundToInt().toString()
         binding.tvCarbsPercentage.text =
-            String.format("%s %%", (viewModel.carbs / viewModel.carbsDailyIntake * 100).roundToInt())
-        binding.tvFatWeight.text = viewModel.fat.roundToInt().toString()
+            String.format("%s %%", (viewModel.food.carbs / viewModel.carbsDailyIntake * 100).roundToInt())
+        binding.tvFatWeight.text = viewModel.food.fat.roundToInt().toString()
         binding.tvFatPercentage.text =
-            String.format("%s %%", (viewModel.fat / viewModel.fatDailyIntake * 100).roundToInt())
-        binding.tvProteinWeight.text = viewModel.protein.roundToInt().toString()
+            String.format("%s %%", (viewModel.food.fat / viewModel.fatDailyIntake * 100).roundToInt())
+        binding.tvProteinWeight.text = viewModel.food.protein.roundToInt().toString()
         binding.tvProteinPercentage.text =
-            String.format("%s %%", (viewModel.protein / viewModel.proteinDailyIntake * 100).roundToInt())
-        binding.tvCaloriesCount.text = viewModel.calories.roundToInt().toString()
+            String.format("%s %%", (viewModel.food.protein / viewModel.proteinDailyIntake * 100).roundToInt())
+        binding.tvCaloriesCount.text = viewModel.food.calories.roundToInt().toString()
         binding.tvCaloriesPercentage.text =
-            String.format("%s %%", (viewModel.calories / viewModel.calorieDailyIntake * 100).roundToInt())
+            String.format("%s %%", (viewModel.food.calories / viewModel.calorieDailyIntake * 100).roundToInt())
 
         // Create colors representing nutrients
         val colors: MutableList<Int> = ArrayList()
@@ -99,7 +90,7 @@ class FoodItemFragment : Fragment() {
         pieData.setValueTextSize(12f)
         binding.pieChart.data = pieData
         binding.pieChart.centerText =
-            "${viewModel.calories.roundToInt()}\nkCal" // calorie text inside inner circle
+            "${viewModel.food.calories.roundToInt()}\nkCal" // calorie text inside inner circle
         binding.pieChart.setCenterTextSize(14f)
         binding.pieChart.setCenterTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
         binding.pieChart.centerTextRadiusPercent = 100f

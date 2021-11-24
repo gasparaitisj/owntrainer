@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-            android:textColor="@color/colorPrimary"
+
             android:textSize="18sp" />
 
         <LinearLayout
@@ -44,7 +44,6 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorAccent" />
+            android:layout_marginTop="10dp" />
     </LinearLayout>
 </layout>

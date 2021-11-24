@@ -3,13 +3,19 @@ package com.gasparaiciukas.owntrainer.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.DatabaseFoodAdapter.DatabaseFoodViewHolder
 import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.databinding.FoodRowBinding
+import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 
-class DatabaseFoodAdapter(private val foods: List<FoodEntry>) : RecyclerView.Adapter<DatabaseFoodViewHolder>() {
+class DatabaseFoodAdapter(
+    private val foods: List<FoodEntry>,
+    private val singleClickListener: (food: FoodEntryParcelable) -> Unit,
+    private val longClickListener: (food: FoodEntry, position: Int) -> Unit
+) : RecyclerView.Adapter<DatabaseFoodViewHolder>() {
     class DatabaseFoodViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         val binding = FoodRowBinding.bind(view)
     }
@@ -35,6 +41,24 @@ class DatabaseFoodAdapter(private val foods: List<FoodEntry>) : RecyclerView.Ada
         holder.binding.tvCarbs.text = carbs.toString()
         holder.binding.tvProtein.text = protein.toString()
         holder.binding.tvFat.text = fat.toString()
+        holder.binding.layoutItem.setOnClickListener {
+            val foodEntryParcelable = FoodEntryParcelable()
+            foodEntryParcelable.calories = calories.toDouble()
+            foodEntryParcelable.protein = protein.toDouble()
+            foodEntryParcelable.fat = fat.toDouble()
+            foodEntryParcelable.carbs = carbs.toDouble()
+            foodEntryParcelable.quantityInG = quantity.toDouble()
+            foodEntryParcelable.title = title
+            singleClickListener(foodEntryParcelable)
+        }
+        holder.binding.layoutItem.setOnLongClickListener {
+            val popup = PopupMenu(holder.binding.layoutItem.context, holder.binding.layoutItem)
+            val inflater = popup.menuInflater
+            inflater.inflate(R.menu.food_menu, popup.menu)
+            popup.show()
+            popup.setOnMenuItemClickListener { longClickListener(foods[position], position); true }
+            true
+        }
     }
 
     override fun getItemCount(): Int {

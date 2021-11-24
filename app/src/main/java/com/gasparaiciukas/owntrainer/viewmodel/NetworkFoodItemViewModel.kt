@@ -6,7 +6,7 @@ import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.network.Food
 import io.realm.Realm
 
-class FoodItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
+class NetworkFoodItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
     var title = ""
     var carbs = 0f
     var carbsPercentage = 0f

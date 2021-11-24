@@ -11,8 +11,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_fragment_diary"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorSmokeDark">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:id="@+id/layout_navigation"
@@ -45,38 +44,33 @@
                         style="@style/TextAppearance.MaterialComponents.Headline6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/monday"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:text="@string/monday" />
 
                     <TextView
                         style="@style/TextAppearance.MaterialComponents.Headline6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/comma"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:text="@string/comma" />
 
                     <TextView
                         android:id="@+id/tv_month_of_year"
                         style="@style/TextAppearance.MaterialComponents.Headline6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/march"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:text="@string/march" />
 
                     <TextView
                         style="@style/TextAppearance.MaterialComponents.Headline6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/space"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:text="@string/space" />
 
                     <TextView
                         android:id="@+id/tv_day_of_month"
                         style="@style/TextAppearance.MaterialComponents.Headline6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/_29"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:text="@string/_29" />
                 </LinearLayout>
 
                 <ImageButton
@@ -111,7 +105,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:text="Calories "
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -121,7 +115,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:text="@string/_50"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -129,7 +123,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="% "
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -139,7 +133,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:text="@string/_50"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -147,7 +141,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="/"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -156,7 +150,7 @@
                         android:layout_width="40dp"
                         android:layout_height="wrap_content"
                         android:text="@string/_50"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -164,7 +158,7 @@
                         android:layout_width="35dp"
                         android:layout_height="wrap_content"
                         android:text=" kCal"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -180,7 +174,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:text="Protein "
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -190,7 +184,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:text="@string/_50"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -198,7 +192,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="% "
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -208,7 +202,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:text="@string/_50"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -216,7 +210,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="/"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -225,7 +219,7 @@
                         android:layout_width="40dp"
                         android:layout_height="wrap_content"
                         android:text="@string/_50"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -234,7 +228,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="start"
                         android:text=" g"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -250,7 +244,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:text="Carbs "
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -260,7 +254,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:text="@string/_50"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -268,7 +262,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="% "
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -278,7 +272,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:text="@string/_50"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -286,7 +280,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="/"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -295,7 +289,7 @@
                         android:layout_width="40dp"
                         android:layout_height="wrap_content"
                         android:text="@string/_50"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -304,7 +298,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="start"
                         android:text=" g"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -320,7 +314,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:text="Fat "
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -330,7 +324,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:text="@string/_50"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -338,7 +332,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="% "
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -348,7 +342,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:text="@string/_50"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -356,7 +350,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="/"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -365,7 +359,7 @@
                         android:layout_width="40dp"
                         android:layout_height="wrap_content"
                         android:text="@string/_50"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
 
                     <TextView
@@ -374,7 +368,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="start"
                         android:text=" g"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
@@ -395,8 +389,7 @@
                     style="@style/TextAppearance.MaterialComponents.Headline6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Meals eaten"
-                    android:textColor="@color/colorPrimaryDark" />
+                    android:text="Meals eaten" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"

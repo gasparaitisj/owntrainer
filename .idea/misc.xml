@@ -3,12 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/layout/food_row.xml" value="0.21041666666666667" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.2526041666666667" />
+        <entry key="app/src/main/res/layout/food_row.xml" value="0.5" />
         <entry key="app/src/main/res/layout/foodapi_row.xml" value="0.21041666666666667" />
+        <entry key="app/src/main/res/layout/fragment_add_meal_to_diary.xml" value="0.21145833333333333" />
+        <entry key="app/src/main/res/layout/fragment_database_food_item.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_diary.xml" value="0.2526041666666667" />
         <entry key="app/src/main/res/layout/fragment_food.xml" value="0.21041666666666667" />
         <entry key="app/src/main/res/layout/fragment_food_item.xml" value="0.21041666666666667" />
         <entry key="app/src/main/res/layout/fragment_intro_details.xml" value="0.21041666666666667" />
+        <entry key="app/src/main/res/layout/fragment_meal_item.xml" value="0.21145833333333333" />
+        <entry key="app/src/main/res/layout/fragment_network_food_item.xml" value="0.36594202898550726" />
+        <entry key="app/src/main/res/layout/fragment_step.xml" value="0.21145833333333333" />
+        <entry key="app/src/main/res/layout/meal_row.xml" value="0.2526041666666667" />
         <entry key="app/src/main/res/menu/create_meal_top_app_bar.xml" value="0.21145833333333333" />
+        <entry key="app/src/main/res/menu/food_menu.xml" value="0.2552083333333333" />
+        <entry key="app/src/main/res/menu/meal_menu.xml" value="0.33" />
         <entry key="app/src/main/res/menu/settings_top_app_bar.xml" value="0.21145833333333333" />
       </map>
     </option>

@@ -8,6 +8,8 @@ import com.gasparaiciukas.owntrainer.database.User
 import io.realm.Realm
 
 class MealItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
+    private var realm: Realm = Realm.getDefaultInstance()
+
     var carbs = 0f
     var carbsPercentage = 0f
     var carbsDailyIntake = 0f
@@ -20,7 +22,7 @@ class MealItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
     var proteinPercentage = 0f
     var proteinDailyIntake = 0f
     val quantity = 0
-    lateinit var meals: List<Meal>
+    lateinit var meals: MutableList<Meal>
     lateinit var foodList: List<FoodEntry>
     var position: Int = bundle.getInt("position")
 
@@ -29,7 +31,6 @@ class MealItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
     }
 
     private fun fetchData() {
-        val realm = Realm.getDefaultInstance()
         meals = realm.where(Meal::class.java).findAll()
         foodList = meals[position].foodList
 
@@ -56,6 +57,21 @@ class MealItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
             fatDailyIntake = u.dailyFatIntakeInG.toFloat()
             proteinDailyIntake = u.dailyProteinIntakeInG.toFloat()
         }
+    }
+
+    fun deleteFoodFromMeal(food: FoodEntry, mealPosition: Int) {
+        realm.executeTransaction {
+            it.where(Meal::class.java)
+                .equalTo("title", meals[mealPosition].title)
+                .findFirst()
+                ?.foodList
+                ?.remove(food)
+        }
+        fetchData()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
         realm.close()
     }
 }

@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:text="@string/add_food_to_selected_meal"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimaryDark"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

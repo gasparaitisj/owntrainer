@@ -8,11 +8,14 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.DatabaseFoodAdapter
+import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealItemBinding
+import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
 import com.gasparaiciukas.owntrainer.viewmodel.BundleViewModelFactory
 import com.gasparaiciukas.owntrainer.viewmodel.MealItemViewModel
@@ -32,6 +35,19 @@ class MealItemFragment : Fragment() {
 
     private lateinit var viewModel: MealItemViewModel
     private lateinit var viewModelFactory: BundleViewModelFactory
+
+    private val singleClickListener: (food: FoodEntryParcelable) -> Unit = { food: FoodEntryParcelable ->
+        val action = MealItemFragmentDirections.actionMealItemFragmentToDatabaseFoodItemFragment(food)
+        findNavController().navigate(action)
+    }
+
+    private val longClickListener: (food: FoodEntry, position: Int) -> Unit = { food: FoodEntry, position: Int ->
+        viewModel.deleteFoodFromMeal(food, args.position)
+        adapter.notifyItemRemoved(position)
+        adapter.notifyItemRangeChanged(position, (adapter.itemCount - position))
+        initTextViews()
+        initPieChart()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,12 +72,12 @@ class MealItemFragment : Fragment() {
     }
 
     private fun initUi() {
-        adapter = DatabaseFoodAdapter(viewModel.foodList)
-        val layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = layoutManager
+        initRecyclerView()
+        initTextViews()
+        initPieChart()
+    }
 
-        // Set up text views
+    private fun initTextViews() {
         binding.tvTitle.text = viewModel.meals[args.position].title
         binding.tvInstructions.text = viewModel.meals[args.position].instructions
         binding.tvInstructions.movementMethod = ScrollingMovementMethod()
@@ -77,7 +93,16 @@ class MealItemFragment : Fragment() {
         binding.tvCaloriesCount.text = viewModel.calories.roundToInt().toString()
         binding.tvCaloriesPercentage.text =
             String.format("%s %%", (viewModel.calories / viewModel.calorieDailyIntake * 100).roundToInt())
+    }
 
+    private fun initRecyclerView() {
+        adapter = DatabaseFoodAdapter(viewModel.foodList, singleClickListener, longClickListener)
+        val layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = layoutManager
+    }
+
+    private fun initPieChart() {
         // Create colors representing nutrients
         val colors: MutableList<Int> = ArrayList()
         colors.add(ContextCompat.getColor(requireContext(), R.color.colorGold)) // carbs
