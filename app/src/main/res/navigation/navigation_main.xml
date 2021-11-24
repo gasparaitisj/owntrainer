@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_main"
     app:startDestination="@id/diaryFragment">
     <fragment
@@ -25,6 +26,9 @@
         <action
             android:id="@+id/action_diaryFragment_self"
             app:destination="@id/diaryFragment" />
+        <action
+            android:id="@+id/action_diaryFragment_to_mealItemFragment"
+            app:destination="@id/mealItemFragment" />
     </fragment>
     <fragment
         android:id="@+id/mealFragment"
@@ -47,6 +51,9 @@
         <argument
             android:name="position"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_mealItemFragment_to_databaseFoodItemFragment"
+            app:destination="@id/databaseFoodItemFragment" />
     </fragment>
     <fragment
         android:id="@+id/progressFragment"
@@ -77,18 +84,18 @@
             app:destination="@id/mealFragment" />
         <action
             android:id="@+id/action_foodFragment_to_foodItemFragment"
-            app:destination="@id/foodItemFragment" />
+            app:destination="@id/networkFoodItemFragment" />
     </fragment>
     <fragment
-        android:id="@+id/foodItemFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.FoodItemFragment"
-        android:label="FoodItemFragment" >
-    <argument
-        android:name="position"
-        app:argType="integer" />
-    <argument
-        android:name="foodItem"
-        app:argType="com.gasparaiciukas.owntrainer.network.Food" />
+        android:id="@+id/networkFoodItemFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.NetworkFoodItemFragment"
+        android:label="NetworkFoodItemFragment">
+        <argument
+            android:name="position"
+            app:argType="integer" />
+        <argument
+            android:name="foodItem"
+            app:argType="com.gasparaiciukas.owntrainer.network.Food" />
         <action
             android:id="@+id/action_foodItemFragment_to_selectMealItemFragment"
             app:destination="@id/selectMealItemFragment" />
@@ -104,5 +111,13 @@
             android:name="quantity"
             app:argType="integer"
             android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/databaseFoodItemFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.DatabaseFoodItemFragment"
+        android:label="DatabaseFoodItemFragment" >
+        <argument
+            android:name="food"
+            app:argType="com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable" />
     </fragment>
 </navigation>

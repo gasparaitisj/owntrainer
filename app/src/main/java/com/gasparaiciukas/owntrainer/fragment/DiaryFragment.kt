@@ -1,11 +1,8 @@
 package com.gasparaiciukas.owntrainer.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -25,6 +22,18 @@ class DiaryFragment : Fragment() {
     private lateinit var adapter: MealAdapter
 
     private val viewModel: DiaryViewModel by viewModels()
+
+    private val singleClickListener: (meal: Meal, position: Int) -> Unit = { _: Meal, position: Int ->
+        val action = DiaryFragmentDirections.actionDiaryFragmentToMealItemFragment(position)
+        findNavController().navigate(action)
+    }
+
+    private val longClickListener: (position: Int) -> Unit = { position: Int ->
+        Timber.d("Position: $position")
+        viewModel.deleteMealFromDiary(position)
+        adapter.notifyItemRemoved(position)
+        adapter.notifyItemRangeChanged(position, (adapter.itemCount - position))
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -111,10 +120,9 @@ class DiaryFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        // Set up recycler view
         val layoutManager = LinearLayoutManager(context)
         val passLambda: (_1: Meal, _2: Int) -> Unit = { _: Meal, _: Int -> }
-        adapter = MealAdapter(viewModel.diaryEntry.meals, passLambda)
+        adapter = MealAdapter(viewModel.diaryEntry.meals, singleClickListener, longClickListener)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
     }

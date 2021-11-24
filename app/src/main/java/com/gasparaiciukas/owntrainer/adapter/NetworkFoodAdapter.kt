@@ -26,6 +26,7 @@ class NetworkFoodAdapter(
     override fun onBindViewHolder(holder: NetworkFoodViewHolder, position: Int) {
         // Get information of each row
         val title = foods[position].description
+        val quantity = 100.0
         var calories = 0.0
         var protein = 0.0
         var fat = 0.0
@@ -47,6 +48,7 @@ class NetworkFoodAdapter(
         holder.binding.tvCarbs.text = carbs.toString()
         holder.binding.tvProtein.text = protein.toString()
         holder.binding.tvFat.text = fat.toString()
+        holder.binding.tvQuantity.text = quantity.toString()
         holder.binding.layoutItem.setOnClickListener { listener(foods[position], position) }
     }
 

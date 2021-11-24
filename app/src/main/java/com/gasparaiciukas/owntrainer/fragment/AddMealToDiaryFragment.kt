@@ -47,7 +47,8 @@ class AddMealToDiaryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = MealAdapter(viewModel.meals, listener)
+        val passLambda: (_: Int) -> Unit = { _: Int -> }
+        adapter = MealAdapter(viewModel.meals, listener, passLambda)
         val layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = layoutManager

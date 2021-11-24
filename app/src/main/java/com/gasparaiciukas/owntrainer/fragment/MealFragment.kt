@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +14,7 @@ import com.gasparaiciukas.owntrainer.databinding.FragmentMealBinding
 import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import timber.log.Timber
 
 class MealFragment : Fragment() {
     private var _binding: FragmentMealBinding? = null
@@ -22,9 +22,15 @@ class MealFragment : Fragment() {
 
     private lateinit var adapter: MealAdapter
 
-    private val listener: (meal: Meal, position: Int) -> Unit = { _: Meal, position: Int ->
+    private val singleClickListener: (meal: Meal, position: Int) -> Unit = { _: Meal, position: Int ->
         val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(position)
         findNavController().navigate(action)
+    }
+
+    private val longClickListener: (position: Int) -> Unit = { position: Int ->
+        viewModel.deleteMealFromMeals(position)
+        adapter.notifyItemRemoved(position)
+        adapter.notifyItemRangeChanged(position, (adapter.itemCount - position))
     }
 
     private val viewModel: MealViewModel by viewModels()
@@ -75,7 +81,7 @@ class MealFragment : Fragment() {
 
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
-        adapter = MealAdapter(viewModel.meals, listener)
+        adapter = MealAdapter(viewModel.meals, singleClickListener, longClickListener)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
     }

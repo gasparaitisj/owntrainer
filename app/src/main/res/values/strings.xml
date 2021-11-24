@@ -57,4 +57,7 @@
     <string name="comma">,</string>
     <string name="space" />
     <string name="_29">29</string>
+    <string name="delete_meal">Delete Meal</string>
+    <string name="delete_food">Delete Food</string>
+    <string name="quantity">Quantity:</string>
 </resources>

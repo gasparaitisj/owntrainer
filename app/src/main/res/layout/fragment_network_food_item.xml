@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textAlignment="center"
-                android:textColor="@color/colorPrimaryDark" />
+                  />
 
         </LinearLayout>
 
@@ -106,7 +106,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/protein"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textSize="12sp" />
 
                     <LinearLayout
@@ -118,7 +118,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="80,3"
-                            android:textColor="@color/colorPrimaryDark"
+
                             android:textSize="12sp"
                             tools:ignore="HardcodedText" />
 
@@ -126,7 +126,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/g"
-                            android:textColor="@color/colorPrimaryDark"
+
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -134,7 +134,7 @@
                         android:id="@+id/tv_protein_percentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -150,7 +150,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/fat"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textSize="12sp" />
 
                     <LinearLayout
@@ -161,14 +161,14 @@
                             android:id="@+id/tv_fat_weight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorPrimaryDark"
+
                             android:textSize="12sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/g"
-                            android:textColor="@color/colorPrimaryDark"
+
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -176,7 +176,7 @@
                         android:id="@+id/tv_fat_percentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -192,7 +192,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/carbs"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textSize="12sp" />
 
                     <LinearLayout
@@ -203,14 +203,14 @@
                             android:id="@+id/tv_carbs_weight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorPrimaryDark"
+
                             android:textSize="12sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/g"
-                            android:textColor="@color/colorPrimaryDark"
+
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -218,7 +218,7 @@
                         android:id="@+id/tv_carbs_percentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -233,7 +233,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/calories"
-                    android:textColor="@color/colorPrimaryDark"
+
                     android:textSize="12sp" />
 
                 <LinearLayout
@@ -244,14 +244,14 @@
                         android:id="@+id/tv_calories_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textSize="12sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/kcal"
-                        android:textColor="@color/colorPrimaryDark"
+
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -259,7 +259,7 @@
                     android:id="@+id/tv_calories_percentage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorPrimaryDark"
+
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
