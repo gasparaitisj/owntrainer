@@ -60,4 +60,5 @@
     <string name="delete_meal">Delete Meal</string>
     <string name="delete_food">Delete Food</string>
     <string name="quantity">Quantity:</string>
+    <string name="meals_eaten">Meals eaten</string>
 </resources>

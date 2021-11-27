@@ -58,6 +58,7 @@ class MealItemFragment : Fragment() {
 
         val bundle = Bundle().apply {
             putInt("position", args.position)
+            putString("primaryKey", args.primaryKey)
         }
         viewModelFactory = BundleViewModelFactory(bundle)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MealItemViewModel::class.java)

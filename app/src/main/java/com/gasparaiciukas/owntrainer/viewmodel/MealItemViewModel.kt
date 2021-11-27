@@ -2,10 +2,12 @@ package com.gasparaiciukas.owntrainer.viewmodel
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
+import com.gasparaiciukas.owntrainer.database.DiaryEntry
 import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.User
 import io.realm.Realm
+import timber.log.Timber
 
 class MealItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
     private var realm: Realm = Realm.getDefaultInstance()
@@ -24,14 +26,23 @@ class MealItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
     val quantity = 0
     lateinit var meals: MutableList<Meal>
     lateinit var foodList: List<FoodEntry>
-    var position: Int = bundle.getInt("position")
+    private val position = bundle.getInt("position")
+    private val primaryKey = bundle.getString("primaryKey")
 
     init {
         fetchData()
     }
 
     private fun fetchData() {
-        meals = realm.where(Meal::class.java).findAll()
+        meals = if (primaryKey == "") {
+            realm.where(Meal::class.java).findAll()
+        } else {
+            realm.where(DiaryEntry::class.java)
+                .equalTo("yearAndDayOfYear", primaryKey)
+                .findFirst()
+                ?.meals
+                ?: mutableListOf()
+        }
         foodList = meals[position].foodList
 
         // Get nutrients from food item

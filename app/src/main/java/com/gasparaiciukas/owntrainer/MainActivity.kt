@@ -46,21 +46,21 @@ class MainActivity : AppCompatActivity() {
         // Bottom navigation
         binding.bottomNavigation.setupWithNavController(navController)
 
-        // Top app bar
-        setSupportActionBar(binding.appBar)
-        supportActionBar?.setHomeButtonEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        supportActionBar?.setDisplayShowHomeEnabled(false)
+//        // Top app bar
+//        setSupportActionBar(binding.appBar)
+//        supportActionBar?.setHomeButtonEnabled(false)
+//        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+//        supportActionBar?.setDisplayShowHomeEnabled(false)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.settings_top_app_bar, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.settings_top_app_bar, menu)
+//        return true
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
+//    }
 
     private fun initDatabase() {
         Realm.init(this)

@@ -39,7 +39,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_et_sex"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/sex"
@@ -117,7 +117,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_et_lifestyle"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/lifestyle"

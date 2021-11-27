@@ -54,6 +54,9 @@
         <action
             android:id="@+id/action_mealItemFragment_to_databaseFoodItemFragment"
             app:destination="@id/databaseFoodItemFragment" />
+        <argument
+            android:name="primaryKey"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/progressFragment"

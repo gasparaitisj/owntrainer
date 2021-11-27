@@ -24,7 +24,7 @@ class DiaryFragment : Fragment() {
     private val viewModel: DiaryViewModel by viewModels()
 
     private val singleClickListener: (meal: Meal, position: Int) -> Unit = { _: Meal, position: Int ->
-        val action = DiaryFragmentDirections.actionDiaryFragmentToMealItemFragment(position)
+        val action = DiaryFragmentDirections.actionDiaryFragmentToMealItemFragment(position, viewModel.diaryEntry.yearAndDayOfYear)
         findNavController().navigate(action)
     }
 

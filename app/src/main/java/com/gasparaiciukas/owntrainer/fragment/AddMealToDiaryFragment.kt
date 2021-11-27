@@ -14,6 +14,7 @@ import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.databinding.FragmentAddMealToDiaryBinding
 import com.gasparaiciukas.owntrainer.viewmodel.AddMealToDiaryViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.BundleViewModelFactory
+import timber.log.Timber
 
 class AddMealToDiaryFragment : Fragment() {
     private var _binding: FragmentAddMealToDiaryBinding? = null
@@ -26,7 +27,7 @@ class AddMealToDiaryFragment : Fragment() {
 
     private lateinit var adapter: MealAdapter
     private val listener: (meal: Meal, position: Int) -> Unit = { meal: Meal, _: Int ->
-        viewModel.selectMeal(meal)
+        viewModel.addMealToDiary(meal)
         findNavController().popBackStack()
     }
 
