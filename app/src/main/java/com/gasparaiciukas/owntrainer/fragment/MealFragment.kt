@@ -4,14 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealBinding
 import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
+import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import timber.log.Timber
@@ -77,6 +83,19 @@ class MealFragment : Fragment() {
                 // do nothing
             }
         })
+
+        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            // Scroll down
+            if (scrollY > oldScrollY) {
+                slideBottomNavigationDown()
+                binding.fab.hide()
+            }
+            // Scroll up
+            if (scrollY < oldScrollY) {
+                slideBottomNavigationUp()
+                binding.fab.show()
+            }
+        })
     }
 
     private fun initRecyclerView() {
@@ -84,5 +103,27 @@ class MealFragment : Fragment() {
         adapter = MealAdapter(viewModel.meals, singleClickListener, longClickListener)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
+    }
+
+    private fun slideBottomNavigationUp() {
+        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val layoutParams = botNav?.layoutParams
+        if (layoutParams is CoordinatorLayout.LayoutParams) {
+            val behavior = layoutParams.behavior
+            if (behavior is HideBottomViewOnScrollBehavior) {
+                behavior.slideUp(botNav)
+            }
+        }
+    }
+
+    private fun slideBottomNavigationDown() {
+        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val layoutParams = botNav?.layoutParams
+        if (layoutParams is CoordinatorLayout.LayoutParams) {
+            val behavior = layoutParams.behavior
+            if (behavior is HideBottomViewOnScrollBehavior) {
+                behavior.slideDown(botNav)
+            }
+        }
     }
 }

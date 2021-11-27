@@ -21,12 +21,11 @@
 
             <TextView
                 android:id="@+id/tv_title"
-                style="@style/TextAppearance.MaterialComponents.Headline4"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
-                android:textAlignment="center"
-                  />
+                android:text="@string/sample_text"
+                android:textAlignment="center"/>
 
         </LinearLayout>
 

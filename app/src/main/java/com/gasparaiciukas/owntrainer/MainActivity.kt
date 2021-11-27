@@ -19,7 +19,7 @@ import io.realm.RealmConfiguration
 import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+    lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val appIntroLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
         navController = navHostFragment.navController
-
         // Bottom navigation
         binding.bottomNavigation.setupWithNavController(navController)
 

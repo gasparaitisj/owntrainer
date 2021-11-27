@@ -42,7 +42,6 @@
     <string name="save_button">Save button</string>
     <string name="add_food">Add food</string>
     <string name="basic_information">Basic information</string>
-    <string name="sample_text">Sample Text</string>
     <string name="ingredient_list">Ingredient list</string>
     <string name="recipe_instructions">Recipe instructions</string>
     <string name="calories_space">Calories</string>
@@ -61,4 +60,5 @@
     <string name="delete_food">Delete Food</string>
     <string name="quantity">Quantity:</string>
     <string name="meals_eaten">Meals eaten</string>
+    <string name="sample_text">Sample Text</string>
 </resources>

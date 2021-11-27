@@ -22,13 +22,25 @@
         android:label="DiaryFragment" >
         <action
             android:id="@+id/action_diaryFragment_to_addMealToDiaryFragment"
-            app:destination="@id/addMealToDiaryFragment" />
+            app:destination="@id/addMealToDiaryFragment"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short" />
         <action
             android:id="@+id/action_diaryFragment_self"
-            app:destination="@id/diaryFragment" />
+            app:destination="@id/diaryFragment"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short" />
         <action
             android:id="@+id/action_diaryFragment_to_mealItemFragment"
-            app:destination="@id/mealItemFragment" />
+            app:destination="@id/mealItemFragment"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short" />
     </fragment>
     <fragment
         android:id="@+id/mealFragment"
@@ -36,13 +48,25 @@
         android:label="MealFragment" >
         <action
             android:id="@+id/action_mealFragment_to_mealItemFragment"
-            app:destination="@id/mealItemFragment" />
+            app:destination="@id/mealItemFragment"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short" />
         <action
             android:id="@+id/action_mealFragment_to_createMealItemFragment"
-            app:destination="@id/createMealItemFragment" />
+            app:destination="@id/createMealItemFragment"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short" />
         <action
             android:id="@+id/action_mealFragment_to_foodFragment"
-            app:destination="@id/foodFragment" />
+            app:destination="@id/foodFragment"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short"  />
     </fragment>
     <fragment
         android:id="@+id/mealItemFragment"
@@ -53,7 +77,11 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_mealItemFragment_to_databaseFoodItemFragment"
-            app:destination="@id/databaseFoodItemFragment" />
+            app:destination="@id/databaseFoodItemFragment"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short"  />
         <argument
             android:name="primaryKey"
             app:argType="string" />
@@ -72,7 +100,11 @@
         android:label="StepFragment" >
         <action
             android:id="@+id/action_stepFragment_self"
-            app:destination="@id/stepFragment" />
+            app:destination="@id/stepFragment"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short"  />
     </fragment>
     <activity
         android:id="@+id/introActivity"
@@ -84,10 +116,18 @@
         android:label="FoodFragment" >
         <action
             android:id="@+id/action_foodFragment_to_mealFragment"
-            app:destination="@id/mealFragment" />
+            app:destination="@id/mealFragment"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short" />
         <action
             android:id="@+id/action_foodFragment_to_foodItemFragment"
-            app:destination="@id/networkFoodItemFragment" />
+            app:destination="@id/networkFoodItemFragment"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short" />
     </fragment>
     <fragment
         android:id="@+id/networkFoodItemFragment"
@@ -101,7 +141,11 @@
             app:argType="com.gasparaiciukas.owntrainer.network.Food" />
         <action
             android:id="@+id/action_foodItemFragment_to_selectMealItemFragment"
-            app:destination="@id/selectMealItemFragment" />
+            app:destination="@id/selectMealItemFragment"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short"  />
     </fragment>
     <fragment
         android:id="@+id/selectMealItemFragment"

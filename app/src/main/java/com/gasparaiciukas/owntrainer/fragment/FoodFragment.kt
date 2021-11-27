@@ -6,15 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.NetworkFoodAdapter
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodBinding
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
+import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 
@@ -53,7 +58,30 @@ class FoodFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        slideBottomNavigationUp()
         _binding = null
+    }
+
+    private fun slideBottomNavigationUp() {
+        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val layoutParams = botNav?.layoutParams
+        if (layoutParams is CoordinatorLayout.LayoutParams) {
+            val behavior = layoutParams.behavior
+            if (behavior is HideBottomViewOnScrollBehavior) {
+                behavior.slideUp(botNav)
+            }
+        }
+    }
+
+    private fun slideBottomNavigationDown() {
+        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val layoutParams = botNav?.layoutParams
+        if (layoutParams is CoordinatorLayout.LayoutParams) {
+            val behavior = layoutParams.behavior
+            if (behavior is HideBottomViewOnScrollBehavior) {
+                behavior.slideDown(botNav)
+            }
+        }
     }
 
     private fun reloadRecyclerView(foods: List<Food>) {
@@ -62,6 +90,11 @@ class FoodFragment : Fragment() {
         adapter.notifyItemRangeRemoved(0, itemCount)
         this.foods.addAll(foods)
         adapter.notifyItemRangeInserted(0, this.foods.size)
+        if (adapter.itemCount == 0) {
+            binding.cardRecyclerView.visibility = View.INVISIBLE
+        } else {
+            binding.cardRecyclerView.visibility = View.VISIBLE
+        }
     }
 
     private fun initUi() {
@@ -96,6 +129,17 @@ class FoodFragment : Fragment() {
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
+
+        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            // Scroll down
+            if (scrollY > oldScrollY) {
+                slideBottomNavigationDown()
+            }
+            // Scroll up
+            if (scrollY < oldScrollY) {
+                slideBottomNavigationUp()
+            }
+        })
     }
 
     private fun initRecyclerView() {
@@ -103,5 +147,8 @@ class FoodFragment : Fragment() {
         adapter = NetworkFoodAdapter(foods, listener)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
+        if (adapter.itemCount == 0) {
+            binding.cardRecyclerView.visibility = View.INVISIBLE
+        }
     }
 }
