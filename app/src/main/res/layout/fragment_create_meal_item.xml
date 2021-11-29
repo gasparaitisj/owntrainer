@@ -22,8 +22,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:orientation="vertical"
                     android:gravity="center"
+                    android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -32,8 +32,8 @@
                         style="@style/TextAppearance.owntrainer.Headline6"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAlignment="center"
-                        android:text="@string/add_new_meal" />
+                        android:text="@string/add_new_meal"
+                        android:textAlignment="center" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layout_et_title"
@@ -82,7 +82,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:text="Add meal"/>
+                        android:text="Add meal" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp" />
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -308,11 +308,17 @@
                             android:id="@+id/recycler_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:minHeight="300dp"
                             android:paddingTop="8dp" />
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/card_ingredients" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
