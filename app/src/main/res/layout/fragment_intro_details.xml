@@ -3,135 +3,145 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".fragment.IntroDetailsFragment">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/layout_title"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-            <TextView
-                style="@style/TextAppearance.MaterialComponents.Headline6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/basic_information" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_title">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layout_et_sex"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/sex"
-                android:paddingHorizontal="20dp"
-                android:paddingTop="30dp"
-                app:startIconContentDescription="Sex"
-                app:startIconDrawable="@drawable/outline_male_24">
+                android:layout_height="wrap_content">
 
-                <AutoCompleteTextView
-                    android:id="@+id/et_sex"
+                <LinearLayout
+                    android:id="@+id/layout_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layout_et_age"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/age"
-                android:paddingHorizontal="20dp"
-                android:paddingTop="30dp"
-                app:startIconContentDescription="Age"
-                app:startIconDrawable="@drawable/outline_accessibility_new_24"
-                app:suffixText="years">
+                    <TextView
+                        style="@style/TextAppearance.owntrainer.Headline6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/basic_information" />
+                </LinearLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_age"
+                <LinearLayout
+                    android:id="@+id/layout_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:maxLength="3" />
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/layout_title">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_et_sex"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/sex"
+                        android:paddingHorizontal="20dp"
+                        android:paddingTop="30dp"
+                        app:startIconContentDescription="Sex"
+                        app:startIconDrawable="@drawable/outline_male_24">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layout_et_height"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/height"
-                android:paddingHorizontal="20dp"
-                android:paddingTop="30dp"
-                app:startIconContentDescription="Height"
-                app:startIconDrawable="@drawable/baseline_height_24"
-                app:suffixText="(cm)">
+                        <AutoCompleteTextView
+                            android:id="@+id/et_sex"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_height"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:maxLength="3" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_et_age"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/age"
+                        android:paddingHorizontal="20dp"
+                        android:paddingTop="30dp"
+                        app:startIconContentDescription="Age"
+                        app:startIconDrawable="@drawable/outline_accessibility_new_24"
+                        app:suffixText="years">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_age"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:maxLength="3" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layout_et_weight"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/weight"
-                android:paddingHorizontal="20dp"
-                android:paddingTop="30dp"
-                app:startIconContentDescription="Weight"
-                app:startIconDrawable="@drawable/baseline_monitor_weight_24"
-                app:suffixText="(kg)">
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_weight"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:maxLength="5" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_et_height"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/height"
+                        android:paddingHorizontal="20dp"
+                        android:paddingTop="30dp"
+                        app:startIconContentDescription="Height"
+                        app:startIconDrawable="@drawable/baseline_height_24"
+                        app:suffixText="(cm)">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_height"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:maxLength="3" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layout_et_lifestyle"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/lifestyle"
-                android:paddingHorizontal="20dp"
-                android:paddingTop="30dp"
-                app:startIconContentDescription="Lifestyle"
-                app:startIconDrawable="@drawable/outline_run_circle_24">
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                <AutoCompleteTextView
-                    android:id="@+id/et_lifestyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_et_weight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/weight"
+                        android:paddingHorizontal="20dp"
+                        android:paddingTop="30dp"
+                        app:startIconContentDescription="Weight"
+                        app:startIconDrawable="@drawable/baseline_monitor_weight_24"
+                        app:suffixText="(kg)">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_weight"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:maxLength="5" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_et_lifestyle"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/lifestyle"
+                        android:paddingHorizontal="20dp"
+                        android:paddingTop="30dp"
+                        app:startIconContentDescription="Lifestyle"
+                        app:startIconDrawable="@drawable/outline_run_circle_24">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/et_lifestyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

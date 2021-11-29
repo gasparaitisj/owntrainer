@@ -28,5 +28,14 @@
         <item name="colorPrimaryInverse">@color/md_theme_light_primaryInverse</item>
 
         <item name="colorControlHighlight">@color/md_theme_light_primaryContainer</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+
+    <style name="TextAppearance.owntrainer.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/nunito</item>
+    </style>
+
+    <style name="TextAppearance.owntrainer.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="fontFamily">@font/nunito</item>
     </style>
 </resources>

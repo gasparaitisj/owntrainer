@@ -55,6 +55,7 @@ class MealFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        slideBottomNavigationUp()
         _binding = null
     }
 

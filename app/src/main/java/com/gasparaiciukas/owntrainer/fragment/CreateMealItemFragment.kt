@@ -4,11 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentCreateMealItemBinding
 import com.gasparaiciukas.owntrainer.viewmodel.CreateMealItemViewModel
+import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class CreateMealItemFragment : Fragment() {
     private var _binding: FragmentCreateMealItemBinding? = null
@@ -28,6 +32,7 @@ class CreateMealItemFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        slideBottomNavigationUp()
         _binding = null
     }
 
@@ -38,6 +43,28 @@ class CreateMealItemFragment : Fragment() {
                 binding.etInstructions.text.toString()
             )
             findNavController().popBackStack()
+        }
+    }
+
+    private fun slideBottomNavigationUp() {
+        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val layoutParams = botNav?.layoutParams
+        if (layoutParams is CoordinatorLayout.LayoutParams) {
+            val behavior = layoutParams.behavior
+            if (behavior is HideBottomViewOnScrollBehavior) {
+                behavior.slideUp(botNav)
+            }
+        }
+    }
+
+    private fun slideBottomNavigationDown() {
+        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val layoutParams = botNav?.layoutParams
+        if (layoutParams is CoordinatorLayout.LayoutParams) {
+            val behavior = layoutParams.behavior
+            if (behavior is HideBottomViewOnScrollBehavior) {
+                behavior.slideDown(botNav)
+            }
         }
     }
 }

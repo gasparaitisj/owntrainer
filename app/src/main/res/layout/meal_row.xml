@@ -18,31 +18,31 @@
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:textAppearance="@style/TextAppearance.owntrainer.Caption"
             android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
 
             <TextView
                 android:id="@+id/tv_calories"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+                android:textAppearance="@style/TextAppearance.owntrainer.Caption" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" kcal per portion"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textAppearance="@style/TextAppearance.owntrainer.Caption"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
-        <View
+        <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="10dp" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </layout>

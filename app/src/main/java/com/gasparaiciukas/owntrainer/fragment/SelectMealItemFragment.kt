@@ -4,16 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.databinding.FragmentSelectMealItemBinding
 import com.gasparaiciukas.owntrainer.viewmodel.BundleViewModelFactory
 import com.gasparaiciukas.owntrainer.viewmodel.SelectMealItemViewModel
+import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class SelectMealItemFragment : Fragment() {
     private var _binding: FragmentSelectMealItemBinding? = null
@@ -59,6 +63,29 @@ class SelectMealItemFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        slideBottomNavigationUp()
         _binding = null
+    }
+
+    private fun slideBottomNavigationUp() {
+        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val layoutParams = botNav?.layoutParams
+        if (layoutParams is CoordinatorLayout.LayoutParams) {
+            val behavior = layoutParams.behavior
+            if (behavior is HideBottomViewOnScrollBehavior) {
+                behavior.slideUp(botNav)
+            }
+        }
+    }
+
+    private fun slideBottomNavigationDown() {
+        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val layoutParams = botNav?.layoutParams
+        if (layoutParams is CoordinatorLayout.LayoutParams) {
+            val behavior = layoutParams.behavior
+            if (behavior is HideBottomViewOnScrollBehavior) {
+                behavior.slideDown(botNav)
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
+            style="@style/TextAppearance.owntrainer.Headline6"
             android:text="You are doing a great job!"
             android:textSize="30sp" />
     </RelativeLayout>

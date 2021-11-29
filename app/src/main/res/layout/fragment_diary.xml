@@ -3,442 +3,454 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
-        android:id="@+id/layout_main"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_fragment_diary"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_navigation"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_fragment_diary"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:strokeWidth="0dp">
+                android:layout_height="wrap_content">
 
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_navigation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp">
-
-                    <ImageButton
-                        android:id="@+id/btn_back"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/previous_day_button"
-                        android:src="@drawable/outline_arrow_back_ios_24"
-                        android:layout_marginEnd="25dp" />
+                    android:layout_margin="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeWidth="0dp">
 
                     <LinearLayout
-                        android:id="@+id/layout_date"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:focusable="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
                         android:gravity="center">
 
-                        <TextView
-                            android:id="@+id/tv_day_of_week"
-                            style="@style/TextAppearance.MaterialComponents.Headline6"
+                        <ImageButton
+                            android:id="@+id/btn_back"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/monday" />
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="25dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/previous_day_button"
+                            android:src="@drawable/outline_arrow_back_ios_24" />
 
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Headline6"
+                        <LinearLayout
+                            android:id="@+id/layout_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/comma" />
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center">
 
-                        <TextView
-                            android:id="@+id/tv_month_of_year"
-                            style="@style/TextAppearance.MaterialComponents.Headline6"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/march" />
+                            <TextView
+                                android:id="@+id/tv_day_of_week"
+                                style="@style/TextAppearance.owntrainer.Headline6"
+                                android:fontFamily="@font/nunito"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/monday" />
 
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Headline6"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/space" />
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Headline6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/comma" />
 
-                        <TextView
-                            android:id="@+id/tv_day_of_month"
-                            style="@style/TextAppearance.MaterialComponents.Headline6"
+                            <TextView
+                                android:id="@+id/tv_month_of_year"
+                                style="@style/TextAppearance.owntrainer.Headline6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/march" />
+
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Headline6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/space" />
+
+                            <TextView
+                                android:id="@+id/tv_day_of_month"
+                                style="@style/TextAppearance.owntrainer.Headline6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/_29" />
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/btn_forward"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/_29" />
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="25dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/next_day_button"
+                            android:src="@drawable/outline_arrow_forward_ios_24" />
+
                     </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/btn_forward"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/next_day_button"
-                        android:src="@drawable/outline_arrow_forward_ios_24"
-                        android:layout_marginStart="25dp"/>
+                </com.google.android.material.card.MaterialCardView>
 
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_statistics"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/card_navigation">
-
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_statistics"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:orientation="vertical">
+                    android:layout_margin="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/card_navigation">
 
                     <LinearLayout
-                        android:id="@+id/layout_calories"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center">
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="vertical">
 
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="75dp"
+                        <LinearLayout
+                            android:id="@+id/layout_calories"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="Calories "
+                            android:gravity="center">
 
-                            android:textStyle="bold" />
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="75dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="Calories "
 
-                        <TextView
-                            android:id="@+id/tv_calories_percentage"
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="30dp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_calories_percentage"
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="30dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="@string/_50"
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="% "
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_calories_consumed"
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="@string/_50"
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="/"
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_calories_intake"
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="40dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/_50"
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="35dp"
+                                android:layout_height="wrap_content"
+                                android:text=" kCal"
+
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_protein"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="@string/_50"
+                            android:gravity="center">
 
-                            android:textStyle="bold" />
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="75dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="Protein "
 
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="wrap_content"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_protein_percentage"
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="30dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="@string/_50"
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="% "
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_protein_consumed"
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="@string/_50"
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="/"
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_protein_intake"
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="40dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/_50"
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="35dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="start"
+                                android:text=" g"
+
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_carbs"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="% "
+                            android:gravity="center">
 
-                            android:textStyle="bold" />
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="75dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="Carbs "
 
-                        <TextView
-                            android:id="@+id/tv_calories_consumed"
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="50dp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_carbs_percentage"
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="30dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="@string/_50"
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="% "
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_carbs_consumed"
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="@string/_50"
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="/"
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_carbs_intake"
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="40dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/_50"
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="35dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="start"
+                                android:text=" g"
+
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_fat"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="@string/_50"
+                            android:gravity="center">
 
-                            android:textStyle="bold" />
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="75dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="Fat "
 
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="/"
+                                android:textStyle="bold" />
 
-                            android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/tv_fat_percentage"
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="30dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="@string/_50"
 
-                        <TextView
-                            android:id="@+id/tv_calories_intake"
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="40dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/_50"
+                                android:textStyle="bold" />
 
-                            android:textStyle="bold" />
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="% "
 
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="35dp"
-                            android:layout_height="wrap_content"
-                            android:text=" kCal"
+                                android:textStyle="bold" />
 
-                            android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/tv_fat_consumed"
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="@string/_50"
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="/"
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_fat_intake"
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="40dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/_50"
+
+                                android:textStyle="bold" />
+
+                            <TextView
+                                style="@style/TextAppearance.owntrainer.Caption"
+                                android:layout_width="35dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="start"
+                                android:text=" g"
+
+                                android:textStyle="bold" />
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/layout_protein"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center">
+                </com.google.android.material.card.MaterialCardView>
 
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="75dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="Protein "
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tv_protein_percentage"
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="@string/_50"
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="% "
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tv_protein_consumed"
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="50dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="@string/_50"
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="/"
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tv_protein_intake"
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="40dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/_50"
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="35dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="start"
-                            android:text=" g"
-
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_carbs"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center">
-
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="75dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="Carbs "
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tv_carbs_percentage"
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="@string/_50"
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="% "
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tv_carbs_consumed"
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="50dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="@string/_50"
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="/"
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tv_carbs_intake"
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="40dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/_50"
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="35dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="start"
-                            android:text=" g"
-
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_fat"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center">
-
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="75dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="Fat "
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tv_fat_percentage"
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="@string/_50"
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="% "
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tv_fat_consumed"
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="50dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="@string/_50"
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="/"
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tv_fat_intake"
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="40dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/_50"
-
-                            android:textStyle="bold" />
-
-                        <TextView
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="35dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="start"
-                            android:text=" g"
-
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_meals"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/card_statistics">
-
-                <LinearLayout
-                    android:id="@+id/layout_meals"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_meals"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/card_statistics">
 
-                    <TextView
-                        style="@style/TextAppearance.MaterialComponents.Headline6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/meals_eaten" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_view"
+                    <LinearLayout
+                        android:id="@+id/layout_meals"
                         android:layout_width="match_parent"
-                        android:layout_height="fill_parent"
-                        android:layout_marginTop="5dp"
-                        app:layout_constrainedHeight="true" />
-                </LinearLayout>
+                        android:layout_height="300dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
 
-            </com.google.android.material.card.MaterialCardView>
+                        <TextView
+                            style="@style/TextAppearance.owntrainer.Headline6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/meals_eaten" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="120dp"
-                android:contentDescription="@string/add_new_meal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/baseline_add_24" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_marginTop="5dp"
+                            app:layout_constrainedHeight="true" />
+                    </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </FrameLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="120dp"
+            android:contentDescription="@string/add_new_meal"
+            app:srcCompat="@drawable/baseline_add_24" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

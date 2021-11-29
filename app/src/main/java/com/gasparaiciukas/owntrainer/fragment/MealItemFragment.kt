@@ -5,6 +5,7 @@ import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -22,6 +23,8 @@ import com.gasparaiciukas.owntrainer.viewmodel.MealItemViewModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -69,6 +72,7 @@ class MealItemFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        slideBottomNavigationUp()
         _binding = null
     }
 
@@ -134,5 +138,27 @@ class MealItemFragment : Fragment() {
         binding.pieChart.description.isEnabled = false
         binding.pieChart.setTouchEnabled(false)
         binding.pieChart.invalidate()
+    }
+
+    private fun slideBottomNavigationUp() {
+        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val layoutParams = botNav?.layoutParams
+        if (layoutParams is CoordinatorLayout.LayoutParams) {
+            val behavior = layoutParams.behavior
+            if (behavior is HideBottomViewOnScrollBehavior) {
+                behavior.slideUp(botNav)
+            }
+        }
+    }
+
+    private fun slideBottomNavigationDown() {
+        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val layoutParams = botNav?.layoutParams
+        if (layoutParams is CoordinatorLayout.LayoutParams) {
+            val behavior = layoutParams.behavior
+            if (behavior is HideBottomViewOnScrollBehavior) {
+                behavior.slideDown(botNav)
+            }
+        }
     }
 }

@@ -47,20 +47,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="("
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textAppearance="@style/TextAppearance.owntrainer.Caption"
                     tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/tv_calories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+                    android:textAppearance="@style/TextAppearance.owntrainer.Caption" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" kCal)"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textAppearance="@style/TextAppearance.owntrainer.Caption"
                     tools:ignore="HardcodedText" />
             </LinearLayout>
 
@@ -73,60 +73,60 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Protein "
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textAppearance="@style/TextAppearance.owntrainer.Caption"
                     tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/tv_protein"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+                    android:textAppearance="@style/TextAppearance.owntrainer.Caption" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" g "
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textAppearance="@style/TextAppearance.owntrainer.Caption"
                     tools:ignore="HardcodedText" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Carbs "
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textAppearance="@style/TextAppearance.owntrainer.Caption"
                     tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/tv_carbs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+                    android:textAppearance="@style/TextAppearance.owntrainer.Caption" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" g "
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textAppearance="@style/TextAppearance.owntrainer.Caption"
                     tools:ignore="HardcodedText" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Fat "
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textAppearance="@style/TextAppearance.owntrainer.Caption"
                     tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/tv_fat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+                    android:textAppearance="@style/TextAppearance.owntrainer.Caption" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" g"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:textAppearance="@style/TextAppearance.owntrainer.Caption"
                     tools:ignore="HardcodedText" />
             </LinearLayout>
 
