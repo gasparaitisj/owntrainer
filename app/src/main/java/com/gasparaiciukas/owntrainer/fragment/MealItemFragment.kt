@@ -98,6 +98,11 @@ class MealItemFragment : Fragment() {
         binding.tvCaloriesCount.text = viewModel.calories.roundToInt().toString()
         binding.tvCaloriesPercentage.text =
             String.format("%s %%", (viewModel.calories / viewModel.calorieDailyIntake * 100).roundToInt())
+
+        binding.btnAddFood.setOnClickListener {
+            val action = MealItemFragmentDirections.actionMealItemFragmentToFoodFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private fun initRecyclerView() {

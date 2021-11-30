@@ -85,6 +85,9 @@
         <argument
             android:name="primaryKey"
             app:argType="string" />
+        <action
+            android:id="@+id/action_mealItemFragment_to_foodFragment"
+            app:destination="@id/foodFragment" />
     </fragment>
     <fragment
         android:id="@+id/progressFragment"

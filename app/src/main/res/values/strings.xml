@@ -39,7 +39,6 @@
     <string name="instructions">Instructions</string>
     <string name="save">Save</string>
     <string name="save_button">Save button</string>
-    <string name="add_food">Add food</string>
     <string name="basic_information">Basic information</string>
     <string name="ingredient_list">Ingredient list</string>
     <string name="recipe_instructions">Recipe instructions</string>
@@ -65,4 +64,5 @@
     <string name="ingredients">Ingredients</string>
     <string name="nutrition">Nutrition</string>
     <string name="chart">Chart</string>
+    <string name="add_food">Add food</string>
 </resources>
