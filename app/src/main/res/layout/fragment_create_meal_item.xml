@@ -29,7 +29,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        style="@style/TextAppearance.owntrainer.Headline6"
+                        style="@style/TextAppearance.OwnTrainer.Headline6"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/add_new_meal"

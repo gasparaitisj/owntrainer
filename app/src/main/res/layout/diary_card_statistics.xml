@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_statistics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_navigation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/layout_calories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="Calories "
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_calories_percentage"
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="% "
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_calories_consumed"
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_calories_intake"
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_50"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:text=" kCal"
+
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_protein"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="Protein "
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_protein_percentage"
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="% "
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_protein_consumed"
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_protein_intake"
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_50"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text=" g"
+
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_carbs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="Carbs "
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_carbs_percentage"
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="% "
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_carbs_consumed"
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_carbs_intake"
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_50"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text=" g"
+
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_fat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="Fat "
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_fat_percentage"
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="% "
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_fat_consumed"
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/_50"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_fat_intake"
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_50"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/TextAppearance.OwnTrainer.Caption"
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text=" g"
+
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>

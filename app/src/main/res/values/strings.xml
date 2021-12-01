@@ -33,7 +33,6 @@
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="back">Back</string>
     <string name="back_button">Back button</string>
-    <string name="meals">Meals</string>
     <string name="foods">Foods</string>
     <string name="title">Title</string>
     <string name="instructions">Instructions</string>
@@ -65,4 +64,8 @@
     <string name="nutrition">Nutrition</string>
     <string name="chart">Chart</string>
     <string name="add_food">Add food</string>
+    <string name="show_more">Show more</string>
+    <string name="home">Home</string>
+    <string name="meals">Meals</string>
+    <string name="progress">Progress</string>
 </resources>

@@ -1,5 +1,8 @@
 <resources>
+
     <style name="Theme.OwnTrainer" parent="Theme.Material3.Light.NoActionBar">
+
+        <!-- Main app colors, generated w/ Material 3 -->
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
@@ -27,15 +30,34 @@
         <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_primaryInverse</item>
 
+        <!-- Ripple color -->
         <item name="colorControlHighlight">@color/md_theme_light_primaryContainer</item>
+
+        <!-- Fonts -->
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+
+        <!-- Navigation Drawer -->
+<!--        <item name="android:windowTranslucentStatus">true</item>-->
+    </style>
+
+    <style name="TextAppearance.OwnTrainer.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/nunito</item>
         <item name="android:fontFamily">@font/nunito</item>
     </style>
 
-    <style name="TextAppearance.owntrainer.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+    <style name="TextAppearance.OwnTrainer.Caption" parent="TextAppearance.MaterialComponents.Caption">
         <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
     </style>
 
-    <style name="TextAppearance.owntrainer.Caption" parent="TextAppearance.MaterialComponents.Caption">
+    <style name="TextAppearance.OwnTrainer.ActionBar.Title" parent="TextAppearance.Material3.ActionBar.Title">
         <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="android:textColor">@color/md_theme_light_onPrimary</item>
+    </style>
+
+    <style name="Widget.OwnTrainer.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/md_theme_light_primary</item>
     </style>
 </resources>

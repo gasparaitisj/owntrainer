@@ -1,6 +1,8 @@
 package com.gasparaiciukas.owntrainer.fragment
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.widget.NestedScrollView
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -98,7 +101,12 @@ class FoodFragment : Fragment() {
     }
 
     private fun initUi() {
+        initNavigation()
+        setListeners()
         initRecyclerView()
+    }
+
+    private fun setListeners() {
         // Send get request on end icon clicked
         binding.layoutEtSearch.setEndIconOnClickListener {
             if (!TextUtils.isEmpty(binding.etSearch.text)) {
@@ -140,6 +148,59 @@ class FoodFragment : Fragment() {
                 slideBottomNavigationUp()
             }
         })
+    }
+
+    private fun initNavigation() {
+        binding.topAppBar.setNavigationOnClickListener {
+            binding.drawerLayout.open()
+        }
+        binding.navigationView.setCheckedItem(R.id.foods)
+        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            menuItem.isChecked = true
+            when (menuItem.itemId) {
+                R.id.home -> {
+                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                        override fun onDrawerClosed(drawerView: View) {
+                            super.onDrawerClosed(drawerView)
+                            val action = FoodFragmentDirections.actionFoodFragmentToDiaryFragment()
+                            findNavController().navigate(action)
+                        }
+                    })
+                    binding.drawerLayout.close()
+                }
+                R.id.foods -> {
+                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                        override fun onDrawerClosed(drawerView: View) {
+                            super.onDrawerClosed(drawerView)
+                            val action = FoodFragmentDirections.actionFoodFragmentSelf()
+                            findNavController().navigate(action)
+                        }
+                    })
+                    binding.drawerLayout.close()
+                }
+                R.id.meals -> {
+                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                        override fun onDrawerClosed(drawerView: View) {
+                            super.onDrawerClosed(drawerView)
+                            val action = FoodFragmentDirections.actionFoodFragmentToMealFragment()
+                            findNavController().navigate(action)
+                        }
+                    })
+                    binding.drawerLayout.close()
+                }
+                R.id.progress -> {
+                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                        override fun onDrawerClosed(drawerView: View) {
+                            super.onDrawerClosed(drawerView)
+                            val action = FoodFragmentDirections.actionFoodFragmentToProgressFragment()
+                            findNavController().navigate(action)
+                        }
+                    })
+                    binding.drawerLayout.close()
+                }
+            }
+            true
+        }
     }
 
     private fun initRecyclerView() {

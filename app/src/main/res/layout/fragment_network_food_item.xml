@@ -30,7 +30,7 @@
 
                     <TextView
                         android:id="@+id/tv_title"
-                        style="@style/TextAppearance.owntrainer.Headline6"
+                        style="@style/TextAppearance.OwnTrainer.Headline6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/sample_text"
@@ -86,7 +86,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            style="@style/TextAppearance.owntrainer.Headline6"
+                            style="@style/TextAppearance.OwnTrainer.Headline6"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/nutrition"

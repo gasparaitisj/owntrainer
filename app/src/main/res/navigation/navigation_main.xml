@@ -41,6 +41,15 @@
             app:exitAnim="@anim/fade_out_short"
             app:popEnterAnim="@anim/fade_in_short"
             app:popExitAnim="@anim/fade_out_short" />
+        <action
+            android:id="@+id/action_diaryFragment_to_mealFragment"
+            app:destination="@id/mealFragment" />
+        <action
+            android:id="@+id/action_diaryFragment_to_progressFragment"
+            app:destination="@id/progressFragment" />
+        <action
+            android:id="@+id/action_diaryFragment_to_foodFragment"
+            app:destination="@id/foodFragment" />
     </fragment>
     <fragment
         android:id="@+id/mealFragment"
@@ -67,6 +76,15 @@
             app:exitAnim="@anim/fade_out_short"
             app:popEnterAnim="@anim/fade_in_short"
             app:popExitAnim="@anim/fade_out_short"  />
+        <action
+            android:id="@+id/action_mealFragment_to_diaryFragment"
+            app:destination="@id/diaryFragment" />
+        <action
+            android:id="@+id/action_mealFragment_to_progressFragment"
+            app:destination="@id/progressFragment" />
+        <action
+            android:id="@+id/action_mealFragment_self"
+            app:destination="@id/mealFragment" />
     </fragment>
     <fragment
         android:id="@+id/mealItemFragment"
@@ -92,7 +110,20 @@
     <fragment
         android:id="@+id/progressFragment"
         android:name="com.gasparaiciukas.owntrainer.fragment.ProgressFragment"
-        android:label="ProgressFragment" />
+        android:label="ProgressFragment" >
+        <action
+            android:id="@+id/action_progressFragment_to_diaryFragment"
+            app:destination="@id/diaryFragment" />
+        <action
+            android:id="@+id/action_progressFragment_to_mealFragment"
+            app:destination="@id/mealFragment" />
+        <action
+            android:id="@+id/action_progressFragment_self"
+            app:destination="@id/progressFragment" />
+        <action
+            android:id="@+id/action_progressFragment_to_foodFragment"
+            app:destination="@id/foodFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.gasparaiciukas.owntrainer.fragment.SettingsFragment"
@@ -131,6 +162,15 @@
             app:exitAnim="@anim/fade_out_short"
             app:popEnterAnim="@anim/fade_in_short"
             app:popExitAnim="@anim/fade_out_short" />
+        <action
+            android:id="@+id/action_foodFragment_self"
+            app:destination="@id/foodFragment" />
+        <action
+            android:id="@+id/action_foodFragment_to_diaryFragment"
+            app:destination="@id/diaryFragment" />
+        <action
+            android:id="@+id/action_foodFragment_to_progressFragment"
+            app:destination="@id/progressFragment" />
     </fragment>
     <fragment
         android:id="@+id/networkFoodItemFragment"

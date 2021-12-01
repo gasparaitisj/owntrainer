@@ -1,16 +1,19 @@
 package com.gasparaiciukas.owntrainer.fragment
 
-import android.graphics.Rect
 import android.os.Bundle
-import android.view.*
+import android.os.Handler
+import android.os.Looper
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.widget.NestedScrollView
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.Meal
@@ -65,32 +68,86 @@ class DiaryFragment : Fragment() {
     private fun initUi() {
         setTextViews()
         setListeners()
+        initNavigation()
         initRecyclerView()
+    }
+
+    private fun initNavigation() {
+        binding.topAppBar.setNavigationOnClickListener {
+            binding.drawerLayout.open()
+        }
+        binding.navigationView.setCheckedItem(R.id.home)
+        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            menuItem.isChecked = true
+            when (menuItem.itemId) {
+                R.id.home -> {
+                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                        override fun onDrawerClosed(drawerView: View) {
+                            super.onDrawerClosed(drawerView)
+                            val action = DiaryFragmentDirections.actionDiaryFragmentSelf()
+                            findNavController().navigate(action)
+                        }
+                    })
+                    binding.drawerLayout.close()
+                }
+                R.id.foods -> {
+                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                        override fun onDrawerClosed(drawerView: View) {
+                            super.onDrawerClosed(drawerView)
+                            val action = DiaryFragmentDirections.actionDiaryFragmentToFoodFragment()
+                            findNavController().navigate(action)
+                        }
+                    })
+                    binding.drawerLayout.close()
+                }
+                R.id.meals -> {
+                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                        override fun onDrawerClosed(drawerView: View) {
+                            super.onDrawerClosed(drawerView)
+                            val action = DiaryFragmentDirections.actionDiaryFragmentToMealFragment()
+                            findNavController().navigate(action)
+                        }
+                    })
+                    binding.drawerLayout.close()
+                }
+                R.id.progress -> {
+                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                        override fun onDrawerClosed(drawerView: View) {
+                            super.onDrawerClosed(drawerView)
+                            val action = DiaryFragmentDirections.actionDiaryFragmentToProgressFragment()
+                            findNavController().navigate(action)
+                        }
+                    })
+                    binding.drawerLayout.close()
+                }
+            }
+            true
+        }
     }
 
     private fun setTextViews() {
         // Navigation
-        binding.tvDayOfWeek.text = DateFormatter.dayOfWeekToString(viewModel.diaryEntry.dayOfWeek)
-        binding.tvMonthOfYear.text = DateFormatter.monthOfYearToString(viewModel.diaryEntry.monthOfYear)
-        binding.tvDayOfMonth.text = viewModel.diaryEntry.dayOfMonth.toString()
+        binding.cardNavigation.tvDayOfWeek.text = DateFormatter.dayOfWeekToString(viewModel.diaryEntry.dayOfWeek)
+        binding.cardNavigation.tvMonthOfYear.text = DateFormatter.monthOfYearToString(viewModel.diaryEntry.monthOfYear)
+        binding.cardNavigation.tvDayOfMonth.text = viewModel.diaryEntry.dayOfMonth.toString()
 
         // Intakes
-        binding.tvCaloriesIntake.text = viewModel.user.dailyKcalIntake.roundToInt().toString()
-        binding.tvProteinIntake.text = viewModel.user.dailyProteinIntakeInG.roundToInt().toString()
-        binding.tvFatIntake.text = viewModel.user.dailyFatIntakeInG.roundToInt().toString()
-        binding.tvCarbsIntake.text = viewModel.user.dailyCarbsIntakeInG.roundToInt().toString()
+        binding.cardStatistics.tvCaloriesIntake.text = viewModel.user.dailyKcalIntake.roundToInt().toString()
+        binding.cardStatistics.tvProteinIntake.text = viewModel.user.dailyProteinIntakeInG.roundToInt().toString()
+        binding.cardStatistics.tvFatIntake.text = viewModel.user.dailyFatIntakeInG.roundToInt().toString()
+        binding.cardStatistics.tvCarbsIntake.text = viewModel.user.dailyCarbsIntakeInG.roundToInt().toString()
 
         // Total calories of day
-        binding.tvCaloriesConsumed.text = viewModel.caloriesConsumed.roundToInt().toString()
-        binding.tvProteinConsumed.text = viewModel.proteinConsumed.roundToInt().toString()
-        binding.tvFatConsumed.text = viewModel.fatConsumed.roundToInt().toString()
-        binding.tvCarbsConsumed.text = viewModel.carbsConsumed.roundToInt().toString()
+        binding.cardStatistics.tvCaloriesConsumed.text = viewModel.caloriesConsumed.roundToInt().toString()
+        binding.cardStatistics.tvProteinConsumed.text = viewModel.proteinConsumed.roundToInt().toString()
+        binding.cardStatistics.tvFatConsumed.text = viewModel.fatConsumed.roundToInt().toString()
+        binding.cardStatistics.tvCarbsConsumed.text = viewModel.carbsConsumed.roundToInt().toString()
 
         // Percentage of daily intake
-        binding.tvCaloriesPercentage.text = viewModel.caloriesPercentage.roundToInt().toString()
-        binding.tvProteinPercentage.text = viewModel.proteinPercentage.roundToInt().toString()
-        binding.tvFatPercentage.text = viewModel.fatPercentage.roundToInt().toString()
-        binding.tvCarbsPercentage.text = viewModel.carbsPercentage.roundToInt().toString()
+        binding.cardStatistics.tvCaloriesPercentage.text = viewModel.caloriesPercentage.roundToInt().toString()
+        binding.cardStatistics.tvProteinPercentage.text = viewModel.proteinPercentage.roundToInt().toString()
+        binding.cardStatistics.tvFatPercentage.text = viewModel.fatPercentage.roundToInt().toString()
+        binding.cardStatistics.tvCarbsPercentage.text = viewModel.carbsPercentage.roundToInt().toString()
     }
 
     private fun setListeners() {
@@ -103,7 +160,7 @@ class DiaryFragment : Fragment() {
         }
 
         // Navigation (back button)
-        binding.btnBack.setOnClickListener {
+        binding.cardNavigation.btnBack.setOnClickListener {
             // Refresh fragment and show previous day
             viewModel.updateUserToPreviousDay()
             val action = DiaryFragmentDirections.actionDiaryFragmentSelf()
@@ -111,7 +168,7 @@ class DiaryFragment : Fragment() {
         }
 
         // Navigation (date layout)
-        binding.layoutDate.setOnClickListener {
+        binding.cardNavigation.layoutDate.setOnClickListener {
             // Refresh fragment and show current day
             viewModel.updateUserToCurrentDay()
             val action = DiaryFragmentDirections.actionDiaryFragmentSelf()
@@ -119,7 +176,7 @@ class DiaryFragment : Fragment() {
         }
 
         // Navigation (forward button)
-        binding.btnForward.setOnClickListener {
+        binding.cardNavigation.btnForward.setOnClickListener {
             // Refresh fragment and show next day
             viewModel.updateUserToNextDay()
             val action = DiaryFragmentDirections.actionDiaryFragmentSelf()
@@ -131,8 +188,8 @@ class DiaryFragment : Fragment() {
         val layoutManager = LinearLayoutManager(context)
         val passLambda: (_1: Meal, _2: Int) -> Unit = { _: Meal, _: Int -> }
         adapter = MealAdapter(viewModel.diaryEntry.meals, singleClickListener, longClickListener)
-        binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = adapter
+        binding.cardMeals.recyclerView.layoutManager = layoutManager
+        binding.cardMeals.recyclerView.adapter = adapter
         binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             // Scroll up
             if (scrollY < oldScrollY) {

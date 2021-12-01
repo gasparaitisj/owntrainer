@@ -17,13 +17,14 @@ buildscript {
         ktlintVersion = '0.38.1'
         ktxVersion = '1.7.0'
         lifecycleVersion = '2.4.0'
-        materialVersion = '1.5.0-beta01'
+        materialVersion = '1.6.0-alpha01'
         navigationVersion = '2.3.5'
         pieChartVersion = 'v3.1.0'
-        realmVersion = '10.7.1'
+        realmVersion = '10.8.1'
         recyclerViewVersion = '1.2.1'
         retrofitVersion = '2.9.0'
         timberVersion = '5.0.1'
+        transitionVersion = '1.4.1'
     }
 
     repositories {

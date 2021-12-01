@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/navigation_group"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/home"
+            android:icon="@drawable/baseline_home_24"
+            android:title="@string/home" />
+        <item
+            android:id="@+id/foods"
+            android:icon="@drawable/outline_lunch_dining_24"
+            android:title="@string/foods" />
+        <item
+            android:id="@+id/meals"
+            android:icon="@drawable/baseline_local_dining_24"
+            android:title="@string/meals" />
+        <item
+            android:id="@+id/progress"
+            android:icon="@drawable/baseline_auto_graph_24"
+            android:title="@string/progress" />
+    </group>
+</menu>
