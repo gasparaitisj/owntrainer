@@ -68,4 +68,9 @@
     <string name="home">Home</string>
     <string name="meals">Meals</string>
     <string name="progress">Progress</string>
+    <string name="stats">Stats</string>
+    <string name="profile">Profile</string>
+    <string name="diaryLowercase">diary</string>
+    <string name="foodsLowercase">foods</string>
+    <string name="dark_theme">Dark theme</string>
 </resources>

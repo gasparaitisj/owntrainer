@@ -50,6 +50,12 @@
         <action
             android:id="@+id/action_diaryFragment_to_foodFragment"
             app:destination="@id/foodFragment" />
+        <action
+            android:id="@+id/action_diaryFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_diaryFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/mealFragment"
@@ -85,6 +91,12 @@
         <action
             android:id="@+id/action_mealFragment_self"
             app:destination="@id/mealFragment" />
+        <action
+            android:id="@+id/action_mealFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_mealFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/mealItemFragment"
@@ -123,11 +135,36 @@
         <action
             android:id="@+id/action_progressFragment_to_foodFragment"
             app:destination="@id/foodFragment" />
+        <action
+            android:id="@+id/action_progressFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_progressFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:id="@+id/profileFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.ProfileFragment"
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_diaryFragment"
+            app:destination="@id/diaryFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_mealFragment"
+            app:destination="@id/mealFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_foodFragment"
+            app:destination="@id/foodFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_progressFragment"
+            app:destination="@id/progressFragment" />
+        <action
+            android:id="@+id/action_profileFragment_self"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/stepFragment"
         android:name="com.gasparaiciukas.owntrainer.fragment.StepFragment"
@@ -171,6 +208,12 @@
         <action
             android:id="@+id/action_foodFragment_to_progressFragment"
             app:destination="@id/progressFragment" />
+        <action
+            android:id="@+id/action_foodFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_foodFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/networkFoodItemFragment"
@@ -209,5 +252,28 @@
         <argument
             android:name="food"
             app:argType="com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.SettingsFragment"
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settingsFragment_to_diaryFragment"
+            app:destination="@id/diaryFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_mealFragment"
+            app:destination="@id/mealFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_progressFragment"
+            app:destination="@id/progressFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_foodFragment"
+            app:destination="@id/foodFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_self"
+            app:destination="@id/settingsFragment" />
     </fragment>
 </navigation>

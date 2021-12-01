@@ -11,7 +11,7 @@ interface GetService {
     @GET("search")
     fun getResponse(@Query("api_key") apiKey: String = BuildConfig.API_KEY,
                     @Query("query") query: String,
-                    @Query("query") dataType: String = "Foundation,SR Legacy,Branded"
+                    @Query("query") dataType: String = "Foundation,SR Legacy"
     )
     : Call<GetResponse>
 

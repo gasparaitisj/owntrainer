@@ -198,6 +198,26 @@ class FoodFragment : Fragment() {
                     })
                     binding.drawerLayout.close()
                 }
+                R.id.profile -> {
+                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                        override fun onDrawerClosed(drawerView: View) {
+                            super.onDrawerClosed(drawerView)
+                            val action = FoodFragmentDirections.actionFoodFragmentToProfileFragment()
+                            findNavController().navigate(action)
+                        }
+                    })
+                    binding.drawerLayout.close()
+                }
+                R.id.settings -> {
+                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                        override fun onDrawerClosed(drawerView: View) {
+                            super.onDrawerClosed(drawerView)
+                            val action = FoodFragmentDirections.actionFoodFragmentToSettingsFragment()
+                            findNavController().navigate(action)
+                        }
+                    })
+                    binding.drawerLayout.close()
+                }
             }
             true
         }

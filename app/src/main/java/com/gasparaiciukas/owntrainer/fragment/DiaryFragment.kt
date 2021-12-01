@@ -120,6 +120,26 @@ class DiaryFragment : Fragment() {
                     })
                     binding.drawerLayout.close()
                 }
+                R.id.profile -> {
+                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                        override fun onDrawerClosed(drawerView: View) {
+                            super.onDrawerClosed(drawerView)
+                            val action = DiaryFragmentDirections.actionDiaryFragmentToProfileFragment()
+                            findNavController().navigate(action)
+                        }
+                    })
+                    binding.drawerLayout.close()
+                }
+                R.id.settings -> {
+                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                        override fun onDrawerClosed(drawerView: View) {
+                            super.onDrawerClosed(drawerView)
+                            val action = DiaryFragmentDirections.actionDiaryFragmentToSettingsFragment()
+                            findNavController().navigate(action)
+                        }
+                    })
+                    binding.drawerLayout.close()
+                }
             }
             true
         }

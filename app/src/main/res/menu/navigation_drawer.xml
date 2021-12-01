@@ -20,4 +20,18 @@
             android:icon="@drawable/baseline_auto_graph_24"
             android:title="@string/progress" />
     </group>
+
+    <group
+        android:id="@+id/settings_group"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/profile"
+            android:icon="@drawable/baseline_perm_identity_24"
+            android:title="@string/profile" />
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/baseline_settings_24"
+            android:title="@string/settings" />
+    </group>
+
 </menu>

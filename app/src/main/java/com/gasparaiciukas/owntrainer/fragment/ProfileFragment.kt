@@ -1,75 +1,129 @@
 package com.gasparaiciukas.owntrainer.fragment
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.adapter.MealAdapter
-import com.gasparaiciukas.owntrainer.database.Meal
-import com.gasparaiciukas.owntrainer.databinding.FragmentMealBinding
-import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
+import com.gasparaiciukas.owntrainer.databinding.FragmentProfileBinding
+import com.gasparaiciukas.owntrainer.viewmodel.ProfileViewModel
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import timber.log.Timber
+import java.util.*
 
-class MealFragment : Fragment() {
-    private var _binding: FragmentMealBinding? = null
+class ProfileFragment : Fragment() {
+    private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: MealAdapter
+    private val viewModel: ProfileViewModel by viewModels()
 
-    private val singleClickListener: (meal: Meal, position: Int) -> Unit = { _: Meal, position: Int ->
-        val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(position, "")
-        findNavController().navigate(action)
-    }
-
-    private val longClickListener: (position: Int) -> Unit = { position: Int ->
-        viewModel.deleteMealFromMeals(position)
-        adapter.notifyItemRemoved(position)
-        adapter.notifyItemRangeChanged(position, (adapter.itemCount - position))
-    }
-
-    private val viewModel: MealViewModel by viewModels()
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        _binding = FragmentMealBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
         initUi()
+        return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        slideBottomNavigationUp()
+        viewModel.writeUserToDatabase()
         _binding = null
     }
 
     private fun initUi() {
         initNavigation()
-        setListeners()
-        initRecyclerView()
+        setTextFields()
+    }
+
+    private fun setTextFields() {
+        // Insert current data into fields
+        binding.etSex.setText(viewModel.sex)
+        binding.etAge.setText(viewModel.age.toString())
+        binding.etHeight.setText(viewModel.height.toString())
+        binding.etWeight.setText(viewModel.weight.toString())
+        binding.etLifestyle.setText(viewModel.lifestyle)
+
+        // Set up listeners
+        val sexList: List<String?> = ArrayList(listOf("Male", "Female"))
+        val sexAdapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(requireContext(), R.layout.details_list_item, sexList)
+        binding.etSex.setAdapter(sexAdapter)
+        binding.etSex.onItemClickListener =
+            AdapterView.OnItemClickListener { _, _, _, _ -> viewModel.sex = binding.etSex.text.toString() }
+        binding.etAge.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                // do nothing
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                // do nothing
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                if (s.toString().isNotEmpty()) viewModel.age = s.toString().toInt()
+            }
+        })
+        binding.etHeight.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                // do nothing
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                // do nothing
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                if (s.toString().isNotEmpty()) viewModel.height = s.toString().toInt()
+            }
+        })
+        binding.etWeight.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                // do nothing
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                // do nothing
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                if (s.toString().isNotEmpty()) viewModel.weight = s.toString().toDouble()
+            }
+        })
+        binding.etLifestyle.onItemClickListener =
+            AdapterView.OnItemClickListener { _, _, _, _ ->
+                viewModel.lifestyle = binding.etLifestyle.text.toString()
+            }
+        val lifestyleList: List<String?> = ArrayList(
+            listOf(
+                "Sedentary",
+                "Lightly active",
+                "Moderately active",
+                "Very active",
+                "Extra active"
+            )
+        )
+        val lifestyleAdapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(requireContext(), R.layout.details_list_item, lifestyleList)
+        binding.etLifestyle.setAdapter(lifestyleAdapter)
     }
 
     private fun initNavigation() {
         binding.topAppBar.setNavigationOnClickListener {
             binding.drawerLayout.open()
         }
-        binding.navigationView.setCheckedItem(R.id.meals)
+        binding.navigationView.setCheckedItem(R.id.foods)
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
             when (menuItem.itemId) {
@@ -77,7 +131,7 @@ class MealFragment : Fragment() {
                     binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = MealFragmentDirections.actionMealFragmentToDiaryFragment()
+                            val action = ProfileFragmentDirections.actionProfileFragmentToDiaryFragment()
                             findNavController().navigate(action)
                         }
                     })
@@ -87,7 +141,7 @@ class MealFragment : Fragment() {
                     binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = MealFragmentDirections.actionMealFragmentToFoodFragment()
+                            val action = ProfileFragmentDirections.actionProfileFragmentToFoodFragment()
                             findNavController().navigate(action)
                         }
                     })
@@ -97,7 +151,7 @@ class MealFragment : Fragment() {
                     binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = MealFragmentDirections.actionMealFragmentSelf()
+                            val action = ProfileFragmentDirections.actionProfileFragmentToMealFragment()
                             findNavController().navigate(action)
                         }
                     })
@@ -107,7 +161,7 @@ class MealFragment : Fragment() {
                     binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = MealFragmentDirections.actionMealFragmentToProgressFragment()
+                            val action = ProfileFragmentDirections.actionProfileFragmentToProgressFragment()
                             findNavController().navigate(action)
                         }
                     })
@@ -117,7 +171,7 @@ class MealFragment : Fragment() {
                     binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = MealFragmentDirections.actionMealFragmentToProfileFragment()
+                            val action = ProfileFragmentDirections.actionProfileFragmentSelf()
                             findNavController().navigate(action)
                         }
                     })
@@ -127,7 +181,7 @@ class MealFragment : Fragment() {
                     binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = MealFragmentDirections.actionMealFragmentToSettingsFragment()
+                            val action = ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
                             findNavController().navigate(action)
                         }
                     })
@@ -136,53 +190,6 @@ class MealFragment : Fragment() {
             }
             true
         }
-    }
-
-    private fun setListeners() {
-        // Set up FAB
-        binding.fab.setOnClickListener {
-            val action = MealFragmentDirections.actionMealFragmentToCreateMealItemFragment()
-            findNavController().navigate(action)
-        }
-
-        // Tabs (foods or meals)
-        binding.layoutTab.getTabAt(1)?.select() // select current tab
-        binding.layoutTab.addOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                if (tab.position == 0) {
-                    val action = MealFragmentDirections.actionMealFragmentToFoodFragment()
-                    findNavController().navigate(action)
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {
-                // do nothing
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab) {
-                // do nothing
-            }
-        })
-
-        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-            // Scroll down
-            if (scrollY > oldScrollY) {
-                slideBottomNavigationDown()
-                binding.fab.hide()
-            }
-            // Scroll up
-            if (scrollY < oldScrollY) {
-                slideBottomNavigationUp()
-                binding.fab.show()
-            }
-        })
-    }
-
-    private fun initRecyclerView() {
-        val layoutManager = LinearLayoutManager(context)
-        adapter = MealAdapter(viewModel.meals, singleClickListener, longClickListener)
-        binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = adapter
     }
 
     private fun slideBottomNavigationUp() {
@@ -206,4 +213,5 @@ class MealFragment : Fragment() {
             }
         }
     }
+
 }

@@ -5,7 +5,7 @@ import com.gasparaiciukas.owntrainer.database.User
 import io.realm.Realm
 import timber.log.Timber
 
-class SettingsViewModel : ViewModel() {
+class ProfileViewModel : ViewModel() {
     var sex: String = "Male"
     var age = 0
     var height = 0

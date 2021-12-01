@@ -88,6 +88,26 @@ class ProgressFragment : Fragment() {
                     })
                     binding.drawerLayout.close()
                 }
+                R.id.profile -> {
+                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                        override fun onDrawerClosed(drawerView: View) {
+                            super.onDrawerClosed(drawerView)
+                            val action = ProgressFragmentDirections.actionProgressFragmentToProfileFragment()
+                            findNavController().navigate(action)
+                        }
+                    })
+                    binding.drawerLayout.close()
+                }
+                R.id.settings -> {
+                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                        override fun onDrawerClosed(drawerView: View) {
+                            super.onDrawerClosed(drawerView)
+                            val action = ProgressFragmentDirections.actionProgressFragmentToSettingsFragment()
+                            findNavController().navigate(action)
+                        }
+                    })
+                    binding.drawerLayout.close()
+                }
             }
             true
         }

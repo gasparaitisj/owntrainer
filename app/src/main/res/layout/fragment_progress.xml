@@ -48,7 +48,7 @@
                     app:menu="@menu/top_app_bar"
                     app:navigationIcon="@drawable/outline_menu_24"
                     app:navigationIconTint="@color/md_theme_light_onPrimary"
-                    app:title="@string/app_name"
+                    app:title="@string/progress"
                     app:titleTextAppearance="@style/TextAppearance.OwnTrainer.ActionBar.Title" />
             </com.google.android.material.appbar.AppBarLayout>
 
