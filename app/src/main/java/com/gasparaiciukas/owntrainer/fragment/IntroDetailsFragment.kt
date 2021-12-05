@@ -57,7 +57,13 @@ class IntroDetailsFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable) {
-                if (s.toString().isNotEmpty()) age = s.toString().toInt()
+                val validation = isAgeCorrect(s.toString())
+                if (validation == "") {
+                    age = s.toString().toInt()
+                    binding.layoutEtAge.error = null
+                } else {
+                    binding.layoutEtAge.error = validation
+                }
             }
         })
 
@@ -72,7 +78,13 @@ class IntroDetailsFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable) {
-                if (s.toString().isNotEmpty()) height = s.toString().toInt()
+                val validation = isHeightCorrect(s.toString())
+                if (validation == "") {
+                    height = s.toString().toInt()
+                    binding.layoutEtHeight.error = null
+                } else {
+                    binding.layoutEtHeight.error = validation
+                }
             }
         })
 
@@ -87,7 +99,13 @@ class IntroDetailsFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable) {
-                if (s.toString().isNotEmpty()) weight = s.toString().toDouble()
+                val validation = isWeightCorrect(s.toString())
+                if (validation == "") {
+                    weight = s.toString().toDouble()
+                    binding.layoutEtWeight.error = null
+                } else {
+                    binding.layoutEtWeight.error = validation
+                }
             }
         })
 
@@ -103,6 +121,45 @@ class IntroDetailsFragment : Fragment() {
         val lifestyleAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any>(requireContext(), R.layout.details_list_item, lifestyleList)
         binding.etLifestyle.setAdapter(lifestyleAdapter)
+    }
+
+    private fun isAgeCorrect(s : String) : String {
+        val age : Int
+        try {
+            age = s.toInt()
+        } catch (e : NumberFormatException) {
+            return "Number must be valid"
+        }
+        if (age <= 0) {
+            return "Age must be valid"
+        }
+        return ""
+    }
+
+    private fun isHeightCorrect(s : String) : String {
+        val height : Int
+        try {
+            height = s.toInt()
+        } catch (e : NumberFormatException) {
+            return "Number must be valid"
+        }
+        if (height <= 0) {
+            return "Height must be valid"
+        }
+        return ""
+    }
+
+    private fun isWeightCorrect(s : String) : String {
+        val weight : Double
+        try {
+            weight = s.toDouble()
+        } catch (e : NumberFormatException) {
+            return "Number must be valid"
+        }
+        if (weight <= 0) {
+            return "Height must be valid"
+        }
+        return ""
     }
 
     private fun writeUserToDatabase() {
