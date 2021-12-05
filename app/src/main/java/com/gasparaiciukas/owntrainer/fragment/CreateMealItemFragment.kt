@@ -26,8 +26,12 @@ class CreateMealItemFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCreateMealItemBinding.inflate(inflater, container, false)
-        initUi()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initUi()
     }
 
     override fun onDestroyView() {
@@ -37,7 +41,15 @@ class CreateMealItemFragment : Fragment() {
     }
 
     private fun initUi() {
-        binding.btnSave.setOnClickListener {
+        initNavigation()
+    }
+
+    private fun initNavigation() {
+        binding.topAppBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        binding.topAppBar.menu.findItem(R.id.btn_save).setOnMenuItemClickListener {
             viewModel.addMealToDatabase(
                 binding.etTitle.text.toString(),
                 binding.etInstructions.text.toString()

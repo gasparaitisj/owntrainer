@@ -25,15 +25,15 @@ class SelectMealItemFragment : Fragment() {
 
     private lateinit var adapter: MealAdapter
 
-    private val listener: (meal: Meal, position: Int) -> Unit = { meal: Meal, _: Int ->
-        viewModel.addFoodToMeal(meal)
-        findNavController().popBackStack()
-    }
-
     private val args: SelectMealItemFragmentArgs by navArgs()
 
     private lateinit var viewModel: SelectMealItemViewModel
     private lateinit var viewModelFactory: BundleViewModelFactory
+
+    private val listener: (meal: Meal, position: Int) -> Unit = { meal: Meal, _: Int ->
+        viewModel.addFoodToMeal(meal)
+        findNavController().popBackStack()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,6 +54,22 @@ class SelectMealItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initUi()
+        initRecyclerView()
+    }
+
+    private fun initUi() {
+        initNavigation()
+        initRecyclerView()
+    }
+
+    private fun initNavigation() {
+        binding.topAppBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
+    private fun initRecyclerView() {
         val passLambda: (_: Int) -> Unit = { _: Int -> }
         adapter = MealAdapter(viewModel.meals, listener, passLambda)
         val layoutManager = LinearLayoutManager(context)

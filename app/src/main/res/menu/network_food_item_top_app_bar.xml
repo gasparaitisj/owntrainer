@@ -2,9 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/btn_save"
-        android:contentDescription="@string/save_button"
-        android:title="@string/save"
+        android:id="@+id/btn_add_to_meal"
+        android:contentDescription="@string/add_to_meal"
+        android:title="@string/add"
         app:showAsAction="always" />
 
 </menu>

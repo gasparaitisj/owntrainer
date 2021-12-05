@@ -52,6 +52,21 @@ class AddMealToDiaryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initUi()
+    }
+
+    private fun initUi() {
+        initNavigation()
+        initRecyclerView()
+    }
+
+    private fun initNavigation() {
+        binding.topAppBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
+    private fun initRecyclerView() {
         val passLambda: (_: Int) -> Unit = { _: Int -> }
         adapter = MealAdapter(viewModel.meals, listener, passLambda)
         val layoutManager = LinearLayoutManager(context)

@@ -45,9 +45,12 @@ class NetworkFoodItemFragment : Fragment() {
         }
         viewModelFactory = BundleViewModelFactory(bundle)
         viewModel = ViewModelProvider(this, viewModelFactory).get(NetworkFoodItemViewModel::class.java)
-
-        initUi()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initUi()
     }
 
     override fun onDestroyView() {
@@ -57,37 +60,17 @@ class NetworkFoodItemFragment : Fragment() {
     }
 
     private fun initUi() {
-        // Add to meal button
-        binding.btnAddToMeal.setOnClickListener {
-            val action =
-                NetworkFoodItemFragmentDirections.actionFoodItemFragmentToSelectMealItemFragment(
-                    args.foodItem,
-                    binding.etWeight.text.toString().toInt()
-                )
-            findNavController().navigate(action)
-        }
+        initNavigation()
+        initTextViews()
+        initPieChart()
+    }
 
-        // Text views
-        binding.tvTitle.text = viewModel.title
-        binding.tvCarbsWeight.text = viewModel.carbs.roundToInt().toString()
-        binding.tvCarbsPercentage.text =
-            String.format("%s %%", (viewModel.carbs / viewModel.carbsDailyIntake * 100).roundToInt())
-        binding.tvFatWeight.text = viewModel.fat.roundToInt().toString()
-        binding.tvFatPercentage.text =
-            String.format("%s %%", (viewModel.fat / viewModel.fatDailyIntake * 100).roundToInt())
-        binding.tvProteinWeight.text = viewModel.protein.roundToInt().toString()
-        binding.tvProteinPercentage.text =
-            String.format("%s %%", (viewModel.protein / viewModel.proteinDailyIntake * 100).roundToInt())
-        binding.tvCaloriesCount.text = viewModel.calories.roundToInt().toString()
-        binding.tvCaloriesPercentage.text =
-            String.format("%s %%", (viewModel.calories / viewModel.calorieDailyIntake * 100).roundToInt())
-
+    private fun initPieChart() {
         // Create colors representing nutrients
         val colors: MutableList<Int> = ArrayList()
         colors.add(ContextCompat.getColor(requireContext(), R.color.colorGold)) // carbs
         colors.add(ContextCompat.getColor(requireContext(), R.color.colorOrange)) // fat
         colors.add(ContextCompat.getColor(requireContext(), R.color.colorSmoke)) // protein
-
 
         // Add data to pie chart
         val entries: MutableList<PieEntry> = ArrayList()
@@ -115,6 +98,39 @@ class NetworkFoodItemFragment : Fragment() {
         binding.pieChart.setTouchEnabled(false)
         binding.pieChart.invalidate()
     }
+
+    private fun initTextViews() {
+        binding.tvCarbsWeight.text = viewModel.carbs.roundToInt().toString()
+        binding.tvCarbsPercentage.text =
+            String.format("%s %%", (viewModel.carbs / viewModel.carbsDailyIntake * 100).roundToInt())
+        binding.tvFatWeight.text = viewModel.fat.roundToInt().toString()
+        binding.tvFatPercentage.text =
+            String.format("%s %%", (viewModel.fat / viewModel.fatDailyIntake * 100).roundToInt())
+        binding.tvProteinWeight.text = viewModel.protein.roundToInt().toString()
+        binding.tvProteinPercentage.text =
+            String.format("%s %%", (viewModel.protein / viewModel.proteinDailyIntake * 100).roundToInt())
+        binding.tvCaloriesCount.text = viewModel.calories.roundToInt().toString()
+        binding.tvCaloriesPercentage.text =
+            String.format("%s %%", (viewModel.calories / viewModel.calorieDailyIntake * 100).roundToInt())
+    }
+
+    private fun initNavigation() {
+        binding.topAppBar.title = viewModel.title
+        binding.topAppBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        binding.topAppBar.menu.findItem(R.id.btn_add_to_meal).setOnMenuItemClickListener {
+            val action =
+                NetworkFoodItemFragmentDirections.actionFoodItemFragmentToSelectMealItemFragment(
+                    args.foodItem,
+                    binding.etWeight.text.toString().toInt()
+                )
+            findNavController().navigate(action)
+            true
+        }
+    }
+
     private fun slideBottomNavigationUp() {
         val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val layoutParams = botNav?.layoutParams

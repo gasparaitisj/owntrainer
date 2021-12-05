@@ -65,9 +65,12 @@ class MealItemFragment : Fragment() {
         }
         viewModelFactory = BundleViewModelFactory(bundle)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MealItemViewModel::class.java)
-
-        initUi()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initUi()
     }
 
     override fun onDestroyView() {
@@ -77,13 +80,20 @@ class MealItemFragment : Fragment() {
     }
 
     private fun initUi() {
+        initNavigation()
         initRecyclerView()
         initTextViews()
         initPieChart()
     }
 
+    private fun initNavigation() {
+        binding.topAppBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+        binding.topAppBar.title = viewModel.meals[args.position].title
+    }
+
     private fun initTextViews() {
-        binding.tvTitle.text = viewModel.meals[args.position].title
         binding.tvInstructions.text = viewModel.meals[args.position].instructions
         binding.tvInstructions.movementMethod = ScrollingMovementMethod()
         binding.tvCarbsWeight.text = viewModel.carbs.roundToInt().toString()

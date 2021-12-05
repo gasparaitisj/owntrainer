@@ -77,20 +77,29 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_save"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="Add meal" />
-
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="100dp" />
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
         </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/top_app_bar"
+                style="@style/Widget.OwnTrainer.Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:menu="@menu/create_meal_top_app_bar"
+                app:navigationIcon="@drawable/baseline_arrow_back_24"
+                app:navigationIconTint="@color/md_theme_light_onPrimary"
+                app:title="@string/create_meal"
+                app:titleTextAppearance="@style/TextAppearance.OwnTrainer.ActionBar.Title" />
+        </com.google.android.material.appbar.AppBarLayout>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

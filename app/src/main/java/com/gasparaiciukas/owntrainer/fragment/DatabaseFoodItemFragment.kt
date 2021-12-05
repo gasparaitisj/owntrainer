@@ -8,6 +8,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentDatabaseFoodItemBinding
@@ -36,7 +37,7 @@ class DatabaseFoodItemFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentDatabaseFoodItemBinding.inflate(inflater, container, false)
 
         val bundle = Bundle().apply {
@@ -45,9 +46,12 @@ class DatabaseFoodItemFragment : Fragment() {
 
         viewModelFactory = BundleViewModelFactory(bundle)
         viewModel = ViewModelProvider(this, viewModelFactory).get(DatabaseFoodItemViewModel::class.java)
-
-        initUi()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initUi()
     }
 
     override fun onDestroyView() {
@@ -57,22 +61,19 @@ class DatabaseFoodItemFragment : Fragment() {
     }
 
     private fun initUi() {
-        // Text views
-        binding.tvTitle.text = viewModel.food.title
-        binding.tvQuantityCount.text = viewModel.food.quantityInG.toString()
-        binding.tvCarbsWeight.text = viewModel.food.carbs.roundToInt().toString()
-        binding.tvCarbsPercentage.text =
-            String.format("%s %%", (viewModel.food.carbs / viewModel.carbsDailyIntake * 100).roundToInt())
-        binding.tvFatWeight.text = viewModel.food.fat.roundToInt().toString()
-        binding.tvFatPercentage.text =
-            String.format("%s %%", (viewModel.food.fat / viewModel.fatDailyIntake * 100).roundToInt())
-        binding.tvProteinWeight.text = viewModel.food.protein.roundToInt().toString()
-        binding.tvProteinPercentage.text =
-            String.format("%s %%", (viewModel.food.protein / viewModel.proteinDailyIntake * 100).roundToInt())
-        binding.tvCaloriesCount.text = viewModel.food.calories.roundToInt().toString()
-        binding.tvCaloriesPercentage.text =
-            String.format("%s %%", (viewModel.food.calories / viewModel.calorieDailyIntake * 100).roundToInt())
+        initNavigation()
+        initTextViews()
+        initPieChart()
+    }
 
+    private fun initNavigation() {
+        binding.topAppBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+        binding.topAppBar.title = viewModel.food.title
+    }
+
+    private fun initPieChart() {
         // Create colors representing nutrients
         val colors: MutableList<Int> = ArrayList()
         colors.add(ContextCompat.getColor(requireContext(), R.color.colorGold)) // carbs
@@ -105,6 +106,22 @@ class DatabaseFoodItemFragment : Fragment() {
         binding.pieChart.description.isEnabled = false
         binding.pieChart.setTouchEnabled(false)
         binding.pieChart.invalidate()
+    }
+
+    private fun initTextViews() {
+        binding.tvQuantityCount.text = viewModel.food.quantityInG.toString()
+        binding.tvCarbsWeight.text = viewModel.food.carbs.roundToInt().toString()
+        binding.tvCarbsPercentage.text =
+            String.format("%s %%", (viewModel.food.carbs / viewModel.carbsDailyIntake * 100).roundToInt())
+        binding.tvFatWeight.text = viewModel.food.fat.roundToInt().toString()
+        binding.tvFatPercentage.text =
+            String.format("%s %%", (viewModel.food.fat / viewModel.fatDailyIntake * 100).roundToInt())
+        binding.tvProteinWeight.text = viewModel.food.protein.roundToInt().toString()
+        binding.tvProteinPercentage.text =
+            String.format("%s %%", (viewModel.food.protein / viewModel.proteinDailyIntake * 100).roundToInt())
+        binding.tvCaloriesCount.text = viewModel.food.calories.roundToInt().toString()
+        binding.tvCaloriesPercentage.text =
+            String.format("%s %%", (viewModel.food.calories / viewModel.calorieDailyIntake * 100).roundToInt())
     }
 
     private fun slideBottomNavigationUp() {

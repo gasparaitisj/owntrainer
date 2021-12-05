@@ -73,4 +73,8 @@
     <string name="diaryLowercase">diary</string>
     <string name="foodsLowercase">foods</string>
     <string name="dark_theme">Dark theme</string>
+    <string name="add">Add</string>
+    <string name="add_food_to_meal">Add food to meal</string>
+    <string name="add_meal">Add meal</string>
+    <string name="create_meal">Create meal</string>
 </resources>
