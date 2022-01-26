@@ -14,10 +14,12 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.NetworkFoodAdapter
+import com.gasparaiciukas.owntrainer.database.AppDatabase
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodBinding
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
@@ -25,6 +27,8 @@ import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class FoodFragment : Fragment() {
     private var _binding: FragmentFoodBinding? = null
@@ -57,6 +61,12 @@ class FoodFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUi()
+//        val db = AppDatabase.getInstance(requireContext())
+//        val users = db.userDao().getAll()
+//        Timber.d("users from Room:")
+//        for (u in users) {
+//            Timber.d("user: ${u.userId}")
+//        }
     }
 
     override fun onDestroyView() {

@@ -1,48 +1,18 @@
 package com.gasparaiciukas.owntrainer.database
 
-import io.realm.RealmList
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.Required
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-open class Meal : RealmObject() {
-    @PrimaryKey @Required var title: String = ""
-    var foodList = RealmList<FoodEntry>()
-    var calories: Double = 0.0
-    var carbs: Double = 0.0
-    var fat: Double = 0.0
-    var protein: Double = 0.0
-    var instructions: String = ""
 
-    fun calculateCalories(): Double {
-        var mCalories = 0.0
-        for (f in foodList) {
-            mCalories += f.calories
-        }
-        return mCalories
-    }
-
-    fun calculateCarbs(): Double {
-        var mCarbs = 0.0
-        for (f in foodList) {
-            mCarbs += f.carbs
-        }
-        return mCarbs
-    }
-
-    fun calculateFat(): Double {
-        var mFat = 0.0
-        for (f in foodList) {
-            mFat += f.fat
-        }
-        return mFat
-    }
-
-    fun calculateProtein(): Double {
-        var mProtein = 0.0
-        for (f in foodList) {
-            mProtein += f.protein
-        }
-        return mProtein
-    }
+@Entity(tableName = "meal")
+data class Meal(
+    @ColumnInfo(name = "title") var title: String,
+    @ColumnInfo(name = "instructions") var instructions: String
+) {
+    @PrimaryKey(autoGenerate = true) var mealId: Int = 0
+    @ColumnInfo(name = "calories") var calories: Double = 0.0
+    @ColumnInfo(name = "carbs") var carbs: Double = 0.0
+    @ColumnInfo(name = "fat") var fat: Double = 0.0
+    @ColumnInfo(name = "protein") var protein: Double = 0.0
 }

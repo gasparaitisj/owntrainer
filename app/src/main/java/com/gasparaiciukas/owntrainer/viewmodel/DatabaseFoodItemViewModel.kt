@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
-import io.realm.Realm
 
 class DatabaseFoodItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
 
@@ -29,16 +28,16 @@ class DatabaseFoodItemViewModel constructor(private val bundle: Bundle) : ViewMo
         proteinPercentage = (food.protein / sum * 100).toFloat()
 
         // Get daily intake percentages
-        val realm = Realm.getDefaultInstance()
-        val user = realm.where(User::class.java)
-            .equalTo("userId", "user")
-            .findFirst()
-        if (user != null) {
-            calorieDailyIntake = user.dailyKcalIntake.toFloat()
-            carbsDailyIntake = user.dailyCarbsIntakeInG.toFloat()
-            fatDailyIntake = user.dailyFatIntakeInG.toFloat()
-            proteinDailyIntake = user.dailyProteinIntakeInG.toFloat()
-        }
-        realm.close()
+//        val realm = Realm.getDefaultInstance()
+//        val user = realm.where(User::class.java)
+//            .equalTo("userId", "user")
+//            .findFirst()
+//        if (user != null) {
+//            calorieDailyIntake = user.dailyKcalIntake.toFloat()
+//            carbsDailyIntake = user.dailyCarbsIntakeInG.toFloat()
+//            fatDailyIntake = user.dailyFatIntakeInG.toFloat()
+//            proteinDailyIntake = user.dailyProteinIntakeInG.toFloat()
+//        }
+//        realm.close()
     }
 }

@@ -1,22 +1,30 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.gasparaiciukas.owntrainer.database.DiaryEntry
-import com.gasparaiciukas.owntrainer.database.User
-import com.gasparaiciukas.owntrainer.network.GetResponse
-import com.gasparaiciukas.owntrainer.network.GetService
-import io.realm.Realm
-import timber.log.Timber
+import androidx.lifecycle.*
+import com.gasparaiciukas.owntrainer.database.*
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.launch
 import java.time.LocalDate
+import javax.inject.Inject
 
-class DiaryViewModel : ViewModel() {
-    private var realm: Realm = Realm.getDefaultInstance()
-    private lateinit var currentDay: LocalDate
+@HiltViewModel
+class DiaryViewModel @Inject internal constructor(
+    private val userRepository: UserRepository,
+    private val diaryEntryRepository: DiaryEntryRepository
+) : ViewModel() {
 
-    lateinit var diaryEntry: DiaryEntry
+    lateinit var currentDay: LocalDate
+
+    val ldUser: LiveData<User> = userRepository.user.asLiveData()
+    lateinit var flUser: MutableStateFlow<User>
     lateinit var user: User
+
+    lateinit var diaryEntryWithMeals: DiaryEntryWithMeals
+    lateinit var flDiaryEntryWithMeals: Flow<DiaryEntryWithMeals>
+    lateinit var ldDiaryEntryWithMeals: LiveData<DiaryEntryWithMeals>
 
     var caloriesConsumed: Double = 0.0
     var proteinConsumed: Double = 0.0
@@ -27,104 +35,87 @@ class DiaryViewModel : ViewModel() {
     var fatPercentage: Double = 0.0
     var carbsPercentage: Double = 0.0
 
-    private val _dataChanged = MutableLiveData<Boolean>()
-    val dataChanged: LiveData<Boolean>
-        get() = _dataChanged
-
-    init {
-        realm.addChangeListener {
-            loadData()
-            _dataChanged.value = _dataChanged.value != true
-            Timber.d("Data changed!")
+    fun loadData() {
+        flDiaryEntryWithMeals = flUser.flatMapLatest {
+            diaryEntryRepository.getDiaryEntryWithMeals(it.currentYear, it.currentDayOfYear)
         }
-        loadData()
+        ldDiaryEntryWithMeals = flDiaryEntryWithMeals.asLiveData()
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        realm.close()
-    }
-
-    private fun loadData() {
-        loadDiaryEntry()
-        calculateData()
-    }
-
-    private fun calculateData() {
-        caloriesConsumed = diaryEntry.calculateTotalCalories(diaryEntry.meals)
-        proteinConsumed = diaryEntry.calculateTotalProtein(diaryEntry.meals)
-        fatConsumed = diaryEntry.calculateTotalFat(diaryEntry.meals)
-        carbsConsumed = diaryEntry.calculateTotalCarbs(diaryEntry.meals)
+    fun calculateData() {
+        caloriesConsumed = diaryEntryWithMeals.calculateTotalCalories(diaryEntryWithMeals.meals)
+        proteinConsumed = diaryEntryWithMeals.calculateTotalProtein(diaryEntryWithMeals.meals)
+        fatConsumed = diaryEntryWithMeals.calculateTotalFat(diaryEntryWithMeals.meals)
+        carbsConsumed = diaryEntryWithMeals.calculateTotalCarbs(diaryEntryWithMeals.meals)
         caloriesPercentage = (caloriesConsumed / user.dailyKcalIntake) * 100
         proteinPercentage = (proteinConsumed / user.dailyProteinIntakeInG) * 100
         fatPercentage = (fatConsumed / user.dailyFatIntakeInG) * 100
         carbsPercentage = (carbsConsumed / user.dailyCarbsIntakeInG) * 100
     }
 
-    private fun loadDiaryEntry() {
-        // Get user from database
-        user = realm.where(User::class.java).findFirst()!!
-
-        val year = user.currentYear
-        val month = user.currentMonth
-        val day = user.currentDay
-        currentDay = LocalDate.of(year, month, day)
-
-        // Try to get diary entry from database
-        val diaryEntryFromDatabase = realm.where(DiaryEntry::class.java)
-            .equalTo("yearAndDayOfYear", currentDay.year.toString() + currentDay.dayOfYear)
-            .findFirst()
-
-        // If current day's entry does not exist, insert it to the database
-        if (diaryEntryFromDatabase == null) {
-            val newDiaryEntry = DiaryEntry()
-            newDiaryEntry.yearAndDayOfYear = currentDay.year.toString() + currentDay.dayOfYear
-            newDiaryEntry.year = currentDay.year
-            newDiaryEntry.dayOfYear = currentDay.dayOfYear
-            newDiaryEntry.dayOfMonth = currentDay.dayOfMonth
-            newDiaryEntry.dayOfWeek = currentDay.dayOfWeek.value
-            newDiaryEntry.monthOfYear = currentDay.monthValue
-            realm.executeTransaction { it.insertOrUpdate(newDiaryEntry) }
-            diaryEntry = newDiaryEntry
-        } else {
-            diaryEntry = diaryEntryFromDatabase
+    fun createDiaryEntry() {
+        // Current day's entry does not exist - insert it to the database
+        viewModelScope.launch {
+            val diaryEntry = DiaryEntry(
+                currentDay.year,
+                currentDay.dayOfYear,
+                currentDay.dayOfWeek.value,
+                currentDay.monthValue,
+                currentDay.dayOfMonth
+            )
+            diaryEntryRepository.insertDiaryEntry(diaryEntry)
         }
     }
 
     fun updateUserToPreviousDay() {
         currentDay = currentDay.minusDays(1) // subtract 1 day from current day
-        realm.executeTransaction {
+        val user = ldUser.value
+        if (user != null) {
             user.currentYear = currentDay.year
             user.currentMonth = currentDay.monthValue
-            user.currentDay = currentDay.dayOfMonth
-            it.insertOrUpdate(user)
+            user.currentDayOfYear = currentDay.dayOfYear
+            user.currentDayOfMonth = currentDay.dayOfMonth
+            user.currentDayOfWeek = currentDay.dayOfWeek.value
+            viewModelScope.launch {
+                userRepository.updateUser(user)
+            }
         }
     }
 
     fun updateUserToCurrentDay() {
         currentDay = LocalDate.now()
-        realm.executeTransaction {
+        val user = ldUser.value
+        if (user != null) {
             user.currentYear = currentDay.year
             user.currentMonth = currentDay.monthValue
-            user.currentDay = currentDay.dayOfMonth
-            it.insertOrUpdate(user)
+            user.currentDayOfYear = currentDay.dayOfYear
+            user.currentDayOfMonth = currentDay.dayOfMonth
+            user.currentDayOfWeek = currentDay.dayOfWeek.value
+            viewModelScope.launch {
+                userRepository.updateUser(user)
+            }
         }
     }
 
     fun updateUserToNextDay() {
         currentDay = currentDay.plusDays(1)
-        realm.executeTransaction {
+        val user = ldUser.value
+        if (user != null) {
             user.currentYear = currentDay.year
             user.currentMonth = currentDay.monthValue
-            user.currentDay = currentDay.dayOfMonth
-            it.insertOrUpdate(user)
+            user.currentDayOfYear = currentDay.dayOfYear
+            user.currentDayOfMonth = currentDay.dayOfMonth
+            user.currentDayOfWeek = currentDay.dayOfWeek.value
+            viewModelScope.launch {
+                userRepository.updateUser(user)
+            }
         }
     }
 
     fun deleteMealFromDiary(position: Int) {
-        realm.executeTransaction {
-            diaryEntry.meals.removeAt(position)
-            it.insertOrUpdate(diaryEntry)
-        }
+//        realm.executeTransaction {
+//            diaryEntry.meals.removeAt(position)
+//            it.insertOrUpdate(diaryEntry)
+//        }
     }
 }

@@ -1,18 +1,27 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.gasparaiciukas.owntrainer.database.DiaryEntryRepository
 import com.gasparaiciukas.owntrainer.database.Meal
-import io.realm.Realm
+import com.gasparaiciukas.owntrainer.database.MealRepository
+import com.gasparaiciukas.owntrainer.database.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CreateMealItemViewModel : ViewModel() {
+@HiltViewModel
+class CreateMealItemViewModel @Inject internal constructor(
+    private val mealRepository: MealRepository
+) : ViewModel() {
     fun addMealToDatabase(title: String, instructions: String) {
-        // Add meal to database
-        val meal = Meal()
-        meal.title = parseTitle(title)
-        meal.instructions = parseInstructions(instructions)
-        val realm = Realm.getDefaultInstance()
-        realm.executeTransaction { it.insertOrUpdate(meal) }
-        realm.close()
+        viewModelScope.launch {
+            val meal = Meal(
+                parseTitle(title),
+                parseInstructions(instructions)
+            )
+            mealRepository.addMeal(meal)
+        }
     }
 
     private fun parseTitle(title: String) : String {

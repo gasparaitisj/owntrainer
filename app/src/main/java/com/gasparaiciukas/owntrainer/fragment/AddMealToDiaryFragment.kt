@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,21 +20,25 @@ import com.gasparaiciukas.owntrainer.viewmodel.AddMealToDiaryViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.BundleViewModelFactory
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
+@AndroidEntryPoint
 class AddMealToDiaryFragment : Fragment() {
     private var _binding: FragmentAddMealToDiaryBinding? = null
     private val binding get() = _binding!!
 
     private val args: AddMealToDiaryFragmentArgs by navArgs()
 
-    private lateinit var viewModel: AddMealToDiaryViewModel
-    private lateinit var viewModelFactory: BundleViewModelFactory
+    private val viewModel: AddMealToDiaryViewModel by viewModels()
 
     private lateinit var adapter: MealAdapter
     private val listener: (meal: Meal, position: Int) -> Unit = { meal: Meal, _: Int ->
-        viewModel.addMealToDiary(meal)
-        findNavController().popBackStack()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.addMealToDiary(meal)
+            findNavController().popBackStack()
+        }
     }
 
     override fun onCreateView(
@@ -41,18 +47,15 @@ class AddMealToDiaryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddMealToDiaryBinding.inflate(inflater, container, false)
-        val bundle = Bundle().apply {
-            putString("primaryKey", args.primaryKey)
-        }
-        viewModelFactory = BundleViewModelFactory(bundle)
-        viewModel =
-            ViewModelProvider(this, viewModelFactory).get(AddMealToDiaryViewModel::class.java)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initUi()
+        viewModel.ldMeals.observe(viewLifecycleOwner) {
+            viewModel.meals = it
+            initUi()
+        }
     }
 
     private fun initUi() {

@@ -1,50 +1,18 @@
 package com.gasparaiciukas.owntrainer.database
 
-import io.realm.RealmList
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.Required
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 
-open class DiaryEntry : RealmObject() {
-    @PrimaryKey
-    @Required
-    var yearAndDayOfYear: String = ""
-    var year: Int = 0
-    var dayOfYear: Int = 0
-    var dayOfWeek: Int = 0
-    var monthOfYear: Int = 0
-    var dayOfMonth: Int = 0
-    var meals = RealmList<Meal>()
-
-    fun calculateTotalCalories(meals: List<Meal>): Double {
-        var mCalories = 0.0
-        for (m in meals) {
-            mCalories += m.calculateCalories()
-        }
-        return mCalories
-    }
-
-    fun calculateTotalProtein(meals: List<Meal>): Double {
-        var mProtein = 0.0
-        for (m in meals) {
-            mProtein += m.calculateProtein()
-        }
-        return mProtein
-    }
-
-    fun calculateTotalFat(meals: List<Meal>): Double {
-        var mFat = 0.0
-        for (m in meals) {
-            mFat += m.calculateFat()
-        }
-        return mFat
-    }
-
-    fun calculateTotalCarbs(meals: List<Meal>): Double {
-        var mCarbs = 0.0
-        for (m in meals) {
-            mCarbs += m.calculateCarbs()
-        }
-        return mCarbs
-    }
+@Entity(tableName = "diaryEntry",
+        indices = [Index(value = ["year", "dayOfYear"], unique = true)])
+data class DiaryEntry(
+    @ColumnInfo(name = "year") var year: Int,
+    @ColumnInfo(name = "dayOfYear") var dayOfYear: Int,
+    @ColumnInfo(name = "dayOfWeek") var dayOfWeek: Int,
+    @ColumnInfo(name = "monthOfYear") var monthOfYear: Int,
+    @ColumnInfo(name = "dayOfMonth") var dayOfMonth: Int,
+) {
+    @PrimaryKey(autoGenerate = true) var diaryEntryId: Int = 0
 }

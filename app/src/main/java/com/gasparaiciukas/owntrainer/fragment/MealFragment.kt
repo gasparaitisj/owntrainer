@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.Meal
@@ -21,8 +20,9 @@ import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import timber.log.Timber
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MealFragment : Fragment() {
     private var _binding: FragmentMealBinding? = null
     private val binding get() = _binding!!
@@ -30,7 +30,7 @@ class MealFragment : Fragment() {
     private lateinit var adapter: MealAdapter
 
     private val singleClickListener: (meal: Meal, position: Int) -> Unit = { _: Meal, position: Int ->
-        val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(position, "")
+        val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(position, -1)
         findNavController().navigate(action)
     }
 
@@ -50,7 +50,12 @@ class MealFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initUi()
+        viewModel.ldMeals.observe(viewLifecycleOwner) {
+            if (it != null) {
+                viewModel.meals = it
+                initUi()
+            }
+        }
     }
 
     override fun onDestroyView() {

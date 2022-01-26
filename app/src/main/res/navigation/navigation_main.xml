@@ -10,7 +10,7 @@
         android:label="AddMealToDiaryFragment" >
         <argument
             android:name="primaryKey"
-            app:argType="string" />
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/createMealItemFragment"
@@ -112,12 +112,12 @@
             app:exitAnim="@anim/fade_out_short"
             app:popEnterAnim="@anim/fade_in_short"
             app:popExitAnim="@anim/fade_out_short"  />
-        <argument
-            android:name="primaryKey"
-            app:argType="string" />
         <action
             android:id="@+id/action_mealItemFragment_to_foodFragment"
             app:destination="@id/foodFragment" />
+        <argument
+            android:name="primaryKey"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/progressFragment"
@@ -177,10 +177,6 @@
             app:popEnterAnim="@anim/fade_in_short"
             app:popExitAnim="@anim/fade_out_short"  />
     </fragment>
-    <activity
-        android:id="@+id/introActivity"
-        android:name="com.gasparaiciukas.owntrainer.IntroActivity"
-        android:label="IntroActivity" />
     <fragment
         android:id="@+id/foodFragment"
         android:name="com.gasparaiciukas.owntrainer.fragment.FoodFragment"

@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 @Suppress("UNCHECKED_CAST")
 class BundleViewModelFactory(private val bundle: Bundle) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AddMealToDiaryViewModel::class.java)) {
-            return AddMealToDiaryViewModel(bundle) as T
-        }
+//        if (modelClass.isAssignableFrom(AddMealToDiaryViewModel::class.java)) {
+//            return AddMealToDiaryViewModel(bundle) as T
+//        }
         if (modelClass.isAssignableFrom(MealItemViewModel::class.java)) {
             return MealItemViewModel(bundle) as T
         }

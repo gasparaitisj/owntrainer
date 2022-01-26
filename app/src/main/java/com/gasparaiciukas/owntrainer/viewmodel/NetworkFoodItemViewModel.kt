@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.network.Food
-import io.realm.Realm
 
 class NetworkFoodItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
     var title = ""
@@ -52,16 +51,16 @@ class NetworkFoodItemViewModel constructor(private val bundle: Bundle) : ViewMod
         proteinPercentage = protein / sum * 100
 
         // Get daily intake percentages
-        val realm = Realm.getDefaultInstance()
-        val user = realm.where(User::class.java)
-            .equalTo("userId", "user")
-            .findFirst()
-        if (user != null) {
-            calorieDailyIntake = user.dailyKcalIntake.toFloat()
-            carbsDailyIntake = user.dailyCarbsIntakeInG.toFloat()
-            fatDailyIntake = user.dailyFatIntakeInG.toFloat()
-            proteinDailyIntake = user.dailyProteinIntakeInG.toFloat()
-        }
-        realm.close()
+//        val realm = Realm.getDefaultInstance()
+//        val user = realm.where(User::class.java)
+//            .equalTo("userId", "user")
+//            .findFirst()
+//        if (user != null) {
+//            calorieDailyIntake = user.dailyKcalIntake.toFloat()
+//            carbsDailyIntake = user.dailyCarbsIntakeInG.toFloat()
+//            fatDailyIntake = user.dailyFatIntakeInG.toFloat()
+//            proteinDailyIntake = user.dailyProteinIntakeInG.toFloat()
+//        }
+//        realm.close()
     }
 }

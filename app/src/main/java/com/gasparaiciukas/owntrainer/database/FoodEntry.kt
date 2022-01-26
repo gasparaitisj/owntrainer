@@ -1,18 +1,24 @@
 package com.gasparaiciukas.owntrainer.database
 
-import io.realm.RealmObject
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 
-open class FoodEntry : RealmObject() {
-    var title: String = ""
-    var caloriesPer100G: Double = 0.0
-    var carbsPer100G: Double = 0.0
-    var fatPer100G: Double = 0.0
-    var proteinPer100G: Double = 0.0
-    var calories: Double = 0.0
-    var carbs: Double = 0.0
-    var fat: Double = 0.0
-    var protein: Double = 0.0
-    var quantityInG: Double = 0.0
+@Entity(tableName = "foodEntry")
+data class FoodEntry(
+    @ColumnInfo(name = "title") var title: String,
+    @ColumnInfo(name = "caloriesPer100G") var caloriesPer100G: Double,
+    @ColumnInfo(name = "carbsPer100G") var carbsPer100G: Double,
+    @ColumnInfo(name = "fatPer100G") var fatPer100G: Double,
+    @ColumnInfo(name = "proteinPer100G") var proteinPer100G: Double,
+    @ColumnInfo(name = "quantityInG") var quantityInG: Double
+) {
+    @PrimaryKey(autoGenerate = true) var foodEntryId: Int = 0
+    @ColumnInfo(name = "calories") var calories: Double = 0.0
+    @ColumnInfo(name = "carbs") var carbs: Double = 0.0
+    @ColumnInfo(name = "fat") var fat: Double = 0.0
+    @ColumnInfo(name = "protein") var protein: Double = 0.0
 
     fun calculateCarbs(carbsPer100G: Double, quantity: Double): Double {
         return carbsPer100G / 100 * quantity

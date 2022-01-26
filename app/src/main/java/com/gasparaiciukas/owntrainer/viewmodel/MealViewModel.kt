@@ -1,24 +1,27 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import com.gasparaiciukas.owntrainer.database.DiaryEntryRepository
 import com.gasparaiciukas.owntrainer.database.Meal
-import io.realm.Realm
+import com.gasparaiciukas.owntrainer.database.MealRepository
+import com.gasparaiciukas.owntrainer.database.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MealViewModel : ViewModel() {
-    private val realm = Realm.getDefaultInstance()
-    val meals: MutableList<Meal> = realm.where(Meal::class.java).findAll()
-
-    override fun onCleared() {
-        super.onCleared()
-        realm.close()
-    }
+@HiltViewModel
+class MealViewModel @Inject internal constructor(
+    private val mealRepository: MealRepository
+) : ViewModel() {
+    val ldMeals = mealRepository.getMeals().asLiveData()
+    lateinit var meals : List<Meal>
 
     fun deleteMealFromMeals(position: Int) {
-        realm.executeTransaction {
-            it.where(Meal::class.java)
-                .equalTo("title", meals[position].title)
-                .findFirst()
-                ?.deleteFromRealm()
-        }
+//        realm.executeTransaction {
+//            it.where(Meal::class.java)
+//                .equalTo("title", meals[position].title)
+//                .findFirst()
+//                ?.deleteFromRealm()
+//        }
     }
 }

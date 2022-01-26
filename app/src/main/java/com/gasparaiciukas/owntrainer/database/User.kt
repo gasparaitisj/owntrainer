@@ -1,35 +1,34 @@
 package com.gasparaiciukas.owntrainer.database
 
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.Required
-import java.time.LocalDate
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-open class User : RealmObject() {
-    @PrimaryKey
-    @Required
-    var userId: String = "user"
 
-    // Basic information
-    var sex: String = ""
-    var ageInYears = 0
-    var heightInCm = 0
-    var weightInKg = 0.0
-    var lifestyle: String = ""
-    var avgWalkingSpeedInKmH: Double = 5.0
-    var dailyStepGoal: Int = 10000
-    var currentYear: Int = LocalDate.now().year
-    var currentMonth = LocalDate.now().monthValue
-    var currentDay = LocalDate.now().dayOfMonth
+@Entity(tableName = "user")
+data class User(
+    @ColumnInfo(name = "sex") var sex: String,
+    @ColumnInfo(name = "ageInYears") var ageInYears: Int,
+    @ColumnInfo(name = "heightInCm") var heightInCm: Int,
+    @ColumnInfo(name = "weightInKg") var weightInKg: Double,
+    @ColumnInfo(name = "lifestyle") var lifestyle: String,
+    @ColumnInfo(name = "currentYear") var currentYear: Int,
+    @ColumnInfo(name = "currentMonth") var currentMonth: Int,
+    @ColumnInfo(name = "currentDayOfYear") var currentDayOfYear: Int,
+    @ColumnInfo(name = "currentDayOfMonth") var currentDayOfMonth: Int,
+    @ColumnInfo(name = "currentDayOfWeek") var currentDayOfWeek: Int,
+) {
+    @PrimaryKey(autoGenerate = true) var userId: Int = 0
+    @ColumnInfo(name = "avgWalkingSpeedInKmH") var avgWalkingSpeedInKmH: Double = 5.0
+    @ColumnInfo(name = "dailyStepGoal") var dailyStepGoal: Int = 10000
+    @ColumnInfo(name = "bmr") var bmr: Double = 0.0
+    @ColumnInfo(name = "kcalBurnedPerStep") var kcalBurnedPerStep: Double = 0.0
+    @ColumnInfo(name = "dailyKcalIntake") var dailyKcalIntake: Double = 0.0
+    @ColumnInfo(name = "dailyProteinIntakeInG") var dailyProteinIntakeInG: Double = 0.0
+    @ColumnInfo(name = "dailyFatIntakeInG") var dailyFatIntakeInG: Double = 0.0
+    @ColumnInfo(name = "dailyCarbsIntakeInG") var dailyCarbsIntakeInG: Double = 0.0
+    @ColumnInfo(name = "stepLengthInCm") var stepLengthInCm: Double = 0.0
 
-    // Calculated information using formulas
-    var bmr: Double = 0.0
-    var kcalBurnedPerStep: Double = 0.0
-    var dailyKcalIntake: Double = 0.0
-    var dailyProteinIntakeInG: Double = 0.0
-    var dailyFatIntakeInG: Double = 0.0
-    var dailyCarbsIntakeInG: Double = 0.0
-    var stepLengthInCm: Double = 0.0
 
     fun calculateBmr(weightInKg: Double, heightInCm: Double, age: Int, sex: String): Double {
         return if (sex == "Male") 10 * weightInKg + 6.25 * heightInCm - 5 * age + 5 else 10 * weightInKg + 6.25 * heightInCm - 5 * age - 161
@@ -64,5 +63,33 @@ open class User : RealmObject() {
 
     fun calculateStepLengthInCm(heightInCm: Double, sex: String): Double {
         return if (sex == "Male") 0.415 * heightInCm else 0.413 * heightInCm
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return false
+    }
+
+    override fun hashCode(): Int {
+        var result = sex.hashCode()
+        result = 31 * result + ageInYears
+        result = 31 * result + heightInCm
+        result = 31 * result + weightInKg.hashCode()
+        result = 31 * result + lifestyle.hashCode()
+        result = 31 * result + currentYear
+        result = 31 * result + currentMonth
+        result = 31 * result + currentDayOfYear
+        result = 31 * result + currentDayOfMonth
+        result = 31 * result + currentDayOfWeek
+        result = 31 * result + userId
+        result = 31 * result + avgWalkingSpeedInKmH.hashCode()
+        result = 31 * result + dailyStepGoal
+        result = 31 * result + bmr.hashCode()
+        result = 31 * result + kcalBurnedPerStep.hashCode()
+        result = 31 * result + dailyKcalIntake.hashCode()
+        result = 31 * result + dailyProteinIntakeInG.hashCode()
+        result = 31 * result + dailyFatIntakeInG.hashCode()
+        result = 31 * result + dailyCarbsIntakeInG.hashCode()
+        result = 31 * result + stepLengthInCm.hashCode()
+        return result
     }
 }

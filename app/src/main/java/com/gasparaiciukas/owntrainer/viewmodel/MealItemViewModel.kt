@@ -6,11 +6,9 @@ import com.gasparaiciukas.owntrainer.database.DiaryEntry
 import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.User
-import io.realm.Realm
 import timber.log.Timber
 
 class MealItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
-    private var realm: Realm = Realm.getDefaultInstance()
 
     var carbs = 0f
     var carbsPercentage = 0f
@@ -34,55 +32,54 @@ class MealItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
     }
 
     private fun fetchData() {
-        meals = if (primaryKey == "") {
-            realm.where(Meal::class.java).findAll()
-        } else {
-            realm.where(DiaryEntry::class.java)
-                .equalTo("yearAndDayOfYear", primaryKey)
-                .findFirst()
-                ?.meals
-                ?: mutableListOf()
-        }
-        foodList = meals[position].foodList
-
-        // Get nutrients from food item
-        carbs = meals[position].calculateCarbs().toFloat()
-        calories = meals[position].calculateCalories().toFloat()
-        fat = meals[position].calculateFat().toFloat()
-        protein = meals[position].calculateProtein().toFloat()
-
-        // Calculate percentage of each item
-        val sum = carbs + fat + protein
-        carbsPercentage = carbs / sum * 100
-        fatPercentage = fat / sum * 100
-        proteinPercentage = protein / sum * 100
-
-        // Get daily intake percentages
-        val u = realm.where(User::class.java)
-            .equalTo("userId", "user")
-            .findFirst()
-
-        if (u != null) {
-            calorieDailyIntake = u.dailyKcalIntake.toFloat()
-            carbsDailyIntake = u.dailyCarbsIntakeInG.toFloat()
-            fatDailyIntake = u.dailyFatIntakeInG.toFloat()
-            proteinDailyIntake = u.dailyProteinIntakeInG.toFloat()
-        }
+//        meals = if (primaryKey == "") {
+//            realm.where(Meal::class.java).findAll()
+//        } else {
+//            realm.where(DiaryEntry::class.java)
+//                .equalTo("yearAndDayOfYear", primaryKey)
+//                .findFirst()
+//                ?.meals
+//                ?: mutableListOf()
+//        }
+//        foodList = meals[position].foodList
+//
+//        // Get nutrients from food item
+//        carbs = meals[position].calculateCarbs().toFloat()
+//        calories = meals[position].calculateCalories().toFloat()
+//        fat = meals[position].calculateFat().toFloat()
+//        protein = meals[position].calculateProtein().toFloat()
+//
+//        // Calculate percentage of each item
+//        val sum = carbs + fat + protein
+//        carbsPercentage = carbs / sum * 100
+//        fatPercentage = fat / sum * 100
+//        proteinPercentage = protein / sum * 100
+//
+//        // Get daily intake percentages
+//        val u = realm.where(User::class.java)
+//            .equalTo("userId", "user")
+//            .findFirst()
+//
+//        if (u != null) {
+//            calorieDailyIntake = u.dailyKcalIntake.toFloat()
+//            carbsDailyIntake = u.dailyCarbsIntakeInG.toFloat()
+//            fatDailyIntake = u.dailyFatIntakeInG.toFloat()
+//            proteinDailyIntake = u.dailyProteinIntakeInG.toFloat()
+//        }
     }
 
     fun deleteFoodFromMeal(food: FoodEntry, mealPosition: Int) {
-        realm.executeTransaction {
-            it.where(Meal::class.java)
-                .equalTo("title", meals[mealPosition].title)
-                .findFirst()
-                ?.foodList
-                ?.remove(food)
-        }
-        fetchData()
+//        realm.executeTransaction {
+//            it.where(Meal::class.java)
+//                .equalTo("title", meals[mealPosition].title)
+//                .findFirst()
+//                ?.foodList
+//                ?.remove(food)
+//        }
+//        fetchData()
     }
 
     override fun onCleared() {
         super.onCleared()
-        realm.close()
     }
 }
