@@ -49,7 +49,6 @@ class DiaryFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         _binding = FragmentDiaryBinding.inflate(inflater, container, false)
-        TODO("One DiaryEntry can only have only unique meals. DiaryEntryMealEntryCrossRef DiaryEntry -> MealEntry -> Meal (?)")
         return binding.root
     }
 

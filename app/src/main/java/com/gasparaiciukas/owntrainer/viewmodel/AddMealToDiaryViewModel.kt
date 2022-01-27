@@ -1,14 +1,13 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
-import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
-import com.gasparaiciukas.owntrainer.database.*
-import dagger.assisted.Assisted
+import com.gasparaiciukas.owntrainer.database.DiaryEntryMealCrossRef
+import com.gasparaiciukas.owntrainer.database.DiaryEntryRepository
+import com.gasparaiciukas.owntrainer.database.Meal
+import com.gasparaiciukas.owntrainer.database.MealRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 

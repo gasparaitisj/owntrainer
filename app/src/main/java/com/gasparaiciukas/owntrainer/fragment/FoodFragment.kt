@@ -1,8 +1,6 @@
 package com.gasparaiciukas.owntrainer.fragment
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -13,13 +11,10 @@ import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.NetworkFoodAdapter
-import com.gasparaiciukas.owntrainer.database.AppDatabase
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodBinding
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
@@ -27,22 +22,21 @@ import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class FoodFragment : Fragment() {
     private var _binding: FragmentFoodBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var adapter: NetworkFoodAdapter
 
-    private var foods: MutableList<Food> = mutableListOf()
-
     private val listener: (food: Food, position: Int) -> Unit = { _: Food, position: Int ->
         val action =
-            FoodFragmentDirections.actionFoodFragmentToFoodItemFragment(
+            FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment(
                 position = position,
-                foodItem = foods[position]
+                foodItem = viewModel.foods[position]
             )
         findNavController().navigate(action)
     }
@@ -52,21 +46,15 @@ class FoodFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         _binding = FragmentFoodBinding.inflate(inflater, container, false)
-        viewModel.foods.observe(viewLifecycleOwner, Observer { foods ->
-            reloadRecyclerView(foods)
-        })
+        viewModel.ldFoods.observe(viewLifecycleOwner) {
+            reloadRecyclerView(it)
+        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUi()
-//        val db = AppDatabase.getInstance(requireContext())
-//        val users = db.userDao().getAll()
-//        Timber.d("users from Room:")
-//        for (u in users) {
-//            Timber.d("user: ${u.userId}")
-//        }
     }
 
     override fun onDestroyView() {
@@ -99,10 +87,10 @@ class FoodFragment : Fragment() {
 
     private fun reloadRecyclerView(foods: List<Food>) {
         val itemCount = adapter.itemCount
-        this.foods.clear()
+        viewModel.foods.clear()
         adapter.notifyItemRangeRemoved(0, itemCount)
-        this.foods.addAll(foods)
-        adapter.notifyItemRangeInserted(0, this.foods.size)
+        viewModel.foods.addAll(foods)
+        adapter.notifyItemRangeInserted(0, viewModel.foods.size)
         if (adapter.itemCount == 0) {
             binding.cardRecyclerView.visibility = View.INVISIBLE
         } else {
@@ -120,7 +108,7 @@ class FoodFragment : Fragment() {
         // Send get request on end icon clicked
         binding.layoutEtSearch.setEndIconOnClickListener {
             if (!TextUtils.isEmpty(binding.etSearch.text)) {
-                viewModel.sendGet(binding.etSearch.text.toString())
+                viewModel.getFoods(binding.etSearch.text.toString())
             }
         }
 
@@ -129,7 +117,7 @@ class FoodFragment : Fragment() {
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 if (!TextUtils.isEmpty(binding.etSearch.text)) {
-                    viewModel.sendGet(binding.etSearch.text.toString())
+                    viewModel.getFoods(binding.etSearch.text.toString())
                 }
                 handled = true
             }
@@ -235,7 +223,7 @@ class FoodFragment : Fragment() {
 
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
-        adapter = NetworkFoodAdapter(foods, listener)
+        adapter = NetworkFoodAdapter(viewModel.foods, listener)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
         if (adapter.itemCount == 0) {

@@ -21,13 +21,13 @@ data class User(
     @PrimaryKey(autoGenerate = true) var userId: Int = 0
     @ColumnInfo(name = "avgWalkingSpeedInKmH") var avgWalkingSpeedInKmH: Double = 5.0
     @ColumnInfo(name = "dailyStepGoal") var dailyStepGoal: Int = 10000
-    @ColumnInfo(name = "bmr") var bmr: Double = 0.0
+    @ColumnInfo(name = "bmr") var bmr: Double = calculateBmr(weightInKg, heightInCm.toDouble(), ageInYears, sex)
     @ColumnInfo(name = "kcalBurnedPerStep") var kcalBurnedPerStep: Double = 0.0
-    @ColumnInfo(name = "dailyKcalIntake") var dailyKcalIntake: Double = 0.0
-    @ColumnInfo(name = "dailyProteinIntakeInG") var dailyProteinIntakeInG: Double = 0.0
-    @ColumnInfo(name = "dailyFatIntakeInG") var dailyFatIntakeInG: Double = 0.0
-    @ColumnInfo(name = "dailyCarbsIntakeInG") var dailyCarbsIntakeInG: Double = 0.0
-    @ColumnInfo(name = "stepLengthInCm") var stepLengthInCm: Double = 0.0
+    @ColumnInfo(name = "dailyKcalIntake") var dailyKcalIntake: Double = calculateDailyKcalIntake(bmr, lifestyle)
+    @ColumnInfo(name = "dailyProteinIntakeInG") var dailyProteinIntakeInG: Double = calculateDailyProteinIntakeInG(weightInKg)
+    @ColumnInfo(name = "dailyFatIntakeInG") var dailyFatIntakeInG: Double = calculateDailyFatIntake(dailyKcalIntake)
+    @ColumnInfo(name = "dailyCarbsIntakeInG") var dailyCarbsIntakeInG: Double = calculateDailyCarbsIntake(dailyKcalIntake)
+    @ColumnInfo(name = "stepLengthInCm") var stepLengthInCm: Double = calculateStepLengthInCm(heightInCm.toDouble(), sex)
 
 
     fun calculateBmr(weightInKg: Double, heightInCm: Double, age: Int, sex: String): Double {
@@ -63,6 +63,15 @@ data class User(
 
     fun calculateStepLengthInCm(heightInCm: Double, sex: String): Double {
         return if (sex == "Male") 0.415 * heightInCm else 0.413 * heightInCm
+    }
+
+    fun recalculateUserMetrics() {
+        bmr = calculateBmr(weightInKg, heightInCm.toDouble(), ageInYears, sex)
+        dailyKcalIntake = calculateDailyKcalIntake(bmr, lifestyle)
+        dailyProteinIntakeInG = calculateDailyProteinIntakeInG(weightInKg)
+        dailyFatIntakeInG = calculateDailyFatIntake(dailyKcalIntake)
+        dailyCarbsIntakeInG = calculateDailyCarbsIntake(dailyKcalIntake)
+        stepLengthInCm = calculateStepLengthInCm(heightInCm.toDouble(), sex)
     }
 
     override fun equals(other: Any?): Boolean {

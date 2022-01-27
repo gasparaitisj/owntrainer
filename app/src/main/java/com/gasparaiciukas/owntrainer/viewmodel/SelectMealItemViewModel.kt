@@ -2,19 +2,33 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
 import android.os.Bundle
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.database.Meal
+import com.gasparaiciukas.owntrainer.database.MealRepository
+import com.gasparaiciukas.owntrainer.database.UserRepository
 import com.gasparaiciukas.owntrainer.network.Food
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SelectMealItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
-    private val foodItem: Food = bundle.getParcelable("foodItem")!!
-    private val quantity = bundle.getInt("quantity").toDouble()
+@HiltViewModel
+class SelectMealItemViewModel @Inject internal constructor(
+    private val mealRepository: MealRepository,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+    private val foodItem: Food? = savedStateHandle["foodItem"]
+    private val quantity: Int? = savedStateHandle["quantity"]
 
 //    val meals: List<Meal> = realm.where(Meal::class.java).findAll()
     val meals: List<Meal> = listOf()
 
     fun addFoodToMeal(meal: Meal) {
+        viewModelScope.launch {
+
+        }
 //        val foodList = meal.foodList
 //        val food = FoodEntry()
 //        var protein = 0.0
@@ -47,9 +61,5 @@ class SelectMealItemViewModel constructor(private val bundle: Bundle) : ViewMode
 //            foodList.add(food)
 //            meal.foodList = foodList
 //        }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
     }
 }

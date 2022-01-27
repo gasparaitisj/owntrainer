@@ -13,9 +13,9 @@ class BundleViewModelFactory(private val bundle: Bundle) : ViewModelProvider.Fac
         if (modelClass.isAssignableFrom(MealItemViewModel::class.java)) {
             return MealItemViewModel(bundle) as T
         }
-        if (modelClass.isAssignableFrom(NetworkFoodItemViewModel::class.java)) {
-            return NetworkFoodItemViewModel(bundle) as T
-        }
+//        if (modelClass.isAssignableFrom(NetworkFoodItemViewModel::class.java)) {
+//            return NetworkFoodItemViewModel(bundle) as T
+//        }
         if (modelClass.isAssignableFrom(SelectMealItemViewModel::class.java)) {
             return SelectMealItemViewModel(bundle) as T
         }

@@ -7,30 +7,31 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentNetworkFoodItemBinding
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
-import com.gasparaiciukas.owntrainer.viewmodel.BundleViewModelFactory
 import com.gasparaiciukas.owntrainer.viewmodel.NetworkFoodItemViewModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import java.util.*
 import kotlin.math.roundToInt
 
+@AndroidEntryPoint
 class NetworkFoodItemFragment : Fragment() {
     private var _binding: FragmentNetworkFoodItemBinding? = null
     private val binding get() = _binding!!
 
     private val args: NetworkFoodItemFragmentArgs by navArgs()
 
-    private lateinit var viewModel: NetworkFoodItemViewModel
-    private lateinit var viewModelFactory: BundleViewModelFactory
+    private val viewModel by viewModels<NetworkFoodItemViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,19 +39,21 @@ class NetworkFoodItemFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentNetworkFoodItemBinding.inflate(inflater, container, false)
-
-        val bundle = Bundle().apply {
-            putParcelable("foodItem", args.foodItem)
-            putInt("position", args.position)
-        }
-        viewModelFactory = BundleViewModelFactory(bundle)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(NetworkFoodItemViewModel::class.java)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initUi()
+        viewModel.ldUser.observe(viewLifecycleOwner) {
+            if (it != null) {
+                Timber.d("data is loaded...")
+                viewModel.loadData()
+                viewModel.user = it
+                initUi()
+            } else {
+                Timber.d("data is not yet loaded...")
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -102,16 +105,16 @@ class NetworkFoodItemFragment : Fragment() {
     private fun initTextViews() {
         binding.tvCarbsWeight.text = viewModel.carbs.roundToInt().toString()
         binding.tvCarbsPercentage.text =
-            String.format("%s %%", (viewModel.carbs / viewModel.carbsDailyIntake * 100).roundToInt())
+            String.format("%s %%", (viewModel.carbs / viewModel.user.dailyCarbsIntakeInG * 100).roundToInt())
         binding.tvFatWeight.text = viewModel.fat.roundToInt().toString()
         binding.tvFatPercentage.text =
-            String.format("%s %%", (viewModel.fat / viewModel.fatDailyIntake * 100).roundToInt())
+            String.format("%s %%", (viewModel.fat / viewModel.user.dailyFatIntakeInG * 100).roundToInt())
         binding.tvProteinWeight.text = viewModel.protein.roundToInt().toString()
         binding.tvProteinPercentage.text =
-            String.format("%s %%", (viewModel.protein / viewModel.proteinDailyIntake * 100).roundToInt())
+            String.format("%s %%", (viewModel.protein / viewModel.user.dailyProteinIntakeInG * 100).roundToInt())
         binding.tvCaloriesCount.text = viewModel.calories.roundToInt().toString()
         binding.tvCaloriesPercentage.text =
-            String.format("%s %%", (viewModel.calories / viewModel.calorieDailyIntake * 100).roundToInt())
+            String.format("%s %%", (viewModel.calories / viewModel.user.dailyKcalIntake * 100).roundToInt())
     }
 
     private fun initNavigation() {
@@ -122,7 +125,7 @@ class NetworkFoodItemFragment : Fragment() {
 
         binding.topAppBar.menu.findItem(R.id.btn_add_to_meal).setOnMenuItemClickListener {
             val action =
-                NetworkFoodItemFragmentDirections.actionFoodItemFragmentToSelectMealItemFragment(
+                NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToSelectMealItemFragment(
                     args.foodItem,
                     binding.etWeight.text.toString().toInt()
                 )

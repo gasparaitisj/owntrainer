@@ -1,66 +1,55 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
-import android.os.Bundle
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.gasparaiciukas.owntrainer.database.User
+import com.gasparaiciukas.owntrainer.database.UserRepository
 import com.gasparaiciukas.owntrainer.network.Food
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import timber.log.Timber
+import javax.inject.Inject
 
-class NetworkFoodItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
+@HiltViewModel
+class NetworkFoodItemViewModel @Inject internal constructor(
+    private val userRepository: UserRepository,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+    private val foodItem: Food? = savedStateHandle["foodItem"]
+    private val position: Int? = savedStateHandle["position"]
+
+    val ldUser = userRepository.user.asLiveData()
+    lateinit var user: User
+
     var title = ""
     var carbs = 0f
     var carbsPercentage = 0f
-    var carbsDailyIntake = 0f
     var calories = 0f
-    var calorieDailyIntake = 0f
     var fat = 0f
     var fatPercentage = 0f
-    var fatDailyIntake = 0f
     var protein = 0f
     var proteinPercentage = 0f
-    var proteinDailyIntake = 0f
 
-    private val foodItem: Food = bundle.getParcelable("foodItem")!!
-    private val position: Int = bundle.getInt("position")
-
-    init {
-        fetchData()
-    }
-
-    private fun fetchData() {
-        // Get nutrients from food item
-        title = foodItem.description.toString()
-        calories = 0.0f
-        protein = 0.0f
-        fat = 0.0f
-        carbs = 0.0f
-
-        val nutrients = foodItem.foodNutrients
-        if (nutrients != null) {
-            for (nutrient in nutrients) {
-                if (nutrient.nutrientId == 1003) protein = (nutrient.value ?: 0.0).toFloat()
-                if (nutrient.nutrientId == 1004) fat = (nutrient.value ?: 0.0).toFloat()
-                if (nutrient.nutrientId == 1005) carbs = (nutrient.value ?: 0.0).toFloat()
-                if (nutrient.nutrientId == 1008) calories = (nutrient.value ?: 0.0).toFloat()
+    fun loadData() {
+        if (foodItem != null) {
+            // Get nutrients from food item
+            title = foodItem.description.toString()
+            val nutrients = foodItem.foodNutrients
+            if (nutrients != null) {
+                for (nutrient in nutrients) {
+                    val nutrientValue = (nutrient.value ?: 0.0).toFloat()
+                    if (nutrient.nutrientId == 1003) protein = nutrientValue
+                    if (nutrient.nutrientId == 1004) fat = nutrientValue
+                    if (nutrient.nutrientId == 1005) carbs = nutrientValue
+                    if (nutrient.nutrientId == 1008) calories = nutrientValue
+                }
             }
+
+            // Calculate percentage of each item
+            val sum = carbs + fat + protein
+            carbsPercentage = carbs / sum * 100
+            fatPercentage = fat / sum * 100
+            proteinPercentage = protein / sum * 100
         }
-
-        // Calculate percentage of each item
-        val sum = carbs + fat + protein
-        carbsPercentage = carbs / sum * 100
-        fatPercentage = fat / sum * 100
-        proteinPercentage = protein / sum * 100
-
-        // Get daily intake percentages
-//        val realm = Realm.getDefaultInstance()
-//        val user = realm.where(User::class.java)
-//            .equalTo("userId", "user")
-//            .findFirst()
-//        if (user != null) {
-//            calorieDailyIntake = user.dailyKcalIntake.toFloat()
-//            carbsDailyIntake = user.dailyCarbsIntakeInG.toFloat()
-//            fatDailyIntake = user.dailyFatIntakeInG.toFloat()
-//            proteinDailyIntake = user.dailyProteinIntakeInG.toFloat()
-//        }
-//        realm.close()
     }
 }
