@@ -9,11 +9,12 @@ import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
-import com.gasparaiciukas.owntrainer.database.Meal
+import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.FragmentDiaryBinding
 import com.gasparaiciukas.owntrainer.utils.DateFormatter
 import com.gasparaiciukas.owntrainer.viewmodel.DiaryViewModel
@@ -21,6 +22,7 @@ import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
 import kotlin.math.roundToInt
@@ -32,18 +34,22 @@ class DiaryFragment : Fragment() {
 
     private lateinit var adapter: MealAdapter
 
-    private val viewModel: DiaryViewModel by viewModels()
+    private val viewModel by viewModels<DiaryViewModel>()
 
-    private val singleClickListener: (meal: Meal, position: Int) -> Unit = { _: Meal, position: Int ->
-        val action = DiaryFragmentDirections.actionDiaryFragmentToMealItemFragment(position, viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId)
+    private val singleClickListener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
+        val action = DiaryFragmentDirections.actionDiaryFragmentToMealItemFragment(
+            mealWithFoodEntries.meal.mealId,
+            viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId
+        )
         findNavController().navigate(action)
     }
 
-    private val longClickListener: (position: Int) -> Unit = { position: Int ->
-        Timber.d("Position: $position")
-        viewModel.deleteMealFromDiary(position)
-        adapter.notifyItemRemoved(position)
-        adapter.notifyItemRangeChanged(position, (adapter.itemCount - position))
+    private val longClickListener: (mealId: Int, position: Int) -> Unit = { mealId, position ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.deleteMealFromDiary(viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId, mealId)
+            adapter.notifyItemRemoved(position)
+            adapter.notifyItemRangeChanged(position, adapter.itemCount)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -54,29 +60,46 @@ class DiaryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Data loading chain:
+        // User -> DiaryEntry -> List<MealWithFoodEntries>
         viewModel.ldUser.observe(viewLifecycleOwner) { user ->
+            // User
             if (user != null) {
                 Timber.d("Loading user...")
                 viewModel.flUser = MutableStateFlow(user)
                 viewModel.user = user
                 viewModel.currentDay = LocalDate.of(user.currentYear, user.currentMonth, user.currentDayOfMonth)
-                Timber.d("User loaded! ${user.currentMonth} ${user.currentDayOfMonth}")
+                Timber.d("user loaded! ${user.currentMonth} ${user.currentDayOfMonth}")
                 viewModel.loadData()
+
+                // Diary entry
                 viewModel.ldDiaryEntryWithMeals.observe(viewLifecycleOwner) { diaryEntryWithMeals ->
-                    Timber.d("Loading DiaryEntry...")
+                    Timber.d("Loading diaryEntryWithMeals...")
                     if (diaryEntryWithMeals != null) {
                         viewModel.diaryEntryWithMeals = diaryEntryWithMeals
-                        viewModel.calculateData()
-                        Timber.d("DiaryEntry loaded! ${diaryEntryWithMeals.diaryEntry.monthOfYear} ${diaryEntryWithMeals.diaryEntry.dayOfMonth}")
-                        initUi()
-                        // diary entry exists and is loaded correctly
+                        Timber.d("diaryEntryWithMeals loaded successfully!")
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            viewModel.calculateData()
+
+                            // Meals with food entries
+                            viewModel.ldMealsWithFoodEntries.observe(viewLifecycleOwner) { mealsWithFoodEntries ->
+                                Timber.d("Loading mealsWithFoodEntries...")
+                                if (mealsWithFoodEntries != null) {
+                                    viewModel.mealsWithFoodEntries = mealsWithFoodEntries
+                                    //Timber.d("mealsWithFoodEntries loaded successfully! (foodEntries size: ${mealsWithFoodEntries[0].foodEntries.size})")
+                                    initUi()
+                                } else {
+                                    Timber.d("mealsWithFoodEntries is null...")
+                                }
+                            }
+                        }
                     } else {
-                        Timber.d("DiaryEntry is null... creating new entry.")
+                        Timber.d("diaryEntryWithMeals is null... creating new entry.")
                         viewModel.createDiaryEntry()
                     }
                 }
             } else {
-                Timber.d("User is null or not found...")
+                Timber.d("user is null or not found...")
             }
         }
     }
@@ -108,19 +131,31 @@ class DiaryFragment : Fragment() {
         // Navigation (back button)
         binding.cardNavigation.btnBack.setOnClickListener {
             // Refresh fragment and show previous day
-            viewModel.updateUserToPreviousDay()
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.updateUserToPreviousDay()
+                val action = DiaryFragmentDirections.actionDiaryFragmentSelf()
+                findNavController().navigate(action)
+            }
         }
 
         // Navigation (date layout)
         binding.cardNavigation.layoutDate.setOnClickListener {
             // Refresh fragment and show current day
-            viewModel.updateUserToCurrentDay()
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.updateUserToCurrentDay()
+                val action = DiaryFragmentDirections.actionDiaryFragmentSelf()
+                findNavController().navigate(action)
+            }
         }
 
         // Navigation (forward button)
         binding.cardNavigation.btnForward.setOnClickListener {
             // Refresh fragment and show next day
-            viewModel.updateUserToNextDay()
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.updateUserToNextDay()
+                val action = DiaryFragmentDirections.actionDiaryFragmentSelf()
+                findNavController().navigate(action)
+            }
         }
 
         binding.topAppBar.setNavigationOnClickListener {
@@ -218,11 +253,11 @@ class DiaryFragment : Fragment() {
 
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
-        val passLambda: (_1: Meal, _2: Int) -> Unit = { _: Meal, _: Int -> }
-        adapter = MealAdapter(viewModel.diaryEntryWithMeals.meals, singleClickListener, longClickListener)
+        // val passLambda: (_1: Meal, _2: Int) -> Unit = { _: Meal, _: Int -> }
+        adapter = MealAdapter(viewModel.mealsWithFoodEntries, singleClickListener, longClickListener)
         binding.cardMeals.recyclerView.layoutManager = layoutManager
         binding.cardMeals.recyclerView.adapter = adapter
-        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
             // Scroll up
             if (scrollY < oldScrollY) {
                 slideBottomNavigationUp()

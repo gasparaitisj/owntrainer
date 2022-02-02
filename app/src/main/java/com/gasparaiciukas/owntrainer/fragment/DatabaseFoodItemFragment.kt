@@ -7,31 +7,26 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentDatabaseFoodItemBinding
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
-import com.gasparaiciukas.owntrainer.viewmodel.BundleViewModelFactory
 import com.gasparaiciukas.owntrainer.viewmodel.DatabaseFoodItemViewModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.ArrayList
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 
+@AndroidEntryPoint
 class DatabaseFoodItemFragment : Fragment() {
     private var _binding: FragmentDatabaseFoodItemBinding? = null
     private val binding get() = _binding!!
 
-    private val args: DatabaseFoodItemFragmentArgs by navArgs()
-
-    private lateinit var viewModel: DatabaseFoodItemViewModel
-    private lateinit var viewModelFactory: BundleViewModelFactory
-
+    private val viewModel by viewModels<DatabaseFoodItemViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,19 +34,16 @@ class DatabaseFoodItemFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDatabaseFoodItemBinding.inflate(inflater, container, false)
-
-        val bundle = Bundle().apply {
-            putParcelable("food", args.food)
-        }
-
-        viewModelFactory = BundleViewModelFactory(bundle)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(DatabaseFoodItemViewModel::class.java)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initUi()
+        viewModel.ldUser.observe(viewLifecycleOwner) {
+            viewModel.user = it
+            viewModel.loadData()
+            initUi()
+        }
     }
 
     override fun onDestroyView() {

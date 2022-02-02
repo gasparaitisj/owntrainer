@@ -14,7 +14,7 @@ import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 class DatabaseFoodAdapter(
     private val foods: List<FoodEntry>,
     private val singleClickListener: (food: FoodEntryParcelable) -> Unit,
-    private val longClickListener: (food: FoodEntry, position: Int) -> Unit
+    private val longClickListener: (position: Int) -> Unit
 ) : RecyclerView.Adapter<DatabaseFoodViewHolder>() {
     class DatabaseFoodViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         val binding = FoodRowBinding.bind(view)
@@ -56,7 +56,7 @@ class DatabaseFoodAdapter(
             val inflater = popup.menuInflater
             inflater.inflate(R.menu.food_menu, popup.menu)
             popup.show()
-            popup.setOnMenuItemClickListener { longClickListener(foods[position], position); true }
+            popup.setOnMenuItemClickListener { longClickListener(position); true }
             true
         }
     }

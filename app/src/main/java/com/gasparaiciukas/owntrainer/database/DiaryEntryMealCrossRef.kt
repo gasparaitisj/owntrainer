@@ -1,9 +1,11 @@
 package com.gasparaiciukas.owntrainer.database
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "diaryEntryMeal")
+@Entity(tableName = "diaryEntryMeal",
+        indices = [Index("diaryEntryId"), Index("mealId")])
 data class DiaryEntryMealCrossRef (
     val diaryEntryId: Int,
     val mealId: Int

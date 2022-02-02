@@ -9,7 +9,10 @@ import javax.inject.Singleton
 
 @Singleton
 class FoodRepository @Inject constructor(
-    private val getService: GetService
+    private val getService: GetService,
+    private val foodEntryDao: FoodEntryDao
 ) {
     suspend fun getFoods(query: String) = getService.getFoods(BuildConfig.API_KEY, query).foods ?: listOf()
+    suspend fun insertFood(foodEntry: FoodEntry) = foodEntryDao.insertAll(foodEntry)
+    suspend fun deleteFoodById(foodEntryId: Int) = foodEntryDao.deleteById(foodEntryId)
 }

@@ -41,7 +41,7 @@ class FoodFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private val viewModel: FoodViewModel by viewModels()
+    private val viewModel by viewModels<FoodViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -136,7 +136,7 @@ class FoodFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
             // Scroll down
             if (scrollY > oldScrollY) {
                 slideBottomNavigationDown()

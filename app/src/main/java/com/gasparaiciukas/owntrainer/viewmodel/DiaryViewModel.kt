@@ -7,13 +7,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class DiaryViewModel @Inject internal constructor(
     private val userRepository: UserRepository,
-    private val diaryEntryRepository: DiaryEntryRepository
+    private val diaryEntryRepository: DiaryEntryRepository,
+    private val mealRepository: MealRepository
 ) : ViewModel() {
 
     lateinit var currentDay: LocalDate
@@ -26,6 +28,9 @@ class DiaryViewModel @Inject internal constructor(
     lateinit var flDiaryEntryWithMeals: Flow<DiaryEntryWithMeals>
     lateinit var ldDiaryEntryWithMeals: LiveData<DiaryEntryWithMeals>
 
+    lateinit var ldMealsWithFoodEntries: MutableLiveData<List<MealWithFoodEntries>>
+    lateinit var mealsWithFoodEntries: List<MealWithFoodEntries>
+
     var caloriesConsumed: Double = 0.0
     var proteinConsumed: Double = 0.0
     var fatConsumed: Double = 0.0
@@ -35,6 +40,7 @@ class DiaryViewModel @Inject internal constructor(
     var fatPercentage: Double = 0.0
     var carbsPercentage: Double = 0.0
 
+
     fun loadData() {
         flDiaryEntryWithMeals = flUser.flatMapLatest {
             diaryEntryRepository.getDiaryEntryWithMeals(it.currentYear, it.currentDayOfYear)
@@ -42,15 +48,32 @@ class DiaryViewModel @Inject internal constructor(
         ldDiaryEntryWithMeals = flDiaryEntryWithMeals.asLiveData()
     }
 
-    fun calculateData() {
-        caloriesConsumed = diaryEntryWithMeals.calculateTotalCalories(diaryEntryWithMeals.meals)
-        proteinConsumed = diaryEntryWithMeals.calculateTotalProtein(diaryEntryWithMeals.meals)
-        fatConsumed = diaryEntryWithMeals.calculateTotalFat(diaryEntryWithMeals.meals)
-        carbsConsumed = diaryEntryWithMeals.calculateTotalCarbs(diaryEntryWithMeals.meals)
+    suspend fun calculateData() {
+        val meals = mutableListOf<MealWithFoodEntries>()
+        caloriesConsumed = 0.0
+        proteinConsumed = 0.0
+        fatConsumed = 0.0
+        carbsConsumed = 0.0
+        for (meal in diaryEntryWithMeals.meals) {
+            val mealWithFoodEntries = mealRepository.getMealWithFoodEntriesById(meal.mealId)
+            mealWithFoodEntries.meal.calories = mealWithFoodEntries.calculateCalories()
+            caloriesConsumed += mealWithFoodEntries.calculateCalories()
+            mealWithFoodEntries.meal.protein = mealWithFoodEntries.calculateProtein()
+            proteinConsumed += mealWithFoodEntries.calculateProtein()
+            mealWithFoodEntries.meal.carbs = mealWithFoodEntries.calculateCarbs()
+            carbsConsumed += mealWithFoodEntries.calculateCarbs()
+            mealWithFoodEntries.meal.fat = mealWithFoodEntries.calculateFat()
+            fatConsumed += mealWithFoodEntries.calculateFat()
+
+            meals.add(mealWithFoodEntries)
+            Timber.d("Calories: ${mealWithFoodEntries.meal.calories}")
+        }
         caloriesPercentage = (caloriesConsumed / user.dailyKcalIntake) * 100
         proteinPercentage = (proteinConsumed / user.dailyProteinIntakeInG) * 100
         fatPercentage = (fatConsumed / user.dailyFatIntakeInG) * 100
         carbsPercentage = (carbsConsumed / user.dailyCarbsIntakeInG) * 100
+
+        ldMealsWithFoodEntries = MutableLiveData(meals)
     }
 
     fun createDiaryEntry() {
@@ -67,7 +90,7 @@ class DiaryViewModel @Inject internal constructor(
         }
     }
 
-    fun updateUserToPreviousDay() {
+    suspend fun updateUserToPreviousDay() {
         currentDay = currentDay.minusDays(1) // subtract 1 day from current day
         val user = ldUser.value
         if (user != null) {
@@ -76,13 +99,11 @@ class DiaryViewModel @Inject internal constructor(
             user.currentDayOfYear = currentDay.dayOfYear
             user.currentDayOfMonth = currentDay.dayOfMonth
             user.currentDayOfWeek = currentDay.dayOfWeek.value
-            viewModelScope.launch {
-                userRepository.updateUser(user)
-            }
+            userRepository.updateUser(user)
         }
     }
 
-    fun updateUserToCurrentDay() {
+    suspend fun updateUserToCurrentDay() {
         currentDay = LocalDate.now()
         val user = ldUser.value
         if (user != null) {
@@ -91,13 +112,11 @@ class DiaryViewModel @Inject internal constructor(
             user.currentDayOfYear = currentDay.dayOfYear
             user.currentDayOfMonth = currentDay.dayOfMonth
             user.currentDayOfWeek = currentDay.dayOfWeek.value
-            viewModelScope.launch {
-                userRepository.updateUser(user)
-            }
+            userRepository.updateUser(user)
         }
     }
 
-    fun updateUserToNextDay() {
+    suspend fun updateUserToNextDay() {
         currentDay = currentDay.plusDays(1)
         val user = ldUser.value
         if (user != null) {
@@ -106,16 +125,11 @@ class DiaryViewModel @Inject internal constructor(
             user.currentDayOfYear = currentDay.dayOfYear
             user.currentDayOfMonth = currentDay.dayOfMonth
             user.currentDayOfWeek = currentDay.dayOfWeek.value
-            viewModelScope.launch {
-                userRepository.updateUser(user)
-            }
+            userRepository.updateUser(user)
         }
     }
 
-    fun deleteMealFromDiary(position: Int) {
-//        realm.executeTransaction {
-//            diaryEntry.meals.removeAt(position)
-//            it.insertOrUpdate(diaryEntry)
-//        }
+    suspend fun deleteMealFromDiary(diaryEntryId: Int, mealId: Int) {
+        diaryEntryRepository.deleteDiaryEntryMealCrossRef(diaryEntryId, mealId)
     }
 }

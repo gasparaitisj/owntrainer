@@ -40,11 +40,6 @@ class DatabaseModule {
     }
 
     @Provides
-    fun provideMealWithFoodEntriesDao(appDatabase: AppDatabase): MealWithFoodEntriesDao {
-        return appDatabase.mealWithFoodEntriesDao()
-    }
-
-    @Provides
     fun provideUserDao(appDatabase: AppDatabase): UserDao {
         return appDatabase.userDao()
     }

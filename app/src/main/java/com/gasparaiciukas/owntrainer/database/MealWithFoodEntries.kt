@@ -7,9 +7,9 @@ data class MealWithFoodEntries(
     @Embedded val meal: Meal,
     @Relation(
         parentColumn = "mealId",
-        entityColumn = "foodEntryId",
+        entityColumn = "mealId",
     )
-    val foodEntries: List<FoodEntry>
+    val foodEntries: MutableList<FoodEntry>
 ) {
     fun calculateCalories(): Double {
         var mCalories = 0.0

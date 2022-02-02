@@ -13,7 +13,7 @@ data class DiaryEntryWithMeals(
     )
     val meals: List<Meal>
 ) {
-    fun calculateTotalCalories(meals: List<Meal>): Double {
+    fun calculateTotalCalories(): Double {
         var mCalories = 0.0
         for (m in meals) {
             mCalories += m.calories
@@ -21,7 +21,7 @@ data class DiaryEntryWithMeals(
         return mCalories
     }
 
-    fun calculateTotalProtein(meals: List<Meal>): Double {
+    fun calculateTotalProtein(): Double {
         var mProtein = 0.0
         for (m in meals) {
             mProtein += m.protein
@@ -29,7 +29,7 @@ data class DiaryEntryWithMeals(
         return mProtein
     }
 
-    fun calculateTotalFat(meals: List<Meal>): Double {
+    fun calculateTotalFat(): Double {
         var mFat = 0.0
         for (m in meals) {
             mFat += m.fat
@@ -37,7 +37,7 @@ data class DiaryEntryWithMeals(
         return mFat
     }
 
-    fun calculateTotalCarbs(meals: List<Meal>): Double {
+    fun calculateTotalCarbs(): Double {
         var mCarbs = 0.0
         for (m in meals) {
             mCarbs += m.carbs

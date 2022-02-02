@@ -7,6 +7,7 @@ import javax.inject.Singleton
 class MealRepository @Inject constructor(
     private val mealDao: MealDao
 ) {
-    fun getMeals() = mealDao.getAll()
+    fun getMealsWithFoodEntries() = mealDao.getMealsWithFoodEntries()
+    suspend fun getMealWithFoodEntriesById(id: Int) = mealDao.getMealWithFoodEntriesById(id)
     suspend fun addMeal(meal: Meal) = mealDao.insertAll(meal)
 }

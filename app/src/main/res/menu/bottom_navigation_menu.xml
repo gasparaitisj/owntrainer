@@ -4,15 +4,18 @@
         android:id="@+id/diaryFragment"
         android:enabled="true"
         android:icon="@drawable/baseline_home_black_24"
+        android:menuCategory="secondary"
         android:title="@string/text_navbar_1" />
     <item
         android:id="@+id/mealFragment"
         android:enabled="true"
         android:icon="@drawable/baseline_local_dining_black_24"
+        android:menuCategory="secondary"
         android:title="@string/text_navbar_3" />
     <item
         android:id="@+id/progressFragment"
         android:enabled="true"
         android:icon="@drawable/baseline_auto_graph_black_24"
+        android:menuCategory="secondary"
         android:title="@string/text_navbar_4" />
 </menu>

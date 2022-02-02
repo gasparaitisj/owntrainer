@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
-import com.gasparaiciukas.owntrainer.database.Meal
+import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealBinding
 import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
@@ -29,18 +29,21 @@ class MealFragment : Fragment() {
 
     private lateinit var adapter: MealAdapter
 
-    private val singleClickListener: (meal: Meal, position: Int) -> Unit = { _: Meal, position: Int ->
-        val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(position, -1)
+    private val singleClickListener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
+        val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(
+            mealWithFoodEntries.meal.mealId,
+            -1
+        )
         findNavController().navigate(action)
     }
 
-    private val longClickListener: (position: Int) -> Unit = { position: Int ->
-        viewModel.deleteMealFromMeals(position)
-        adapter.notifyItemRemoved(position)
-        adapter.notifyItemRangeChanged(position, (adapter.itemCount - position))
+    private val longClickListener: (mealId: Int, position: Int) -> Unit = { mealId, position ->
+//        viewModel.deleteMealFromMeals(position)
+//        adapter.notifyItemRemoved(position)
+//        adapter.notifyItemRangeChanged(position, (adapter.itemCount - position))
     }
 
-    private val viewModel: MealViewModel by viewModels()
+    private val viewModel by viewModels<MealViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -169,7 +172,7 @@ class MealFragment : Fragment() {
             }
         })
 
-        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
             // Scroll down
             if (scrollY > oldScrollY) {
                 slideBottomNavigationDown()

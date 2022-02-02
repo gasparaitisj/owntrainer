@@ -16,7 +16,9 @@ import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentSettingsBinding
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
@@ -44,7 +46,7 @@ class SettingsFragment : Fragment() {
 
     private fun setTextFields() {
         binding.switchDarkMode.isChecked = isDarkMode()
-        binding.switchDarkMode.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 setDarkMode(true)
             } else {
@@ -75,7 +77,7 @@ class SettingsFragment : Fragment() {
         binding.topAppBar.setNavigationOnClickListener {
             binding.drawerLayout.open()
         }
-        binding.navigationView.setCheckedItem(R.id.foods)
+        binding.navigationView.setCheckedItem(R.id.settings)
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
             when (menuItem.itemId) {

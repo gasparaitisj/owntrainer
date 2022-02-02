@@ -1,7 +1,5 @@
 package com.gasparaiciukas.owntrainer.database
 
-import kotlinx.coroutines.flow.Flow
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,4 +17,6 @@ class DiaryEntryRepository @Inject constructor(
     fun getDiaryEntryWithMeals(year: Int, dayOfYear: Int) = diaryEntryWithMealsDao.getDiaryEntryWithMeals(year, dayOfYear)
 
     suspend fun insertDiaryEntryMealCrossRef(crossRef: DiaryEntryMealCrossRef) = diaryEntryWithMealsDao.insertDiaryEntryMealCrossRef(crossRef)
+
+    suspend fun deleteDiaryEntryMealCrossRef(diaryEntryId: Int, mealId: Int) = diaryEntryWithMealsDao.deleteDiaryEntryMealCrossRef(diaryEntryId, mealId)
 }

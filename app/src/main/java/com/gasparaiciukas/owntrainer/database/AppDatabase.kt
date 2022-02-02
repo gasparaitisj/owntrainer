@@ -10,13 +10,22 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-@Database(entities = [DiaryEntry::class, DiaryEntryMealCrossRef::class, FoodEntry::class, Meal::class, User::class], version = 1)
+@Database(entities =
+        [
+            DiaryEntry::class,
+            DiaryEntryMealCrossRef::class,
+            FoodEntry::class,
+            Meal::class,
+            User::class
+        ],
+        version = 1,
+        exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun diaryEntryDao(): DiaryEntryDao
     abstract fun diaryEntryWithMealsDao(): DiaryEntryWithMealsDao
     abstract fun foodEntryDao(): FoodEntryDao
     abstract fun mealDao(): MealDao
-    abstract fun mealWithFoodEntriesDao(): MealWithFoodEntriesDao
     abstract fun userDao(): UserDao
 
     companion object {
