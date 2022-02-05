@@ -11,11 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.DatabaseFoodAdapter
-import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealItemBinding
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
@@ -27,8 +25,6 @@ import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import timber.log.Timber
-import java.util.*
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -50,7 +46,9 @@ class MealItemFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.deleteFoodFromMeal(viewModel.mealWithFoodEntries.foodEntries[position].foodEntryId)
             viewModel.loadData()
-            initUi()
+            adapter.foods.removeAt(position)
+            adapter.notifyItemRemoved(position)
+            adapter.notifyItemRangeChanged(position, adapter.itemCount)
         }
     }
 

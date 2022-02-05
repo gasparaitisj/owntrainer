@@ -10,7 +10,7 @@ import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.MealRowBinding
 
 class MealAdapter(
-    private val mealsWithFoodEntries: List<MealWithFoodEntries>,
+    val mealsWithFoodEntries: MutableList<MealWithFoodEntries>,
     private val singleClickListener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit,
     private val longClickListener: (mealId: Int, position: Int) -> Unit
 ) : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {

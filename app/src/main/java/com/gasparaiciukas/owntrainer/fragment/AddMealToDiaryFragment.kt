@@ -65,7 +65,7 @@ class AddMealToDiaryFragment : Fragment() {
 
     private fun initRecyclerView() {
         val passLambda: (_1: Int, _2: Int) -> Unit = { _: Int, _: Int -> }
-        adapter = MealAdapter(viewModel.meals, listener, passLambda)
+        adapter = MealAdapter(viewModel.meals.toMutableList(), listener, passLambda)
         val layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = layoutManager

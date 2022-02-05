@@ -113,6 +113,7 @@ class DiaryFragment : Fragment() {
     private fun initUi() {
         initNavigation()
         initStatistics()
+        binding.scrollView.visibility = View.VISIBLE
     }
 
     private fun initNavigation() {
@@ -133,8 +134,6 @@ class DiaryFragment : Fragment() {
             // Refresh fragment and show previous day
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.updateUserToPreviousDay()
-                val action = DiaryFragmentDirections.actionDiaryFragmentSelf()
-                findNavController().navigate(action)
             }
         }
 
@@ -143,8 +142,6 @@ class DiaryFragment : Fragment() {
             // Refresh fragment and show current day
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.updateUserToCurrentDay()
-                val action = DiaryFragmentDirections.actionDiaryFragmentSelf()
-                findNavController().navigate(action)
             }
         }
 
@@ -153,8 +150,6 @@ class DiaryFragment : Fragment() {
             // Refresh fragment and show next day
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.updateUserToNextDay()
-                val action = DiaryFragmentDirections.actionDiaryFragmentSelf()
-                findNavController().navigate(action)
             }
         }
 
@@ -254,7 +249,7 @@ class DiaryFragment : Fragment() {
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
         // val passLambda: (_1: Meal, _2: Int) -> Unit = { _: Meal, _: Int -> }
-        adapter = MealAdapter(viewModel.mealsWithFoodEntries, singleClickListener, longClickListener)
+        adapter = MealAdapter(viewModel.mealsWithFoodEntries.toMutableList(), singleClickListener, longClickListener)
         binding.cardMeals.recyclerView.layoutManager = layoutManager
         binding.cardMeals.recyclerView.adapter = adapter
         binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->

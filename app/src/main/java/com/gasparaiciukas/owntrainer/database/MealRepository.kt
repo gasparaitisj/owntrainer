@@ -10,4 +10,5 @@ class MealRepository @Inject constructor(
     fun getMealsWithFoodEntries() = mealDao.getMealsWithFoodEntries()
     suspend fun getMealWithFoodEntriesById(id: Int) = mealDao.getMealWithFoodEntriesById(id)
     suspend fun addMeal(meal: Meal) = mealDao.insertAll(meal)
+    suspend fun deleteMealById(mealId: Int) = mealDao.deleteById(mealId)
 }

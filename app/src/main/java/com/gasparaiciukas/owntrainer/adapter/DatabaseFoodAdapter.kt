@@ -12,7 +12,7 @@ import com.gasparaiciukas.owntrainer.databinding.FoodRowBinding
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 
 class DatabaseFoodAdapter(
-    private val foods: List<FoodEntry>,
+    val foods: MutableList<FoodEntry>,
     private val singleClickListener: (food: FoodEntryParcelable) -> Unit,
     private val longClickListener: (position: Int) -> Unit
 ) : RecyclerView.Adapter<DatabaseFoodViewHolder>() {

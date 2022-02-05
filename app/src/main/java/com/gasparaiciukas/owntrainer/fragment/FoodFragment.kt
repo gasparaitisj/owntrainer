@@ -11,6 +11,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
@@ -23,7 +24,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FoodFragment : Fragment() {
@@ -46,14 +47,16 @@ class FoodFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         _binding = FragmentFoodBinding.inflate(inflater, container, false)
-        viewModel.ldFoods.observe(viewLifecycleOwner) {
-            reloadRecyclerView(it)
-        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.ldFoods.observe(viewLifecycleOwner) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                reloadRecyclerView(it)
+            }
+        }
         initUi()
     }
 
@@ -87,10 +90,11 @@ class FoodFragment : Fragment() {
 
     private fun reloadRecyclerView(foods: List<Food>) {
         val itemCount = adapter.itemCount
-        viewModel.foods.clear()
+        adapter.foods.clear()
         adapter.notifyItemRangeRemoved(0, itemCount)
-        viewModel.foods.addAll(foods)
-        adapter.notifyItemRangeInserted(0, viewModel.foods.size)
+        adapter.foods.addAll(foods)
+        adapter.notifyItemRangeInserted(0, adapter.itemCount)
+        viewModel.foods = adapter.foods
         if (adapter.itemCount == 0) {
             binding.cardRecyclerView.visibility = View.INVISIBLE
         } else {
@@ -224,6 +228,7 @@ class FoodFragment : Fragment() {
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
         adapter = NetworkFoodAdapter(viewModel.foods, listener)
+        adapter.setHasStableIds(true)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
         if (adapter.itemCount == 0) {

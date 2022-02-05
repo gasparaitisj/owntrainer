@@ -9,6 +9,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
@@ -21,6 +22,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MealFragment : Fragment() {
@@ -38,9 +40,12 @@ class MealFragment : Fragment() {
     }
 
     private val longClickListener: (mealId: Int, position: Int) -> Unit = { mealId, position ->
-//        viewModel.deleteMealFromMeals(position)
-//        adapter.notifyItemRemoved(position)
-//        adapter.notifyItemRangeChanged(position, (adapter.itemCount - position))
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.deleteMealFromMeals(mealId)
+            adapter.mealsWithFoodEntries.removeAt(position)
+            adapter.notifyItemRemoved(position)
+            adapter.notifyItemRangeChanged(position, adapter.itemCount)
+        }
     }
 
     private val viewModel by viewModels<MealViewModel>()
@@ -74,6 +79,7 @@ class MealFragment : Fragment() {
     }
 
     private fun initNavigation() {
+        binding.layoutTab.getTabAt(1)?.select() // select Meals tab
         binding.topAppBar.setNavigationOnClickListener {
             binding.drawerLayout.open()
         }
@@ -154,7 +160,6 @@ class MealFragment : Fragment() {
         }
 
         // Tabs (foods or meals)
-        binding.layoutTab.getTabAt(1)?.select() // select current tab
         binding.layoutTab.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if (tab.position == 0) {
@@ -188,7 +193,7 @@ class MealFragment : Fragment() {
 
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
-        adapter = MealAdapter(viewModel.meals, singleClickListener, longClickListener)
+        adapter = MealAdapter(viewModel.meals.toMutableList(), singleClickListener, longClickListener)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
     }

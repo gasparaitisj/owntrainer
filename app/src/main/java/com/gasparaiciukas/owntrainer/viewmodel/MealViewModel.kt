@@ -13,12 +13,5 @@ class MealViewModel @Inject internal constructor(
     val ldMeals = mealRepository.getMealsWithFoodEntries().asLiveData()
     lateinit var meals : List<MealWithFoodEntries>
 
-    fun deleteMealFromMeals(position: Int) {
-//        realm.executeTransaction {
-//            it.where(Meal::class.java)
-//                .equalTo("title", meals[position].title)
-//                .findFirst()
-//                ?.deleteFromRealm()
-//        }
-    }
+    suspend fun deleteMealFromMeals(mealId: Int) = mealRepository.deleteMealById(mealId)
 }

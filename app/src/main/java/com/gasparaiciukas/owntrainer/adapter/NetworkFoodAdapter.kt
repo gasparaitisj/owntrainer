@@ -10,7 +10,7 @@ import com.gasparaiciukas.owntrainer.databinding.FoodRowBinding
 import com.gasparaiciukas.owntrainer.network.Food
 
 class NetworkFoodAdapter(
-    private var foods: List<Food>,
+    val foods: MutableList<Food>,
     private val listener: (food: Food, position: Int) -> Unit
 ) : RecyclerView.Adapter<NetworkFoodViewHolder>() {
 
@@ -54,5 +54,9 @@ class NetworkFoodAdapter(
 
     override fun getItemCount(): Int {
         return foods.size
+    }
+
+    override fun getItemId(position: Int): Long {
+        return foods[position].fdcId.hashCode().toLong()
     }
 }
