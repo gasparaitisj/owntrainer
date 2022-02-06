@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/drawable/baseline_search_24.xml" value="0.26875" />
         <entry key="app/src/main/res/drawable/outline_arrow_back_ios_24.xml" value="0.2635416666666667" />
         <entry key="app/src/main/res/drawable/outline_arrow_forward_ios_24.xml" value="0.26875" />
+        <entry key="app/src/main/res/drawable/outline_fitness_center_24.xml" value="0.213" />
         <entry key="app/src/main/res/drawable/outline_menu_24.xml" value="0.2911458333333333" />
         <entry key="app/src/main/res/font/nunito.xml" value="0.2828125" />
         <entry key="app/src/main/res/layout/activity_intro.xml" value="0.21145833333333333" />
@@ -44,6 +45,7 @@
         <entry key="app/src/main/res/menu/profile_top_app_bar.xml" value="0.3765625" />
         <entry key="app/src/main/res/menu/settings_top_app_bar.xml" value="0.21145833333333333" />
         <entry key="app/src/main/res/menu/top_app_bar.xml" value="0.1" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.213" />
       </map>
     </option>
   </component>

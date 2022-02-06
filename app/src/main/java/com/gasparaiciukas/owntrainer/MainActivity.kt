@@ -2,6 +2,7 @@ package com.gasparaiciukas.owntrainer
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -15,16 +16,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initNavigation()
     }
 
     private fun initNavigation() {
-//        // Check if first start
-//        val sharedPref = getSharedPreferences("diary", Context.MODE_PRIVATE)
-//        val isFirstStart = sharedPref.getBoolean("firstStart", true)
-
         // Get NavController
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment

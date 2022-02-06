@@ -38,9 +38,9 @@
         <item name="android:fontFamily">@font/nunito</item>
 
         <!-- Navigation Drawer -->
-<!--        <item name="android:windowTranslucentStatus">true</item>-->
-
         <item name="android:actionMenuTextColor">@color/md_theme_light_onPrimary</item>
+
+
 
     </style>
 
