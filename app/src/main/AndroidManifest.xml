@@ -9,11 +9,10 @@
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
-        android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.OwnTrainer">
+        android:theme="@style/Theme.OwnTrainer.Starting">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -23,7 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".IntroActivity" />
 
         <service android:name=".service.StepCounterService" />
     </application>

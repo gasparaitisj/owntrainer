@@ -24,7 +24,8 @@ buildscript {
         pieChartVersion = 'v3.1.0'
         recyclerViewVersion = '1.2.1'
         retrofitVersion = '2.9.0'
-        roomVersion = "2.4.1"
+        roomVersion = '2.4.1'
+        splashScreenVersion = '1.0.0-beta01'
         timberVersion = '5.0.1'
         transitionVersion = '1.4.1'
     }

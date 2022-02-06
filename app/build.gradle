@@ -106,6 +106,9 @@ dependencies {
     kapt "androidx.room:room-compiler:$rootProject.roomVersion"
     implementation "androidx.room:room-ktx:$rootProject.roomVersion"
 
+    // Splash Screen
+    implementation "androidx.core:core-splashscreen:$rootProject.splashScreenVersion"
+
     // Testing
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test.ext:junit:1.1.3"
