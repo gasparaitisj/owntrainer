@@ -2,8 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
-apply plugin: "androidx.navigation.safeargs.kotlin"
-apply plugin: 'realm-android'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
+apply plugin: 'dagger.hilt.android.plugin'
+
 
 def apikeyPropertiesFile = rootProject.file("apikey.properties")
 def apikeyProperties = new Properties()
@@ -95,6 +96,15 @@ dependencies {
 
     // Timber for Logging
     implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"
+    kapt "com.google.dagger:hilt-compiler:$rootProject.hiltVersion"
+
+    // Room
+    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
+    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+    implementation "androidx.room:room-ktx:$rootProject.roomVersion"
 
     // Testing
     testImplementation "junit:junit:4.13.2"

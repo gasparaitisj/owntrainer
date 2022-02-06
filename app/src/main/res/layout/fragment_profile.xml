@@ -17,7 +17,6 @@
                 android:id="@+id/scroll_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="true"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -146,7 +145,7 @@
                     style="@style/Widget.OwnTrainer.Toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:menu="@menu/top_app_bar"
+                    app:menu="@menu/create_meal_top_app_bar"
                     app:navigationIcon="@drawable/outline_menu_24"
                     app:navigationIconTint="@color/md_theme_light_onPrimary"
                     app:title="@string/profile"

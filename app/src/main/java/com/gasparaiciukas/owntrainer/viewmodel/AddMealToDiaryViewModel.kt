@@ -1,30 +1,35 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
-import android.os.Bundle
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.gasparaiciukas.owntrainer.database.DiaryEntry
-import com.gasparaiciukas.owntrainer.database.Meal
-import io.realm.Realm
+import androidx.lifecycle.asLiveData
+import com.gasparaiciukas.owntrainer.database.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
+import javax.inject.Inject
 
-class AddMealToDiaryViewModel constructor(private val bundle: Bundle) : ViewModel() {
-    private val realm: Realm = Realm.getDefaultInstance()
-    private val primaryKey: String = bundle.getString("primaryKey").toString()
+@HiltViewModel
+class AddMealToDiaryViewModel @Inject internal constructor(
+    private val mealRepository: MealRepository,
+    private val diaryEntryRepository: DiaryEntryRepository,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
-    val meals: List<Meal> = realm.where(Meal::class.java).findAll()
+    private val diaryEntryId: Int? = savedStateHandle["primaryKey"]
 
-    fun addMealToDiary(meal: Meal) {
-        realm.executeTransaction {
-            it.where(DiaryEntry::class.java)
-                .equalTo("yearAndDayOfYear", primaryKey)
-                .findFirst()
-                ?.meals
-                ?.add(meal)
+    val ldMeals = mealRepository.getMealsWithFoodEntries().asLiveData()
+    lateinit var meals: List<MealWithFoodEntries>
+
+    suspend fun addMealToDiary(mealWithFoodEntries: MealWithFoodEntries) {
+        if (diaryEntryId != null) {
+            diaryEntryRepository.insertDiaryEntryMealCrossRef(
+                DiaryEntryMealCrossRef(
+                    diaryEntryId,
+                    mealWithFoodEntries.meal.mealId
+                )
+            )
+        } else {
+            Timber.e("Adding meal to diary failed! diaryEntryId is null.")
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        realm.close()
     }
 }

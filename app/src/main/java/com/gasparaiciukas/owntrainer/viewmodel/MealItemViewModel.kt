@@ -1,88 +1,50 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
-import android.os.Bundle
-import androidx.lifecycle.ViewModel
-import com.gasparaiciukas.owntrainer.database.DiaryEntry
-import com.gasparaiciukas.owntrainer.database.FoodEntry
-import com.gasparaiciukas.owntrainer.database.Meal
-import com.gasparaiciukas.owntrainer.database.User
-import io.realm.Realm
+import androidx.lifecycle.*
+import com.gasparaiciukas.owntrainer.database.*
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class MealItemViewModel constructor(private val bundle: Bundle) : ViewModel() {
-    private var realm: Realm = Realm.getDefaultInstance()
+@HiltViewModel
+class MealItemViewModel @Inject internal constructor(
+    private val userRepository: UserRepository,
+    private val mealRepository: MealRepository,
+    private val foodRepository: FoodRepository,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+    private val mealId: Int? = savedStateHandle["mealId"]
 
-    var carbs = 0f
     var carbsPercentage = 0f
-    var carbsDailyIntake = 0f
-    var calories = 0f
-    var calorieDailyIntake = 0f
-    var fat = 0f
     var fatPercentage = 0f
-    var fatDailyIntake = 0f
-    var protein = 0f
     var proteinPercentage = 0f
-    var proteinDailyIntake = 0f
     val quantity = 0
-    lateinit var meals: MutableList<Meal>
-    lateinit var foodList: List<FoodEntry>
-    private val position = bundle.getInt("position")
-    private val primaryKey = bundle.getString("primaryKey")
 
-    init {
-        fetchData()
-    }
+    val ldUser: LiveData<User> = userRepository.user.asLiveData()
+    lateinit var user: User
 
-    private fun fetchData() {
-        meals = if (primaryKey == "") {
-            realm.where(Meal::class.java).findAll()
-        } else {
-            realm.where(DiaryEntry::class.java)
-                .equalTo("yearAndDayOfYear", primaryKey)
-                .findFirst()
-                ?.meals
-                ?: mutableListOf()
-        }
-        foodList = meals[position].foodList
+    lateinit var mealWithFoodEntries: MealWithFoodEntries
 
-        // Get nutrients from food item
-        carbs = meals[position].calculateCarbs().toFloat()
-        calories = meals[position].calculateCalories().toFloat()
-        fat = meals[position].calculateFat().toFloat()
-        protein = meals[position].calculateProtein().toFloat()
+    suspend fun loadData() {
+        if (mealId != null) {
+            mealWithFoodEntries = mealRepository.getMealWithFoodEntriesById(mealId)
+            for (food in mealWithFoodEntries.foodEntries) {
+                Timber.d("Title: ${food.title}, Size: ${mealWithFoodEntries.foodEntries.size}")
+            }
+            mealWithFoodEntries.meal.calories = mealWithFoodEntries.calculateCalories()
+            mealWithFoodEntries.meal.protein = mealWithFoodEntries.calculateProtein()
+            mealWithFoodEntries.meal.carbs = mealWithFoodEntries.calculateCarbs()
+            mealWithFoodEntries.meal.fat = mealWithFoodEntries.calculateFat()
 
-        // Calculate percentage of each item
-        val sum = carbs + fat + protein
-        carbsPercentage = carbs / sum * 100
-        fatPercentage = fat / sum * 100
-        proteinPercentage = protein / sum * 100
-
-        // Get daily intake percentages
-        val u = realm.where(User::class.java)
-            .equalTo("userId", "user")
-            .findFirst()
-
-        if (u != null) {
-            calorieDailyIntake = u.dailyKcalIntake.toFloat()
-            carbsDailyIntake = u.dailyCarbsIntakeInG.toFloat()
-            fatDailyIntake = u.dailyFatIntakeInG.toFloat()
-            proteinDailyIntake = u.dailyProteinIntakeInG.toFloat()
+            val sum = mealWithFoodEntries.meal.carbs + mealWithFoodEntries.meal.fat + mealWithFoodEntries.meal.protein
+            carbsPercentage = (mealWithFoodEntries.meal.carbs / sum * 100).toFloat()
+            fatPercentage = (mealWithFoodEntries.meal.fat / sum * 100).toFloat()
+            proteinPercentage = (mealWithFoodEntries.meal.protein / sum * 100).toFloat()
         }
     }
 
-    fun deleteFoodFromMeal(food: FoodEntry, mealPosition: Int) {
-        realm.executeTransaction {
-            it.where(Meal::class.java)
-                .equalTo("title", meals[mealPosition].title)
-                .findFirst()
-                ?.foodList
-                ?.remove(food)
-        }
-        fetchData()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        realm.close()
+    suspend fun deleteFoodFromMeal(foodEntryId: Int) {
+        foodRepository.deleteFoodById(foodEntryId)
     }
 }

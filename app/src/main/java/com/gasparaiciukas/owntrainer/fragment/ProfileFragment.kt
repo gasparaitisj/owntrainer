@@ -12,19 +12,23 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentProfileBinding
 import com.gasparaiciukas.owntrainer.viewmodel.ProfileViewModel
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.*
 
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: ProfileViewModel by viewModels()
+    private val viewModel by viewModels<ProfileViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,13 +36,19 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        initUi()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.ldUser.observe(viewLifecycleOwner) {
+            viewModel.user = it
+            initUi()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.writeUserToDatabase()
         _binding = null
     }
 
@@ -88,11 +98,11 @@ class ProfileFragment : Fragment() {
 
     private fun setTextFields() {
         // Insert current data into fields
-        binding.etSex.setText(viewModel.sex)
-        binding.etAge.setText(viewModel.age.toString())
-        binding.etHeight.setText(viewModel.height.toString())
-        binding.etWeight.setText(viewModel.weight.toString())
-        binding.etLifestyle.setText(viewModel.lifestyle)
+        binding.etSex.setText(viewModel.user.sex)
+        binding.etAge.setText(viewModel.user.ageInYears.toString())
+        binding.etHeight.setText(viewModel.user.heightInCm.toString())
+        binding.etWeight.setText(viewModel.user.weightInKg.toString())
+        binding.etLifestyle.setText(viewModel.user.lifestyle)
 
         // Set up listeners
         val sexList: List<String?> = ArrayList(listOf("Male", "Female"))
@@ -100,7 +110,7 @@ class ProfileFragment : Fragment() {
             ArrayAdapter<Any?>(requireContext(), R.layout.details_list_item, sexList)
         binding.etSex.setAdapter(sexAdapter)
         binding.etSex.onItemClickListener =
-            AdapterView.OnItemClickListener { _, _, _, _ -> viewModel.sex = binding.etSex.text.toString() }
+            AdapterView.OnItemClickListener { _, _, _, _ -> viewModel.user.sex = binding.etSex.text.toString() }
         binding.etAge.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // do nothing
@@ -113,7 +123,7 @@ class ProfileFragment : Fragment() {
             override fun afterTextChanged(s: Editable) {
                 val validation = isAgeCorrect(s.toString())
                 if (validation == "") {
-                    viewModel.age = s.toString().toInt()
+                    viewModel.user.ageInYears = s.toString().toInt()
                     binding.layoutEtAge.error = null
                 } else {
                     binding.layoutEtAge.error = validation
@@ -132,7 +142,7 @@ class ProfileFragment : Fragment() {
             override fun afterTextChanged(s: Editable) {
                 val validation = isHeightCorrect(s.toString())
                 if (validation == "") {
-                    viewModel.height = s.toString().toInt()
+                    viewModel.user.heightInCm = s.toString().toInt()
                     binding.layoutEtHeight.error = null
                 } else {
                     binding.layoutEtHeight.error = validation
@@ -151,7 +161,7 @@ class ProfileFragment : Fragment() {
             override fun afterTextChanged(s: Editable) {
                 val validation = isWeightCorrect(s.toString())
                 if (validation == "") {
-                    viewModel.weight = s.toString().toDouble()
+                    viewModel.user.weightInKg = s.toString().toDouble()
                     binding.layoutEtWeight.error = null
                 } else {
                     binding.layoutEtWeight.error = validation
@@ -160,7 +170,7 @@ class ProfileFragment : Fragment() {
         })
         binding.etLifestyle.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, _, _ ->
-                viewModel.lifestyle = binding.etLifestyle.text.toString()
+                viewModel.user.lifestyle = binding.etLifestyle.text.toString()
             }
         val lifestyleList: List<String?> = ArrayList(
             listOf(
@@ -180,7 +190,15 @@ class ProfileFragment : Fragment() {
         binding.topAppBar.setNavigationOnClickListener {
             binding.drawerLayout.open()
         }
-        binding.navigationView.setCheckedItem(R.id.foods)
+
+        binding.topAppBar.menu.findItem(R.id.btn_save).setOnMenuItemClickListener {
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.writeUserToDatabase()
+            }
+            return@setOnMenuItemClickListener true
+        }
+
+        binding.navigationView.setCheckedItem(R.id.profile)
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
             when (menuItem.itemId) {

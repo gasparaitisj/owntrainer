@@ -17,7 +17,6 @@
                 android:id="@+id/scroll_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="true"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,7 +49,7 @@
                     app:menu="@menu/top_app_bar"
                     app:navigationIcon="@drawable/outline_menu_24"
                     app:navigationIconTint="@color/md_theme_light_onPrimary"
-                    app:title="@string/profile"
+                    app:title="@string/settings"
                     app:titleTextAppearance="@style/TextAppearance.OwnTrainer.ActionBar.Title" />
             </com.google.android.material.appbar.AppBarLayout>
 

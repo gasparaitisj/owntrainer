@@ -13,12 +13,14 @@ import com.gasparaiciukas.owntrainer.databinding.FragmentCreateMealItemBinding
 import com.gasparaiciukas.owntrainer.viewmodel.CreateMealItemViewModel
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CreateMealItemFragment : Fragment() {
     private var _binding: FragmentCreateMealItemBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: CreateMealItemViewModel by viewModels()
+    private val viewModel by viewModels<CreateMealItemViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

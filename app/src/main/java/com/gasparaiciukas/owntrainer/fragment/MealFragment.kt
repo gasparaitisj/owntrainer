@@ -9,38 +9,44 @@ import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
-import com.gasparaiciukas.owntrainer.database.Meal
+import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealBinding
 import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import timber.log.Timber
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MealFragment : Fragment() {
     private var _binding: FragmentMealBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var adapter: MealAdapter
 
-    private val singleClickListener: (meal: Meal, position: Int) -> Unit = { _: Meal, position: Int ->
-        val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(position, "")
+    private val singleClickListener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
+        val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(
+            mealWithFoodEntries.meal.mealId,
+            -1
+        )
         findNavController().navigate(action)
     }
 
-    private val longClickListener: (position: Int) -> Unit = { position: Int ->
-        viewModel.deleteMealFromMeals(position)
-        adapter.notifyItemRemoved(position)
-        adapter.notifyItemRangeChanged(position, (adapter.itemCount - position))
+    private val longClickListener: (mealId: Int, position: Int) -> Unit = { mealId, _ ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.deleteMealFromMeals(mealId)
+            adapter.submitMeals(viewModel.meals)
+        }
     }
 
-    private val viewModel: MealViewModel by viewModels()
+    private val viewModel by viewModels<MealViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -50,7 +56,12 @@ class MealFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initUi()
+        viewModel.ldMeals.observe(viewLifecycleOwner) {
+            if (it != null) {
+                viewModel.meals = it
+                initUi()
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -66,6 +77,7 @@ class MealFragment : Fragment() {
     }
 
     private fun initNavigation() {
+        binding.layoutTab.getTabAt(1)?.select() // select Meals tab
         binding.topAppBar.setNavigationOnClickListener {
             binding.drawerLayout.open()
         }
@@ -146,7 +158,6 @@ class MealFragment : Fragment() {
         }
 
         // Tabs (foods or meals)
-        binding.layoutTab.getTabAt(1)?.select() // select current tab
         binding.layoutTab.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if (tab.position == 0) {
@@ -164,7 +175,7 @@ class MealFragment : Fragment() {
             }
         })
 
-        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
             // Scroll down
             if (scrollY > oldScrollY) {
                 slideBottomNavigationDown()

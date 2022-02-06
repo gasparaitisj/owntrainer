@@ -1,57 +1,24 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.User
-import io.realm.Realm
+import com.gasparaiciukas.owntrainer.database.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
+import javax.inject.Inject
 
-class ProfileViewModel : ViewModel() {
-    var sex: String = "Male"
-    var age = 0
-    var height = 0
-    var weight = 0.0
-    var lifestyle: String = "Lightly active"
-    private val realm: Realm = Realm.getDefaultInstance()
+@HiltViewModel
+class ProfileViewModel @Inject internal constructor(
+    private val userRepository: UserRepository
+) : ViewModel() {
+    val ldUser: LiveData<User> = userRepository.user.asLiveData()
+    lateinit var user: User
 
-    init {
-        loadData()
-    }
-
-    private fun loadData() {
-        val user = realm.where(User::class.java).findFirst()
-        if (user != null) {
-            sex = user.sex
-            age = user.ageInYears
-            height = user.heightInCm
-            weight = user.weightInKg
-            lifestyle = user.lifestyle
-        }
-    }
-
-    fun writeUserToDatabase() {
-        val user = User()
-        user.userId = "user"
-        user.ageInYears = age
-        user.sex = sex
-        user.heightInCm = height
-        user.weightInKg = weight
-        user.lifestyle = lifestyle
-        user.stepLengthInCm = user.calculateStepLengthInCm(height.toDouble(), sex)
-        user.bmr = user.calculateBmr(weight, height.toDouble(), age, sex)
-        user.kcalBurnedPerStep =
-            user.calculateKcalBurnedPerStep(weight, height.toDouble(), user.avgWalkingSpeedInKmH)
-        user.dailyKcalIntake = user.calculateDailyKcalIntake(user.bmr, lifestyle)
-        user.dailyCarbsIntakeInG = user.calculateDailyCarbsIntake(user.dailyKcalIntake)
-        user.dailyFatIntakeInG = user.calculateDailyFatIntake(user.dailyKcalIntake)
-        user.dailyProteinIntakeInG = user.calculateDailyProteinIntakeInG(weight)
-        realm.executeTransaction {
-            it.insertOrUpdate(user)
-            Timber.d("Transaction ended!")
-        }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        realm.close()
+    suspend fun writeUserToDatabase() {
+        user.recalculateUserMetrics()
+        userRepository.updateUser(user)
     }
 }

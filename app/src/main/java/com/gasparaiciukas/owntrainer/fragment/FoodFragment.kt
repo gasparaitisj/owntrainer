@@ -1,8 +1,6 @@
 package com.gasparaiciukas.owntrainer.fragment
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +11,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
@@ -25,37 +23,40 @@ import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class FoodFragment : Fragment() {
     private var _binding: FragmentFoodBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var adapter: NetworkFoodAdapter
 
-    private var foods: MutableList<Food> = mutableListOf()
-
     private val listener: (food: Food, position: Int) -> Unit = { _: Food, position: Int ->
         val action =
-            FoodFragmentDirections.actionFoodFragmentToFoodItemFragment(
+            FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment(
                 position = position,
-                foodItem = foods[position]
+                foodItem = viewModel.foods[position]
             )
         findNavController().navigate(action)
     }
 
-    private val viewModel: FoodViewModel by viewModels()
+    private val viewModel by viewModels<FoodViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         _binding = FragmentFoodBinding.inflate(inflater, container, false)
-        viewModel.foods.observe(viewLifecycleOwner, Observer { foods ->
-            reloadRecyclerView(foods)
-        })
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.ldFoods.observe(viewLifecycleOwner) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                reloadRecyclerView(it)
+            }
+        }
         initUi()
     }
 
@@ -88,11 +89,8 @@ class FoodFragment : Fragment() {
     }
 
     private fun reloadRecyclerView(foods: List<Food>) {
-        val itemCount = adapter.itemCount
-        this.foods.clear()
-        adapter.notifyItemRangeRemoved(0, itemCount)
-        this.foods.addAll(foods)
-        adapter.notifyItemRangeInserted(0, this.foods.size)
+        adapter.submitFoods(foods)
+        viewModel.foods = foods
         if (adapter.itemCount == 0) {
             binding.cardRecyclerView.visibility = View.INVISIBLE
         } else {
@@ -110,7 +108,7 @@ class FoodFragment : Fragment() {
         // Send get request on end icon clicked
         binding.layoutEtSearch.setEndIconOnClickListener {
             if (!TextUtils.isEmpty(binding.etSearch.text)) {
-                viewModel.sendGet(binding.etSearch.text.toString())
+                viewModel.getFoods(binding.etSearch.text.toString())
             }
         }
 
@@ -119,7 +117,7 @@ class FoodFragment : Fragment() {
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 if (!TextUtils.isEmpty(binding.etSearch.text)) {
-                    viewModel.sendGet(binding.etSearch.text.toString())
+                    viewModel.getFoods(binding.etSearch.text.toString())
                 }
                 handled = true
             }
@@ -138,7 +136,7 @@ class FoodFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
             // Scroll down
             if (scrollY > oldScrollY) {
                 slideBottomNavigationDown()
@@ -225,7 +223,7 @@ class FoodFragment : Fragment() {
 
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
-        adapter = NetworkFoodAdapter(foods, listener)
+        adapter = NetworkFoodAdapter(viewModel.foods, listener)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
         if (adapter.itemCount == 0) {
