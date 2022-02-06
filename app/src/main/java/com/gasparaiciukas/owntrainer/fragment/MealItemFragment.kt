@@ -46,9 +46,7 @@ class MealItemFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.deleteFoodFromMeal(viewModel.mealWithFoodEntries.foodEntries[position].foodEntryId)
             viewModel.loadData()
-            adapter.foods.removeAt(position)
-            adapter.notifyItemRemoved(position)
-            adapter.notifyItemRangeChanged(position, adapter.itemCount)
+            adapter.submitFoodEntries(viewModel.mealWithFoodEntries.foodEntries)
         }
     }
 

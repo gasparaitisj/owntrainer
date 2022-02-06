@@ -9,7 +9,7 @@ data class MealWithFoodEntries(
         parentColumn = "mealId",
         entityColumn = "mealId",
     )
-    val foodEntries: MutableList<FoodEntry>
+    var foodEntries: List<FoodEntry>
 ) {
     fun calculateCalories(): Double {
         var mCalories = 0.0

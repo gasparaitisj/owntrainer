@@ -89,12 +89,8 @@ class FoodFragment : Fragment() {
     }
 
     private fun reloadRecyclerView(foods: List<Food>) {
-        val itemCount = adapter.itemCount
-        adapter.foods.clear()
-        adapter.notifyItemRangeRemoved(0, itemCount)
-        adapter.foods.addAll(foods)
-        adapter.notifyItemRangeInserted(0, adapter.itemCount)
-        viewModel.foods = adapter.foods
+        adapter.submitFoods(foods)
+        viewModel.foods = foods
         if (adapter.itemCount == 0) {
             binding.cardRecyclerView.visibility = View.INVISIBLE
         } else {
@@ -228,7 +224,6 @@ class FoodFragment : Fragment() {
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
         adapter = NetworkFoodAdapter(viewModel.foods, listener)
-        adapter.setHasStableIds(true)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
         if (adapter.itemCount == 0) {

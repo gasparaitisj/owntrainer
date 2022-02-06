@@ -14,7 +14,7 @@ class FoodViewModel @Inject internal constructor(
     private val foodRepository: FoodRepository
 ) : ViewModel() {
     val ldFoods: MutableLiveData<List<Food>> = MutableLiveData(mutableListOf())
-    var foods = mutableListOf<Food>()
+    var foods = listOf<Food>()
 
     fun getFoods(query: String) {
         viewModelScope.launch {

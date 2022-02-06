@@ -39,12 +39,10 @@ class MealFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private val longClickListener: (mealId: Int, position: Int) -> Unit = { mealId, position ->
+    private val longClickListener: (mealId: Int, position: Int) -> Unit = { mealId, _ ->
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.deleteMealFromMeals(mealId)
-            adapter.mealsWithFoodEntries.removeAt(position)
-            adapter.notifyItemRemoved(position)
-            adapter.notifyItemRangeChanged(position, adapter.itemCount)
+            adapter.submitMeals(viewModel.meals)
         }
     }
 
@@ -193,7 +191,7 @@ class MealFragment : Fragment() {
 
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
-        adapter = MealAdapter(viewModel.meals.toMutableList(), singleClickListener, longClickListener)
+        adapter = MealAdapter(viewModel.meals, singleClickListener, longClickListener)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
     }

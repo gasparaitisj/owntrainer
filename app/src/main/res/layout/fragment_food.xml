@@ -17,7 +17,6 @@
                 android:id="@+id/scroll_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="true"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,8 +58,7 @@
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recycler_view"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:nestedScrollingEnabled="false"
+                            android:layout_height="500dp"
                             android:layout_margin="8dp" />
 
                     </com.google.android.material.card.MaterialCardView>
