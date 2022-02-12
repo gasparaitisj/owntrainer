@@ -67,7 +67,7 @@ class SettingsFragment : Fragment() {
             ?.apply()
     }
 
-    private fun isDarkMode() : Boolean {
+    private fun isDarkMode(): Boolean {
         return activity?.getSharedPreferences("settings", Context.MODE_PRIVATE)
             ?.getBoolean("darkMode", false)
             ?: false
@@ -82,57 +82,68 @@ class SettingsFragment : Fragment() {
             menuItem.isChecked = true
             when (menuItem.itemId) {
                 R.id.home -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = SettingsFragmentDirections.actionSettingsFragmentToDiaryFragment()
+                            val action =
+                                SettingsFragmentDirections.actionSettingsFragmentToDiaryFragment()
                             findNavController().navigate(action)
                         }
                     })
                     binding.drawerLayout.close()
                 }
                 R.id.foods -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = SettingsFragmentDirections.actionSettingsFragmentToFoodFragment()
+                            val action =
+                                SettingsFragmentDirections.actionSettingsFragmentToFoodFragment()
                             findNavController().navigate(action)
                         }
                     })
                     binding.drawerLayout.close()
                 }
                 R.id.meals -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = SettingsFragmentDirections.actionSettingsFragmentToMealFragment()
+                            val action =
+                                SettingsFragmentDirections.actionSettingsFragmentToMealFragment()
                             findNavController().navigate(action)
                         }
                     })
                     binding.drawerLayout.close()
                 }
                 R.id.progress -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = SettingsFragmentDirections.actionSettingsFragmentToProgressFragment()
+                            val action =
+                                SettingsFragmentDirections.actionSettingsFragmentToProgressFragment()
                             findNavController().navigate(action)
                         }
                     })
                     binding.drawerLayout.close()
                 }
                 R.id.profile -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = SettingsFragmentDirections.actionSettingsFragmentToProfileFragment()
+                            val action =
+                                SettingsFragmentDirections.actionSettingsFragmentToProfileFragment()
                             findNavController().navigate(action)
                         }
                     })
                     binding.drawerLayout.close()
                 }
                 R.id.settings -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
                             val action = SettingsFragmentDirections.actionSettingsFragmentSelf()

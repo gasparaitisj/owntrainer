@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class FoodNutrient
-(
+    (
     @SerializedName("nutrientId") @Expose var nutrientId: Int? = null,
     @SerializedName("nutrientName") @Expose var nutrientName: String? = null,
     @SerializedName("nutrientNumber") @Expose var nutrientNumber: String? = null,

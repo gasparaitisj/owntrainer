@@ -18,6 +18,7 @@ class MealAdapter(
 
     class MealViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         val binding = MealRowBinding.bind(view)
+
         init {
             this.itemView.isLongClickable = true
         }
@@ -26,7 +27,7 @@ class MealAdapter(
     class MealItemDiffCallback(
         var oldMeals: List<MealWithFoodEntries>,
         var newMeals: List<MealWithFoodEntries>
-    ): DiffUtil.Callback() {
+    ) : DiffUtil.Callback() {
         override fun getOldListSize() = oldMeals.size
 
         override fun getNewListSize() = newMeals.size
@@ -66,13 +67,23 @@ class MealAdapter(
         // Display information of each row
         holder.binding.tvTitle.text = title
         holder.binding.tvCalories.text = calories.toString()
-        holder.binding.layoutItem.setOnClickListener { singleClickListener(items[position], position) }
+        holder.binding.layoutItem.setOnClickListener {
+            singleClickListener(
+                items[position],
+                position
+            )
+        }
         holder.binding.layoutItem.setOnLongClickListener {
             val popup = PopupMenu(holder.binding.layoutItem.context, holder.binding.layoutItem)
             val inflater = popup.menuInflater
             inflater.inflate(R.menu.meal_menu, popup.menu)
             popup.show()
-            popup.setOnMenuItemClickListener { longClickListener(items[position].meal.mealId, position); true }
+            popup.setOnMenuItemClickListener {
+                longClickListener(
+                    items[position].meal.mealId,
+                    position
+                ); true
+            }
             true
         }
     }

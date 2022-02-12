@@ -36,11 +36,12 @@ class MealItemFragment : Fragment() {
 
     private val viewModel by viewModels<MealItemViewModel>()
 
-    private val singleClickListener: (food: FoodEntryParcelable) -> Unit = { food: FoodEntryParcelable ->
-        val action =
-            MealItemFragmentDirections.actionMealItemFragmentToDatabaseFoodItemFragment(food)
-        findNavController().navigate(action)
-    }
+    private val singleClickListener: (food: FoodEntryParcelable) -> Unit =
+        { food: FoodEntryParcelable ->
+            val action =
+                MealItemFragmentDirections.actionMealItemFragmentToDatabaseFoodItemFragment(food)
+            findNavController().navigate(action)
+        }
 
     private val longClickListener: (position: Int) -> Unit = { position: Int ->
         viewLifecycleOwner.lifecycleScope.launch {

@@ -28,12 +28,13 @@ class AddMealToDiaryFragment : Fragment() {
     private val viewModel by viewModels<AddMealToDiaryViewModel>()
 
     private lateinit var adapter: MealAdapter
-    private val listener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.addMealToDiary(mealWithFoodEntries)
-            findNavController().popBackStack()
+    private val listener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit =
+        { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.addMealToDiary(mealWithFoodEntries)
+                findNavController().popBackStack()
+            }
         }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

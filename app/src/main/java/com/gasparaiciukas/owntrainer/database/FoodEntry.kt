@@ -2,7 +2,6 @@ package com.gasparaiciukas.owntrainer.database
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "foodEntry")
@@ -15,11 +14,16 @@ data class FoodEntry(
     @ColumnInfo(name = "proteinPer100G") var proteinPer100G: Double,
     @ColumnInfo(name = "quantityInG") var quantityInG: Double
 ) {
-    @PrimaryKey(autoGenerate = true) var foodEntryId: Int = 0
-    @ColumnInfo(name = "calories") var calories: Double = 0.0
-    @ColumnInfo(name = "carbs") var carbs: Double = 0.0
-    @ColumnInfo(name = "fat") var fat: Double = 0.0
-    @ColumnInfo(name = "protein") var protein: Double = 0.0
+    @PrimaryKey(autoGenerate = true)
+    var foodEntryId: Int = 0
+    @ColumnInfo(name = "calories")
+    var calories: Double = 0.0
+    @ColumnInfo(name = "carbs")
+    var carbs: Double = 0.0
+    @ColumnInfo(name = "fat")
+    var fat: Double = 0.0
+    @ColumnInfo(name = "protein")
+    var protein: Double = 0.0
 
     fun calculateCarbs(carbsPer100G: Double, quantity: Double): Double {
         return carbsPer100G / 100 * quantity

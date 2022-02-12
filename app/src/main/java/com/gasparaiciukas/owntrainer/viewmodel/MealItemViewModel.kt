@@ -1,9 +1,11 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -37,7 +39,8 @@ class MealItemViewModel @Inject internal constructor(
             mealWithFoodEntries.meal.carbs = mealWithFoodEntries.calculateCarbs()
             mealWithFoodEntries.meal.fat = mealWithFoodEntries.calculateFat()
 
-            val sum = mealWithFoodEntries.meal.carbs + mealWithFoodEntries.meal.fat + mealWithFoodEntries.meal.protein
+            val sum =
+                mealWithFoodEntries.meal.carbs + mealWithFoodEntries.meal.fat + mealWithFoodEntries.meal.protein
             carbsPercentage = (mealWithFoodEntries.meal.carbs / sum * 100).toFloat()
             fatPercentage = (mealWithFoodEntries.meal.fat / sum * 100).toFloat()
             proteinPercentage = (mealWithFoodEntries.meal.protein / sum * 100).toFloat()

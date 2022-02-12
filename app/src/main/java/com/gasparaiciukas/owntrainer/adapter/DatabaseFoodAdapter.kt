@@ -24,7 +24,7 @@ class DatabaseFoodAdapter(
     class DatabaseFoodItemDiffCallback(
         var oldFoodEntries: List<FoodEntry>,
         var newFoodEntries: List<FoodEntry>
-    ): DiffUtil.Callback() {
+    ) : DiffUtil.Callback() {
         override fun getOldListSize() = oldFoodEntries.size
 
         override fun getNewListSize() = newFoodEntries.size

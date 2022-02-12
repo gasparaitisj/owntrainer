@@ -1,6 +1,5 @@
 package com.gasparaiciukas.owntrainer.database
 
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 

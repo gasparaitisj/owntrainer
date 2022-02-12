@@ -21,7 +21,6 @@ import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.*
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -57,11 +56,11 @@ class ProfileFragment : Fragment() {
         setTextFields()
     }
 
-    private fun isAgeCorrect(s : String) : String {
-        val age : Int
+    private fun isAgeCorrect(s: String): String {
+        val age: Int
         try {
             age = s.toInt()
-        } catch (e : NumberFormatException) {
+        } catch (e: NumberFormatException) {
             return "Number must be valid"
         }
         if (age <= 0) {
@@ -70,11 +69,11 @@ class ProfileFragment : Fragment() {
         return ""
     }
 
-    private fun isHeightCorrect(s : String) : String {
-        val height : Int
+    private fun isHeightCorrect(s: String): String {
+        val height: Int
         try {
             height = s.toInt()
-        } catch (e : NumberFormatException) {
+        } catch (e: NumberFormatException) {
             return "Number must be valid"
         }
         if (height <= 0) {
@@ -83,11 +82,11 @@ class ProfileFragment : Fragment() {
         return ""
     }
 
-    private fun isWeightCorrect(s : String) : String {
-        val weight : Double
+    private fun isWeightCorrect(s: String): String {
+        val weight: Double
         try {
             weight = s.toDouble()
-        } catch (e : NumberFormatException) {
+        } catch (e: NumberFormatException) {
             return "Number must be valid"
         }
         if (weight <= 0) {
@@ -110,7 +109,9 @@ class ProfileFragment : Fragment() {
             ArrayAdapter<Any?>(requireContext(), R.layout.details_list_item, sexList)
         binding.etSex.setAdapter(sexAdapter)
         binding.etSex.onItemClickListener =
-            AdapterView.OnItemClickListener { _, _, _, _ -> viewModel.user.sex = binding.etSex.text.toString() }
+            AdapterView.OnItemClickListener { _, _, _, _ ->
+                viewModel.user.sex = binding.etSex.text.toString()
+            }
         binding.etAge.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // do nothing
@@ -203,47 +204,56 @@ class ProfileFragment : Fragment() {
             menuItem.isChecked = true
             when (menuItem.itemId) {
                 R.id.home -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = ProfileFragmentDirections.actionProfileFragmentToDiaryFragment()
+                            val action =
+                                ProfileFragmentDirections.actionProfileFragmentToDiaryFragment()
                             findNavController().navigate(action)
                         }
                     })
                     binding.drawerLayout.close()
                 }
                 R.id.foods -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = ProfileFragmentDirections.actionProfileFragmentToFoodFragment()
+                            val action =
+                                ProfileFragmentDirections.actionProfileFragmentToFoodFragment()
                             findNavController().navigate(action)
                         }
                     })
                     binding.drawerLayout.close()
                 }
                 R.id.meals -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = ProfileFragmentDirections.actionProfileFragmentToMealFragment()
+                            val action =
+                                ProfileFragmentDirections.actionProfileFragmentToMealFragment()
                             findNavController().navigate(action)
                         }
                     })
                     binding.drawerLayout.close()
                 }
                 R.id.progress -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = ProfileFragmentDirections.actionProfileFragmentToProgressFragment()
+                            val action =
+                                ProfileFragmentDirections.actionProfileFragmentToProgressFragment()
                             findNavController().navigate(action)
                         }
                     })
                     binding.drawerLayout.close()
                 }
                 R.id.profile -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
                             val action = ProfileFragmentDirections.actionProfileFragmentSelf()
@@ -253,10 +263,12 @@ class ProfileFragment : Fragment() {
                     binding.drawerLayout.close()
                 }
                 R.id.settings -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
+                            val action =
+                                ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
                             findNavController().navigate(action)
                         }
                     })

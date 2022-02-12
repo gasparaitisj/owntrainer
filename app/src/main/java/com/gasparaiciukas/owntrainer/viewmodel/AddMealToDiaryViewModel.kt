@@ -3,7 +3,10 @@ package com.gasparaiciukas.owntrainer.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.gasparaiciukas.owntrainer.database.*
+import com.gasparaiciukas.owntrainer.database.DiaryEntryMealCrossRef
+import com.gasparaiciukas.owntrainer.database.DiaryEntryRepository
+import com.gasparaiciukas.owntrainer.database.MealRepository
+import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
 import javax.inject.Inject

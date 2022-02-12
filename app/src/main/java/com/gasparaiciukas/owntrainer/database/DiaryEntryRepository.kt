@@ -12,11 +12,15 @@ class DiaryEntryRepository @Inject constructor(
 
     suspend fun removeDiaryEntry(diaryEntry: DiaryEntry) = diaryEntryDao.delete(diaryEntry)
 
-    fun getDiaryEntry(year: Int, dayOfYear: Int) = diaryEntryDao.getDiaryEntryByYearAndDayOfYear(year, dayOfYear)
+    fun getDiaryEntry(year: Int, dayOfYear: Int) =
+        diaryEntryDao.getDiaryEntryByYearAndDayOfYear(year, dayOfYear)
 
-    fun getDiaryEntryWithMeals(year: Int, dayOfYear: Int) = diaryEntryWithMealsDao.getDiaryEntryWithMeals(year, dayOfYear)
+    fun getDiaryEntryWithMeals(year: Int, dayOfYear: Int) =
+        diaryEntryWithMealsDao.getDiaryEntryWithMeals(year, dayOfYear)
 
-    suspend fun insertDiaryEntryMealCrossRef(crossRef: DiaryEntryMealCrossRef) = diaryEntryWithMealsDao.insertDiaryEntryMealCrossRef(crossRef)
+    suspend fun insertDiaryEntryMealCrossRef(crossRef: DiaryEntryMealCrossRef) =
+        diaryEntryWithMealsDao.insertDiaryEntryMealCrossRef(crossRef)
 
-    suspend fun deleteDiaryEntryMealCrossRef(diaryEntryId: Int, mealId: Int) = diaryEntryWithMealsDao.deleteDiaryEntryMealCrossRef(diaryEntryId, mealId)
+    suspend fun deleteDiaryEntryMealCrossRef(diaryEntryId: Int, mealId: Int) =
+        diaryEntryWithMealsDao.deleteDiaryEntryMealCrossRef(diaryEntryId, mealId)
 }

@@ -21,7 +21,6 @@ import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import java.util.*
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -91,7 +90,12 @@ class NetworkFoodItemFragment : Fragment() {
         binding.pieChart.centerText =
             "${viewModel.calories.roundToInt()}\nkCal" // calorie text inside inner circle
         binding.pieChart.setCenterTextSize(14f)
-        binding.pieChart.setCenterTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
+        binding.pieChart.setCenterTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.colorWhite
+            )
+        )
         binding.pieChart.centerTextRadiusPercent = 100f
         binding.pieChart.setHoleColor(ContextCompat.getColor(requireContext(), R.color.colorRed))
         binding.pieChart.holeRadius = 30f
@@ -105,16 +109,28 @@ class NetworkFoodItemFragment : Fragment() {
     private fun initTextViews() {
         binding.tvCarbsWeight.text = viewModel.carbs.roundToInt().toString()
         binding.tvCarbsPercentage.text =
-            String.format("%s %%", (viewModel.carbs / viewModel.user.dailyCarbsIntakeInG * 100).roundToInt())
+            String.format(
+                "%s %%",
+                (viewModel.carbs / viewModel.user.dailyCarbsIntakeInG * 100).roundToInt()
+            )
         binding.tvFatWeight.text = viewModel.fat.roundToInt().toString()
         binding.tvFatPercentage.text =
-            String.format("%s %%", (viewModel.fat / viewModel.user.dailyFatIntakeInG * 100).roundToInt())
+            String.format(
+                "%s %%",
+                (viewModel.fat / viewModel.user.dailyFatIntakeInG * 100).roundToInt()
+            )
         binding.tvProteinWeight.text = viewModel.protein.roundToInt().toString()
         binding.tvProteinPercentage.text =
-            String.format("%s %%", (viewModel.protein / viewModel.user.dailyProteinIntakeInG * 100).roundToInt())
+            String.format(
+                "%s %%",
+                (viewModel.protein / viewModel.user.dailyProteinIntakeInG * 100).roundToInt()
+            )
         binding.tvCaloriesCount.text = viewModel.calories.roundToInt().toString()
         binding.tvCaloriesPercentage.text =
-            String.format("%s %%", (viewModel.calories / viewModel.user.dailyKcalIntake * 100).roundToInt())
+            String.format(
+                "%s %%",
+                (viewModel.calories / viewModel.user.dailyKcalIntake * 100).roundToInt()
+            )
     }
 
     private fun initNavigation() {

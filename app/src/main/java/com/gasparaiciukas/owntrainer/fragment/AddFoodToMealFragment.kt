@@ -27,12 +27,13 @@ class AddFoodToMealFragment : Fragment() {
 
     private val viewModel by viewModels<AddFoodToMealViewModel>()
 
-    private val listener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.addFoodToMeal(mealWithFoodEntries)
-            findNavController().popBackStack()
+    private val listener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit =
+        { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.addFoodToMeal(mealWithFoodEntries)
+                findNavController().popBackStack()
+            }
         }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -1,13 +1,12 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.database.UserRepository
 import com.gasparaiciukas.owntrainer.network.Food
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel

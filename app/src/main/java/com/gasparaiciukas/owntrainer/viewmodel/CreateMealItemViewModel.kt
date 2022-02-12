@@ -2,10 +2,8 @@ package com.gasparaiciukas.owntrainer.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gasparaiciukas.owntrainer.database.DiaryEntryRepository
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.MealRepository
-import com.gasparaiciukas.owntrainer.database.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,7 +22,7 @@ class CreateMealItemViewModel @Inject internal constructor(
         }
     }
 
-    private fun parseTitle(title: String) : String {
+    private fun parseTitle(title: String): String {
         return when {
             title.trim { it <= ' ' }
                 .isEmpty() -> "No title"
@@ -32,7 +30,7 @@ class CreateMealItemViewModel @Inject internal constructor(
         }
     }
 
-    private fun parseInstructions(instructions: String) : String {
+    private fun parseInstructions(instructions: String): String {
         return when {
             instructions.trim { it <= ' ' }
                 .isEmpty() -> "No instructions"

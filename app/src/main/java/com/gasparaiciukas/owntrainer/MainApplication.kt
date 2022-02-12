@@ -27,8 +27,9 @@ class MainApplication : Application() {
     }
 }
 
-class CustomTimberDebugTree(val tagPrefix: String) : Timber.DebugTree() {
+class CustomTimberDebugTree(private val tagPrefix: String) : Timber.DebugTree() {
 
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-        super.log(priority, "$tagPrefix.$tag", message, t)  }
+        super.log(priority, "$tagPrefix.$tag", message, t)
+    }
 }

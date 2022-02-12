@@ -1,4 +1,3 @@
-
 package com.gasparaiciukas.owntrainer.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
@@ -49,10 +48,13 @@ class AddFoodToMealViewModel @Inject internal constructor(
                 protein,
                 quantity.toDouble()
             )
-            foodEntry.calories = foodEntry.calculateCalories(foodEntry.caloriesPer100G, foodEntry.quantityInG)
-            foodEntry.carbs = foodEntry.calculateCarbs(foodEntry.carbsPer100G, foodEntry.quantityInG)
+            foodEntry.calories =
+                foodEntry.calculateCalories(foodEntry.caloriesPer100G, foodEntry.quantityInG)
+            foodEntry.carbs =
+                foodEntry.calculateCarbs(foodEntry.carbsPer100G, foodEntry.quantityInG)
             foodEntry.fat = foodEntry.calculateFat(foodEntry.fatPer100G, foodEntry.quantityInG)
-            foodEntry.protein = foodEntry.calculateProtein(foodEntry.proteinPer100G, foodEntry.quantityInG)
+            foodEntry.protein =
+                foodEntry.calculateProtein(foodEntry.proteinPer100G, foodEntry.quantityInG)
             foodRepository.insertFood(foodEntry)
         }
     }

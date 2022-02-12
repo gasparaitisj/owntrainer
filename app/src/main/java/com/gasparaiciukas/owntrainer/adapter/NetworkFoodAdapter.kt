@@ -22,7 +22,7 @@ class NetworkFoodAdapter(
     class NetworkFoodItemDiffCallback(
         var oldFoods: List<Food>,
         var newFoods: List<Food>
-    ): DiffUtil.Callback() {
+    ) : DiffUtil.Callback() {
         override fun getOldListSize() = oldFoods.size
 
         override fun getNewListSize() = newFoods.size

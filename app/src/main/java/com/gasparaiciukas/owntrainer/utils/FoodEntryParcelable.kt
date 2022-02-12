@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class FoodEntryParcelable
-(
+    (
     var title: String = "",
     var caloriesPer100G: Double = 0.0,
     var carbsPer100G: Double = 0.0,

@@ -31,13 +31,14 @@ class MealFragment : Fragment() {
 
     private lateinit var adapter: MealAdapter
 
-    private val singleClickListener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
-        val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(
-            mealWithFoodEntries.meal.mealId,
-            -1
-        )
-        findNavController().navigate(action)
-    }
+    private val singleClickListener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit =
+        { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
+            val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(
+                mealWithFoodEntries.meal.mealId,
+                -1
+            )
+            findNavController().navigate(action)
+        }
 
     private val longClickListener: (mealId: Int, position: Int) -> Unit = { mealId, _ ->
         viewLifecycleOwner.lifecycleScope.launch {
@@ -48,8 +49,10 @@ class MealFragment : Fragment() {
 
     private val viewModel by viewModels<MealViewModel>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentMealBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -86,7 +89,8 @@ class MealFragment : Fragment() {
             menuItem.isChecked = true
             when (menuItem.itemId) {
                 R.id.home -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
                             val action = MealFragmentDirections.actionMealFragmentToDiaryFragment()
@@ -96,7 +100,8 @@ class MealFragment : Fragment() {
                     binding.drawerLayout.close()
                 }
                 R.id.foods -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
                             val action = MealFragmentDirections.actionMealFragmentToFoodFragment()
@@ -106,7 +111,8 @@ class MealFragment : Fragment() {
                     binding.drawerLayout.close()
                 }
                 R.id.meals -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
                             val action = MealFragmentDirections.actionMealFragmentSelf()
@@ -116,30 +122,36 @@ class MealFragment : Fragment() {
                     binding.drawerLayout.close()
                 }
                 R.id.progress -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = MealFragmentDirections.actionMealFragmentToProgressFragment()
+                            val action =
+                                MealFragmentDirections.actionMealFragmentToProgressFragment()
                             findNavController().navigate(action)
                         }
                     })
                     binding.drawerLayout.close()
                 }
                 R.id.profile -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = MealFragmentDirections.actionMealFragmentToProfileFragment()
+                            val action =
+                                MealFragmentDirections.actionMealFragmentToProfileFragment()
                             findNavController().navigate(action)
                         }
                     })
                     binding.drawerLayout.close()
                 }
                 R.id.settings -> {
-                    binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    binding.drawerLayout.addDrawerListener(object :
+                        DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = MealFragmentDirections.actionMealFragmentToSettingsFragment()
+                            val action =
+                                MealFragmentDirections.actionMealFragmentToSettingsFragment()
                             findNavController().navigate(action)
                         }
                     })
