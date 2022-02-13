@@ -8,9 +8,9 @@ class DiaryEntryRepository @Inject constructor(
     private val diaryEntryDao: DiaryEntryDao,
     private val diaryEntryWithMealsDao: DiaryEntryWithMealsDao
 ) {
-    suspend fun insertDiaryEntry(diaryEntry: DiaryEntry) = diaryEntryDao.insertAll(diaryEntry)
+    suspend fun insertDiaryEntry(diaryEntry: DiaryEntry) = diaryEntryDao.insertDiaryEntry(diaryEntry)
 
-    suspend fun removeDiaryEntry(diaryEntry: DiaryEntry) = diaryEntryDao.delete(diaryEntry)
+    suspend fun removeDiaryEntry(year: Int, dayOfYear: Int) = diaryEntryDao.deleteDiaryEntryByYearAndDayOfYear(year, dayOfYear)
 
     fun getDiaryEntry(year: Int, dayOfYear: Int) =
         diaryEntryDao.getDiaryEntryByYearAndDayOfYear(year, dayOfYear)

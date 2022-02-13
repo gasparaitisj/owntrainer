@@ -19,7 +19,7 @@ data class User(
     @ColumnInfo(name = "currentDayOfWeek") var currentDayOfWeek: Int,
 ) {
     @PrimaryKey(autoGenerate = true)
-    var userId: Int = 0
+    var id: Int = 0
     @ColumnInfo(name = "bmr")
     var bmr: Double = calculateBmr(weightInKg, heightInCm.toDouble(), ageInYears, sex)
     @ColumnInfo(name = "kcalBurnedPerStep")
@@ -97,30 +97,5 @@ data class User(
      */
     private fun calculateDailyCarbsIntake(dailyKcalIntake: Double): Double {
         return dailyKcalIntake * 0.55 / 4
-    }
-
-    override fun equals(other: Any?): Boolean {
-        return false
-    }
-
-    override fun hashCode(): Int {
-        var result = sex.hashCode()
-        result = 31 * result + ageInYears
-        result = 31 * result + heightInCm
-        result = 31 * result + weightInKg.hashCode()
-        result = 31 * result + lifestyle.hashCode()
-        result = 31 * result + currentYear
-        result = 31 * result + currentMonth
-        result = 31 * result + currentDayOfYear
-        result = 31 * result + currentDayOfMonth
-        result = 31 * result + currentDayOfWeek
-        result = 31 * result + userId
-        result = 31 * result + bmr.hashCode()
-        result = 31 * result + kcalBurnedPerStep.hashCode()
-        result = 31 * result + dailyKcalIntake.hashCode()
-        result = 31 * result + dailyProteinIntakeInG.hashCode()
-        result = 31 * result + dailyFatIntakeInG.hashCode()
-        result = 31 * result + dailyCarbsIntakeInG.hashCode()
-        return result
     }
 }

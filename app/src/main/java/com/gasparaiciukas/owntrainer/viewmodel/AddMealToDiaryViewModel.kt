@@ -28,7 +28,7 @@ class AddMealToDiaryViewModel @Inject internal constructor(
             diaryEntryRepository.insertDiaryEntryMealCrossRef(
                 DiaryEntryMealCrossRef(
                     diaryEntryId,
-                    mealWithFoodEntries.meal.mealId
+                    mealWithFoodEntries.meal.id
                 )
             )
         } else {

@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
+import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.FragmentDiaryBinding
 import com.gasparaiciukas.owntrainer.utils.DateFormatter
@@ -39,8 +40,8 @@ class DiaryFragment : Fragment() {
     private val singleClickListener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit =
         { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
             val action = DiaryFragmentDirections.actionDiaryFragmentToMealItemFragment(
-                mealWithFoodEntries.meal.mealId,
-                viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId
+                mealWithFoodEntries.meal.id,
+                viewModel.diaryEntryWithMeals.diaryEntry.id
             )
             findNavController().navigate(action)
         }
@@ -48,7 +49,7 @@ class DiaryFragment : Fragment() {
     private val longClickListener: (mealId: Int, position: Int) -> Unit = { mealId, position ->
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.deleteMealFromDiary(
-                viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId,
+                viewModel.diaryEntryWithMeals.diaryEntry.id,
                 mealId
             )
             adapter.notifyItemRemoved(position)
@@ -133,7 +134,7 @@ class DiaryFragment : Fragment() {
         // Add meal to diary on FAB clicked
         binding.fab.setOnClickListener {
             val action = DiaryFragmentDirections.actionDiaryFragmentToAddMealToDiaryFragment(
-                viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId
+                viewModel.diaryEntryWithMeals.diaryEntry.id
             )
             findNavController().navigate(action)
         }

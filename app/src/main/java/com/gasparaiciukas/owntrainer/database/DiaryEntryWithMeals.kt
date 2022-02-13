@@ -7,8 +7,8 @@ import androidx.room.Relation
 data class DiaryEntryWithMeals(
     @Embedded val diaryEntry: DiaryEntry,
     @Relation(
-        parentColumn = "diaryEntryId",
-        entityColumn = "mealId",
+        parentColumn = "id",
+        entityColumn = "id",
         associateBy = Junction(DiaryEntryMealCrossRef::class)
     )
     val meals: List<Meal>

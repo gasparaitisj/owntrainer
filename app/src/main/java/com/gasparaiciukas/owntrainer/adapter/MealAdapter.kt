@@ -33,7 +33,7 @@ class MealAdapter(
         override fun getNewListSize() = newMeals.size
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldMeals[oldItemPosition].meal.mealId == newMeals[newItemPosition].meal.mealId
+            return oldMeals[oldItemPosition].meal.id == newMeals[newItemPosition].meal.id
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
@@ -80,7 +80,7 @@ class MealAdapter(
             popup.show()
             popup.setOnMenuItemClickListener {
                 longClickListener(
-                    items[position].meal.mealId,
+                    items[position].meal.id,
                     position
                 ); true
             }

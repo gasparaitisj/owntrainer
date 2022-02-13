@@ -40,7 +40,7 @@ class AddFoodToMealViewModel @Inject internal constructor(
                 }
             }
             val foodEntry = FoodEntry(
-                mealWithFoodEntries.meal.mealId,
+                mealWithFoodEntries.meal.id,
                 foodItem.description.toString(),
                 calories,
                 carbs,

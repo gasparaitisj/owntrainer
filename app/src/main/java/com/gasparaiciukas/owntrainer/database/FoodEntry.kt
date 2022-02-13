@@ -15,7 +15,7 @@ data class FoodEntry(
     @ColumnInfo(name = "quantityInG") var quantityInG: Double
 ) {
     @PrimaryKey(autoGenerate = true)
-    var foodEntryId: Int = 0
+    var id: Int = 0
     @ColumnInfo(name = "calories")
     var calories: Double = 0.0
     @ColumnInfo(name = "carbs")

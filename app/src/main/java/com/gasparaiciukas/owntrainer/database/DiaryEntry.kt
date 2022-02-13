@@ -17,5 +17,5 @@ data class DiaryEntry(
     @ColumnInfo(name = "dayOfMonth") var dayOfMonth: Int,
 ) {
     @PrimaryKey(autoGenerate = true)
-    var diaryEntryId: Int = 0
+    var id: Int = 0
 }

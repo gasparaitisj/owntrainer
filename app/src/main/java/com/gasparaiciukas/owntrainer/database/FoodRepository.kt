@@ -13,6 +13,6 @@ class FoodRepository @Inject constructor(
     suspend fun getFoods(query: String) =
         getService.getFoods(BuildConfig.API_KEY, query).foods ?: listOf()
 
-    suspend fun insertFood(foodEntry: FoodEntry) = foodEntryDao.insertAll(foodEntry)
-    suspend fun deleteFoodById(foodEntryId: Int) = foodEntryDao.deleteById(foodEntryId)
+    suspend fun insertFood(foodEntry: FoodEntry) = foodEntryDao.insertFoodEntry(foodEntry)
+    suspend fun deleteFoodById(foodEntryId: Int) = foodEntryDao.deleteFoodEntryById(foodEntryId)
 }

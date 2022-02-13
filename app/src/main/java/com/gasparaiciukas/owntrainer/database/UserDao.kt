@@ -9,11 +9,11 @@ interface UserDao {
     fun getUser(): Flow<User>
 
     @Insert
-    suspend fun insertAll(vararg user: User)
+    suspend fun insertUser(user: User)
 
     @Update
     suspend fun updateUser(user: User)
 
-    @Delete
-    fun delete(user: User)
+    @Query("DELETE FROM user WHERE id = :id")
+    suspend fun deleteUserById(id: Int)
 }

@@ -11,7 +11,7 @@ data class Meal(
     @ColumnInfo(name = "instructions") var instructions: String
 ) {
     @PrimaryKey(autoGenerate = true)
-    var mealId: Int = 0
+    var id: Int = 0
     @ColumnInfo(name = "calories")
     var calories: Double = 0.0
     @ColumnInfo(name = "carbs")

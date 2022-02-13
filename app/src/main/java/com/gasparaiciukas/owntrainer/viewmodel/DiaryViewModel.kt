@@ -55,7 +55,7 @@ class DiaryViewModel @Inject internal constructor(
         fatConsumed = 0.0
         carbsConsumed = 0.0
         for (meal in diaryEntryWithMeals.meals) {
-            val mealWithFoodEntries = mealRepository.getMealWithFoodEntriesById(meal.mealId)
+            val mealWithFoodEntries = mealRepository.getMealWithFoodEntriesById(meal.id)
             mealWithFoodEntries.meal.calories = mealWithFoodEntries.calculateCalories()
             caloriesConsumed += mealWithFoodEntries.calculateCalories()
             mealWithFoodEntries.meal.protein = mealWithFoodEntries.calculateProtein()

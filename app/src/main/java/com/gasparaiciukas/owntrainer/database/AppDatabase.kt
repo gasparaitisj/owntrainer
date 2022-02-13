@@ -67,7 +67,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         suspend fun populateDatabase(userDao: UserDao) {
-            userDao.insertAll(createUser())
+            userDao.insertUser(createUser())
         }
 
         // Create default user
