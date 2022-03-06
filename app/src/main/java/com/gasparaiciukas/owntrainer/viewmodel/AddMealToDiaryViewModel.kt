@@ -4,8 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.DiaryEntryMealCrossRef
-import com.gasparaiciukas.owntrainer.database.DiaryEntryRepository
-import com.gasparaiciukas.owntrainer.database.MealRepository
+import com.gasparaiciukas.owntrainer.repository.DefaultDiaryRepository
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
@@ -13,19 +12,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddMealToDiaryViewModel @Inject internal constructor(
-    private val mealRepository: MealRepository,
-    private val diaryEntryRepository: DiaryEntryRepository,
+    private val diaryRepository: DefaultDiaryRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val diaryEntryId: Int? = savedStateHandle["primaryKey"]
 
-    val ldMeals = mealRepository.getMealsWithFoodEntries().asLiveData()
+    val ldMeals = diaryRepository.getMealsWithFoodEntries().asLiveData()
     lateinit var meals: List<MealWithFoodEntries>
 
     suspend fun addMealToDiary(mealWithFoodEntries: MealWithFoodEntries) {
         if (diaryEntryId != null) {
-            diaryEntryRepository.insertDiaryEntryMealCrossRef(
+            diaryRepository.insertDiaryEntryMealCrossRef(
                 DiaryEntryMealCrossRef(
                     diaryEntryId,
                     mealWithFoodEntries.meal.id

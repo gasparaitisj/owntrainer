@@ -4,23 +4,23 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.FoodEntry
-import com.gasparaiciukas.owntrainer.database.FoodRepository
-import com.gasparaiciukas.owntrainer.database.MealRepository
+import com.gasparaiciukas.owntrainer.repository.DefaultFoodRepository
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.network.Food
+import com.gasparaiciukas.owntrainer.repository.DefaultDiaryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class AddFoodToMealViewModel @Inject internal constructor(
-    private val mealRepository: MealRepository,
-    private val foodRepository: FoodRepository,
+    private val foodRepository: DefaultFoodRepository,
+    private val diaryRepository: DefaultDiaryRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val foodItem: Food? = savedStateHandle["foodItem"]
     private val quantity: Int? = savedStateHandle["quantity"]
 
-    val ldMeals = mealRepository.getMealsWithFoodEntries().asLiveData()
+    val ldMeals = diaryRepository.getMealsWithFoodEntries().asLiveData()
     lateinit var meals: List<MealWithFoodEntries>
 
     suspend fun addFoodToMeal(mealWithFoodEntries: MealWithFoodEntries) {

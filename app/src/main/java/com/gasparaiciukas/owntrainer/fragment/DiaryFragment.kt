@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
-import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.FragmentDiaryBinding
 import com.gasparaiciukas.owntrainer.utils.DateFormatter
@@ -70,44 +69,40 @@ class DiaryFragment : Fragment() {
         // Data loading chain:
         // User -> DiaryEntry -> List<MealWithFoodEntries>
         viewModel.ldUser.observe(viewLifecycleOwner) { user ->
-            // User
             if (user != null) {
-                Timber.d("Loading user...")
                 viewModel.flUser = MutableStateFlow(user)
                 viewModel.user = user
-                viewModel.currentDay =
-                    LocalDate.of(user.currentYear, user.currentMonth, user.currentDayOfMonth)
+                viewModel.currentDay = LocalDate.of(user.currentYear, user.currentMonth, user.currentDayOfMonth)
                 Timber.d("user loaded! ${user.currentMonth} ${user.currentDayOfMonth}")
-                viewModel.loadData()
-
-                // Diary entry
-                viewModel.ldDiaryEntryWithMeals.observe(viewLifecycleOwner) { diaryEntryWithMeals ->
-                    Timber.d("Loading diaryEntryWithMeals...")
-                    if (diaryEntryWithMeals != null) {
-                        viewModel.diaryEntryWithMeals = diaryEntryWithMeals
-                        Timber.d("diaryEntryWithMeals loaded successfully!")
-                        viewLifecycleOwner.lifecycleScope.launch {
-                            viewModel.calculateData()
-
-                            // Meals with food entries
-                            viewModel.ldMealsWithFoodEntries.observe(viewLifecycleOwner) { mealsWithFoodEntries ->
-                                Timber.d("Loading mealsWithFoodEntries...")
-                                if (mealsWithFoodEntries != null) {
-                                    viewModel.mealsWithFoodEntries = mealsWithFoodEntries
-                                    //Timber.d("mealsWithFoodEntries loaded successfully! (foodEntries size: ${mealsWithFoodEntries[0].foodEntries.size})")
-                                    initUi()
-                                } else {
-                                    Timber.d("mealsWithFoodEntries is null...")
-                                }
-                            }
-                        }
-                    } else {
-                        Timber.d("diaryEntryWithMeals is null... creating new entry.")
-                        viewModel.createDiaryEntry()
-                    }
-                }
             } else {
                 Timber.d("user is null or not found...")
+            }
+        }
+
+        viewModel.ldDiaryEntryWithMeals.observe(viewLifecycleOwner) { diaryEntryWithMeals ->
+            if (diaryEntryWithMeals != null) {
+                viewModel.diaryEntryWithMeals = diaryEntryWithMeals
+                Timber.d("year ${diaryEntryWithMeals.diaryEntry.year}," +
+                        "dayOfMonth ${diaryEntryWithMeals.diaryEntry.dayOfMonth}," +
+                        "dayOfWeek ${diaryEntryWithMeals.diaryEntry.dayOfWeek}," +
+                        "id ${diaryEntryWithMeals.diaryEntry.id}")
+                Timber.d("diaryEntryWithMeals size: ${diaryEntryWithMeals.meals.size}")
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.calculateData()
+                }
+            } else {
+                Timber.d("diaryEntryWithMeals is null... creating new entry.")
+                viewModel.createDiaryEntry()
+            }
+        }
+
+        viewModel.ldMealsWithFoodEntries.observe(viewLifecycleOwner) { mealsWithFoodEntries ->
+            if (mealsWithFoodEntries != null) {
+                viewModel.mealsWithFoodEntries = mealsWithFoodEntries
+                Timber.d("mealsWithFoodEntries loaded successfully! (mealsWithFoodEntries size: ${mealsWithFoodEntries.size})")
+                initUi()
+            } else {
+                Timber.d("mealsWithFoodEntries is null.")
             }
         }
     }
@@ -144,6 +139,7 @@ class DiaryFragment : Fragment() {
             // Refresh fragment and show previous day
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.updateUserToPreviousDay()
+                //adapter.submitMeals(viewModel.mealsWithFoodEntries)
             }
         }
 
@@ -152,6 +148,7 @@ class DiaryFragment : Fragment() {
             // Refresh fragment and show current day
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.updateUserToCurrentDay()
+                //adapter.submitMeals(viewModel.mealsWithFoodEntries)
             }
         }
 
@@ -160,6 +157,7 @@ class DiaryFragment : Fragment() {
             // Refresh fragment and show next day
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.updateUserToNextDay()
+                //adapter.submitMeals(viewModel.mealsWithFoodEntries)
             }
         }
 

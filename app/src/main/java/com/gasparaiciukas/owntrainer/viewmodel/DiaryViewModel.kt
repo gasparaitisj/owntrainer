@@ -1,7 +1,12 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
 import androidx.lifecycle.*
-import com.gasparaiciukas.owntrainer.database.*
+import com.gasparaiciukas.owntrainer.database.DiaryEntry
+import com.gasparaiciukas.owntrainer.database.DiaryEntryWithMeals
+import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
+import com.gasparaiciukas.owntrainer.database.User
+import com.gasparaiciukas.owntrainer.repository.DiaryRepository
+import com.gasparaiciukas.owntrainer.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,23 +17,25 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class DiaryViewModel @Inject internal constructor(
+class DiaryViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val diaryEntryRepository: DiaryEntryRepository,
-    private val mealRepository: MealRepository
+    private val diaryRepository: DiaryRepository
 ) : ViewModel() {
 
     lateinit var currentDay: LocalDate
 
     val ldUser: LiveData<User> = userRepository.user.asLiveData()
+    val ldDiaryEntryWithMeals: LiveData<DiaryEntryWithMeals> = Transformations.switchMap(ldUser) {
+        flUser.flatMapLatest {
+            diaryRepository.getDiaryEntryWithMeals(it.currentYear, it.currentDayOfYear)
+        }.asLiveData()
+    }
+    val ldMealsWithFoodEntries: LiveData<List<MealWithFoodEntries>> get() = _ldMealsWithFoodEntries
+    private val _ldMealsWithFoodEntries = MutableLiveData<List<MealWithFoodEntries>>()
+
     lateinit var flUser: MutableStateFlow<User>
     lateinit var user: User
-
     lateinit var diaryEntryWithMeals: DiaryEntryWithMeals
-    lateinit var flDiaryEntryWithMeals: Flow<DiaryEntryWithMeals>
-    lateinit var ldDiaryEntryWithMeals: LiveData<DiaryEntryWithMeals>
-
-    lateinit var ldMealsWithFoodEntries: MutableLiveData<List<MealWithFoodEntries>>
     lateinit var mealsWithFoodEntries: List<MealWithFoodEntries>
 
     var caloriesConsumed: Double = 0.0
@@ -40,14 +47,6 @@ class DiaryViewModel @Inject internal constructor(
     var fatPercentage: Double = 0.0
     var carbsPercentage: Double = 0.0
 
-
-    fun loadData() {
-        flDiaryEntryWithMeals = flUser.flatMapLatest {
-            diaryEntryRepository.getDiaryEntryWithMeals(it.currentYear, it.currentDayOfYear)
-        }
-        ldDiaryEntryWithMeals = flDiaryEntryWithMeals.asLiveData()
-    }
-
     suspend fun calculateData() {
         val meals = mutableListOf<MealWithFoodEntries>()
         caloriesConsumed = 0.0
@@ -55,7 +54,7 @@ class DiaryViewModel @Inject internal constructor(
         fatConsumed = 0.0
         carbsConsumed = 0.0
         for (meal in diaryEntryWithMeals.meals) {
-            val mealWithFoodEntries = mealRepository.getMealWithFoodEntriesById(meal.id)
+            val mealWithFoodEntries = diaryRepository.getMealWithFoodEntriesById(meal.id)
             mealWithFoodEntries.meal.calories = mealWithFoodEntries.calculateCalories()
             caloriesConsumed += mealWithFoodEntries.calculateCalories()
             mealWithFoodEntries.meal.protein = mealWithFoodEntries.calculateProtein()
@@ -64,7 +63,6 @@ class DiaryViewModel @Inject internal constructor(
             carbsConsumed += mealWithFoodEntries.calculateCarbs()
             mealWithFoodEntries.meal.fat = mealWithFoodEntries.calculateFat()
             fatConsumed += mealWithFoodEntries.calculateFat()
-
             meals.add(mealWithFoodEntries)
             Timber.d("Calories: ${mealWithFoodEntries.meal.calories}")
         }
@@ -72,8 +70,8 @@ class DiaryViewModel @Inject internal constructor(
         proteinPercentage = (proteinConsumed / user.dailyProteinIntakeInG) * 100
         fatPercentage = (fatConsumed / user.dailyFatIntakeInG) * 100
         carbsPercentage = (carbsConsumed / user.dailyCarbsIntakeInG) * 100
-
-        ldMealsWithFoodEntries = MutableLiveData(meals)
+        Timber.d("mealsWithFoodEntries size: ${diaryEntryWithMeals.meals.size}")
+        _ldMealsWithFoodEntries.postValue(meals)
     }
 
     fun createDiaryEntry() {
@@ -86,7 +84,7 @@ class DiaryViewModel @Inject internal constructor(
                 currentDay.monthValue,
                 currentDay.dayOfMonth
             )
-            diaryEntryRepository.insertDiaryEntry(diaryEntry)
+            diaryRepository.insertDiaryEntry(diaryEntry)
         }
     }
 
@@ -130,6 +128,6 @@ class DiaryViewModel @Inject internal constructor(
     }
 
     suspend fun deleteMealFromDiary(diaryEntryId: Int, mealId: Int) {
-        diaryEntryRepository.deleteDiaryEntryMealCrossRef(diaryEntryId, mealId)
+        diaryRepository.deleteDiaryEntryMealCrossRef(diaryEntryId, mealId)
     }
 }

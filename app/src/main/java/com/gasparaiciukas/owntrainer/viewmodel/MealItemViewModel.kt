@@ -5,15 +5,18 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.*
+import com.gasparaiciukas.owntrainer.repository.DefaultDiaryRepository
+import com.gasparaiciukas.owntrainer.repository.DefaultFoodRepository
+import com.gasparaiciukas.owntrainer.repository.DefaultUserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class MealItemViewModel @Inject internal constructor(
-    private val userRepository: UserRepository,
-    private val mealRepository: MealRepository,
-    private val foodRepository: FoodRepository,
+    private val userRepository: DefaultUserRepository,
+    private val foodRepository: DefaultFoodRepository,
+    private val diaryRepository: DefaultDiaryRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val mealId: Int? = savedStateHandle["mealId"]
@@ -30,7 +33,7 @@ class MealItemViewModel @Inject internal constructor(
 
     suspend fun loadData() {
         if (mealId != null) {
-            mealWithFoodEntries = mealRepository.getMealWithFoodEntriesById(mealId)
+            mealWithFoodEntries = diaryRepository.getMealWithFoodEntriesById(mealId)
             for (food in mealWithFoodEntries.foodEntries) {
                 Timber.d("Title: ${food.title}, Size: ${mealWithFoodEntries.foodEntries.size}")
             }

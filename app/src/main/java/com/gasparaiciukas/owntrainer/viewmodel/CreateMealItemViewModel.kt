@@ -3,14 +3,14 @@ package com.gasparaiciukas.owntrainer.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gasparaiciukas.owntrainer.database.Meal
-import com.gasparaiciukas.owntrainer.database.MealRepository
+import com.gasparaiciukas.owntrainer.repository.DefaultDiaryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateMealItemViewModel @Inject internal constructor(
-    private val mealRepository: MealRepository
+    private val diaryRepository: DefaultDiaryRepository
 ) : ViewModel() {
     fun addMealToDatabase(title: String, instructions: String) {
         viewModelScope.launch {
@@ -18,7 +18,7 @@ class CreateMealItemViewModel @Inject internal constructor(
                 parseTitle(title),
                 parseInstructions(instructions)
             )
-            mealRepository.addMeal(meal)
+            diaryRepository.addMeal(meal)
         }
     }
 
