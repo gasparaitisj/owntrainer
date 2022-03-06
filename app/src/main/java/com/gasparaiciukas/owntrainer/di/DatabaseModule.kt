@@ -2,6 +2,8 @@ package com.gasparaiciukas.owntrainer.di
 
 import android.content.Context
 import com.gasparaiciukas.owntrainer.database.*
+import com.gasparaiciukas.owntrainer.network.GetService
+import com.gasparaiciukas.owntrainer.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,4 +45,25 @@ class DatabaseModule {
     fun provideUserDao(appDatabase: AppDatabase): UserDao {
         return appDatabase.userDao()
     }
+
+    @Singleton
+    @Provides
+    fun provideDefaultDiaryRepository(
+        diaryEntryDao: DiaryEntryDao,
+        diaryEntryWithMealsDao: DiaryEntryWithMealsDao,
+        mealDao: MealDao
+    ) = DefaultDiaryRepository(diaryEntryDao, diaryEntryWithMealsDao, mealDao) as DiaryRepository
+
+    @Singleton
+    @Provides
+    fun provideDefaultFoodRepository(
+        getService: GetService,
+        foodEntryDao: FoodEntryDao
+    ) = DefaultFoodRepository(getService, foodEntryDao) as FoodRepository
+
+    @Singleton
+    @Provides
+    fun provideDefaultUserRepository(
+        userDao: UserDao
+    ) = DefaultUserRepository(userDao) as UserRepository
 }

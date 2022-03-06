@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.gasparaiciukas.owntrainer.R
+import com.gasparaiciukas.owntrainer.utils.Constants.DATABASE_NAME
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
@@ -46,7 +47,7 @@ abstract class AppDatabase : RoomDatabase() {
                 .databaseBuilder(
                     context,
                     AppDatabase::class.java,
-                    context.getString(R.string.app_name)
+                    DATABASE_NAME
                 )
                 .addCallback(AppDatabaseCallback(CoroutineScope(SupervisorJob())))
                 .build()
