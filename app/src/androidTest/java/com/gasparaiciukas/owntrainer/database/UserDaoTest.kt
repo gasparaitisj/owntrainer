@@ -104,7 +104,7 @@ class UserDaoTest {
         )
         user.recalculateUserMetrics()
         userDao.insertUser(user)
-        val userId = userDao.getUser().asLiveData().getOrAwaitValue().id
+        val userId = userDao.getUser().asLiveData().getOrAwaitValue().userId
         userDao.deleteUserById(userId)
         val userRoom = userDao.getUser().asLiveData().getOrAwaitValue()
         assertThat(userRoom).isEqualTo(null)

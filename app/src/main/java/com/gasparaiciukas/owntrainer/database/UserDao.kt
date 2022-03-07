@@ -14,6 +14,6 @@ interface UserDao {
     @Update
     suspend fun updateUser(user: User)
 
-    @Query("DELETE FROM user WHERE id = :id")
+    @Query("DELETE FROM user WHERE userId = :id")
     suspend fun deleteUserById(id: Int)
 }

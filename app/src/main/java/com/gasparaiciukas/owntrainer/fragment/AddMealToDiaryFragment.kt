@@ -32,7 +32,8 @@ class AddMealToDiaryFragment : Fragment() {
         { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.addMealToDiary(mealWithFoodEntries)
-                findNavController().popBackStack()
+                val action = AddMealToDiaryFragmentDirections.actionAddMealToDiaryFragmentToDiaryFragment()
+                findNavController().navigate(action)
             }
         }
 
@@ -60,7 +61,8 @@ class AddMealToDiaryFragment : Fragment() {
 
     private fun initNavigation() {
         binding.topAppBar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            val action = AddMealToDiaryFragmentDirections.actionAddMealToDiaryFragmentToDiaryFragment()
+            findNavController().navigate(action)
         }
     }
 

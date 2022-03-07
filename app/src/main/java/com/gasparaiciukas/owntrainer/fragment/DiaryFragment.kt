@@ -39,8 +39,8 @@ class DiaryFragment : Fragment() {
     private val singleClickListener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit =
         { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
             val action = DiaryFragmentDirections.actionDiaryFragmentToMealItemFragment(
-                mealWithFoodEntries.meal.id,
-                viewModel.diaryEntryWithMeals.diaryEntry.id
+                mealWithFoodEntries.meal.mealId,
+                viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId
             )
             findNavController().navigate(action)
         }
@@ -48,7 +48,7 @@ class DiaryFragment : Fragment() {
     private val longClickListener: (mealId: Int, position: Int) -> Unit = { mealId, position ->
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.deleteMealFromDiary(
-                viewModel.diaryEntryWithMeals.diaryEntry.id,
+                viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId,
                 mealId
             )
             adapter.notifyItemRemoved(position)
@@ -81,28 +81,15 @@ class DiaryFragment : Fragment() {
 
         viewModel.ldDiaryEntryWithMeals.observe(viewLifecycleOwner) { diaryEntryWithMeals ->
             if (diaryEntryWithMeals != null) {
+                Timber.d("ldDiaryEntryWithMeals observe!")
                 viewModel.diaryEntryWithMeals = diaryEntryWithMeals
-                Timber.d("year ${diaryEntryWithMeals.diaryEntry.year}," +
-                        "dayOfMonth ${diaryEntryWithMeals.diaryEntry.dayOfMonth}," +
-                        "dayOfWeek ${diaryEntryWithMeals.diaryEntry.dayOfWeek}," +
-                        "id ${diaryEntryWithMeals.diaryEntry.id}")
-                Timber.d("diaryEntryWithMeals size: ${diaryEntryWithMeals.meals.size}")
                 viewLifecycleOwner.lifecycleScope.launch {
                     viewModel.calculateData()
+                    initUi()
                 }
             } else {
                 Timber.d("diaryEntryWithMeals is null... creating new entry.")
                 viewModel.createDiaryEntry()
-            }
-        }
-
-        viewModel.ldMealsWithFoodEntries.observe(viewLifecycleOwner) { mealsWithFoodEntries ->
-            if (mealsWithFoodEntries != null) {
-                viewModel.mealsWithFoodEntries = mealsWithFoodEntries
-                Timber.d("mealsWithFoodEntries loaded successfully! (mealsWithFoodEntries size: ${mealsWithFoodEntries.size})")
-                initUi()
-            } else {
-                Timber.d("mealsWithFoodEntries is null.")
             }
         }
     }
@@ -129,7 +116,7 @@ class DiaryFragment : Fragment() {
         // Add meal to diary on FAB clicked
         binding.fab.setOnClickListener {
             val action = DiaryFragmentDirections.actionDiaryFragmentToAddMealToDiaryFragment(
-                viewModel.diaryEntryWithMeals.diaryEntry.id
+                viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId
             )
             findNavController().navigate(action)
         }
@@ -139,7 +126,6 @@ class DiaryFragment : Fragment() {
             // Refresh fragment and show previous day
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.updateUserToPreviousDay()
-                //adapter.submitMeals(viewModel.mealsWithFoodEntries)
             }
         }
 
@@ -148,7 +134,6 @@ class DiaryFragment : Fragment() {
             // Refresh fragment and show current day
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.updateUserToCurrentDay()
-                //adapter.submitMeals(viewModel.mealsWithFoodEntries)
             }
         }
 
@@ -157,7 +142,6 @@ class DiaryFragment : Fragment() {
             // Refresh fragment and show next day
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.updateUserToNextDay()
-                //adapter.submitMeals(viewModel.mealsWithFoodEntries)
             }
         }
 

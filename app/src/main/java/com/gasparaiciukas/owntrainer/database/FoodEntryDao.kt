@@ -13,6 +13,6 @@ interface FoodEntryDao {
     @Insert
     suspend fun insertFoodEntry(foodEntry: FoodEntry)
 
-    @Query("DELETE FROM foodEntry WHERE id = :id")
+    @Query("DELETE FROM foodEntry WHERE foodEntryId = :id")
     suspend fun deleteFoodEntryById(id: Int)
 }

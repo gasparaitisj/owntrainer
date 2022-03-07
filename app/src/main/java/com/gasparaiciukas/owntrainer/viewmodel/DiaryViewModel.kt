@@ -8,7 +8,6 @@ import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.repository.DiaryRepository
 import com.gasparaiciukas.owntrainer.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
@@ -26,12 +25,11 @@ class DiaryViewModel @Inject constructor(
 
     val ldUser: LiveData<User> = userRepository.user.asLiveData()
     val ldDiaryEntryWithMeals: LiveData<DiaryEntryWithMeals> = Transformations.switchMap(ldUser) {
+        Timber.d("ldDiaryEntryWithMeals transformation!")
         flUser.flatMapLatest {
             diaryRepository.getDiaryEntryWithMeals(it.currentYear, it.currentDayOfYear)
         }.asLiveData()
     }
-    val ldMealsWithFoodEntries: LiveData<List<MealWithFoodEntries>> get() = _ldMealsWithFoodEntries
-    private val _ldMealsWithFoodEntries = MutableLiveData<List<MealWithFoodEntries>>()
 
     lateinit var flUser: MutableStateFlow<User>
     lateinit var user: User
@@ -54,7 +52,7 @@ class DiaryViewModel @Inject constructor(
         fatConsumed = 0.0
         carbsConsumed = 0.0
         for (meal in diaryEntryWithMeals.meals) {
-            val mealWithFoodEntries = diaryRepository.getMealWithFoodEntriesById(meal.id)
+            val mealWithFoodEntries = diaryRepository.getMealWithFoodEntriesById(meal.mealId)
             mealWithFoodEntries.meal.calories = mealWithFoodEntries.calculateCalories()
             caloriesConsumed += mealWithFoodEntries.calculateCalories()
             mealWithFoodEntries.meal.protein = mealWithFoodEntries.calculateProtein()
@@ -64,14 +62,13 @@ class DiaryViewModel @Inject constructor(
             mealWithFoodEntries.meal.fat = mealWithFoodEntries.calculateFat()
             fatConsumed += mealWithFoodEntries.calculateFat()
             meals.add(mealWithFoodEntries)
-            Timber.d("Calories: ${mealWithFoodEntries.meal.calories}")
         }
+        Timber.d("Calories: ${caloriesConsumed}")
         caloriesPercentage = (caloriesConsumed / user.dailyKcalIntake) * 100
         proteinPercentage = (proteinConsumed / user.dailyProteinIntakeInG) * 100
         fatPercentage = (fatConsumed / user.dailyFatIntakeInG) * 100
         carbsPercentage = (carbsConsumed / user.dailyCarbsIntakeInG) * 100
-        Timber.d("mealsWithFoodEntries size: ${diaryEntryWithMeals.meals.size}")
-        _ldMealsWithFoodEntries.postValue(meals)
+        mealsWithFoodEntries = meals
     }
 
     fun createDiaryEntry() {

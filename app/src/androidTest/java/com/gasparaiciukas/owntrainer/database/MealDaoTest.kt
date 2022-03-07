@@ -54,7 +54,7 @@ class MealDaoTest {
         val meal = Meal("Omelette", "Put egg in pan")
         mealDao.insertMeal(meal)
 
-        val mealId = mealDao.getAllMeals().asLiveData().getOrAwaitValue()[0].id
+        val mealId = mealDao.getAllMeals().asLiveData().getOrAwaitValue()[0].mealId
         mealDao.deleteMealById(mealId)
 
         val allMeals = mealDao.getAllMeals().asLiveData().getOrAwaitValue()

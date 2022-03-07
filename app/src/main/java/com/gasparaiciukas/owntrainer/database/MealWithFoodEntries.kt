@@ -6,7 +6,7 @@ import androidx.room.Relation
 data class MealWithFoodEntries(
     @Embedded val meal: Meal,
     @Relation(
-        parentColumn = "id",
+        parentColumn = "mealId",
         entityColumn = "mealId",
     )
     var foodEntries: List<FoodEntry>

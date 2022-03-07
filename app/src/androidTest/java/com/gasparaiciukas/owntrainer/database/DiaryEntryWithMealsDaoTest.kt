@@ -52,8 +52,8 @@ class DiaryEntryWithMealsDaoTest {
         mealDao.insertMeal(meal)
 
         // Get auto-generated ids
-        val diaryEntryId = diaryEntryDao.getAllDiaryEntries().asLiveData().getOrAwaitValue()[0].id
-        val mealId = mealDao.getAllMeals().asLiveData().getOrAwaitValue()[0].id
+        val diaryEntryId = diaryEntryDao.getAllDiaryEntries().asLiveData().getOrAwaitValue()[0].diaryEntryId
+        val mealId = mealDao.getAllMeals().asLiveData().getOrAwaitValue()[0].mealId
 
         // Check test data
         val crossRef = DiaryEntryMealCrossRef(diaryEntryId, mealId)
@@ -75,8 +75,8 @@ class DiaryEntryWithMealsDaoTest {
         mealDao.insertMeal(meal)
 
         // Get auto-generated ids
-        val diaryEntryId = diaryEntryDao.getAllDiaryEntries().asLiveData().getOrAwaitValue()[0].id
-        val mealId = mealDao.getAllMeals().asLiveData().getOrAwaitValue()[0].id
+        val diaryEntryId = diaryEntryDao.getAllDiaryEntries().asLiveData().getOrAwaitValue()[0].diaryEntryId
+        val mealId = mealDao.getAllMeals().asLiveData().getOrAwaitValue()[0].mealId
 
         // Check test data
         val crossRef = DiaryEntryMealCrossRef(diaryEntryId, mealId)

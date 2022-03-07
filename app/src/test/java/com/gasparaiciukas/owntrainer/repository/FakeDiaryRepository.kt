@@ -63,7 +63,7 @@ class FakeDiaryRepository : DiaryRepository {
             title = "Title",
             instructions = "Instructions"
         )
-        meal.id = id
+        meal.mealId = id
         return MealWithFoodEntries(
             Meal(
                 title = "Title",
@@ -78,6 +78,6 @@ class FakeDiaryRepository : DiaryRepository {
     }
 
     override suspend fun deleteMealById(mealId: Int) {
-        meals.removeIf { it.id == mealId }
+        meals.removeIf { it.mealId == mealId }
     }
 }

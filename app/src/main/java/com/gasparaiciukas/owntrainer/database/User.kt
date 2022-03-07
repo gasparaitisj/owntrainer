@@ -19,7 +19,7 @@ data class User(
     @ColumnInfo(name = "currentDayOfWeek") var currentDayOfWeek: Int,
 ) {
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+    var userId: Int = 0
     @ColumnInfo(name = "bmr")
     var bmr: Double = calculateBmr(weightInKg, heightInCm.toDouble(), ageInYears, sex)
     @ColumnInfo(name = "kcalBurnedPerStep")

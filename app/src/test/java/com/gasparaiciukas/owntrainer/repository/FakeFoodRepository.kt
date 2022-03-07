@@ -33,7 +33,7 @@ class FakeFoodRepository : FoodRepository {
     }
 
     override suspend fun deleteFoodById(foodEntryId: Int) {
-        foodEntries.removeIf { it.id == foodEntryId }
+        foodEntries.removeIf { it.foodEntryId == foodEntryId }
         refreshLiveData()
     }
 }

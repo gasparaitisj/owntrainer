@@ -11,7 +11,7 @@ interface MealDao {
     @Insert
     suspend fun insertMeal(meal: Meal)
 
-    @Query("DELETE FROM meal WHERE id = :id")
+    @Query("DELETE FROM meal WHERE mealId = :id")
     suspend fun deleteMealById(id: Int)
 
     @Transaction
@@ -19,6 +19,6 @@ interface MealDao {
     fun getMealsWithFoodEntries(): Flow<List<MealWithFoodEntries>>
 
     @Transaction
-    @Query("SELECT * FROM meal WHERE id = :id")
+    @Query("SELECT * FROM meal WHERE mealId = :id")
     suspend fun getMealWithFoodEntriesById(id: Int): MealWithFoodEntries
 }

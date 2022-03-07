@@ -84,6 +84,9 @@
         android:label="SettingsFragment" />
 
     <action
+        android:id="@+id/action_addMealToDiaryFragment_to_diaryFragment"
+        app:destination="@id/diaryFragment" />
+    <action
         android:id="@+id/action_diaryFragment_to_addMealToDiaryFragment"
         app:destination="@id/addMealToDiaryFragment" />
     <action

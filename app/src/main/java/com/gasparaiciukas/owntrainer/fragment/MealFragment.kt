@@ -34,7 +34,7 @@ class MealFragment : Fragment() {
     private val singleClickListener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit =
         { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
             val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(
-                mealWithFoodEntries.meal.id,
+                mealWithFoodEntries.meal.mealId,
                 -1
             )
             findNavController().navigate(action)
