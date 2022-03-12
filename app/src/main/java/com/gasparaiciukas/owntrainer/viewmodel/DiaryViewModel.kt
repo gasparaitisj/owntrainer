@@ -77,11 +77,11 @@ class DiaryViewModel @Inject constructor(
         // Current day's entry does not exist - insert it to the database
         viewModelScope.launch {
             val diaryEntry = DiaryEntry(
-                currentDay.year,
-                currentDay.dayOfYear,
-                currentDay.dayOfWeek.value,
-                currentDay.monthValue,
-                currentDay.dayOfMonth
+                year = currentDay.year,
+                dayOfYear = currentDay.dayOfYear,
+                dayOfWeek = currentDay.dayOfWeek.value,
+                monthOfYear = currentDay.monthValue,
+                dayOfMonth = currentDay.dayOfMonth
             )
             diaryRepository.insertDiaryEntry(diaryEntry)
         }

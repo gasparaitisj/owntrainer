@@ -3,65 +3,38 @@ package com.gasparaiciukas.owntrainer.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
 import com.gasparaiciukas.owntrainer.MainCoroutineRule
-import com.gasparaiciukas.owntrainer.database.FoodEntry
-import com.gasparaiciukas.owntrainer.database.Meal
-import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.FoodNutrient
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepository
-import com.google.common.truth.Truth.assertThat
+import com.gasparaiciukas.owntrainer.repository.FakeUserRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class AddFoodToMealViewModelTest {
-
+class NetworkFoodItemViewModelTest {
     @get:Rule
     val instantTaskRule = InstantTaskExecutorRule()
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var viewModel: AddFoodToMealViewModel
+    private lateinit var viewModel: NetworkFoodItemViewModel
     private lateinit var savedStateHandle: SavedStateHandle
-    private lateinit var diaryRepository: FakeDiaryRepository
+    private lateinit var userRepository: FakeUserRepository
 
     @Before
     fun setup() {
-        diaryRepository = FakeDiaryRepository()
+        userRepository = FakeUserRepository()
         savedStateHandle = SavedStateHandle().apply {
             set("foodItem", createFood())
-            set("quantity", 150)
         }
-        viewModel = AddFoodToMealViewModel(diaryRepository, savedStateHandle)
+        viewModel = NetworkFoodItemViewModel(userRepository, savedStateHandle)
     }
 
     @Test
-    fun `when addFoodToMeal() is called, should add food to meal`() = runTest {
-        val quantity: Int? = savedStateHandle["quantity"]
-        val foodEntry = FoodEntry(
-            mealId = 1,
-            title = "APPLE",
-            caloriesPer100G = 52.0,
-            carbsPer100G = 14.3,
-            fatPer100G = 0.65,
-            proteinPer100G = 0.0,
-            quantityInG = quantity?.toDouble() ?: 0.0
-        )
-        val meal = Meal(
-            mealId = 1,
-            title = "Apple pie",
-            instructions = "Put in oven"
-        )
-        diaryRepository.insertMeal(meal)
-        val mealWithFoodEntries1 = MealWithFoodEntries(
-            meal,
-            listOf(foodEntry)
-        )
-        viewModel.addFoodToMeal(MealWithFoodEntries(meal, listOf()))
-        val mealWithFoodEntries2 = diaryRepository.getMealWithFoodEntriesById(1)
-        assertThat(mealWithFoodEntries1).isEqualTo(mealWithFoodEntries2)
+    fun `when loadData() is called, should load data`() = runTest {
+
     }
 
     private fun createFood(): Food {

@@ -52,7 +52,7 @@ class CreateMealItemFragment : Fragment() {
         }
 
         binding.topAppBar.menu.findItem(R.id.btn_save).setOnMenuItemClickListener {
-            viewModel.addMealToDatabase(
+            viewModel.createMeal(
                 binding.etTitle.text.toString(),
                 binding.etInstructions.text.toString()
             )

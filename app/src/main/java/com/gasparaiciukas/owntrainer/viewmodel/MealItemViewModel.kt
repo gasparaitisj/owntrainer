@@ -5,18 +5,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.*
-import com.gasparaiciukas.owntrainer.repository.DefaultDiaryRepository
-import com.gasparaiciukas.owntrainer.repository.DefaultFoodRepository
-import com.gasparaiciukas.owntrainer.repository.DefaultUserRepository
+import com.gasparaiciukas.owntrainer.repository.DiaryRepository
+import com.gasparaiciukas.owntrainer.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class MealItemViewModel @Inject internal constructor(
-    private val userRepository: DefaultUserRepository,
-    private val foodRepository: DefaultFoodRepository,
-    private val diaryRepository: DefaultDiaryRepository,
+    private val userRepository: UserRepository,
+    private val diaryRepository: DiaryRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val mealId: Int? = savedStateHandle["mealId"]
@@ -51,6 +49,6 @@ class MealItemViewModel @Inject internal constructor(
     }
 
     suspend fun deleteFoodFromMeal(foodEntryId: Int) {
-        foodRepository.deleteFoodById(foodEntryId)
+        diaryRepository.deleteFoodById(foodEntryId)
     }
 }

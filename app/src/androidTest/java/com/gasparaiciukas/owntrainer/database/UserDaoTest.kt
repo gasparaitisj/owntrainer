@@ -45,6 +45,7 @@ class UserDaoTest {
     fun insertUser() = runTest {
         val currentDate = LocalDate.now()
         val user = User(
+            userId = 1,
             sex = "Male",
             ageInYears = 25,
             heightInCm = 180,
@@ -56,7 +57,6 @@ class UserDaoTest {
             dayOfMonth = currentDate.dayOfMonth,
             dayOfWeek = currentDate.dayOfWeek.value
         )
-        user.recalculateUserMetrics()
         userDao.insertUser(user)
 
         val userRoom = userDao.getUser().asLiveData().getOrAwaitValue()
@@ -67,6 +67,7 @@ class UserDaoTest {
     fun updateUser() = runTest {
         val currentDate = LocalDate.now()
         var user = User(
+            userId = 1,
             sex = "Male",
             ageInYears = 25,
             heightInCm = 180,
@@ -78,7 +79,6 @@ class UserDaoTest {
             dayOfMonth = currentDate.dayOfMonth,
             dayOfWeek = currentDate.dayOfWeek.value
         )
-        user.recalculateUserMetrics()
         userDao.insertUser(user)
         user = userDao.getUser().asLiveData().getOrAwaitValue()
         user.heightInCm = 155
@@ -91,6 +91,7 @@ class UserDaoTest {
     fun deleteUser() = runTest {
         val currentDate = LocalDate.now()
         val user = User(
+            userId = 1,
             sex = "Male",
             ageInYears = 25,
             heightInCm = 180,
@@ -102,7 +103,6 @@ class UserDaoTest {
             dayOfMonth = currentDate.dayOfMonth,
             dayOfWeek = currentDate.dayOfWeek.value
         )
-        user.recalculateUserMetrics()
         userDao.insertUser(user)
         val userId = userDao.getUser().asLiveData().getOrAwaitValue().userId
         userDao.deleteUserById(userId)

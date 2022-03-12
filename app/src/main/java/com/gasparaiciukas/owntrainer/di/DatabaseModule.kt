@@ -51,15 +51,10 @@ class DatabaseModule {
     fun provideDefaultDiaryRepository(
         diaryEntryDao: DiaryEntryDao,
         diaryEntryWithMealsDao: DiaryEntryWithMealsDao,
-        mealDao: MealDao
-    ) = DefaultDiaryRepository(diaryEntryDao, diaryEntryWithMealsDao, mealDao) as DiaryRepository
-
-    @Singleton
-    @Provides
-    fun provideDefaultFoodRepository(
-        getService: GetService,
-        foodEntryDao: FoodEntryDao
-    ) = DefaultFoodRepository(getService, foodEntryDao) as FoodRepository
+        mealDao: MealDao,
+        foodEntryDao: FoodEntryDao,
+        getService: GetService
+    ) = DefaultDiaryRepository(diaryEntryDao, diaryEntryWithMealsDao, mealDao, foodEntryDao, getService) as DiaryRepository
 
     @Singleton
     @Provides

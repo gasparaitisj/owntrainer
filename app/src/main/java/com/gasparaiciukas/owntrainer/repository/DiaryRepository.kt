@@ -1,12 +1,14 @@
 package com.gasparaiciukas.owntrainer.repository
 
 import com.gasparaiciukas.owntrainer.database.*
+import com.gasparaiciukas.owntrainer.network.GetResponse
+import com.gasparaiciukas.owntrainer.network.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface DiaryRepository {
     suspend fun insertDiaryEntry(diaryEntry: DiaryEntry)
 
-    suspend fun removeDiaryEntry(year: Int, dayOfYear: Int)
+    suspend fun deleteDiaryEntry(year: Int, dayOfYear: Int)
 
     fun getDiaryEntry(year: Int, dayOfYear: Int): Flow<DiaryEntry>
 
@@ -20,7 +22,13 @@ interface DiaryRepository {
 
     suspend fun getMealWithFoodEntriesById(id: Int): MealWithFoodEntries
 
-    suspend fun addMeal(meal: Meal)
+    suspend fun insertMeal(meal: Meal)
 
     suspend fun deleteMealById(mealId: Int)
+
+    suspend fun getFoods(query: String): Resource<GetResponse>
+
+    suspend fun insertFood(foodEntry: FoodEntry)
+
+    suspend fun deleteFoodById(foodEntryId: Int)
 }

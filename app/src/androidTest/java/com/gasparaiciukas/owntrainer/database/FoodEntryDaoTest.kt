@@ -44,8 +44,21 @@ class FoodEntryDaoTest {
 
     @Test
     fun insertFoodEntry() = runTest {
-        val meal = Meal("Omelette", "Put egg in pan")
-        val foodEntry = FoodEntry(meal.mealId, "Egg", 100.0, 100.0, 100.0, 100.0, 100.0)
+        val meal = Meal(
+            mealId = 1,
+            title = "Omelette",
+            instructions = "Put egg in pan"
+        )
+        val foodEntry = FoodEntry(
+            foodEntryId = 1,
+            mealId = meal.mealId,
+            title = "Egg",
+            caloriesPer100G = 100.0,
+            carbsPer100G = 100.0,
+            fatPer100G = 100.0,
+            proteinPer100G = 100.0,
+            quantityInG = 100.0
+        )
 
         foodEntryDao.insertFoodEntry(foodEntry)
 
@@ -55,8 +68,21 @@ class FoodEntryDaoTest {
 
     @Test
     fun deleteFoodEntry() = runTest {
-        val meal = Meal("Omelette", "Put egg in pan")
-        val foodEntry = FoodEntry(meal.mealId, "Egg", 100.0, 100.0, 100.0, 100.0, 100.0)
+        val meal = Meal(
+            mealId = 1,
+            title = "Omelette",
+            instructions = "Put egg in pan"
+        )
+        val foodEntry = FoodEntry(
+            foodEntryId = 1,
+            mealId = meal.mealId,
+            title = "Egg",
+            caloriesPer100G = 100.0,
+            carbsPer100G = 100.0,
+            fatPer100G = 100.0,
+            proteinPer100G = 100.0,
+            quantityInG = 100.0
+        )
 
         foodEntryDao.insertFoodEntry(foodEntry)
         val foodEntryId = foodEntryDao.getAllFoodEntries().asLiveData().getOrAwaitValue()[0].foodEntryId

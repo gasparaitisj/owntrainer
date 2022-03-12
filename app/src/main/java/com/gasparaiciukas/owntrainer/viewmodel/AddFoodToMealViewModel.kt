@@ -4,17 +4,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.FoodEntry
-import com.gasparaiciukas.owntrainer.repository.DefaultFoodRepository
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.network.Food
-import com.gasparaiciukas.owntrainer.repository.DefaultDiaryRepository
+import com.gasparaiciukas.owntrainer.repository.DiaryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class AddFoodToMealViewModel @Inject internal constructor(
-    private val foodRepository: DefaultFoodRepository,
-    private val diaryRepository: DefaultDiaryRepository,
+    private val diaryRepository: DiaryRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val foodItem: Food? = savedStateHandle["foodItem"]
@@ -40,15 +39,17 @@ class AddFoodToMealViewModel @Inject internal constructor(
                 }
             }
             val foodEntry = FoodEntry(
-                mealWithFoodEntries.meal.mealId,
-                foodItem.description.toString(),
-                calories,
-                carbs,
-                fat,
-                protein,
-                quantity.toDouble()
+                mealId = mealWithFoodEntries.meal.mealId,
+                title = foodItem.description.toString(),
+                caloriesPer100G = calories,
+                carbsPer100G = carbs,
+                fatPer100G = fat,
+                proteinPer100G = protein,
+                quantityInG = quantity.toDouble()
             )
-            foodRepository.insertFood(foodEntry)
+            diaryRepository.insertFood(foodEntry)
+        } else {
+            Timber.e("addFoodToMeal() failed! either foodItem or quantity is null!")
         }
     }
 }

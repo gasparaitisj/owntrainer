@@ -5,14 +5,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.User
-import com.gasparaiciukas.owntrainer.repository.DefaultUserRepository
+import com.gasparaiciukas.owntrainer.repository.UserRepository
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class DatabaseFoodItemViewModel @Inject internal constructor(
-    private val userRepository: DefaultUserRepository,
+    private val userRepository: UserRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val food: FoodEntryParcelable = savedStateHandle["food"]!!

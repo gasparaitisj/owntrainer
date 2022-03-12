@@ -46,9 +46,20 @@ class DiaryEntryWithMealsDaoTest {
     @Test
     fun insertDiaryEntryMealCrossRef() = runTest {
         // Insert test data
-        val diaryEntry = DiaryEntry(2021, 1, 1, 1, 1)
+        val diaryEntry = DiaryEntry(
+            diaryEntryId = 1,
+            year = 2021,
+            dayOfYear = 1,
+            dayOfWeek = 1,
+            monthOfYear = 1,
+            dayOfMonth = 1
+        )
         diaryEntryDao.insertDiaryEntry(diaryEntry)
-        val meal = Meal("Omelette", "Put egg in pan")
+        val meal = Meal(
+            mealId = 1,
+            title = "Omelette",
+            instructions = "Put egg in pan"
+        )
         mealDao.insertMeal(meal)
 
         // Get auto-generated ids
@@ -69,9 +80,20 @@ class DiaryEntryWithMealsDaoTest {
     @Test
     fun deleteDiaryEntryMealCrossRef() = runTest {
         // Insert test data
-        val diaryEntry = DiaryEntry(2021, 1, 1, 1, 1)
+        val diaryEntry = DiaryEntry(
+            diaryEntryId = 1,
+            year = 2021,
+            dayOfYear = 1,
+            dayOfWeek = 1,
+            monthOfYear = 1,
+            dayOfMonth = 1
+        )
         diaryEntryDao.insertDiaryEntry(diaryEntry)
-        val meal = Meal("Omelette", "Put egg in pan")
+        val meal = Meal(
+            mealId = 1,
+            title = "Omelette",
+            instructions = "Put egg in pan"
+        )
         mealDao.insertMeal(meal)
 
         // Get auto-generated ids

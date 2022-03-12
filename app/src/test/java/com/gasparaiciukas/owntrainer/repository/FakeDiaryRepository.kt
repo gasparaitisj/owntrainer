@@ -5,9 +5,10 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.*
 import com.gasparaiciukas.owntrainer.getOrAwaitValueTest
+import com.gasparaiciukas.owntrainer.network.Food
+import com.gasparaiciukas.owntrainer.network.GetResponse
+import com.gasparaiciukas.owntrainer.network.Resource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import java.io.IOException
 import java.time.LocalDate
 
 class FakeDiaryRepository : DiaryRepository {
@@ -17,6 +18,7 @@ class FakeDiaryRepository : DiaryRepository {
     private val meals = mutableListOf<Meal>()
     private val mealsWithFoodEntries = mutableListOf<MealWithFoodEntries>()
     private var foodEntries = mutableListOf<FoodEntry>()
+    private var shouldReturnNetworkError = false
 
     fun setFoodEntries(foodEntries: MutableList<FoodEntry>) {
         this.foodEntries = foodEntries
@@ -26,7 +28,7 @@ class FakeDiaryRepository : DiaryRepository {
         diaryEntries.add(diaryEntry)
     }
 
-    override suspend fun removeDiaryEntry(year: Int, dayOfYear: Int) {
+    override suspend fun deleteDiaryEntry(year: Int, dayOfYear: Int) {
         diaryEntries.removeIf { it.year == year && it.dayOfYear == dayOfYear }
     }
 
@@ -39,7 +41,7 @@ class FakeDiaryRepository : DiaryRepository {
             monthOfYear = date.monthValue,
             dayOfMonth = date.dayOfMonth
         )
-        return if (diaryEntries.contains(diaryEntry)) {
+        return if (diaryEntries.any { d -> d.year == year && d.dayOfYear == dayOfYear }) {
             MutableLiveData(diaryEntry).asFlow()
         } else {
             throw RuntimeException("getDiaryEntry() couldn't find diary entry")
@@ -52,20 +54,22 @@ class FakeDiaryRepository : DiaryRepository {
         for (meal in meals) {
             val crossRef = DiaryEntryMealCrossRef(
                 diaryEntries.first { it.year == year && it.dayOfYear == dayOfYear }.diaryEntryId,
-                meal.mealId)
+                meal.mealId
+            )
             if (diaryEntryMealCrossRefs.contains(crossRef)) {
                 diaryEntryMeals.add(meal)
             }
         }
-        return MutableLiveData(DiaryEntryWithMeals(
-            diaryEntry,
-            diaryEntryMeals
-        )).asFlow()
+        return MutableLiveData(
+            DiaryEntryWithMeals(
+                diaryEntry,
+                diaryEntryMeals
+            )
+        ).asFlow()
     }
 
     override suspend fun insertDiaryEntryMealCrossRef(crossRef: DiaryEntryMealCrossRef) {
         diaryEntryMealCrossRefs.add(crossRef)
-        println(diaryEntryMealCrossRefs)
     }
 
     override suspend fun deleteDiaryEntryMealCrossRef(diaryEntryId: Int, mealId: Int) {
@@ -77,10 +81,11 @@ class FakeDiaryRepository : DiaryRepository {
     }
 
     override suspend fun getMealWithFoodEntriesById(id: Int): MealWithFoodEntries {
-        return getMealsWithFoodEntries().asLiveData().getOrAwaitValueTest().first { it.meal.mealId == id }
+        return getMealsWithFoodEntries().asLiveData().getOrAwaitValueTest()
+            .first { it.meal.mealId == id }
     }
 
-    override suspend fun addMeal(meal: Meal) {
+    override suspend fun insertMeal(meal: Meal) {
         meals.add(meal)
         mealsWithFoodEntries.add(MealWithFoodEntries(meal, foodEntries))
     }
@@ -88,5 +93,25 @@ class FakeDiaryRepository : DiaryRepository {
     override suspend fun deleteMealById(mealId: Int) {
         meals.removeIf { it.mealId == mealId }
         mealsWithFoodEntries.removeIf { it.meal.mealId == mealId }
+    }
+
+    fun setShouldReturnNetworkError(value: Boolean) {
+        shouldReturnNetworkError = value
+    }
+
+    override suspend fun getFoods(query: String): Resource<GetResponse> {
+        return if (shouldReturnNetworkError) {
+            Resource.error("Error", null)
+        } else {
+            Resource.success(GetResponse(foods = listOf()))
+        }
+    }
+
+    override suspend fun insertFood(foodEntry: FoodEntry) {
+        foodEntries.add(foodEntry)
+    }
+
+    override suspend fun deleteFoodById(foodEntryId: Int) {
+        foodEntries.removeIf { it.foodEntryId == foodEntryId }
     }
 }

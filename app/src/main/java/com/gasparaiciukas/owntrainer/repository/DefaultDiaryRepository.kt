@@ -1,6 +1,10 @@
 package com.gasparaiciukas.owntrainer.repository
 
+import com.gasparaiciukas.owntrainer.BuildConfig
 import com.gasparaiciukas.owntrainer.database.*
+import com.gasparaiciukas.owntrainer.network.GetResponse
+import com.gasparaiciukas.owntrainer.network.GetService
+import com.gasparaiciukas.owntrainer.network.Resource
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -8,12 +12,14 @@ import javax.inject.Singleton
 class DefaultDiaryRepository @Inject constructor(
     private val diaryEntryDao: DiaryEntryDao,
     private val diaryEntryWithMealsDao: DiaryEntryWithMealsDao,
-    private val mealDao: MealDao
+    private val mealDao: MealDao,
+    private val foodEntryDao: FoodEntryDao,
+    private val getService: GetService
 ): DiaryRepository {
     override suspend fun insertDiaryEntry(diaryEntry: DiaryEntry) =
         diaryEntryDao.insertDiaryEntry(diaryEntry)
 
-    override suspend fun removeDiaryEntry(year: Int, dayOfYear: Int) =
+    override suspend fun deleteDiaryEntry(year: Int, dayOfYear: Int) =
         diaryEntryDao.deleteDiaryEntryByYearAndDayOfYear(year, dayOfYear)
 
     override fun getDiaryEntry(year: Int, dayOfYear: Int) =
@@ -34,9 +40,32 @@ class DefaultDiaryRepository @Inject constructor(
     override suspend fun getMealWithFoodEntriesById(id: Int) =
         mealDao.getMealWithFoodEntriesById(id)
 
-    override suspend fun addMeal(meal: Meal) =
+    override suspend fun insertMeal(meal: Meal) =
         mealDao.insertMeal(meal)
 
     override suspend fun deleteMealById(mealId: Int) =
         mealDao.deleteMealById(mealId)
+
+    override suspend fun getFoods(query: String): Resource<GetResponse> {
+        return try {
+            val response = getService.getFoods(BuildConfig.API_KEY, query)
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    return@let Resource.success(it)
+                } ?: Resource.error("An unknown error occurred.", null)
+            } else {
+                Resource.error("An unknown error occurred.", null)
+            }
+        } catch (e: Exception) {
+            Resource.error("Couldn't reach the server. Check your internet connection.", null)
+        }
+    }
+
+    override suspend fun insertFood(foodEntry: FoodEntry) {
+        foodEntryDao.insertFoodEntry(foodEntry)
+    }
+
+    override suspend fun deleteFoodById(foodEntryId: Int) {
+        foodEntryDao.deleteFoodEntryById(foodEntryId)
+    }
 }

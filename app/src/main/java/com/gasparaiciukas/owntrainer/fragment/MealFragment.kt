@@ -42,7 +42,7 @@ class MealFragment : Fragment() {
 
     private val longClickListener: (mealId: Int, position: Int) -> Unit = { mealId, _ ->
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.deleteMealFromMeals(mealId)
+            viewModel.deleteMeal(mealId)
             adapter.submitMeals(viewModel.meals)
         }
     }

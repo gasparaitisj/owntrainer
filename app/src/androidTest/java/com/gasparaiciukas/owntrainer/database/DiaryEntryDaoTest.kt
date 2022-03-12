@@ -42,7 +42,14 @@ class DiaryEntryDaoTest {
 
     @Test
     fun insertDiaryEntry() = runTest {
-        val diaryEntry = DiaryEntry(2021, 1, 1, 1, 1)
+        val diaryEntry = DiaryEntry(
+            diaryEntryId = 1,
+            year = 2021,
+            dayOfYear = 1,
+            dayOfWeek = 1,
+            monthOfYear = 1,
+            dayOfMonth = 1
+        )
         dao.insertDiaryEntry(diaryEntry)
 
         val allDiaryEntries = dao.getAllDiaryEntries().asLiveData().getOrAwaitValue()
@@ -52,7 +59,14 @@ class DiaryEntryDaoTest {
 
     @Test
     fun deleteDiaryEntry() = runTest {
-        val diaryEntry = DiaryEntry(2021, 1, 1, 1, 1)
+        val diaryEntry = DiaryEntry(
+            diaryEntryId = 1,
+            year = 2021,
+            dayOfYear = 1,
+            dayOfWeek = 1,
+            monthOfYear = 1,
+            dayOfMonth = 1
+        )
         dao.insertDiaryEntry(diaryEntry)
         dao.deleteDiaryEntryByYearAndDayOfYear(diaryEntry.year, diaryEntry.dayOfYear)
 

@@ -194,7 +194,7 @@ class ProfileFragment : Fragment() {
 
         binding.topAppBar.menu.findItem(R.id.btn_save).setOnMenuItemClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.writeUserToDatabase()
+                viewModel.updateUser()
             }
             return@setOnMenuItemClickListener true
         }

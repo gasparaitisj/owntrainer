@@ -4,14 +4,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.User
-import com.gasparaiciukas.owntrainer.repository.DefaultUserRepository
 import com.gasparaiciukas.owntrainer.network.Food
+import com.gasparaiciukas.owntrainer.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class NetworkFoodItemViewModel @Inject internal constructor(
-    private val userRepository: DefaultUserRepository,
+    private val userRepository: UserRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val foodItem: Food? = savedStateHandle["foodItem"]
@@ -49,6 +50,8 @@ class NetworkFoodItemViewModel @Inject internal constructor(
             carbsPercentage = carbs / sum * 100
             fatPercentage = fat / sum * 100
             proteinPercentage = protein / sum * 100
+        } else {
+            Timber.e("loadData() failed! foodItem is null.")
         }
     }
 }

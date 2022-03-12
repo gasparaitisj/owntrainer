@@ -73,14 +73,15 @@ class DatabaseFoodAdapter(
         holder.binding.tvProtein.text = protein.toString()
         holder.binding.tvFat.text = fat.toString()
         holder.binding.layoutItem.setOnClickListener {
-            val foodEntryParcelable = FoodEntryParcelable()
-            foodEntryParcelable.calories = calories.toDouble()
-            foodEntryParcelable.protein = protein.toDouble()
-            foodEntryParcelable.fat = fat.toDouble()
-            foodEntryParcelable.carbs = carbs.toDouble()
-            foodEntryParcelable.quantityInG = quantity.toDouble()
-            foodEntryParcelable.title = title
-            singleClickListener(foodEntryParcelable)
+            singleClickListener(
+                FoodEntryParcelable(
+                    calories = calories.toDouble(),
+                    protein = protein.toDouble(),
+                    fat = fat.toDouble(),
+                    carbs = carbs.toDouble(),
+                    quantityInG = quantity.toDouble(),
+                    title = title
+            ))
         }
         holder.binding.layoutItem.setOnLongClickListener {
             val popup = PopupMenu(holder.binding.layoutItem.context, holder.binding.layoutItem)

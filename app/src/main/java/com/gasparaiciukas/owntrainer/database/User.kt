@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "user")
 data class User(
+    @PrimaryKey(autoGenerate = true) var userId: Int = 0,
     @ColumnInfo(name = "sex") var sex: String,
     @ColumnInfo(name = "ageInYears") var ageInYears: Int,
     @ColumnInfo(name = "heightInCm") var heightInCm: Int,
@@ -18,8 +19,6 @@ data class User(
     @ColumnInfo(name = "dayOfMonth") var dayOfMonth: Int,
     @ColumnInfo(name = "dayOfWeek") var dayOfWeek: Int,
 ) {
-    @PrimaryKey(autoGenerate = true)
-    var userId: Int = 0
     @ColumnInfo(name = "kcalBurnedPerStep")
     var kcalBurnedPerStep: Double = 0.0
 
