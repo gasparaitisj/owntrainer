@@ -11,7 +11,12 @@ data class MealWithFoodEntries(
     )
     var foodEntries: List<FoodEntry>
 ) {
-    fun calculateCalories(): Double {
+    val calories get() = calculateCalories()
+    val carbs get() = calculateCarbs()
+    val fat get() = calculateFat()
+    val protein get() = calculateProtein()
+
+    private fun calculateCalories(): Double {
         var mCalories = 0.0
         for (f in foodEntries) {
             mCalories += f.calories
@@ -19,7 +24,7 @@ data class MealWithFoodEntries(
         return mCalories
     }
 
-    fun calculateCarbs(): Double {
+    private fun calculateCarbs(): Double {
         var mCarbs = 0.0
         for (f in foodEntries) {
             mCarbs += f.carbs
@@ -27,7 +32,7 @@ data class MealWithFoodEntries(
         return mCarbs
     }
 
-    fun calculateFat(): Double {
+    private fun calculateFat(): Double {
         var mFat = 0.0
         for (f in foodEntries) {
             mFat += f.fat
@@ -35,7 +40,7 @@ data class MealWithFoodEntries(
         return mFat
     }
 
-    fun calculateProtein(): Double {
+    private fun calculateProtein(): Double {
         var mProtein = 0.0
         for (f in foodEntries) {
             mProtein += f.protein

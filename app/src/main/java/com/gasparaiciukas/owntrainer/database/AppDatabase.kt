@@ -5,7 +5,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.utils.Constants.DATABASE_NAME
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -74,20 +73,18 @@ abstract class AppDatabase : RoomDatabase() {
         // Create default user
         private fun createUser(): User {
             val currentDate = LocalDate.now()
-            val user = User(
+            return User(
                 sex = "Male",
                 ageInYears = 25,
                 heightInCm = 180,
                 weightInKg = 80.0,
                 lifestyle = "Lightly active",
-                currentYear = currentDate.year,
-                currentMonth = currentDate.monthValue,
-                currentDayOfYear = currentDate.dayOfYear,
-                currentDayOfMonth = currentDate.dayOfMonth,
-                currentDayOfWeek = currentDate.dayOfWeek.value
+                year = currentDate.year,
+                month = currentDate.monthValue,
+                dayOfYear = currentDate.dayOfYear,
+                dayOfMonth = currentDate.dayOfMonth,
+                dayOfWeek = currentDate.dayOfWeek.value
             )
-            user.recalculateUserMetrics()
-            return user
         }
     }
 }

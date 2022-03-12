@@ -16,7 +16,6 @@ class ProfileViewModel @Inject internal constructor(
     lateinit var user: User
 
     suspend fun writeUserToDatabase() {
-        user.recalculateUserMetrics()
         userRepository.updateUser(user)
     }
 }

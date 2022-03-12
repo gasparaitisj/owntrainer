@@ -61,7 +61,7 @@ class MealAdapter(
 
     override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
         // Get information of each row
-        val calories = items[position].calculateCalories().toInt()
+        val calories = items[position].calories.toInt()
         val title = items[position].meal.title
 
         // Display information of each row

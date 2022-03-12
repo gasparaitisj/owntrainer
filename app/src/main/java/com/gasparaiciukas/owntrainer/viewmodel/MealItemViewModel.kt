@@ -37,10 +37,10 @@ class MealItemViewModel @Inject internal constructor(
             for (food in mealWithFoodEntries.foodEntries) {
                 Timber.d("Title: ${food.title}, Size: ${mealWithFoodEntries.foodEntries.size}")
             }
-            mealWithFoodEntries.meal.calories = mealWithFoodEntries.calculateCalories()
-            mealWithFoodEntries.meal.protein = mealWithFoodEntries.calculateProtein()
-            mealWithFoodEntries.meal.carbs = mealWithFoodEntries.calculateCarbs()
-            mealWithFoodEntries.meal.fat = mealWithFoodEntries.calculateFat()
+            mealWithFoodEntries.meal.calories = mealWithFoodEntries.calories
+            mealWithFoodEntries.meal.protein = mealWithFoodEntries.protein
+            mealWithFoodEntries.meal.carbs = mealWithFoodEntries.carbs
+            mealWithFoodEntries.meal.fat = mealWithFoodEntries.fat
 
             val sum =
                 mealWithFoodEntries.meal.carbs + mealWithFoodEntries.meal.fat + mealWithFoodEntries.meal.protein

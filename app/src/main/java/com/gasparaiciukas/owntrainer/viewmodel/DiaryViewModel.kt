@@ -1,6 +1,7 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
 import androidx.lifecycle.*
+import androidx.lifecycle.Transformations.switchMap
 import com.gasparaiciukas.owntrainer.database.DiaryEntry
 import com.gasparaiciukas.owntrainer.database.DiaryEntryWithMeals
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
@@ -11,7 +12,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -24,11 +24,14 @@ class DiaryViewModel @Inject constructor(
     lateinit var currentDay: LocalDate
 
     val ldUser: LiveData<User> = userRepository.user.asLiveData()
-    val ldDiaryEntryWithMeals: LiveData<DiaryEntryWithMeals> = Transformations.switchMap(ldUser) {
-        Timber.d("ldDiaryEntryWithMeals transformation!")
-        flUser.flatMapLatest {
-            diaryRepository.getDiaryEntryWithMeals(it.currentYear, it.currentDayOfYear)
-        }.asLiveData()
+    val ldDiaryEntryWithMeals: LiveData<DiaryEntryWithMeals> = switchMap(ldUser) {
+        if (::flUser.isInitialized) {
+            flUser.flatMapLatest {
+                diaryRepository.getDiaryEntryWithMeals(it.year, it.dayOfYear)
+            }.asLiveData()
+        } else {
+            MutableLiveData()
+        }
     }
 
     lateinit var flUser: MutableStateFlow<User>
@@ -53,17 +56,16 @@ class DiaryViewModel @Inject constructor(
         carbsConsumed = 0.0
         for (meal in diaryEntryWithMeals.meals) {
             val mealWithFoodEntries = diaryRepository.getMealWithFoodEntriesById(meal.mealId)
-            mealWithFoodEntries.meal.calories = mealWithFoodEntries.calculateCalories()
-            caloriesConsumed += mealWithFoodEntries.calculateCalories()
-            mealWithFoodEntries.meal.protein = mealWithFoodEntries.calculateProtein()
-            proteinConsumed += mealWithFoodEntries.calculateProtein()
-            mealWithFoodEntries.meal.carbs = mealWithFoodEntries.calculateCarbs()
-            carbsConsumed += mealWithFoodEntries.calculateCarbs()
-            mealWithFoodEntries.meal.fat = mealWithFoodEntries.calculateFat()
-            fatConsumed += mealWithFoodEntries.calculateFat()
+            mealWithFoodEntries.meal.calories = mealWithFoodEntries.calories
+            caloriesConsumed += mealWithFoodEntries.calories
+            mealWithFoodEntries.meal.protein = mealWithFoodEntries.protein
+            proteinConsumed += mealWithFoodEntries.protein
+            mealWithFoodEntries.meal.carbs = mealWithFoodEntries.carbs
+            carbsConsumed += mealWithFoodEntries.carbs
+            mealWithFoodEntries.meal.fat = mealWithFoodEntries.fat
+            fatConsumed += mealWithFoodEntries.fat
             meals.add(mealWithFoodEntries)
         }
-        Timber.d("Calories: ${caloriesConsumed}")
         caloriesPercentage = (caloriesConsumed / user.dailyKcalIntake) * 100
         proteinPercentage = (proteinConsumed / user.dailyProteinIntakeInG) * 100
         fatPercentage = (fatConsumed / user.dailyFatIntakeInG) * 100
@@ -85,43 +87,22 @@ class DiaryViewModel @Inject constructor(
         }
     }
 
-    suspend fun updateUserToPreviousDay() {
-        currentDay = currentDay.minusDays(1) // subtract 1 day from current day
-        val user = ldUser.value
-        if (user != null) {
-            user.currentYear = currentDay.year
-            user.currentMonth = currentDay.monthValue
-            user.currentDayOfYear = currentDay.dayOfYear
-            user.currentDayOfMonth = currentDay.dayOfMonth
-            user.currentDayOfWeek = currentDay.dayOfWeek.value
-            userRepository.updateUser(user)
-        }
-    }
+    suspend fun updateUserToPreviousDay() =
+        updateUserDate(currentDay.minusDays(1))
 
-    suspend fun updateUserToCurrentDay() {
-        currentDay = LocalDate.now()
-        val user = ldUser.value
-        if (user != null) {
-            user.currentYear = currentDay.year
-            user.currentMonth = currentDay.monthValue
-            user.currentDayOfYear = currentDay.dayOfYear
-            user.currentDayOfMonth = currentDay.dayOfMonth
-            user.currentDayOfWeek = currentDay.dayOfWeek.value
-            userRepository.updateUser(user)
-        }
-    }
+    suspend fun updateUserToCurrentDay() =
+        updateUserDate(LocalDate.now())
 
-    suspend fun updateUserToNextDay() {
-        currentDay = currentDay.plusDays(1)
-        val user = ldUser.value
-        if (user != null) {
-            user.currentYear = currentDay.year
-            user.currentMonth = currentDay.monthValue
-            user.currentDayOfYear = currentDay.dayOfYear
-            user.currentDayOfMonth = currentDay.dayOfMonth
-            user.currentDayOfWeek = currentDay.dayOfWeek.value
-            userRepository.updateUser(user)
-        }
+    suspend fun updateUserToNextDay() =
+        updateUserDate(currentDay.plusDays(1))
+
+    private suspend fun updateUserDate(currentDay: LocalDate) {
+        user.year = currentDay.year
+        user.month = currentDay.monthValue
+        user.dayOfYear = currentDay.dayOfYear
+        user.dayOfMonth = currentDay.dayOfMonth
+        user.dayOfWeek = currentDay.dayOfWeek.value
+        userRepository.updateUser(user)
     }
 
     suspend fun deleteMealFromDiary(diaryEntryId: Int, mealId: Int) {

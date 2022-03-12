@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "foodEntry")
 data class FoodEntry(
-    @ColumnInfo(name = "mealId") val mealId: Int,
+    @ColumnInfo(name = "mealId") var mealId: Int,
     @ColumnInfo(name = "title") var title: String,
     @ColumnInfo(name = "caloriesPer100G") var caloriesPer100G: Double,
     @ColumnInfo(name = "carbsPer100G") var carbsPer100G: Double,
@@ -16,28 +16,8 @@ data class FoodEntry(
 ) {
     @PrimaryKey(autoGenerate = true)
     var foodEntryId: Int = 0
-    @ColumnInfo(name = "calories")
-    var calories: Double = 0.0
-    @ColumnInfo(name = "carbs")
-    var carbs: Double = 0.0
-    @ColumnInfo(name = "fat")
-    var fat: Double = 0.0
-    @ColumnInfo(name = "protein")
-    var protein: Double = 0.0
-
-    fun calculateCarbs(carbsPer100G: Double, quantity: Double): Double {
-        return carbsPer100G / 100 * quantity
-    }
-
-    fun calculateCalories(caloriesPer100G: Double, quantity: Double): Double {
-        return caloriesPer100G / 100 * quantity
-    }
-
-    fun calculateFat(fatPer100G: Double, quantity: Double): Double {
-        return fatPer100G / 100 * quantity
-    }
-
-    fun calculateProtein(proteinPer100G: Double, quantity: Double): Double {
-        return proteinPer100G / 100 * quantity
-    }
+    val calories: Double get() =  caloriesPer100G / 100 * quantityInG
+    val carbs: Double get() = carbsPer100G / 100 * quantityInG
+    val fat: Double get() = fatPer100G / 100 * quantityInG
+    val protein: Double get() = proteinPer100G / 100 * quantityInG
 }

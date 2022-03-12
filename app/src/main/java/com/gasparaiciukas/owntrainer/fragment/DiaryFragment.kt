@@ -72,8 +72,8 @@ class DiaryFragment : Fragment() {
             if (user != null) {
                 viewModel.flUser = MutableStateFlow(user)
                 viewModel.user = user
-                viewModel.currentDay = LocalDate.of(user.currentYear, user.currentMonth, user.currentDayOfMonth)
-                Timber.d("user loaded! ${user.currentMonth} ${user.currentDayOfMonth}")
+                viewModel.currentDay = LocalDate.of(user.year, user.month, user.dayOfMonth)
+                Timber.d("user loaded! ${user.month} ${user.dayOfMonth}")
             } else {
                 Timber.d("user is null or not found...")
             }

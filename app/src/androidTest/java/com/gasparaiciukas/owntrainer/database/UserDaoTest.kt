@@ -50,11 +50,11 @@ class UserDaoTest {
             heightInCm = 180,
             weightInKg = 80.0,
             lifestyle = "Lightly active",
-            currentYear = currentDate.year,
-            currentMonth = currentDate.monthValue,
-            currentDayOfYear = currentDate.dayOfYear,
-            currentDayOfMonth = currentDate.dayOfMonth,
-            currentDayOfWeek = currentDate.dayOfWeek.value
+            year = currentDate.year,
+            month = currentDate.monthValue,
+            dayOfYear = currentDate.dayOfYear,
+            dayOfMonth = currentDate.dayOfMonth,
+            dayOfWeek = currentDate.dayOfWeek.value
         )
         user.recalculateUserMetrics()
         userDao.insertUser(user)
@@ -72,11 +72,11 @@ class UserDaoTest {
             heightInCm = 180,
             weightInKg = 80.0,
             lifestyle = "Lightly active",
-            currentYear = currentDate.year,
-            currentMonth = currentDate.monthValue,
-            currentDayOfYear = currentDate.dayOfYear,
-            currentDayOfMonth = currentDate.dayOfMonth,
-            currentDayOfWeek = currentDate.dayOfWeek.value
+            year = currentDate.year,
+            month = currentDate.monthValue,
+            dayOfYear = currentDate.dayOfYear,
+            dayOfMonth = currentDate.dayOfMonth,
+            dayOfWeek = currentDate.dayOfWeek.value
         )
         user.recalculateUserMetrics()
         userDao.insertUser(user)
@@ -96,11 +96,11 @@ class UserDaoTest {
             heightInCm = 180,
             weightInKg = 80.0,
             lifestyle = "Lightly active",
-            currentYear = currentDate.year,
-            currentMonth = currentDate.monthValue,
-            currentDayOfYear = currentDate.dayOfYear,
-            currentDayOfMonth = currentDate.dayOfMonth,
-            currentDayOfWeek = currentDate.dayOfWeek.value
+            year = currentDate.year,
+            month = currentDate.monthValue,
+            dayOfYear = currentDate.dayOfYear,
+            dayOfMonth = currentDate.dayOfMonth,
+            dayOfWeek = currentDate.dayOfWeek.value
         )
         user.recalculateUserMetrics()
         userDao.insertUser(user)

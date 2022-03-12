@@ -12,35 +12,22 @@ data class User(
     @ColumnInfo(name = "heightInCm") var heightInCm: Int,
     @ColumnInfo(name = "weightInKg") var weightInKg: Double,
     @ColumnInfo(name = "lifestyle") var lifestyle: String,
-    @ColumnInfo(name = "currentYear") var currentYear: Int,
-    @ColumnInfo(name = "currentMonth") var currentMonth: Int,
-    @ColumnInfo(name = "currentDayOfYear") var currentDayOfYear: Int,
-    @ColumnInfo(name = "currentDayOfMonth") var currentDayOfMonth: Int,
-    @ColumnInfo(name = "currentDayOfWeek") var currentDayOfWeek: Int,
+    @ColumnInfo(name = "year") var year: Int,
+    @ColumnInfo(name = "month") var month: Int,
+    @ColumnInfo(name = "dayOfYear") var dayOfYear: Int,
+    @ColumnInfo(name = "dayOfMonth") var dayOfMonth: Int,
+    @ColumnInfo(name = "dayOfWeek") var dayOfWeek: Int,
 ) {
     @PrimaryKey(autoGenerate = true)
     var userId: Int = 0
-    @ColumnInfo(name = "bmr")
-    var bmr: Double = calculateBmr(weightInKg, heightInCm.toDouble(), ageInYears, sex)
     @ColumnInfo(name = "kcalBurnedPerStep")
     var kcalBurnedPerStep: Double = 0.0
-    @ColumnInfo(name = "dailyKcalIntake")
-    var dailyKcalIntake: Double = calculateDailyKcalIntake(bmr, lifestyle)
-    @ColumnInfo(name = "dailyProteinIntakeInG")
-    var dailyProteinIntakeInG: Double = calculateDailyProteinIntakeInG(weightInKg)
-    @ColumnInfo(name = "dailyFatIntakeInG")
-    var dailyFatIntakeInG: Double = calculateDailyFatIntake(dailyKcalIntake)
-    @ColumnInfo(name = "dailyCarbsIntakeInG")
-    var dailyCarbsIntakeInG: Double = calculateDailyCarbsIntake(dailyKcalIntake)
 
-    // Recalculate each metric by formula
-    fun recalculateUserMetrics() {
-        bmr = calculateBmr(weightInKg, heightInCm.toDouble(), ageInYears, sex)
-        dailyKcalIntake = calculateDailyKcalIntake(bmr, lifestyle)
-        dailyProteinIntakeInG = calculateDailyProteinIntakeInG(weightInKg)
-        dailyFatIntakeInG = calculateDailyFatIntake(dailyKcalIntake)
-        dailyCarbsIntakeInG = calculateDailyCarbsIntake(dailyKcalIntake)
-    }
+    val bmr: Double get() = calculateBmr(weightInKg, heightInCm.toDouble(), ageInYears, sex)
+    val dailyKcalIntake: Double get() = calculateDailyKcalIntake(bmr, lifestyle)
+    val dailyProteinIntakeInG: Double get() = calculateDailyProteinIntakeInG(weightInKg)
+    val dailyFatIntakeInG: Double get() = calculateDailyFatIntake(dailyKcalIntake)
+    val dailyCarbsIntakeInG: Double get() = calculateDailyCarbsIntake(dailyKcalIntake)
 
     /*
     BMR - Basal Metabolic Rate
