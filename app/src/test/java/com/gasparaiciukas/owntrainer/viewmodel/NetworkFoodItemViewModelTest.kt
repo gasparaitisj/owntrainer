@@ -7,6 +7,7 @@ import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.FoodNutrient
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepository
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepository
+import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -19,6 +20,7 @@ class NetworkFoodItemViewModelTest {
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
 
+    private val foodItem = createFood()
     private lateinit var viewModel: NetworkFoodItemViewModel
     private lateinit var savedStateHandle: SavedStateHandle
     private lateinit var userRepository: FakeUserRepository
@@ -27,14 +29,18 @@ class NetworkFoodItemViewModelTest {
     fun setup() {
         userRepository = FakeUserRepository()
         savedStateHandle = SavedStateHandle().apply {
-            set("foodItem", createFood())
+            set("foodItem", foodItem)
         }
         viewModel = NetworkFoodItemViewModel(userRepository, savedStateHandle)
     }
 
     @Test
     fun `when loadData() is called, should load data`() = runTest {
-
+        viewModel.loadData()
+        assertThat(viewModel.calories).isEqualTo(52.0f)
+        assertThat(viewModel.protein).isEqualTo(0.0f)
+        assertThat(viewModel.fat).isEqualTo(0.65f)
+        assertThat(viewModel.carbs).isEqualTo(14.3f)
     }
 
     private fun createFood(): Food {

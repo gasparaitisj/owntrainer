@@ -107,6 +107,10 @@ class FakeDiaryRepository : DiaryRepository {
         }
     }
 
+    override fun getAllFoodEntries(): Flow<List<FoodEntry>> {
+        return MutableLiveData(foodEntries).asFlow()
+    }
+
     override suspend fun insertFood(foodEntry: FoodEntry) {
         foodEntries.add(foodEntry)
     }

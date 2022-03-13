@@ -28,6 +28,8 @@ interface DiaryRepository {
 
     suspend fun getFoods(query: String): Resource<GetResponse>
 
+    fun getAllFoodEntries(): Flow<List<FoodEntry>>
+
     suspend fun insertFood(foodEntry: FoodEntry)
 
     suspend fun deleteFoodById(foodEntryId: Int)

@@ -5,6 +5,7 @@ import com.gasparaiciukas.owntrainer.database.*
 import com.gasparaiciukas.owntrainer.network.GetResponse
 import com.gasparaiciukas.owntrainer.network.GetService
 import com.gasparaiciukas.owntrainer.network.Resource
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -60,6 +61,9 @@ class DefaultDiaryRepository @Inject constructor(
             Resource.error("Couldn't reach the server. Check your internet connection.", null)
         }
     }
+
+    override fun getAllFoodEntries(): Flow<List<FoodEntry>> =
+        foodEntryDao.getAllFoodEntries()
 
     override suspend fun insertFood(foodEntry: FoodEntry) {
         foodEntryDao.insertFoodEntry(foodEntry)
