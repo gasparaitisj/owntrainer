@@ -2,8 +2,6 @@ package com.gasparaiciukas.owntrainer.database
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.asLiveData
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SmallTest
 import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.google.common.truth.Truth.assertThat

@@ -8,7 +8,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,7 +34,7 @@ class DiaryFragment : Fragment() {
 
     private lateinit var adapter: MealAdapter
 
-    private val viewModel by viewModels<DiaryViewModel>()
+    lateinit var viewModel: DiaryViewModel
 
     private val singleClickListener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit =
         { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
@@ -66,6 +66,8 @@ class DiaryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[DiaryViewModel::class.java]
+
         // Data loading chain:
         // User -> DiaryEntry -> List<MealWithFoodEntries>
         viewModel.ldUser.observe(viewLifecycleOwner) { user ->
@@ -100,13 +102,13 @@ class DiaryFragment : Fragment() {
         _binding = null
     }
 
-    private fun initUi() {
+    fun initUi() {
         initNavigation()
         initStatistics()
         binding.scrollView.visibility = View.VISIBLE
     }
 
-    private fun initNavigation() {
+    fun initNavigation() {
         binding.cardNavigation.tvDayOfWeek.text =
             DateFormatter.dayOfWeekToString(viewModel.currentDay.dayOfWeek.value)
         binding.cardNavigation.tvMonthOfYear.text =
@@ -282,7 +284,7 @@ class DiaryFragment : Fragment() {
         })
     }
 
-    private fun slideBottomNavigationUp() {
+    fun slideBottomNavigationUp() {
         val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val layoutParams = botNav?.layoutParams
         if (layoutParams is CoordinatorLayout.LayoutParams) {
@@ -293,7 +295,7 @@ class DiaryFragment : Fragment() {
         }
     }
 
-    private fun slideBottomNavigationDown() {
+    fun slideBottomNavigationDown() {
         val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val layoutParams = botNav?.layoutParams
         if (layoutParams is CoordinatorLayout.LayoutParams) {
