@@ -21,7 +21,7 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "0.1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.gasparaiciukas.owntrainer.HiltTestRunner"
         buildConfigField("String", "API_KEY", apikeyProperties['API_KEY'])
     }
     buildTypes {
@@ -126,6 +126,8 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$rootProject.junitAndroidXVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espressoVersion"
     androidTestImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$rootProject.hiltVersion"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$rootProject.hiltVersion"
 }
 repositories {
     mavenCentral()
