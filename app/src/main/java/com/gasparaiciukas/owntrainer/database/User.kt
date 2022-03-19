@@ -72,14 +72,16 @@ data class User(
     /*
     Dietary Reference Intake recommends:
     20% to 35% of total calories from fat
+    1g fat = 9 kcal
      */
     private fun calculateDailyFatIntake(dailyKcalIntake: Double): Double {
-        return dailyKcalIntake * 0.35
+        return dailyKcalIntake * 0.35 / 9
     }
 
     /*
     Dietary Reference Intake recommends:
     45% to 65% of total calories from carbs
+    1g carbs = 4 kcal
      */
     private fun calculateDailyCarbsIntake(dailyKcalIntake: Double): Double {
         return dailyKcalIntake * 0.55 / 4

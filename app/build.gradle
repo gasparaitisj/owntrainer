@@ -124,7 +124,14 @@ dependencies {
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.archCoreTestingVersion"
     androidTestImplementation "com.google.truth:truth:$rootProject.truthVersion"
     androidTestImplementation "androidx.test.ext:junit:$rootProject.junitAndroidXVersion"
+
+    // updating Espresso to 3.4.0 will break tests
+    //noinspection GradleDependency
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espressoVersion"
+    //noinspection GradleDependency
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$rootProject.espressoVersion"
+
+
     androidTestImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
     androidTestImplementation "com.google.dagger:hilt-android-testing:$rootProject.hiltVersion"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$rootProject.hiltVersion"
