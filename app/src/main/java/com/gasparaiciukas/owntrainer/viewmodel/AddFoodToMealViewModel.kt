@@ -1,14 +1,16 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.gasparaiciukas.owntrainer.database.FoodEntry
+import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.repository.DiaryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -50,6 +52,12 @@ class AddFoodToMealViewModel @Inject constructor(
             diaryRepository.insertFood(foodEntry)
         } else {
             Timber.e("addFoodToMeal() failed! either foodItem or quantity is null!")
+        }
+    }
+
+    fun insertMeal(meal: Meal) {
+        viewModelScope.launch {
+            diaryRepository.insertMeal(meal)
         }
     }
 }

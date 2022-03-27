@@ -44,7 +44,6 @@ class AddFoodToMealFragment @Inject constructor(
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[AddFoodToMealViewModel::class.java]
         viewModel.ldMeals.observe(viewLifecycleOwner) {
-            println("ldMeals.value = $it")
             adapter.items = it
         }
         initUi()

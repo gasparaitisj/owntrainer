@@ -5,6 +5,8 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.*
 import com.gasparaiciukas.owntrainer.getOrAwaitValue
+import com.gasparaiciukas.owntrainer.network.Food
+import com.gasparaiciukas.owntrainer.network.FoodNutrient
 import com.gasparaiciukas.owntrainer.network.GetResponse
 import com.gasparaiciukas.owntrainer.network.Resource
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +14,7 @@ import java.time.LocalDate
 
 class FakeDiaryRepositoryTest : DiaryRepository {
 
-    private val diaryEntries = mutableListOf<DiaryEntry>()
+    val diaryEntries = mutableListOf<DiaryEntry>()
     private val diaryEntryMealCrossRefs = mutableListOf<DiaryEntryMealCrossRef>()
     private val meals = mutableListOf<Meal>()
     var mealsWithFoodEntries = mutableListOf<MealWithFoodEntries>()
@@ -40,15 +42,18 @@ class FakeDiaryRepositoryTest : DiaryRepository {
             monthOfYear = date.monthValue,
             dayOfMonth = date.dayOfMonth
         )
-        return if (diaryEntries.any { d -> d.year == year && d.dayOfYear == dayOfYear }) {
-            MutableLiveData(diaryEntry).asFlow()
-        } else {
-            throw RuntimeException("getDiaryEntry() couldn't find diary entry")
-        }
+        return MutableLiveData(diaryEntry).asFlow()
     }
 
     override fun getDiaryEntryWithMeals(year: Int, dayOfYear: Int): Flow<DiaryEntryWithMeals> {
-        val diaryEntry = getDiaryEntry(year, dayOfYear).asLiveData().getOrAwaitValue()
+        val date = LocalDate.ofYearDay(year, dayOfYear)
+        val diaryEntry = DiaryEntry(
+            year = date.year,
+            dayOfYear = date.dayOfYear,
+            dayOfWeek = date.dayOfWeek.value,
+            monthOfYear = date.monthValue,
+            dayOfMonth = date.dayOfMonth
+        )
         val diaryEntryMeals = mutableListOf<Meal>()
         for (meal in meals) {
             val crossRef = DiaryEntryMealCrossRef(
@@ -102,7 +107,64 @@ class FakeDiaryRepositoryTest : DiaryRepository {
         return if (shouldReturnNetworkError) {
             Resource.error("Error", null)
         } else {
-            Resource.success(GetResponse(foods = listOf()))
+            Resource.success(
+                GetResponse(
+                    foods = listOf(
+                        Food(
+                            fdcId = 454004,
+                            description = "APPLE",
+                            lowercaseDescription = "apple",
+                            dataType = "Branded",
+                            gtinUpc = "867824000001",
+                            publishedDate = "2019-04-01",
+                            brandOwner = "TREECRISP 2 GO",
+                            ingredients = "CRISP APPLE.",
+                            marketCountry = "United States",
+                            foodCategory = "Pre-Packaged Fruit & Vegetables",
+                            allHighlightFields = "<b>Ingredients</b>: CRISP <em>APPLE</em>.",
+                            score = 932.4247,
+                            foodNutrients = listOf(
+                                FoodNutrient(
+                                    nutrientId = 1003,
+                                    nutrientName = "Protein",
+                                    nutrientNumber = "203",
+                                    unitName = "G",
+                                    derivationCode = "LCCS",
+                                    derivationDescription = "Calculated from value per serving size measure",
+                                    value = 0.0
+                                ),
+                                FoodNutrient(
+                                    nutrientId = 1005,
+                                    nutrientName = "Carbohydrate, by difference",
+                                    nutrientNumber = "205",
+                                    unitName = "G",
+                                    derivationCode = "LCCS",
+                                    derivationDescription = "Calculated from value per serving size measure",
+                                    value = 14.3
+                                ),
+                                FoodNutrient(
+                                    nutrientId = 1008,
+                                    nutrientName = "Energy",
+                                    nutrientNumber = "208",
+                                    unitName = "G",
+                                    derivationCode = "LCCS",
+                                    derivationDescription = "Calculated from value per serving size measure",
+                                    value = 52.0
+                                ),
+                                FoodNutrient(
+                                    nutrientId = 1004,
+                                    nutrientName = "Total lipid (fat)",
+                                    nutrientNumber = "204",
+                                    unitName = "G",
+                                    derivationCode = "LCSL",
+                                    derivationDescription = "Calculated from a less than value per serving size measure",
+                                    value = 0.65
+                                ),
+                            )
+                        )
+                    )
+                )
+            )
         }
     }
 

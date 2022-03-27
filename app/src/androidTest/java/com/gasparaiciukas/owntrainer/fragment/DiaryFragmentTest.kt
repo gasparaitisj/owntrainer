@@ -3,6 +3,7 @@ package com.gasparaiciukas.owntrainer.fragment
 import android.widget.ImageButton
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.FragmentFactory
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.espresso.Espresso.onView
@@ -17,16 +18,19 @@ import com.gasparaiciukas.owntrainer.database.*
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
+import com.gasparaiciukas.owntrainer.viewmodel.DatabaseFoodItemViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.DiaryViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.instanceOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import java.time.LocalDate
@@ -46,15 +50,19 @@ class DiaryFragmentTest {
     @Inject
     lateinit var fragmentFactory: MainFragmentFactory
 
+    lateinit var navController: NavController
+    lateinit var fakeViewModel: DiaryViewModel
+    lateinit var userRepository: FakeUserRepositoryTest
+    lateinit var diaryRepository: FakeDiaryRepositoryTest
+
     @Before
     fun setup() {
         hiltRule.inject()
-    }
 
-    @Test
-    fun clickAddMealToDiaryButton_navigateToAddMealToDiaryFragment() {
-        val navController = mock(NavController::class.java)
-        val fakeViewModel = DiaryViewModel(FakeUserRepositoryTest(), FakeDiaryRepositoryTest())
+        navController = Mockito.mock(NavController::class.java)
+        userRepository = FakeUserRepositoryTest()
+        diaryRepository = FakeDiaryRepositoryTest()
+        fakeViewModel = DiaryViewModel(userRepository, diaryRepository)
         fakeViewModel.currentDay = LocalDate.of(2022, 7, 19)
         fakeViewModel.diaryEntryWithMeals = DiaryEntryWithMeals(
             DiaryEntry(
@@ -67,10 +75,12 @@ class DiaryFragmentTest {
             ),
             listOf()
         )
+    }
+
+    @Test
+    fun clickAddMealToDiaryButton_navigateToAddMealToDiaryFragment() = runTest {
         launchFragmentInHiltContainer<DiaryFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
-            viewModel = fakeViewModel
-            this.initNavigation()
         }
         onView(withId(R.id.fab)).perform(click())
 
@@ -81,46 +91,19 @@ class DiaryFragmentTest {
 
     @Test
     fun clickOnMeal_navigateToMealItemFragment() {
-        val navController = mock(NavController::class.java)
-        val fakeViewModel = DiaryViewModel(FakeUserRepositoryTest(), FakeDiaryRepositoryTest())
-        fakeViewModel.currentDay = LocalDate.of(2022, 7, 19)
-        fakeViewModel.diaryEntryWithMeals = DiaryEntryWithMeals(
-            DiaryEntry(
-                diaryEntryId = 1,
-                year = fakeViewModel.currentDay.year,
-                dayOfYear = fakeViewModel.currentDay.dayOfYear,
-                dayOfWeek = fakeViewModel.currentDay.dayOfWeek.value,
-                monthOfYear = fakeViewModel.currentDay.monthValue,
-                dayOfMonth = fakeViewModel.currentDay.dayOfMonth
-            ),
-            listOf()
-        )
-        fakeViewModel.user = User(
-            sex = "Male",
-            ageInYears = 25,
-            heightInCm = 180,
-            weightInKg = 80.0,
-            lifestyle = "Lightly active",
-            year = fakeViewModel.currentDay.year,
-            month = fakeViewModel.currentDay.monthValue,
-            dayOfYear = fakeViewModel.currentDay.dayOfYear,
-            dayOfMonth = fakeViewModel.currentDay.dayOfMonth,
-            dayOfWeek = fakeViewModel.currentDay.dayOfWeek.value
-        )
-        fakeViewModel.mealsWithFoodEntries = listOf(
-            MealWithFoodEntries(
-                Meal(
-                    mealId = 10,
-                    title = "Title",
-                    instructions = "Instructions"
-                ),
-                listOf()
-            )
-        )
-        launchFragmentInHiltContainer<DiaryFragment> {
+        launchFragmentInHiltContainer<DiaryFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
-            initUi()
+            adapter.items = listOf(
+                MealWithFoodEntries(
+                    Meal(
+                        mealId = 10,
+                        title = "title",
+                        instructions = "instructions"
+                    ),
+                    listOf()
+                )
+            )
         }
         onView(withId(R.id.recycler_view)).perform(
             RecyclerViewActions.actionOnItemAtPosition<MealAdapter.MealViewHolder>(
@@ -139,24 +122,9 @@ class DiaryFragmentTest {
 
     @Test
     fun clickDrawerHomeButton_navigateToSelf() {
-        val navController = mock(NavController::class.java)
-        val fakeViewModel = DiaryViewModel(FakeUserRepositoryTest(), FakeDiaryRepositoryTest())
-        fakeViewModel.currentDay = LocalDate.of(2022, 7, 19)
-        fakeViewModel.diaryEntryWithMeals = DiaryEntryWithMeals(
-            DiaryEntry(
-                diaryEntryId = 1,
-                year = fakeViewModel.currentDay.year,
-                dayOfYear = fakeViewModel.currentDay.dayOfYear,
-                dayOfWeek = fakeViewModel.currentDay.dayOfWeek.value,
-                monthOfYear = fakeViewModel.currentDay.monthValue,
-                dayOfMonth = fakeViewModel.currentDay.dayOfMonth
-            ),
-            listOf()
-        )
-        launchFragmentInHiltContainer<DiaryFragment> {
+        launchFragmentInHiltContainer<DiaryFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
-            this.initNavigation()
         }
 
         onView(
@@ -172,24 +140,9 @@ class DiaryFragmentTest {
 
     @Test
     fun clickDrawerFoodsButton_navigateToFoodFragment() {
-        val navController = mock(NavController::class.java)
-        val fakeViewModel = DiaryViewModel(FakeUserRepositoryTest(), FakeDiaryRepositoryTest())
-        fakeViewModel.currentDay = LocalDate.of(2022, 7, 19)
-        fakeViewModel.diaryEntryWithMeals = DiaryEntryWithMeals(
-            DiaryEntry(
-                diaryEntryId = 1,
-                year = fakeViewModel.currentDay.year,
-                dayOfYear = fakeViewModel.currentDay.dayOfYear,
-                dayOfWeek = fakeViewModel.currentDay.dayOfWeek.value,
-                monthOfYear = fakeViewModel.currentDay.monthValue,
-                dayOfMonth = fakeViewModel.currentDay.dayOfMonth
-            ),
-            listOf()
-        )
-        launchFragmentInHiltContainer<DiaryFragment> {
+        launchFragmentInHiltContainer<DiaryFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
-            this.initNavigation()
         }
 
         onView(
@@ -205,24 +158,9 @@ class DiaryFragmentTest {
 
     @Test
     fun clickDrawerMealsButton_navigateToMealFragment() {
-        val navController = mock(NavController::class.java)
-        val fakeViewModel = DiaryViewModel(FakeUserRepositoryTest(), FakeDiaryRepositoryTest())
-        fakeViewModel.currentDay = LocalDate.of(2022, 7, 19)
-        fakeViewModel.diaryEntryWithMeals = DiaryEntryWithMeals(
-            DiaryEntry(
-                diaryEntryId = 1,
-                year = fakeViewModel.currentDay.year,
-                dayOfYear = fakeViewModel.currentDay.dayOfYear,
-                dayOfWeek = fakeViewModel.currentDay.dayOfWeek.value,
-                monthOfYear = fakeViewModel.currentDay.monthValue,
-                dayOfMonth = fakeViewModel.currentDay.dayOfMonth
-            ),
-            listOf()
-        )
-        launchFragmentInHiltContainer<DiaryFragment> {
+        launchFragmentInHiltContainer<DiaryFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
-            this.initNavigation()
         }
 
         onView(
@@ -238,24 +176,9 @@ class DiaryFragmentTest {
 
     @Test
     fun clickDrawerProgressButton_navigateToProgressFragment() {
-        val navController = mock(NavController::class.java)
-        val fakeViewModel = DiaryViewModel(FakeUserRepositoryTest(), FakeDiaryRepositoryTest())
-        fakeViewModel.currentDay = LocalDate.of(2022, 7, 19)
-        fakeViewModel.diaryEntryWithMeals = DiaryEntryWithMeals(
-            DiaryEntry(
-                diaryEntryId = 1,
-                year = fakeViewModel.currentDay.year,
-                dayOfYear = fakeViewModel.currentDay.dayOfYear,
-                dayOfWeek = fakeViewModel.currentDay.dayOfWeek.value,
-                monthOfYear = fakeViewModel.currentDay.monthValue,
-                dayOfMonth = fakeViewModel.currentDay.dayOfMonth
-            ),
-            listOf()
-        )
-        launchFragmentInHiltContainer<DiaryFragment> {
+        launchFragmentInHiltContainer<DiaryFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
-            this.initNavigation()
         }
 
         onView(
@@ -271,24 +194,9 @@ class DiaryFragmentTest {
 
     @Test
     fun clickDrawerProfileButton_navigateToProfileFragment() {
-        val navController = mock(NavController::class.java)
-        val fakeViewModel = DiaryViewModel(FakeUserRepositoryTest(), FakeDiaryRepositoryTest())
-        fakeViewModel.currentDay = LocalDate.of(2022, 7, 19)
-        fakeViewModel.diaryEntryWithMeals = DiaryEntryWithMeals(
-            DiaryEntry(
-                diaryEntryId = 1,
-                year = fakeViewModel.currentDay.year,
-                dayOfYear = fakeViewModel.currentDay.dayOfYear,
-                dayOfWeek = fakeViewModel.currentDay.dayOfWeek.value,
-                monthOfYear = fakeViewModel.currentDay.monthValue,
-                dayOfMonth = fakeViewModel.currentDay.dayOfMonth
-            ),
-            listOf()
-        )
-        launchFragmentInHiltContainer<DiaryFragment> {
+        launchFragmentInHiltContainer<DiaryFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
-            this.initNavigation()
         }
 
         onView(
@@ -304,24 +212,9 @@ class DiaryFragmentTest {
 
     @Test
     fun clickDrawerSettingsButton_navigateToSettingsFragment() {
-        val navController = mock(NavController::class.java)
-        val fakeViewModel = DiaryViewModel(FakeUserRepositoryTest(), FakeDiaryRepositoryTest())
-        fakeViewModel.currentDay = LocalDate.of(2022, 7, 19)
-        fakeViewModel.diaryEntryWithMeals = DiaryEntryWithMeals(
-            DiaryEntry(
-                diaryEntryId = 1,
-                year = fakeViewModel.currentDay.year,
-                dayOfYear = fakeViewModel.currentDay.dayOfYear,
-                dayOfWeek = fakeViewModel.currentDay.dayOfWeek.value,
-                monthOfYear = fakeViewModel.currentDay.monthValue,
-                dayOfMonth = fakeViewModel.currentDay.dayOfMonth
-            ),
-            listOf()
-        )
-        launchFragmentInHiltContainer<DiaryFragment> {
+        launchFragmentInHiltContainer<DiaryFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
-            this.initNavigation()
         }
 
         onView(

@@ -34,23 +34,6 @@ class MealFragment @Inject constructor(
     private var _binding: FragmentMealBinding? = null
     private val binding get() = _binding!!
 
-
-    private val singleClickListener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit =
-        { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
-            val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(
-                mealWithFoodEntries.meal.mealId,
-                -1
-            )
-            findNavController().navigate(action)
-        }
-
-    private val longClickListener: (mealId: Int, position: Int) -> Unit = { mealId, _ ->
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.deleteMeal(mealId)
-            adapter.items = viewModel.meals
-        }
-    }
-
     lateinit var viewModel: MealViewModel
 
     override fun onCreateView(
@@ -208,9 +191,22 @@ class MealFragment @Inject constructor(
     }
 
     private fun initRecyclerView() {
-        val layoutManager = LinearLayoutManager(context)
-        //adapter = MealAdapter(viewModel.meals, singleClickListener, longClickListener)
-        binding.recyclerView.layoutManager = layoutManager
+        adapter.setOnClickListeners(
+            singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
+                val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(
+                    mealWithFoodEntries.meal.mealId,
+                    -1
+                )
+                findNavController().navigate(action)
+            },
+            longClickListener = { mealId, _ ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.deleteMeal(mealId)
+                    adapter.items = viewModel.meals
+                }
+            }
+        )
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
     }
 

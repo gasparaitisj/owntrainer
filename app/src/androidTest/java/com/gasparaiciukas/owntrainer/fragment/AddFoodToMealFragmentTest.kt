@@ -1,13 +1,10 @@
 package com.gasparaiciukas.owntrainer.fragment
 
-import android.content.Context
-import androidx.annotation.UiThread
+import android.widget.ImageButton
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -15,23 +12,21 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
-import com.gasparaiciukas.owntrainer.database.AppDatabase
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
-import com.gasparaiciukas.owntrainer.di.DatabaseModule
-import com.gasparaiciukas.owntrainer.di.NetworkModule
+import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.FoodNutrient
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
 import com.gasparaiciukas.owntrainer.viewmodel.AddFoodToMealViewModel
-import com.gasparaiciukas.owntrainer.viewmodel.DiaryViewModel
+import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.hamcrest.Matchers
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -75,18 +70,14 @@ class AddFoodToMealFragmentTest {
 
     @Test
     fun clickOnMeal_popBackStack() = runTest {
+        val meal = Meal(
+            title = "title",
+            instructions = "instructions"
+        )
         launchFragmentInHiltContainer<AddFoodToMealFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
-            viewModel = fakeViewModel
-            adapter.items = listOf(
-                MealWithFoodEntries(
-                    Meal(
-                        title = "title",
-                        instructions = "instructions"
-                    ),
-                    listOf()
-                )
-            )
+            fakeViewModel = viewModel
+            viewModel.insertMeal(meal)
         }
 
         Espresso.onView(ViewMatchers.withId(R.id.recycler_view)).perform(
@@ -95,6 +86,23 @@ class AddFoodToMealFragmentTest {
                 ViewActions.click()
             )
         )
+
+        assertThat(fakeViewModel.ldMeals.getOrAwaitValue()).contains(MealWithFoodEntries(meal, listOf()))
+        Mockito.verify(navController).popBackStack()
+    }
+
+    @Test
+    fun clickOnNavigationBackButton_popBackStack() = runTest {
+        launchFragmentInHiltContainer<AddFoodToMealFragment>(fragmentFactory = fragmentFactory) {
+            Navigation.setViewNavController(requireView(), navController)
+        }
+
+        Espresso.onView(
+            Matchers.allOf(
+                Matchers.instanceOf(ImageButton::class.java),
+                ViewMatchers.withParent(ViewMatchers.withId(R.id.top_app_bar))
+            )
+        ).perform(ViewActions.click())
 
         Mockito.verify(navController).popBackStack()
     }
@@ -106,7 +114,7 @@ class AddFoodToMealFragmentTest {
             lowercaseDescription = "apple",
             dataType = "Branded",
             gtinUpc = "867824000001",
-            publishedDate =  "2019-04-01",
+            publishedDate = "2019-04-01",
             brandOwner = "TREECRISP 2 GO",
             ingredients = "CRISP APPLE.",
             marketCountry = "United States",
@@ -116,7 +124,7 @@ class AddFoodToMealFragmentTest {
             foodNutrients = listOf(
                 FoodNutrient(
                     nutrientId = 1003,
-                    nutrientName =  "Protein",
+                    nutrientName = "Protein",
                     nutrientNumber = "203",
                     unitName = "G",
                     derivationCode = "LCCS",
@@ -125,7 +133,7 @@ class AddFoodToMealFragmentTest {
                 ),
                 FoodNutrient(
                     nutrientId = 1005,
-                    nutrientName =  "Carbohydrate, by difference",
+                    nutrientName = "Carbohydrate, by difference",
                     nutrientNumber = "205",
                     unitName = "G",
                     derivationCode = "LCCS",
@@ -134,7 +142,7 @@ class AddFoodToMealFragmentTest {
                 ),
                 FoodNutrient(
                     nutrientId = 1008,
-                    nutrientName =  "Energy",
+                    nutrientName = "Energy",
                     nutrientNumber = "208",
                     unitName = "G",
                     derivationCode = "LCCS",
@@ -143,7 +151,7 @@ class AddFoodToMealFragmentTest {
                 ),
                 FoodNutrient(
                     nutrientId = 1004,
-                    nutrientName =  "Total lipid (fat)",
+                    nutrientName = "Total lipid (fat)",
                     nutrientNumber = "204",
                     unitName = "G",
                     derivationCode = "LCSL",

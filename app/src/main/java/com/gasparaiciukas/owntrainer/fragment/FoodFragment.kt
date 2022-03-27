@@ -125,6 +125,7 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 if (!TextUtils.isEmpty(binding.etSearch.text)) {
+                    println("im clicked")
                     viewModel.getFoods(binding.etSearch.text.toString())
                 }
                 handled = true
@@ -136,8 +137,9 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
         binding.layoutTab.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if (tab.position == 1) {
-                    val action = FoodFragmentDirections.actionFoodFragmentToMealFragment()
-                    findNavController().navigate(action)
+                    findNavController().navigate(
+                        FoodFragmentDirections.actionFoodFragmentToMealFragment()
+                    )
                 }
             }
 

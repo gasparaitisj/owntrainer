@@ -7,13 +7,11 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentDatabaseFoodItemBinding
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
-import com.gasparaiciukas.owntrainer.viewmodel.CreateMealItemViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.DatabaseFoodItemViewModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -65,7 +63,7 @@ class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) 
         binding.topAppBar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-        binding.topAppBar.title = viewModel.food.title
+        binding.topAppBar.title = viewModel.food?.title
     }
 
     private fun initPieChart() {
@@ -90,7 +88,7 @@ class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) 
         pieData.setValueTextSize(12f)
         binding.pieChart.data = pieData
         binding.pieChart.centerText =
-            "${viewModel.food.calories.roundToInt()}\nkCal" // calorie text inside inner circle
+            "${viewModel.food?.calories?.roundToInt()}\nkCal" // calorie text inside inner circle
         binding.pieChart.setCenterTextSize(14f)
         binding.pieChart.setCenterTextColor(
             ContextCompat.getColor(
@@ -109,30 +107,30 @@ class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) 
     }
 
     private fun initTextViews() {
-        binding.tvQuantityCount.text = viewModel.food.quantityInG.toString()
-        binding.tvCarbsWeight.text = viewModel.food.carbs.roundToInt().toString()
+        binding.tvQuantityCount.text = viewModel.food?.quantityInG.toString()
+        binding.tvCarbsWeight.text = viewModel.food?.carbs?.roundToInt().toString()
         binding.tvCarbsPercentage.text =
             String.format(
                 "%s %%",
-                (viewModel.food.carbs / viewModel.carbsDailyIntake * 100).roundToInt()
+                viewModel.carbsDailyIntakePercentage.roundToInt()
             )
-        binding.tvFatWeight.text = viewModel.food.fat.roundToInt().toString()
+        binding.tvFatWeight.text = viewModel.food?.fat?.roundToInt().toString()
         binding.tvFatPercentage.text =
             String.format(
                 "%s %%",
-                (viewModel.food.fat / viewModel.fatDailyIntake * 100).roundToInt()
+                viewModel.fatDailyIntakePercentage.roundToInt()
             )
-        binding.tvProteinWeight.text = viewModel.food.protein.roundToInt().toString()
+        binding.tvProteinWeight.text = viewModel.food?.protein?.roundToInt().toString()
         binding.tvProteinPercentage.text =
             String.format(
                 "%s %%",
-                (viewModel.food.protein / viewModel.proteinDailyIntake * 100).roundToInt()
+                viewModel.proteinDailyIntakePercentage.roundToInt()
             )
-        binding.tvCaloriesCount.text = viewModel.food.calories.roundToInt().toString()
+        binding.tvCaloriesCount.text = viewModel.food?.calories?.roundToInt().toString()
         binding.tvCaloriesPercentage.text =
             String.format(
                 "%s %%",
-                (viewModel.food.calories / viewModel.calorieDailyIntake * 100).roundToInt()
+                viewModel.caloriesDailyIntakePercentage.roundToInt()
             )
     }
 

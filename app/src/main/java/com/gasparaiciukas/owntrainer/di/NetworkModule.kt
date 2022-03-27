@@ -1,6 +1,6 @@
 package com.gasparaiciukas.owntrainer.di
 
-import com.gasparaiciukas.owntrainer.network.GetService
+import com.gasparaiciukas.owntrainer.network.DefaultGetService
 import com.gasparaiciukas.owntrainer.utils.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -16,11 +16,11 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideGetService(): GetService {
+    fun provideGetService(): DefaultGetService {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(GetService::class.java)
+            .create(DefaultGetService::class.java)
     }
 }

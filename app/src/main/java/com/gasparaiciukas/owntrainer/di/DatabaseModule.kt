@@ -2,7 +2,7 @@ package com.gasparaiciukas.owntrainer.di
 
 import android.content.Context
 import com.gasparaiciukas.owntrainer.database.*
-import com.gasparaiciukas.owntrainer.network.GetService
+import com.gasparaiciukas.owntrainer.network.DefaultGetService
 import com.gasparaiciukas.owntrainer.repository.*
 import dagger.Module
 import dagger.Provides
@@ -53,8 +53,8 @@ class DatabaseModule {
         diaryEntryWithMealsDao: DiaryEntryWithMealsDao,
         mealDao: MealDao,
         foodEntryDao: FoodEntryDao,
-        getService: GetService
-    ) = DefaultDiaryRepository(diaryEntryDao, diaryEntryWithMealsDao, mealDao, foodEntryDao, getService) as DiaryRepository
+        defaultGetService: DefaultGetService
+    ) = DefaultDiaryRepository(diaryEntryDao, diaryEntryWithMealsDao, mealDao, foodEntryDao, defaultGetService) as DiaryRepository
 
     @Singleton
     @Provides

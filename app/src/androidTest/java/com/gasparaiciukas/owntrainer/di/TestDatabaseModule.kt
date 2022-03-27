@@ -3,11 +3,9 @@ package com.gasparaiciukas.owntrainer.di
 import android.content.Context
 import androidx.room.Room
 import com.gasparaiciukas.owntrainer.database.*
-import com.gasparaiciukas.owntrainer.network.GetService
 import com.gasparaiciukas.owntrainer.repository.*
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
@@ -17,7 +15,7 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(components = [SingletonComponent::class],
     replaces = [DatabaseModule::class])
-object TestAppModule {
+object TestDatabaseModule {
 
     @Provides
     @Named("test_db")

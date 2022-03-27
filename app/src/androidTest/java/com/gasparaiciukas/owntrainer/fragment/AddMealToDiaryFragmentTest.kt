@@ -103,30 +103,11 @@ class AddMealToDiaryFragmentTest {
     }
 
     @Test
-    fun clickOnNavigationBackButton_navigateToDiaryFragment() {
+    fun clickOnNavigationBackButton_navigateToDiaryFragment() = runTest {
         val navController = Mockito.mock(NavController::class.java)
-        val fakeViewModel = DiaryViewModel(FakeUserRepositoryTest(), FakeDiaryRepositoryTest())
-        fakeViewModel.allMealsWithFoodEntries = listOf(
-            MealWithFoodEntries(
-                Meal(
-                    title = "Title",
-                    instructions = "Instructions"
-                ),
-                listOf()
-            ),
-            MealWithFoodEntries(
-                Meal(
-                    title = "Title",
-                    instructions = "Instructions"
-                ),
-                listOf()
-            )
-        )
 
-        launchFragmentInHiltContainer<AddMealToDiaryFragment> {
+        launchFragmentInHiltContainer<AddMealToDiaryFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
-            //sharedViewModel = fakeViewModel
-            //this.initUi()
         }
 
         onView(

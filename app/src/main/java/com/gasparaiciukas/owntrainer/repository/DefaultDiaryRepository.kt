@@ -3,7 +3,7 @@ package com.gasparaiciukas.owntrainer.repository
 import com.gasparaiciukas.owntrainer.BuildConfig
 import com.gasparaiciukas.owntrainer.database.*
 import com.gasparaiciukas.owntrainer.network.GetResponse
-import com.gasparaiciukas.owntrainer.network.GetService
+import com.gasparaiciukas.owntrainer.network.DefaultGetService
 import com.gasparaiciukas.owntrainer.network.Resource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -15,7 +15,7 @@ class DefaultDiaryRepository @Inject constructor(
     private val diaryEntryWithMealsDao: DiaryEntryWithMealsDao,
     private val mealDao: MealDao,
     private val foodEntryDao: FoodEntryDao,
-    private val getService: GetService
+    private val defaultGetService: DefaultGetService
 ): DiaryRepository {
     override suspend fun insertDiaryEntry(diaryEntry: DiaryEntry) =
         diaryEntryDao.insertDiaryEntry(diaryEntry)
@@ -49,7 +49,7 @@ class DefaultDiaryRepository @Inject constructor(
 
     override suspend fun getFoods(query: String): Resource<GetResponse> {
         return try {
-            val response = getService.getFoods(BuildConfig.API_KEY, query)
+            val response = defaultGetService.getFoods(BuildConfig.API_KEY, query)
             if (response.isSuccessful) {
                 response.body()?.let {
                     return@let Resource.success(it)

@@ -37,26 +37,6 @@ class DiaryFragment @Inject constructor(
 
     lateinit var viewModel: DiaryViewModel
 
-    private val singleClickListener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit =
-        { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
-            val action = DiaryFragmentDirections.actionDiaryFragmentToMealItemFragment(
-                mealWithFoodEntries.meal.mealId,
-                viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId
-            )
-            findNavController().navigate(action)
-        }
-
-    private val longClickListener: (mealId: Int, position: Int) -> Unit = { mealId, position ->
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.deleteMealFromDiary(
-                viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId,
-                mealId
-            )
-            adapter.notifyItemRemoved(position)
-            adapter.notifyItemRangeChanged(position, adapter.itemCount)
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -96,6 +76,7 @@ class DiaryFragment @Inject constructor(
                 viewModel.diaryEntryWithMeals = diaryEntryWithMeals
                 viewLifecycleOwner.lifecycleScope.launch {
                     viewModel.calculateData()
+                    adapter.items = viewModel.mealsWithFoodEntries
                     initUi()
                 }
             } else {
@@ -269,12 +250,24 @@ class DiaryFragment @Inject constructor(
     }
 
     private fun initRecyclerView() {
-        // val passLambda: (_1: Meal, _2: Int) -> Unit = { _: Meal, _: Int -> }
-//        adapter = MealAdapter(
-//            viewModel.mealsWithFoodEntries,
-//            singleClickListener,
-//            longClickListener
-//        )
+        adapter.setOnClickListeners(
+            singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
+                findNavController().navigate(
+                    DiaryFragmentDirections.actionDiaryFragmentToMealItemFragment(
+                        mealId = mealWithFoodEntries.meal.mealId,
+                        diaryEntryId = viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId
+                    )
+                )
+            },
+            longClickListener = { mealId, _ ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.deleteMealFromDiary(
+                        viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId,
+                        mealId
+                    )
+                }
+            }
+        )
         binding.cardMeals.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.cardMeals.recyclerView.adapter = adapter
         binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
