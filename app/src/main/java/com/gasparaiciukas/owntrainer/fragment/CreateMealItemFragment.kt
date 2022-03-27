@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentCreateMealItemBinding
@@ -16,11 +17,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CreateMealItemFragment : Fragment() {
+class CreateMealItemFragment : Fragment(R.layout.fragment_create_meal_item) {
     private var _binding: FragmentCreateMealItemBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModels<CreateMealItemViewModel>()
+    lateinit var viewModel: CreateMealItemViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +34,7 @@ class CreateMealItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[CreateMealItemViewModel::class.java]
         initUi()
     }
 
@@ -42,7 +44,7 @@ class CreateMealItemFragment : Fragment() {
         _binding = null
     }
 
-    private fun initUi() {
+    fun initUi() {
         initNavigation()
     }
 

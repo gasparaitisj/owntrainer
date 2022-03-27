@@ -9,6 +9,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +19,7 @@ import com.gasparaiciukas.owntrainer.databinding.FragmentMealItemBinding
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
 import com.gasparaiciukas.owntrainer.viewmodel.MealItemViewModel
+import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -28,13 +30,13 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class MealItemFragment : Fragment() {
+class MealItemFragment : Fragment(R.layout.fragment_meal_item) {
     private var _binding: FragmentMealItemBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var adapter: DatabaseFoodAdapter
 
-    private val viewModel by viewModels<MealItemViewModel>()
+    lateinit var viewModel: MealItemViewModel
 
     private val singleClickListener: (food: FoodEntryParcelable) -> Unit =
         { food: FoodEntryParcelable ->
@@ -62,6 +64,7 @@ class MealItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[MealItemViewModel::class.java]
         viewModel.ldUser.observe(viewLifecycleOwner) {
             viewModel.user = it
             viewLifecycleOwner.lifecycleScope.launch {

@@ -6,6 +6,7 @@ import com.gasparaiciukas.owntrainer.MainCoroutineRule
 import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
+import com.gasparaiciukas.owntrainer.getOrAwaitValueTest
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.FoodNutrient
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepository
@@ -55,13 +56,12 @@ class AddFoodToMealViewModelTest {
             instructions = "Put in oven"
         )
         diaryRepository.insertMeal(meal)
-        val mealWithFoodEntries1 = MealWithFoodEntries(
+        val mealWithFoodEntries = MealWithFoodEntries(
             meal,
             listOf(foodEntry)
         )
         viewModel.addFoodToMeal(MealWithFoodEntries(meal, listOf()))
-        val mealWithFoodEntries2 = diaryRepository.getMealWithFoodEntriesById(1)
-        assertThat(mealWithFoodEntries1).isEqualTo(mealWithFoodEntries2)
+        assertThat(viewModel.ldMeals.getOrAwaitValueTest()).contains(mealWithFoodEntries)
     }
 
     private fun createFood(): Food {

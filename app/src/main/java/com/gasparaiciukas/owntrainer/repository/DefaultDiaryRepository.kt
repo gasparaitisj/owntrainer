@@ -35,8 +35,8 @@ class DefaultDiaryRepository @Inject constructor(
     override suspend fun deleteDiaryEntryMealCrossRef(diaryEntryId: Int, mealId: Int) =
         diaryEntryWithMealsDao.deleteDiaryEntryMealCrossRef(diaryEntryId, mealId)
 
-    override fun getMealsWithFoodEntries() =
-        mealDao.getMealsWithFoodEntries()
+    override fun getAllMealsWithFoodEntries() =
+        mealDao.getAllMealsWithFoodEntries()
 
     override suspend fun getMealWithFoodEntriesById(id: Int) =
         mealDao.getMealWithFoodEntriesById(id)

@@ -15,7 +15,7 @@ class FakeDiaryRepositoryTest : DiaryRepository {
     private val diaryEntries = mutableListOf<DiaryEntry>()
     private val diaryEntryMealCrossRefs = mutableListOf<DiaryEntryMealCrossRef>()
     private val meals = mutableListOf<Meal>()
-    private val mealsWithFoodEntries = mutableListOf<MealWithFoodEntries>()
+    var mealsWithFoodEntries = mutableListOf<MealWithFoodEntries>()
     private var foodEntries = mutableListOf<FoodEntry>()
     private var shouldReturnNetworkError = false
 
@@ -75,12 +75,12 @@ class FakeDiaryRepositoryTest : DiaryRepository {
         diaryEntryMealCrossRefs.removeIf { it.diaryEntryId == diaryEntryId && it.mealId == mealId }
     }
 
-    override fun getMealsWithFoodEntries(): Flow<List<MealWithFoodEntries>> {
+    override fun getAllMealsWithFoodEntries(): Flow<List<MealWithFoodEntries>> {
         return MutableLiveData(mealsWithFoodEntries).asFlow()
     }
 
     override suspend fun getMealWithFoodEntriesById(id: Int): MealWithFoodEntries {
-        return getMealsWithFoodEntries().asLiveData().getOrAwaitValue()
+        return getAllMealsWithFoodEntries().asLiveData().getOrAwaitValue()
             .first { it.meal.mealId == id }
     }
 

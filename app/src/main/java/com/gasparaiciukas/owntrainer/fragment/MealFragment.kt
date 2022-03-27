@@ -9,6 +9,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,7 @@ import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealBinding
+import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -23,13 +25,15 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MealFragment : Fragment() {
+class MealFragment @Inject constructor(
+    val adapter: MealAdapter
+) : Fragment(R.layout.fragment_meal) {
     private var _binding: FragmentMealBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: MealAdapter
 
     private val singleClickListener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit =
         { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
@@ -43,11 +47,11 @@ class MealFragment : Fragment() {
     private val longClickListener: (mealId: Int, position: Int) -> Unit = { mealId, _ ->
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.deleteMeal(mealId)
-            adapter.submitMeals(viewModel.meals)
+            adapter.items = viewModel.meals
         }
     }
 
-    private val viewModel by viewModels<MealViewModel>()
+    lateinit var viewModel: MealViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,8 +63,10 @@ class MealFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[MealViewModel::class.java]
         viewModel.ldMeals.observe(viewLifecycleOwner) {
             if (it != null) {
+                adapter.items = it
                 viewModel.meals = it
                 initUi()
             }
@@ -203,7 +209,7 @@ class MealFragment : Fragment() {
 
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
-        adapter = MealAdapter(viewModel.meals, singleClickListener, longClickListener)
+        //adapter = MealAdapter(viewModel.meals, singleClickListener, longClickListener)
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
     }

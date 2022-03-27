@@ -13,7 +13,7 @@ import com.gasparaiciukas.owntrainer.databinding.FragmentProgressBinding
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class ProgressFragment : Fragment() {
+class ProgressFragment : Fragment(R.layout.fragment_progress) {
     private var _binding: FragmentProgressBinding? = null
     private val binding get() = _binding!!
 

@@ -1,5 +1,6 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -12,15 +13,14 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class AddFoodToMealViewModel @Inject internal constructor(
+class AddFoodToMealViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val foodItem: Food? = savedStateHandle["foodItem"]
     private val quantity: Int? = savedStateHandle["quantity"]
 
-    val ldMeals = diaryRepository.getMealsWithFoodEntries().asLiveData()
-    lateinit var meals: List<MealWithFoodEntries>
+    val ldMeals = diaryRepository.getAllMealsWithFoodEntries().asLiveData()
 
     suspend fun addFoodToMeal(mealWithFoodEntries: MealWithFoodEntries) {
         if (foodItem != null && quantity != null) {

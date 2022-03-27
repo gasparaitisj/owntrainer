@@ -16,7 +16,7 @@ interface MealDao {
 
     @Transaction
     @Query("SELECT * FROM meal")
-    fun getMealsWithFoodEntries(): Flow<List<MealWithFoodEntries>>
+    fun getAllMealsWithFoodEntries(): Flow<List<MealWithFoodEntries>>
 
     @Transaction
     @Query("SELECT * FROM meal WHERE mealId = :id")

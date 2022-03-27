@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_main"
     app:startDestination="@id/diaryFragment">
     <fragment
         android:id="@+id/addMealToDiaryFragment"
         android:name="com.gasparaiciukas.owntrainer.fragment.AddMealToDiaryFragment"
-        android:label="AddMealToDiaryFragment">
-        <argument
-            android:name="primaryKey"
-            app:argType="integer" />
-    </fragment>
+        android:label="AddMealToDiaryFragment" />
     <fragment
         android:id="@+id/createMealItemFragment"
         android:name="com.gasparaiciukas.owntrainer.fragment.CreateMealItemFragment"
@@ -195,7 +190,7 @@
         android:id="@+id/action_foodFragment_to_settingsFragment"
         app:destination="@id/settingsFragment" />
     <action
-        android:id="@+id/action_networkFoodItemFragment_to_selectMealItemFragment"
+        android:id="@+id/action_networkFoodItemFragment_to_addFoodToMealFragment"
         app:destination="@id/addFoodToMealFragment" />
     <action
         android:id="@+id/action_settingsFragment_to_diaryFragment"

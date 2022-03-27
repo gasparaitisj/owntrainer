@@ -5,7 +5,6 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.*
 import com.gasparaiciukas.owntrainer.getOrAwaitValueTest
-import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.GetResponse
 import com.gasparaiciukas.owntrainer.network.Resource
 import kotlinx.coroutines.flow.Flow
@@ -76,12 +75,12 @@ class FakeDiaryRepository : DiaryRepository {
         diaryEntryMealCrossRefs.removeIf { it.diaryEntryId == diaryEntryId && it.mealId == mealId }
     }
 
-    override fun getMealsWithFoodEntries(): Flow<List<MealWithFoodEntries>> {
+    override fun getAllMealsWithFoodEntries(): Flow<List<MealWithFoodEntries>> {
         return MutableLiveData(mealsWithFoodEntries).asFlow()
     }
 
     override suspend fun getMealWithFoodEntriesById(id: Int): MealWithFoodEntries {
-        return getMealsWithFoodEntries().asLiveData().getOrAwaitValueTest()
+        return getAllMealsWithFoodEntries().asLiveData().getOrAwaitValueTest()
             .first { it.meal.mealId == id }
     }
 

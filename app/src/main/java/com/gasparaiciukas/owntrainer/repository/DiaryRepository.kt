@@ -18,7 +18,7 @@ interface DiaryRepository {
 
     suspend fun deleteDiaryEntryMealCrossRef(diaryEntryId: Int, mealId: Int)
 
-    fun getMealsWithFoodEntries(): Flow<List<MealWithFoodEntries>>
+    fun getAllMealsWithFoodEntries(): Flow<List<MealWithFoodEntries>>
 
     suspend fun getMealWithFoodEntriesById(id: Int): MealWithFoodEntries
 

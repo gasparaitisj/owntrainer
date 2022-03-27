@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.MainCoroutineRule
 import com.gasparaiciukas.owntrainer.database.DiaryEntry
+import com.gasparaiciukas.owntrainer.database.DiaryEntryMealCrossRef
 import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.getOrAwaitValueTest
@@ -23,8 +24,7 @@ class AddMealToDiaryViewModelTest {
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var viewModel: AddMealToDiaryViewModel
-    private lateinit var savedStateHandle: SavedStateHandle
+    private lateinit var viewModel: DiaryViewModel
     private lateinit var userRepository: FakeUserRepository
     private lateinit var diaryRepository: FakeDiaryRepository
 
@@ -32,10 +32,7 @@ class AddMealToDiaryViewModelTest {
     fun setup() {
         userRepository = FakeUserRepository()
         diaryRepository = FakeDiaryRepository()
-        savedStateHandle = SavedStateHandle().apply {
-            set("primaryKey", 1)
-        }
-        viewModel = AddMealToDiaryViewModel(diaryRepository, savedStateHandle)
+        viewModel = DiaryViewModel(userRepository, diaryRepository)
     }
 
     @Test
@@ -65,6 +62,15 @@ class AddMealToDiaryViewModelTest {
         diaryRepository.insertMeal(meal)
         diaryRepository.insertFood(foodEntry)
         diaryRepository.insertDiaryEntry(diaryEntry)
+        diaryRepository.insertDiaryEntryMealCrossRef(DiaryEntryMealCrossRef(1, 1))
+
+        viewModel.user = userRepository.user.asLiveData().getOrAwaitValueTest()
+        viewModel.diaryEntryWithMeals = diaryRepository.getDiaryEntryWithMeals(
+            2021,
+            1
+        ).asLiveData().getOrAwaitValueTest()
+        viewModel.calculateData()
+
         viewModel.addMealToDiary(diaryRepository.getMealWithFoodEntriesById(1))
         val diaryEntryWithMeals = diaryRepository.getDiaryEntryWithMeals(2021, 1).asLiveData().getOrAwaitValueTest()
         assertThat(diaryEntryWithMeals.meals).contains(meal)

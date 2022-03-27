@@ -8,11 +8,13 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentNetworkFoodItemBinding
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
+import com.gasparaiciukas.owntrainer.viewmodel.MealItemViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.NetworkFoodItemViewModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -24,13 +26,13 @@ import timber.log.Timber
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class NetworkFoodItemFragment : Fragment() {
+class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
     private var _binding: FragmentNetworkFoodItemBinding? = null
     private val binding get() = _binding!!
 
     private val args: NetworkFoodItemFragmentArgs by navArgs()
 
-    private val viewModel by viewModels<NetworkFoodItemViewModel>()
+    lateinit var viewModel: NetworkFoodItemViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +45,7 @@ class NetworkFoodItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[NetworkFoodItemViewModel::class.java]
         viewModel.ldUser.observe(viewLifecycleOwner) {
             if (it != null) {
                 Timber.d("data is loaded...")
@@ -141,7 +144,7 @@ class NetworkFoodItemFragment : Fragment() {
 
         binding.topAppBar.menu.findItem(R.id.btn_add_to_meal).setOnMenuItemClickListener {
             val action =
-                NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToSelectMealItemFragment(
+                NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToAddFoodToMealFragment(
                     args.foodItem,
                     binding.etWeight.text.toString().toInt()
                 )

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -96,6 +95,7 @@
                 app:menu="@menu/create_meal_top_app_bar"
                 app:navigationIcon="@drawable/baseline_arrow_back_24"
                 app:navigationIconTint="@color/md_theme_light_onPrimary"
+                app:navigationContentDescription="Back"
                 app:title="@string/create_meal"
                 app:titleTextAppearance="@style/TextAppearance.OwnTrainer.ActionBar.Title" />
         </com.google.android.material.appbar.AppBarLayout>

@@ -12,6 +12,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
@@ -19,6 +20,7 @@ import com.gasparaiciukas.owntrainer.adapter.NetworkFoodAdapter
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodBinding
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.Status
+import com.gasparaiciukas.owntrainer.viewmodel.DatabaseFoodItemViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -27,7 +29,7 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FoodFragment : Fragment() {
+class FoodFragment : Fragment(R.layout.fragment_food) {
     private var _binding: FragmentFoodBinding? = null
     private val binding get() = _binding!!
 
@@ -42,7 +44,7 @@ class FoodFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private val viewModel by viewModels<FoodViewModel>()
+    lateinit var viewModel: FoodViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +56,7 @@ class FoodFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[FoodViewModel::class.java]
         viewModel.ldFoods.observe(viewLifecycleOwner) {
             reloadRecyclerView(it)
         }

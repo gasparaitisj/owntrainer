@@ -8,10 +8,12 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentDatabaseFoodItemBinding
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
+import com.gasparaiciukas.owntrainer.viewmodel.CreateMealItemViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.DatabaseFoodItemViewModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -22,11 +24,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class DatabaseFoodItemFragment : Fragment() {
+class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) {
     private var _binding: FragmentDatabaseFoodItemBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModels<DatabaseFoodItemViewModel>()
+    lateinit var viewModel: DatabaseFoodItemViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +41,7 @@ class DatabaseFoodItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[DatabaseFoodItemViewModel::class.java]
         viewModel.ldUser.observe(viewLifecycleOwner) {
             viewModel.user = it
             viewModel.loadData()

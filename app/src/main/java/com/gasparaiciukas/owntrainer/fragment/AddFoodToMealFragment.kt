@@ -6,53 +6,60 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
-import com.gasparaiciukas.owntrainer.databinding.FragmentAddMealToDiaryBinding
+import com.gasparaiciukas.owntrainer.databinding.FragmentAddFoodToMealBinding
 import com.gasparaiciukas.owntrainer.viewmodel.AddFoodToMealViewModel
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddFoodToMealFragment : Fragment() {
-    private var _binding: FragmentAddMealToDiaryBinding? = null
+class AddFoodToMealFragment @Inject constructor(
+    val adapter: MealAdapter
+) : Fragment(R.layout.fragment_add_food_to_meal) {
+    private var _binding: FragmentAddFoodToMealBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModels<AddFoodToMealViewModel>()
-
-    private val listener: (mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit =
-        { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.addFoodToMeal(mealWithFoodEntries)
-                findNavController().popBackStack()
-            }
-        }
+    lateinit var viewModel: AddFoodToMealViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddMealToDiaryBinding.inflate(inflater, container, false)
+        _binding = FragmentAddFoodToMealBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[AddFoodToMealViewModel::class.java]
         viewModel.ldMeals.observe(viewLifecycleOwner) {
-            viewModel.meals = it
-            initUi()
+            println("ldMeals.value = $it")
+            adapter.items = it
         }
+        initUi()
+        adapter.setOnClickListeners(
+            singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.addFoodToMeal(mealWithFoodEntries)
+                    findNavController().popBackStack()
+                }
+            },
+            longClickListener = null
+        )
     }
 
-    private fun initUi() {
+    fun initUi() {
         initNavigation()
         initRecyclerView()
     }
@@ -64,11 +71,8 @@ class AddFoodToMealFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        val passLambda: (_1: Int, _2: Int) -> Unit = { _: Int, _: Int -> }
-        val adapter = MealAdapter(viewModel.meals.toMutableList(), listener, passLambda)
-        val layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = layoutManager
     }
 
     override fun onDestroyView() {

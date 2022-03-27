@@ -1,14 +1,15 @@
 package com.gasparaiciukas.owntrainer.fragment
 
 import android.widget.ImageButton
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.fragment.app.FragmentFactory
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
@@ -19,8 +20,8 @@ import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
 import com.gasparaiciukas.owntrainer.viewmodel.DiaryViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.instanceOf
 import org.junit.Before
@@ -29,13 +30,21 @@ import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import java.time.LocalDate
+import javax.inject.Inject
 
 @MediumTest
 @HiltAndroidTest
 @ExperimentalCoroutinesApi
 class DiaryFragmentTest {
+
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @Inject
+    lateinit var fragmentFactory: MainFragmentFactory
 
     @Before
     fun setup() {
@@ -58,7 +67,7 @@ class DiaryFragmentTest {
             ),
             listOf()
         )
-        launchFragmentInHiltContainer<DiaryFragment> {
+        launchFragmentInHiltContainer<DiaryFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
             this.initNavigation()
@@ -66,9 +75,7 @@ class DiaryFragmentTest {
         onView(withId(R.id.fab)).perform(click())
 
         verify(navController).navigate(
-            DiaryFragmentDirections.actionDiaryFragmentToAddMealToDiaryFragment(
-                fakeViewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId
-            )
+            DiaryFragmentDirections.actionDiaryFragmentToAddMealToDiaryFragment()
         )
     }
 
@@ -113,7 +120,7 @@ class DiaryFragmentTest {
         launchFragmentInHiltContainer<DiaryFragment> {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
-            this.initUi()
+            initUi()
         }
         onView(withId(R.id.recycler_view)).perform(
             RecyclerViewActions.actionOnItemAtPosition<MealAdapter.MealViewHolder>(

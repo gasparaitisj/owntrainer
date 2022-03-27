@@ -25,14 +25,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
+import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class DiaryFragment : Fragment() {
+class DiaryFragment @Inject constructor(
+    val adapter: MealAdapter
+) : Fragment(R.layout.fragment_diary) {
     private var _binding: FragmentDiaryBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var adapter: MealAdapter
 
     lateinit var viewModel: DiaryViewModel
 
@@ -66,12 +67,18 @@ class DiaryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[DiaryViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[DiaryViewModel::class.java]
 
         // Data loading chain:
-        // User -> DiaryEntry -> List<MealWithFoodEntries>
+        // List<MealWithFoodEntries> -> User -> DiaryEntry -> List<MealWithFoodEntries>
+        viewModel.ldMeals.observe(viewLifecycleOwner) { meals ->
+            Timber.d("ldMeals observe!")
+            viewModel.allMealsWithFoodEntries = meals
+        }
+
         viewModel.ldUser.observe(viewLifecycleOwner) { user ->
             if (user != null) {
+                Timber.d("ldUser observe!")
                 viewModel.flUser = MutableStateFlow(user)
                 viewModel.user = user
                 viewModel.currentDay = LocalDate.of(user.year, user.month, user.dayOfMonth)
@@ -81,6 +88,8 @@ class DiaryFragment : Fragment() {
             }
         }
 
+        // TODO: LiveData triggered when navigating from AddMealToDiaryFragment back to DiaryFragment
+        // Results in calling calculateData() twice at the same time
         viewModel.ldDiaryEntryWithMeals.observe(viewLifecycleOwner) { diaryEntryWithMeals ->
             if (diaryEntryWithMeals != null) {
                 Timber.d("ldDiaryEntryWithMeals observe!")
@@ -117,10 +126,9 @@ class DiaryFragment : Fragment() {
 
         // Add meal to diary on FAB clicked
         binding.fab.setOnClickListener {
-            val action = DiaryFragmentDirections.actionDiaryFragmentToAddMealToDiaryFragment(
-                viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId
+            findNavController().navigate(
+                DiaryFragmentDirections.actionDiaryFragmentToAddMealToDiaryFragment()
             )
-            findNavController().navigate(action)
         }
 
         // Navigation (back button)
@@ -261,14 +269,13 @@ class DiaryFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        val layoutManager = LinearLayoutManager(context)
         // val passLambda: (_1: Meal, _2: Int) -> Unit = { _: Meal, _: Int -> }
-        adapter = MealAdapter(
-            viewModel.mealsWithFoodEntries.toMutableList(),
-            singleClickListener,
-            longClickListener
-        )
-        binding.cardMeals.recyclerView.layoutManager = layoutManager
+//        adapter = MealAdapter(
+//            viewModel.mealsWithFoodEntries,
+//            singleClickListener,
+//            longClickListener
+//        )
+        binding.cardMeals.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.cardMeals.recyclerView.adapter = adapter
         binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
             // Scroll up

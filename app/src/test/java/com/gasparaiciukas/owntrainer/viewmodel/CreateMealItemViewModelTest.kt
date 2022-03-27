@@ -39,7 +39,7 @@ class CreateMealItemViewModelTest {
             listOf()
         )
         viewModel.createMeal("Omelette", "Put in pan")
-        val meals = diaryRepository.getMealsWithFoodEntries().asLiveData().getOrAwaitValueTest()
+        val meals = diaryRepository.getAllMealsWithFoodEntries().asLiveData().getOrAwaitValueTest()
         assertThat(meals).contains(meal)
     }
 }

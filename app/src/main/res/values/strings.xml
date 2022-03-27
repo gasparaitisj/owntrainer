@@ -77,4 +77,5 @@
     <string name="add_food_to_meal">Add food to meal</string>
     <string name="add_meal">Add meal</string>
     <string name="create_meal">Create meal</string>
+    <string name="add_meal_to_diary">Add meal to diary</string>
 </resources>

@@ -3,7 +3,6 @@ package com.gasparaiciukas.owntrainer.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
-import com.gasparaiciukas.owntrainer.repository.DefaultDiaryRepository
 import com.gasparaiciukas.owntrainer.repository.DiaryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -12,7 +11,7 @@ import javax.inject.Inject
 class MealViewModel @Inject internal constructor(
     private val diaryRepository: DiaryRepository
 ) : ViewModel() {
-    val ldMeals = diaryRepository.getMealsWithFoodEntries().asLiveData()
+    val ldMeals = diaryRepository.getAllMealsWithFoodEntries().asLiveData()
     lateinit var meals: List<MealWithFoodEntries>
 
     suspend fun deleteMeal(mealId: Int) = diaryRepository.deleteMealById(mealId)

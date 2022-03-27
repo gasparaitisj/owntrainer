@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -39,7 +38,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/card_recycler_view" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
 
@@ -55,7 +53,7 @@
                 app:menu="@menu/top_app_bar"
                 app:navigationIcon="@drawable/baseline_arrow_back_24"
                 app:navigationIconTint="@color/md_theme_light_onPrimary"
-                app:title="@string/add_food"
+                app:title="@string/add_food_to_meal"
                 app:titleTextAppearance="@style/TextAppearance.OwnTrainer.ActionBar.Title" />
         </com.google.android.material.appbar.AppBarLayout>
 
