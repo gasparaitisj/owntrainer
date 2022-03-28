@@ -84,9 +84,12 @@ class FakeDiaryRepositoryTest : DiaryRepository {
         return MutableLiveData(mealsWithFoodEntries).asFlow()
     }
 
-    override suspend fun getMealWithFoodEntriesById(id: Int): MealWithFoodEntries {
-        return getAllMealsWithFoodEntries().asLiveData().getOrAwaitValue()
-            .first { it.meal.mealId == id }
+    override suspend fun getMealWithFoodEntriesById(id: Int): MealWithFoodEntries? {
+        return try {
+            mealsWithFoodEntries.first { it.meal.mealId == id }
+        } catch (e: NoSuchElementException) {
+            null
+        }
     }
 
     override suspend fun insertMeal(meal: Meal) {

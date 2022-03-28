@@ -10,17 +10,17 @@ interface DiaryRepository {
 
     suspend fun deleteDiaryEntry(year: Int, dayOfYear: Int)
 
-    fun getDiaryEntry(year: Int, dayOfYear: Int): Flow<DiaryEntry>
+    fun getDiaryEntry(year: Int, dayOfYear: Int): Flow<DiaryEntry?>
 
-    fun getDiaryEntryWithMeals(year: Int, dayOfYear: Int): Flow<DiaryEntryWithMeals>
+    fun getDiaryEntryWithMeals(year: Int, dayOfYear: Int): Flow<DiaryEntryWithMeals?>
 
     suspend fun insertDiaryEntryMealCrossRef(crossRef: DiaryEntryMealCrossRef)
 
     suspend fun deleteDiaryEntryMealCrossRef(diaryEntryId: Int, mealId: Int)
 
-    fun getAllMealsWithFoodEntries(): Flow<List<MealWithFoodEntries>>
+    fun getAllMealsWithFoodEntries(): Flow<List<MealWithFoodEntries>?>
 
-    suspend fun getMealWithFoodEntriesById(id: Int): MealWithFoodEntries
+    suspend fun getMealWithFoodEntriesById(id: Int): MealWithFoodEntries?
 
     suspend fun insertMeal(meal: Meal)
 
@@ -28,7 +28,7 @@ interface DiaryRepository {
 
     suspend fun getFoods(query: String): Resource<GetResponse>
 
-    fun getAllFoodEntries(): Flow<List<FoodEntry>>
+    fun getAllFoodEntries(): Flow<List<FoodEntry>?>
 
     suspend fun insertFood(foodEntry: FoodEntry)
 

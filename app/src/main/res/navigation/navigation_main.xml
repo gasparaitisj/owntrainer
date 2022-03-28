@@ -25,9 +25,11 @@
         android:label="MealItemFragment">
         <argument
             android:name="mealId"
+            android:defaultValue="0"
             app:argType="integer" />
         <argument
             android:name="diaryEntryId"
+            android:defaultValue="0"
             app:argType="integer" />
     </fragment>
     <fragment

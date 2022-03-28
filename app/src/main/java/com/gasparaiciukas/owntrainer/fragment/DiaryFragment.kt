@@ -21,6 +21,7 @@ import com.gasparaiciukas.owntrainer.viewmodel.DiaryViewModel
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -28,6 +29,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class DiaryFragment @Inject constructor(
     val adapter: MealAdapter
@@ -53,7 +55,7 @@ class DiaryFragment @Inject constructor(
         // List<MealWithFoodEntries> -> User -> DiaryEntry -> List<MealWithFoodEntries>
         viewModel.ldMeals.observe(viewLifecycleOwner) { meals ->
             Timber.d("ldMeals observe!")
-            viewModel.allMealsWithFoodEntries = meals
+            meals?.also { viewModel.allMealsWithFoodEntries = it }
         }
 
         viewModel.ldUser.observe(viewLifecycleOwner) { user ->

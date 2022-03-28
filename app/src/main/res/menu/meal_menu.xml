@@ -3,5 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/delete"
         android:icon="@drawable/baseline_delete_outline_24"
-        android:title="@string/delete_meal"/>
+        android:title="@string/delete_meal"
+        android:contentDescription="@string/delete_meal"/>
 </menu>

@@ -6,6 +6,7 @@ import com.gasparaiciukas.owntrainer.database.*
 import com.gasparaiciukas.owntrainer.repository.DiaryRepository
 import com.gasparaiciukas.owntrainer.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
@@ -13,6 +14,7 @@ import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 @HiltViewModel
 class DiaryViewModel @Inject constructor(
     private val userRepository: UserRepository,
@@ -21,7 +23,7 @@ class DiaryViewModel @Inject constructor(
 
     lateinit var currentDay: LocalDate
 
-    val ldMeals: LiveData<List<MealWithFoodEntries>> = diaryRepository.getAllMealsWithFoodEntries().asLiveData()
+    val ldMeals: LiveData<List<MealWithFoodEntries>?> = diaryRepository.getAllMealsWithFoodEntries().asLiveData()
     val ldUser: LiveData<User> = switchMap(ldMeals) {
         userRepository.user.asLiveData()
     }
@@ -60,16 +62,18 @@ class DiaryViewModel @Inject constructor(
         carbsConsumed = 0.0
         for (meal in diaryEntryWithMeals.meals) {
             val mealWithFoodEntries = diaryRepository.getMealWithFoodEntriesById(meal.mealId)
-            mealWithFoodEntries.meal.calories = mealWithFoodEntries.calories
-            caloriesConsumed += mealWithFoodEntries.calories
-            mealWithFoodEntries.meal.protein = mealWithFoodEntries.protein
-            proteinConsumed += mealWithFoodEntries.protein
-            mealWithFoodEntries.meal.carbs = mealWithFoodEntries.carbs
-            carbsConsumed += mealWithFoodEntries.carbs
-            mealWithFoodEntries.meal.fat = mealWithFoodEntries.fat
-            fatConsumed += mealWithFoodEntries.fat
-            meals.add(mealWithFoodEntries)
-            Timber.d("Meal calories: " + mealWithFoodEntries.calories)
+            if (mealWithFoodEntries != null) {
+                mealWithFoodEntries.meal.calories = mealWithFoodEntries.calories
+                caloriesConsumed += mealWithFoodEntries.calories
+                mealWithFoodEntries.meal.protein = mealWithFoodEntries.protein
+                proteinConsumed += mealWithFoodEntries.protein
+                mealWithFoodEntries.meal.carbs = mealWithFoodEntries.carbs
+                carbsConsumed += mealWithFoodEntries.carbs
+                mealWithFoodEntries.meal.fat = mealWithFoodEntries.fat
+                fatConsumed += mealWithFoodEntries.fat
+                meals.add(mealWithFoodEntries)
+                Timber.d("Meal calories: " + mealWithFoodEntries.calories)
+            }
         }
         Timber.d("Calories: " + caloriesConsumed)
         caloriesPercentage = (caloriesConsumed / user.dailyKcalIntake) * 100

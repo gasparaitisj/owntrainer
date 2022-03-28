@@ -202,13 +202,13 @@ class MealFragment @Inject constructor(
             longClickListener = { mealId, _ ->
                 viewLifecycleOwner.lifecycleScope.launch {
                     viewModel.deleteMeal(mealId)
-                    adapter.items = viewModel.meals
                 }
             }
         )
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
     }
+
 
     private fun slideBottomNavigationUp() {
         val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)

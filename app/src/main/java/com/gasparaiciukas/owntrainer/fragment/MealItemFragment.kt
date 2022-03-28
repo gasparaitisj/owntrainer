@@ -8,18 +8,18 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.DatabaseFoodAdapter
+import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealItemBinding
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
+import com.gasparaiciukas.owntrainer.viewmodel.MealItemUiState
 import com.gasparaiciukas.owntrainer.viewmodel.MealItemViewModel
-import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -27,31 +27,17 @@ import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class MealItemFragment : Fragment(R.layout.fragment_meal_item) {
+class MealItemFragment @Inject constructor(
+    val adapter: DatabaseFoodAdapter
+) : Fragment(R.layout.fragment_meal_item) {
     private var _binding: FragmentMealItemBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: DatabaseFoodAdapter
-
     lateinit var viewModel: MealItemViewModel
-
-    private val singleClickListener: (food: FoodEntryParcelable) -> Unit =
-        { food: FoodEntryParcelable ->
-            val action =
-                MealItemFragmentDirections.actionMealItemFragmentToDatabaseFoodItemFragment(food)
-            findNavController().navigate(action)
-        }
-
-    private val longClickListener: (position: Int) -> Unit = { position: Int ->
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.deleteFoodFromMeal(viewModel.mealWithFoodEntries.foodEntries[position].foodEntryId)
-            viewModel.loadData()
-            adapter.submitFoodEntries(viewModel.mealWithFoodEntries.foodEntries)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,12 +52,14 @@ class MealItemFragment : Fragment(R.layout.fragment_meal_item) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[MealItemViewModel::class.java]
         viewModel.ldUser.observe(viewLifecycleOwner) {
-            viewModel.user = it
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.loadData()
-                initUi()
-            }
+            println("ldUser observe")
+            viewModel.loadData(it)
         }
+        viewModel.uiState.observe(viewLifecycleOwner) {
+            println("uiState: $it")
+            refreshUi(it)
+        }
+        initUi()
     }
 
     override fun onDestroyView() {
@@ -83,87 +71,94 @@ class MealItemFragment : Fragment(R.layout.fragment_meal_item) {
     private fun initUi() {
         initNavigation()
         initRecyclerView()
-        initTextViews()
-        initPieChart()
+    }
+
+    private fun refreshUi(uiState: MealItemUiState) {
+        setTextViews(uiState)
+        setPieChart(uiState)
+        adapter.items = uiState.mealWithFoodEntries.foodEntries
     }
 
     private fun initNavigation() {
         binding.topAppBar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-        binding.topAppBar.title = viewModel.mealWithFoodEntries.meal.title
-    }
-
-    private fun initTextViews() {
-        binding.tvInstructions.text = viewModel.mealWithFoodEntries.meal.instructions
-        binding.tvInstructions.movementMethod = ScrollingMovementMethod()
-        binding.tvCarbsWeight.text =
-            viewModel.mealWithFoodEntries.meal.carbs.roundToInt().toString()
-        binding.tvCarbsPercentage.text =
-            String.format(
-                "%s %%",
-                (viewModel.mealWithFoodEntries.meal.carbs / viewModel.user.dailyCarbsIntakeInG * 100).roundToInt()
-            )
-        binding.tvFatWeight.text = viewModel.mealWithFoodEntries.meal.fat.roundToInt().toString()
-        binding.tvFatPercentage.text =
-            String.format(
-                "%s %%",
-                (viewModel.mealWithFoodEntries.meal.fat / viewModel.user.dailyFatIntakeInG * 100).roundToInt()
-            )
-        binding.tvProteinWeight.text =
-            viewModel.mealWithFoodEntries.meal.protein.roundToInt().toString()
-        binding.tvProteinPercentage.text =
-            String.format(
-                "%s %%",
-                (viewModel.mealWithFoodEntries.meal.protein / viewModel.user.dailyProteinIntakeInG * 100).roundToInt()
-            )
-        binding.tvCaloriesCount.text =
-            viewModel.mealWithFoodEntries.meal.calories.roundToInt().toString()
-        binding.tvCaloriesPercentage.text =
-            String.format(
-                "%s %%",
-                (viewModel.mealWithFoodEntries.meal.calories / viewModel.user.dailyKcalIntake * 100).roundToInt()
-            )
-
         binding.btnAddFood.setOnClickListener {
-            val action = MealItemFragmentDirections.actionMealItemFragmentToFoodFragment()
-            findNavController().navigate(action)
+            findNavController().navigate(
+                MealItemFragmentDirections.actionMealItemFragmentToFoodFragment()
+            )
         }
     }
 
+    private fun setTextViews(uiState: MealItemUiState) {
+        binding.topAppBar.title = uiState.mealWithFoodEntries.meal.title
+        binding.tvInstructions.text = uiState.mealWithFoodEntries.meal.instructions
+        binding.tvInstructions.movementMethod = ScrollingMovementMethod()
+        binding.tvCarbsWeight.text =
+            uiState.mealWithFoodEntries.meal.carbs.roundToInt().toString()
+        binding.tvCarbsPercentage.text =
+            String.format(
+                "%s %%",
+                uiState.carbsDailyIntakePercentage.roundToInt()
+            )
+        binding.tvFatWeight.text = uiState.mealWithFoodEntries.meal.fat.roundToInt().toString()
+        binding.tvFatPercentage.text =
+            String.format(
+                "%s %%",
+                uiState.fatDailyIntakePercentage.roundToInt()
+            )
+        binding.tvProteinWeight.text =
+            uiState.mealWithFoodEntries.meal.protein.roundToInt().toString()
+        binding.tvProteinPercentage.text =
+            String.format(
+                "%s %%",
+                uiState.proteinDailyIntakePercentage.roundToInt()
+            )
+        binding.tvCaloriesCount.text =
+            uiState.mealWithFoodEntries.meal.calories.roundToInt().toString()
+        binding.tvCaloriesPercentage.text =
+            String.format(
+                "%s %%",
+                uiState.caloriesDailyIntakePercentage.roundToInt()
+            )
+    }
+
     private fun initRecyclerView() {
-        adapter = DatabaseFoodAdapter(
-            viewModel.mealWithFoodEntries.foodEntries,
-            singleClickListener,
-            longClickListener
+        adapter.setOnClickListeners(
+            singleClickListener = { food: FoodEntryParcelable ->
+                findNavController().navigate(
+                    MealItemFragmentDirections.actionMealItemFragmentToDatabaseFoodItemFragment(food)
+                )
+            },
+            longClickListener = { food: FoodEntry ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.deleteFoodFromMeal(food.foodEntryId)
+                }
+            }
         )
-        val layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
     }
 
-    private fun initPieChart() {
-        // Create colors representing nutrients
+    private fun setPieChart(uiState: MealItemUiState) {
+        // Colors representing their respective nutrient
         val colors: MutableList<Int> = ArrayList()
         colors.add(ContextCompat.getColor(requireContext(), R.color.colorGold)) // carbs
         colors.add(ContextCompat.getColor(requireContext(), R.color.colorOrange)) // fat
         colors.add(ContextCompat.getColor(requireContext(), R.color.colorSmoke)) // protein
 
-        // Add data to pie chart
+        // Data chart labels
         val entries: MutableList<PieEntry> = ArrayList()
-        entries.add(PieEntry(viewModel.carbsPercentage, "Carbohydrates"))
-        entries.add(PieEntry(viewModel.fatPercentage, "Fat"))
-        entries.add(PieEntry(viewModel.proteinPercentage, "Protein"))
+        entries.add(PieEntry(uiState.carbsPercentage.toFloat(), "Carbohydrates"))
+        entries.add(PieEntry(uiState.fatPercentage.toFloat(), "Fat"))
+        entries.add(PieEntry(uiState.proteinPercentage.toFloat(), "Protein"))
         val pieDataSet = PieDataSet(entries, "Data")
-
-        // Add style to pie chart
         pieDataSet.colors = colors // chart colors
         val pieData = PieData(pieDataSet)
         pieData.setValueFormatter(NutrientValueFormatter()) // adjust labels
         pieData.setValueTextSize(12f)
-        binding.pieChart.data = pieData
-        binding.pieChart.centerText =
-            "${viewModel.mealWithFoodEntries.meal.calories.roundToInt()}\nkCal" // calorie text inside inner circle
+
+        // Center text customization
         binding.pieChart.setCenterTextSize(14f)
         binding.pieChart.setCenterTextColor(
             ContextCompat.getColor(
@@ -172,12 +167,20 @@ class MealItemFragment : Fragment(R.layout.fragment_meal_item) {
             )
         )
         binding.pieChart.centerTextRadiusPercent = 100f
+
+        // Other customization
         binding.pieChart.setHoleColor(ContextCompat.getColor(requireContext(), R.color.colorRed))
         binding.pieChart.holeRadius = 30f
         binding.pieChart.transparentCircleRadius = 0f
         binding.pieChart.legend.isEnabled = false
         binding.pieChart.description.isEnabled = false
         binding.pieChart.setTouchEnabled(false)
+
+        // Set and invalidate current data
+        binding.pieChart.data = pieData
+        binding.pieChart.centerText =
+            "${uiState.mealWithFoodEntries.meal.calories.roundToInt()}\nkCal"
+
         binding.pieChart.invalidate()
     }
 

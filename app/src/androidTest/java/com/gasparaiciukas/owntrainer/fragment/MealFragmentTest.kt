@@ -10,17 +10,26 @@ import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.RootMatchers.isPlatformPopup
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
+import com.gasparaiciukas.owntrainer.adapter.MealAdapter
+import com.gasparaiciukas.owntrainer.database.DiaryEntry
+import com.gasparaiciukas.owntrainer.database.DiaryEntryMealCrossRef
+import com.gasparaiciukas.owntrainer.database.Meal
+import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
 import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
 import com.google.android.material.tabs.TabLayout
+import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.hamcrest.Matchers
 import org.junit.Before
 import org.junit.Rule
@@ -56,9 +65,64 @@ class MealFragmentTest {
     }
 
     @Test
-    fun clickOnMeal_navigateToMealItemFragment() {
+    fun singleClickOnMeal_navigateToMealItemFragment() = runTest {
+        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory) {
+            Navigation.setViewNavController(requireView(), navController)
+            fakeViewModel = viewModel
+        }
 
+        fakeViewModel.diaryRepository.insertMeal(
+            Meal(
+                mealId = 10,
+                title = "title",
+                instructions = "instructions"
+            )
+        )
+
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_view)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<MealAdapter.MealViewHolder>(
+                0,
+                ViewActions.click()
+            )
+        )
+
+        Mockito.verify(navController).navigate(
+            MealFragmentDirections.actionMealFragmentToMealItemFragment(
+                mealId = 10,
+                diaryEntryId = -1
+            )
+        )
     }
+
+    @Test
+    fun longClickOnMeal_deleteMeal() = runTest {
+        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory) {
+            Navigation.setViewNavController(requireView(), navController)
+            fakeViewModel = viewModel
+        }
+
+        val meal = Meal(
+            mealId = 10,
+            title = "title",
+            instructions = "instructions"
+        )
+
+        fakeViewModel.diaryRepository.insertMeal(meal)
+
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_view)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<MealAdapter.MealViewHolder>(
+                0,
+                ViewActions.longClick()
+            )
+        )
+
+        Espresso.onView(ViewMatchers.withContentDescription(R.string.delete_meal)).inRoot(isPlatformPopup()).perform(
+            ViewActions.click()
+        )
+
+        assertThat(fakeViewModel.ldMeals.getOrAwaitValue()).doesNotContain(meal)
+    }
+
 
     @Test
     fun clickFoodsTab_navigateToFoodFragment() {

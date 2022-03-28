@@ -70,7 +70,6 @@ class MealAdapter @Inject constructor(
         holder.binding.tvTitle.text = title
         holder.binding.tvCalories.text = calories.toString()
         if (singleClickListener != null) {
-            Timber.d("listener is set")
             holder.binding.layoutItem.setOnClickListener {
                 singleClickListener?.let { click ->
                     click(items[position], position)

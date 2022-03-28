@@ -8,7 +8,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.gasparaiciukas.owntrainer.databinding.ActivityMainBinding
 import com.gasparaiciukas.owntrainer.fragment.MainFragmentFactory
+import com.gasparaiciukas.owntrainer.fragment.MainFragmentFactoryEntryPoint
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.EntryPointAccessors
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -16,13 +18,13 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
-    @Inject
-    lateinit var fragmentFactory: MainFragmentFactory
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        supportFragmentManager.fragmentFactory = EntryPointAccessors.fromActivity(
+            this,
+            MainFragmentFactoryEntryPoint::class.java
+        ).getFragmentFactory()
         super.onCreate(savedInstanceState)
         installSplashScreen()
-        supportFragmentManager.fragmentFactory = fragmentFactory
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
