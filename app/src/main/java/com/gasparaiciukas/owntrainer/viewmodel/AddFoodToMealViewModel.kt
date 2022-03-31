@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddFoodToMealViewModel @Inject constructor(
-    private val diaryRepository: DiaryRepository,
+    val diaryRepository: DiaryRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val foodItem: Food? = savedStateHandle["foodItem"]
@@ -52,12 +52,6 @@ class AddFoodToMealViewModel @Inject constructor(
             diaryRepository.insertFood(foodEntry)
         } else {
             Timber.e("addFoodToMeal() failed! either foodItem or quantity is null!")
-        }
-    }
-
-    fun insertMeal(meal: Meal) {
-        viewModelScope.launch {
-            diaryRepository.insertMeal(meal)
         }
     }
 }

@@ -19,10 +19,12 @@ import com.gasparaiciukas.owntrainer.viewmodel.DiaryViewModel
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@ExperimentalCoroutinesApi
 class AddMealToDiaryFragment @Inject constructor(
     val adapter: MealAdapter
 ) : Fragment(R.layout.fragment_add_meal_to_diary) {
@@ -73,10 +75,8 @@ class AddMealToDiaryFragment @Inject constructor(
     }
 
     private fun initRecyclerView() {
-        val passLambda: (_1: Int, _2: Int) -> Unit = { _: Int, _: Int -> }
-        val layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     override fun onDestroyView() {

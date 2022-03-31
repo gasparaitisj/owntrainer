@@ -15,7 +15,7 @@ class FakeUserRepositoryTest : UserRepository {
 
     // Create default user
     private fun createUser(): User {
-        val currentDate = LocalDate.now()
+        val currentDate = LocalDate.of(2022, 7, 19)
         return User(
             sex = "Male",
             ageInYears = 25,

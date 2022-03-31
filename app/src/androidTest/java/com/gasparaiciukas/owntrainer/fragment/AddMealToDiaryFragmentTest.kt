@@ -64,18 +64,6 @@ class AddMealToDiaryFragmentTest {
 
     @Test
     fun clickOnMeal_navigateToDiaryFragment() = runTest {
-        fakeViewModel.currentDay = LocalDate.of(2022, 7, 19)
-        fakeViewModel.diaryEntryWithMeals = DiaryEntryWithMeals(
-            DiaryEntry(
-                diaryEntryId = 1,
-                year = fakeViewModel.currentDay.year,
-                dayOfYear = fakeViewModel.currentDay.dayOfYear,
-                dayOfWeek = fakeViewModel.currentDay.dayOfWeek.value,
-                monthOfYear = fakeViewModel.currentDay.monthValue,
-                dayOfMonth = fakeViewModel.currentDay.dayOfMonth
-            ),
-            listOf()
-        )
         launchFragmentInHiltContainer<AddMealToDiaryFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
             sharedViewModel = fakeViewModel

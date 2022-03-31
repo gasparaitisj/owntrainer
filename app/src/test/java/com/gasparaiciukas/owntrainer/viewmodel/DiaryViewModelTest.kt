@@ -8,12 +8,14 @@ import com.gasparaiciukas.owntrainer.getOrAwaitValueTest
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepository
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepository
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.time.LocalDate
 
+@ExperimentalCoroutinesApi
 class DiaryViewModelTest {
 
     @get:Rule
@@ -36,14 +38,14 @@ class DiaryViewModelTest {
     @Test
     fun `when calculateData() is called, should calculate data correctly`() = runTest {
         // Testing data
-        val meals = mutableListOf(
+        val meals = listOf(
             Meal(1, "Agirdi", "Nuklausau"),
             Meal(2, "Abalys", "Prakandys"),
             Meal(3, "Ananas", "Rakatas")
         )
 
-        diaryRepository.setFoodEntries(
-            mutableListOf(
+        val foodEntries = listOf(
+            listOf(
                 FoodEntry(
                     mealId = 1,
                     title = "Banana",
@@ -62,11 +64,8 @@ class DiaryViewModelTest {
                     proteinPer100G = 13.0,
                     quantityInG = 60.0
                 )
-            )
-        )
-        diaryRepository.insertMeal(meals[0])
-        diaryRepository.setFoodEntries(
-            mutableListOf(
+            ),
+            listOf(
                 FoodEntry(
                     mealId = 2,
                     title = "Tofu",
@@ -76,11 +75,8 @@ class DiaryViewModelTest {
                     proteinPer100G = 8.0,
                     quantityInG = 150.0
                 )
-            )
-        )
-        diaryRepository.insertMeal(meals[1])
-        diaryRepository.setFoodEntries(
-            mutableListOf(
+            ),
+            listOf(
                 FoodEntry(
                     mealId = 3,
                     title = "Chicken breast",
@@ -101,7 +97,27 @@ class DiaryViewModelTest {
                 )
             )
         )
+
+        val mealsWithFoodEntries = listOf(
+            MealWithFoodEntries(meals[0], foodEntries[0] + foodEntries[1] + foodEntries[2]),
+            MealWithFoodEntries(meals[0], foodEntries[0] + foodEntries[1] + foodEntries[2]),
+            MealWithFoodEntries(meals[1], foodEntries[0] + foodEntries[1] + foodEntries[2]),
+            MealWithFoodEntries(meals[2], foodEntries[0] + foodEntries[1] + foodEntries[2]),
+            MealWithFoodEntries(meals[2], foodEntries[0] + foodEntries[1] + foodEntries[2])
+        )
+
+        diaryRepository.insertMeal(meals[0])
+        diaryRepository.insertMeal(meals[0])
+        diaryRepository.insertMeal(meals[1])
         diaryRepository.insertMeal(meals[2])
+        diaryRepository.insertMeal(meals[2])
+
+        diaryRepository.insertFood(foodEntries[0][0])
+        diaryRepository.insertFood(foodEntries[0][1])
+        diaryRepository.insertFood(foodEntries[1][0])
+        diaryRepository.insertFood(foodEntries[2][0])
+        diaryRepository.insertFood(foodEntries[2][1])
+
         diaryRepository.insertDiaryEntryMealCrossRef(DiaryEntryMealCrossRef(1, 1))
         diaryRepository.insertDiaryEntryMealCrossRef(DiaryEntryMealCrossRef(1, 1))
         diaryRepository.insertDiaryEntryMealCrossRef(DiaryEntryMealCrossRef(1, 2))
@@ -110,132 +126,122 @@ class DiaryViewModelTest {
 
         val date = LocalDate.of(2022, 7, 19)
         val diaryEntry = DiaryEntry(
+            diaryEntryId = 1,
             year = date.year,
             dayOfYear = date.dayOfYear,
             dayOfWeek = date.dayOfWeek.value,
             monthOfYear = date.monthValue,
             dayOfMonth = date.dayOfMonth
         )
-        diaryEntry.diaryEntryId = 1
         diaryRepository.insertDiaryEntry(diaryEntry)
+        val user = viewModel.ldUser.getOrAwaitValueTest()
+        user.dayOfMonth = date.dayOfMonth
+        user.dayOfWeek = date.dayOfWeek.value
+        user.dayOfYear = date.dayOfYear
+        user.year = date.year
+        user.month = date.monthValue
+        userRepository.updateUser(user)
 
         // Perform calculations
-        viewModel.user = userRepository.user.asLiveData().getOrAwaitValueTest()
-        viewModel.diaryEntryWithMeals = diaryRepository.getDiaryEntryWithMeals(
-            date.year,
-            date.dayOfYear
-        ).asLiveData().getOrAwaitValueTest()
+        val diaryEntryWithMeals = viewModel.ldDiaryEntryWithMeals.getOrAwaitValueTest()
         viewModel.calculateData()
+        val uiState = viewModel.uiState.getOrAwaitValueTest()
 
+        val proteinConsumed = mealsWithFoodEntries[0].protein +
+                    mealsWithFoodEntries[0].protein +
+                    mealsWithFoodEntries[1].protein +
+                    mealsWithFoodEntries[2].protein +
+                    mealsWithFoodEntries[2].protein
+
+        val fatConsumed = mealsWithFoodEntries[0].fat +
+                mealsWithFoodEntries[0].fat +
+                mealsWithFoodEntries[1].fat +
+                mealsWithFoodEntries[2].fat +
+                mealsWithFoodEntries[2].fat
+
+        val carbsConsumed = mealsWithFoodEntries[0].carbs +
+                mealsWithFoodEntries[0].carbs +
+                mealsWithFoodEntries[1].carbs +
+                mealsWithFoodEntries[2].carbs +
+                mealsWithFoodEntries[2].carbs
+
+        val caloriesConsumed = mealsWithFoodEntries[0].calories +
+                mealsWithFoodEntries[0].calories +
+                mealsWithFoodEntries[1].calories +
+                mealsWithFoodEntries[2].calories +
+                mealsWithFoodEntries[2].calories
+
+        val uiStateTest = DiaryUiState(
+            meals = mealsWithFoodEntries,
+            user = user,
+            diaryEntryWithMeals = diaryEntryWithMeals,
+            proteinConsumed = proteinConsumed,
+            fatConsumed = fatConsumed,
+            carbsConsumed = carbsConsumed,
+            caloriesConsumed = caloriesConsumed,
+            caloriesPercentage = (caloriesConsumed / user.dailyKcalIntake) * 100,
+            proteinPercentage = (proteinConsumed / user.dailyProteinIntakeInG) * 100,
+            fatPercentage = (fatConsumed / user.dailyFatIntakeInG) * 100,
+            carbsPercentage = (carbsConsumed / user.dailyCarbsIntakeInG) * 100
+        )
         // Assertions
-        assertThat(viewModel.caloriesConsumed).isWithin(1.0e-10).of(
-            ((89.0 * 120.0 / 100) + (155.0 * 60.0 / 100)) +
-                    (76.0 * 150.0 / 100) +
-                    (172.0 * 500.0 / 100) + (365.0 * 200.0 / 100)
-        )
-        assertThat(viewModel.proteinConsumed).isWithin(1.0e-10).of(
-            ((1.1 * 120.0 / 100) + (13.0 * 60.0 / 100)) +
-                    (8.0 * 150.0 / 100) +
-                    (21.0 * 500.0 / 100) + (7.0 * 200.0 / 100)
-        )
-        assertThat(viewModel.fatConsumed).isWithin(1.0e-10).of(
-            ((0.3 * 120.0 / 100) + (11.0 * 60.0 / 100)) +
-                    (4.8 * 150.0 / 100) +
-                    (9.0 * 500.0 / 100) + (0.7 * 200.0 / 100)
-        )
-        assertThat(viewModel.carbsConsumed).isWithin(1.0e-10).of(
-            ((23.0 * 120.0 / 100) + (1.1 * 60.0 / 100)) +
-                    (1.9 * 150.0 / 100) +
-                    (0.0 * 500.0 / 100) + (80.0 * 200.0 / 100)
-        )
+        assertThat(uiState.meals).isEqualTo(uiStateTest.meals)
+        assertThat(uiState.user).isEqualTo(uiStateTest.user)
+        assertThat(uiState.diaryEntryWithMeals).isEqualTo(uiStateTest.diaryEntryWithMeals)
+        assertThat(uiState.proteinConsumed).isEqualTo(uiStateTest.proteinConsumed)
+        assertThat(uiState.fatConsumed).isEqualTo(uiStateTest.fatConsumed)
+        assertThat(uiState.carbsConsumed).isEqualTo(uiStateTest.carbsConsumed)
+        assertThat(uiState.caloriesConsumed).isEqualTo(uiStateTest.caloriesConsumed)
+        assertThat(uiState.caloriesPercentage).isEqualTo(uiStateTest.caloriesPercentage)
+        assertThat(uiState.proteinPercentage).isEqualTo(uiStateTest.proteinPercentage)
+        assertThat(uiState.proteinConsumed).isEqualTo(uiStateTest.proteinConsumed)
+        assertThat(uiState.fatPercentage).isEqualTo(uiStateTest.fatPercentage)
+        assertThat(uiState.carbsPercentage).isEqualTo(uiStateTest.carbsPercentage)
     }
 
     @Test
     fun `when createDiaryEntry() is called, should create diary entry`() = runTest {
-        viewModel.currentDay = LocalDate.of(2022, 7, 19)
+        val user = viewModel.ldUser.getOrAwaitValueTest()
         val diaryEntry = DiaryEntry(
-            year = viewModel.currentDay.year,
-            dayOfYear = viewModel.currentDay.dayOfYear,
-            dayOfWeek = viewModel.currentDay.dayOfWeek.value,
-            monthOfYear = viewModel.currentDay.monthValue,
-            dayOfMonth = viewModel.currentDay.dayOfMonth
+            year = user.year,
+            dayOfYear = user.dayOfYear,
+            dayOfWeek = user.dayOfWeek,
+            monthOfYear = user.month,
+            dayOfMonth = user.dayOfMonth
         )
         viewModel.createDiaryEntry()
         assertThat(
             diaryRepository.getDiaryEntry(
-                viewModel.currentDay.year,
-                viewModel.currentDay.dayOfYear
+                user.year,
+                user.dayOfYear
             ).asLiveData().getOrAwaitValueTest()
         ).isEqualTo(diaryEntry)
     }
 
     @Test
     fun `when updateUserToPreviousDay() is called, should update user to previous day`() = runTest {
-        var date = LocalDate.of(2022, 7, 19)
-        viewModel.currentDay = date
-        viewModel.user = User(
-            sex = "Male",
-            ageInYears = 25,
-            heightInCm = 180,
-            weightInKg = 80.0,
-            lifestyle = "Lightly active",
-            year = viewModel.currentDay.year,
-            month = viewModel.currentDay.monthValue,
-            dayOfYear = viewModel.currentDay.dayOfYear,
-            dayOfMonth = viewModel.currentDay.dayOfMonth,
-            dayOfWeek = viewModel.currentDay.dayOfWeek.value
-        )
+        val user = viewModel.ldUser.getOrAwaitValueTest().copy()
         viewModel.updateUserToPreviousDay()
-        val user = userRepository.user.asLiveData().getOrAwaitValueTest()
-        val userDate = LocalDate.ofYearDay(user.year, user.dayOfYear)
-        date = date.minusDays(1)
-        assertThat(userDate).isEqualTo(date)
+        val userTest = viewModel.ldUser.getOrAwaitValueTest().copy()
+        assertThat(LocalDate.ofYearDay(user.year, user.dayOfYear).minusDays(1))
+            .isEqualTo(LocalDate.ofYearDay(userTest.year, userTest.dayOfYear))
     }
 
     @Test
     fun `when updateUserToCurrentDay() is called, should update user to current day`() = runTest {
-        var date = LocalDate.of(2022, 7, 19)
-        viewModel.currentDay = date
-        viewModel.user = User(
-            sex = "Male",
-            ageInYears = 25,
-            heightInCm = 180,
-            weightInKg = 80.0,
-            lifestyle = "Lightly active",
-            year = viewModel.currentDay.year,
-            month = viewModel.currentDay.monthValue,
-            dayOfYear = viewModel.currentDay.dayOfYear,
-            dayOfMonth = viewModel.currentDay.dayOfMonth,
-            dayOfWeek = viewModel.currentDay.dayOfWeek.value
-        )
         viewModel.updateUserToCurrentDay()
-        val user = userRepository.user.asLiveData().getOrAwaitValueTest()
-        val userDate = LocalDate.ofYearDay(user.year, user.dayOfYear)
-        date = LocalDate.now()
-        assertThat(userDate).isEqualTo(date)
+        val userTest = viewModel.ldUser.getOrAwaitValueTest().copy()
+        assertThat(LocalDate.now())
+            .isEqualTo(LocalDate.ofYearDay(userTest.year, userTest.dayOfYear))
     }
 
     @Test
     fun `when updateUserToNextDay() is called, should update user to next day`() = runTest {
-        var date = LocalDate.of(2022, 7, 19)
-        viewModel.currentDay = date
-        viewModel.user = User(
-            sex = "Male",
-            ageInYears = 25,
-            heightInCm = 180,
-            weightInKg = 80.0,
-            lifestyle = "Lightly active",
-            year = viewModel.currentDay.year,
-            month = viewModel.currentDay.monthValue,
-            dayOfYear = viewModel.currentDay.dayOfYear,
-            dayOfMonth = viewModel.currentDay.dayOfMonth,
-            dayOfWeek = viewModel.currentDay.dayOfWeek.value
-        )
+        val user = viewModel.ldUser.getOrAwaitValueTest().copy()
         viewModel.updateUserToNextDay()
-        val user = userRepository.user.asLiveData().getOrAwaitValueTest()
-        val userDate = LocalDate.ofYearDay(user.year, user.dayOfYear)
-        date = date.plusDays(1)
-        assertThat(userDate).isEqualTo(date)
+        val userTest = viewModel.ldUser.getOrAwaitValueTest().copy()
+        assertThat(LocalDate.ofYearDay(user.year, user.dayOfYear).plusDays(1))
+            .isEqualTo(LocalDate.ofYearDay(userTest.year, userTest.dayOfYear))
     }
 
     @Test
@@ -261,8 +267,7 @@ class DiaryViewModelTest {
         diaryRepository.insertMeal(meal)
         diaryRepository.insertDiaryEntryMealCrossRef(crossRef)
         viewModel.deleteMealFromDiary(diaryEntry.diaryEntryId, meal.mealId)
-        val diaryEntryWithMeals =
-            diaryRepository.getDiaryEntryWithMeals(1, 1).asLiveData().getOrAwaitValueTest()
+        val diaryEntryWithMeals = diaryRepository.getDiaryEntryWithMeals(1, 1).asLiveData().getOrAwaitValueTest()
 
         assertThat(diaryEntryWithMeals.meals).doesNotContain(meal)
     }

@@ -77,8 +77,9 @@ class AddFoodToMealFragmentTest {
         launchFragmentInHiltContainer<AddFoodToMealFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
             fakeViewModel = viewModel
-            viewModel.insertMeal(meal)
         }
+
+        fakeViewModel.diaryRepository.insertMeal(meal)
 
         Espresso.onView(ViewMatchers.withId(R.id.recycler_view)).perform(
             RecyclerViewActions.actionOnItemAtPosition<MealAdapter.MealViewHolder>(

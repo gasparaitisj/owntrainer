@@ -63,18 +63,6 @@ class DiaryFragmentTest {
         userRepository = FakeUserRepositoryTest()
         diaryRepository = FakeDiaryRepositoryTest()
         fakeViewModel = DiaryViewModel(userRepository, diaryRepository)
-        fakeViewModel.currentDay = LocalDate.of(2022, 7, 19)
-        fakeViewModel.diaryEntryWithMeals = DiaryEntryWithMeals(
-            DiaryEntry(
-                diaryEntryId = 1,
-                year = fakeViewModel.currentDay.year,
-                dayOfYear = fakeViewModel.currentDay.dayOfYear,
-                dayOfWeek = fakeViewModel.currentDay.dayOfWeek.value,
-                monthOfYear = fakeViewModel.currentDay.monthValue,
-                dayOfMonth = fakeViewModel.currentDay.dayOfMonth
-            ),
-            listOf()
-        )
     }
 
     @Test
@@ -115,7 +103,7 @@ class DiaryFragmentTest {
         verify(navController).navigate(
             DiaryFragmentDirections.actionDiaryFragmentToMealItemFragment(
                 mealId = 10,
-                diaryEntryId = 1
+                diaryEntryId = 0
             )
         )
     }

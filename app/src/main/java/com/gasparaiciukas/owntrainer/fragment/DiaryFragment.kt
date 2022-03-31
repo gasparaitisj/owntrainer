@@ -9,7 +9,6 @@ import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
@@ -17,15 +16,13 @@ import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.FragmentDiaryBinding
 import com.gasparaiciukas.owntrainer.utils.DateFormatter
+import com.gasparaiciukas.owntrainer.viewmodel.DiaryUiState
 import com.gasparaiciukas.owntrainer.viewmodel.DiaryViewModel
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.LocalDate
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -52,40 +49,31 @@ class DiaryFragment @Inject constructor(
         viewModel = ViewModelProvider(requireActivity())[DiaryViewModel::class.java]
 
         // Data loading chain:
-        // List<MealWithFoodEntries> -> User -> DiaryEntry -> List<MealWithFoodEntries>
-        viewModel.ldMeals.observe(viewLifecycleOwner) { meals ->
-            Timber.d("ldMeals observe!")
-            meals?.also { viewModel.allMealsWithFoodEntries = it }
-        }
-
+        // User -> DiaryEntryWithMeals -> UiState
         viewModel.ldUser.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 Timber.d("ldUser observe!")
-                viewModel.flUser = MutableStateFlow(user)
-                viewModel.user = user
-                viewModel.currentDay = LocalDate.of(user.year, user.month, user.dayOfMonth)
                 Timber.d("user loaded! ${user.month} ${user.dayOfMonth}")
             } else {
                 Timber.d("user is null or not found...")
             }
         }
 
-        // TODO: LiveData triggered when navigating from AddMealToDiaryFragment back to DiaryFragment
-        // Results in calling calculateData() twice at the same time
         viewModel.ldDiaryEntryWithMeals.observe(viewLifecycleOwner) { diaryEntryWithMeals ->
             if (diaryEntryWithMeals != null) {
                 Timber.d("ldDiaryEntryWithMeals observe!")
-                viewModel.diaryEntryWithMeals = diaryEntryWithMeals
-                viewLifecycleOwner.lifecycleScope.launch {
-                    viewModel.calculateData()
-                    adapter.items = viewModel.mealsWithFoodEntries
-                    initUi()
-                }
+                viewModel.calculateData()
             } else {
                 Timber.d("diaryEntryWithMeals is null... creating new entry.")
                 viewModel.createDiaryEntry()
             }
         }
+
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+            refreshUi(uiState)
+        }
+
+        initUi()
     }
 
     override fun onDestroyView() {
@@ -96,17 +84,16 @@ class DiaryFragment @Inject constructor(
 
     fun initUi() {
         initNavigation()
-        initStatistics()
+        initRecyclerView()
         binding.scrollView.visibility = View.VISIBLE
     }
 
-    fun initNavigation() {
-        binding.cardNavigation.tvDayOfWeek.text =
-            DateFormatter.dayOfWeekToString(viewModel.currentDay.dayOfWeek.value)
-        binding.cardNavigation.tvMonthOfYear.text =
-            DateFormatter.monthOfYearToString(viewModel.currentDay.monthValue)
-        binding.cardNavigation.tvDayOfMonth.text = viewModel.currentDay.dayOfMonth.toString()
+    fun refreshUi(uiState: DiaryUiState) {
+        setStatistics(uiState)
+        setRecyclerView(uiState)
+    }
 
+    fun initNavigation() {
         // Add meal to diary on FAB clicked
         binding.fab.setOnClickListener {
             findNavController().navigate(
@@ -117,25 +104,19 @@ class DiaryFragment @Inject constructor(
         // Navigation (back button)
         binding.cardNavigation.btnBack.setOnClickListener {
             // Refresh fragment and show previous day
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.updateUserToPreviousDay()
-            }
+            viewModel.updateUserToPreviousDay()
         }
 
         // Navigation (date layout)
         binding.cardNavigation.layoutDate.setOnClickListener {
             // Refresh fragment and show current day
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.updateUserToCurrentDay()
-            }
+            viewModel.updateUserToCurrentDay()
         }
 
         // Navigation (forward button)
         binding.cardNavigation.btnForward.setOnClickListener {
             // Refresh fragment and show next day
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.updateUserToNextDay()
-            }
+            viewModel.updateUserToNextDay()
         }
 
         binding.topAppBar.setNavigationOnClickListener {
@@ -219,57 +200,45 @@ class DiaryFragment @Inject constructor(
         }
     }
 
-    private fun initStatistics() {
-        initRecyclerView()
+    private fun setStatistics(uiState: DiaryUiState) {
+        // Navigation bar
+        binding.cardNavigation.tvDayOfWeek.text =
+            DateFormatter.dayOfWeekToString(uiState.user.dayOfWeek)
+        binding.cardNavigation.tvMonthOfYear.text =
+            DateFormatter.monthOfYearToString(uiState.user.month)
+        binding.cardNavigation.tvDayOfMonth.text = uiState.user.dayOfMonth.toString()
+
         // Intakes
         binding.cardStatistics.tvCaloriesIntake.text =
-            viewModel.user.dailyKcalIntake.roundToInt().toString()
+            uiState.user.dailyKcalIntake.roundToInt().toString()
         binding.cardStatistics.tvProteinIntake.text =
-            viewModel.user.dailyProteinIntakeInG.roundToInt().toString()
+            uiState.user.dailyProteinIntakeInG.roundToInt().toString()
         binding.cardStatistics.tvFatIntake.text =
-            viewModel.user.dailyFatIntakeInG.roundToInt().toString()
+            uiState.user.dailyFatIntakeInG.roundToInt().toString()
         binding.cardStatistics.tvCarbsIntake.text =
-            viewModel.user.dailyCarbsIntakeInG.roundToInt().toString()
+            uiState.user.dailyCarbsIntakeInG.roundToInt().toString()
 
         // Total calories of day
         binding.cardStatistics.tvCaloriesConsumed.text =
-            viewModel.caloriesConsumed.roundToInt().toString()
+            uiState.caloriesConsumed.roundToInt().toString()
         binding.cardStatistics.tvProteinConsumed.text =
-            viewModel.proteinConsumed.roundToInt().toString()
-        binding.cardStatistics.tvFatConsumed.text = viewModel.fatConsumed.roundToInt().toString()
+            uiState.proteinConsumed.roundToInt().toString()
+        binding.cardStatistics.tvFatConsumed.text = uiState.fatConsumed.roundToInt().toString()
         binding.cardStatistics.tvCarbsConsumed.text =
-            viewModel.carbsConsumed.roundToInt().toString()
+            uiState.carbsConsumed.roundToInt().toString()
 
         // Percentage of daily intake
         binding.cardStatistics.tvCaloriesPercentage.text =
-            viewModel.caloriesPercentage.roundToInt().toString()
+            uiState.caloriesPercentage.roundToInt().toString()
         binding.cardStatistics.tvProteinPercentage.text =
-            viewModel.proteinPercentage.roundToInt().toString()
+            uiState.proteinPercentage.roundToInt().toString()
         binding.cardStatistics.tvFatPercentage.text =
-            viewModel.fatPercentage.roundToInt().toString()
+            uiState.fatPercentage.roundToInt().toString()
         binding.cardStatistics.tvCarbsPercentage.text =
-            viewModel.carbsPercentage.roundToInt().toString()
+            uiState.carbsPercentage.roundToInt().toString()
     }
 
     private fun initRecyclerView() {
-        adapter.setOnClickListeners(
-            singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
-                findNavController().navigate(
-                    DiaryFragmentDirections.actionDiaryFragmentToMealItemFragment(
-                        mealId = mealWithFoodEntries.meal.mealId,
-                        diaryEntryId = viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId
-                    )
-                )
-            },
-            longClickListener = { mealId, _ ->
-                viewLifecycleOwner.lifecycleScope.launch {
-                    viewModel.deleteMealFromDiary(
-                        viewModel.diaryEntryWithMeals.diaryEntry.diaryEntryId,
-                        mealId
-                    )
-                }
-            }
-        )
         binding.cardMeals.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.cardMeals.recyclerView.adapter = adapter
         binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
@@ -284,6 +253,26 @@ class DiaryFragment @Inject constructor(
                 binding.fab.hide()
             }
         })
+    }
+
+    private fun setRecyclerView(uiState: DiaryUiState) {
+        adapter.setOnClickListeners(
+            singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
+                findNavController().navigate(
+                    DiaryFragmentDirections.actionDiaryFragmentToMealItemFragment(
+                        mealId = mealWithFoodEntries.meal.mealId,
+                        diaryEntryId = uiState.diaryEntryWithMeals.diaryEntry.diaryEntryId
+                    )
+                )
+            },
+            longClickListener = { mealId, _ ->
+                viewModel.deleteMealFromDiary(
+                    uiState.diaryEntryWithMeals.diaryEntry.diaryEntryId,
+                    mealId
+                )
+            }
+        )
+        adapter.items = uiState.meals
     }
 
     fun slideBottomNavigationUp() {
