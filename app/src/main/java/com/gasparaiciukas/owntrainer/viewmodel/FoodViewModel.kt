@@ -17,12 +17,10 @@ import javax.inject.Inject
 class FoodViewModel @Inject internal constructor(
     private val diaryRepository: DiaryRepository
 ) : ViewModel() {
-    var foods = listOf<Food>()
-
-    val ldFoods: LiveData<List<Food>> get() = _ldFoods
+    val ldFoods: LiveData<List<Food>?> get() = _ldFoods
     val ldResponse: LiveData<Resource<GetResponse>> get() = _ldResponse
 
-    private val _ldFoods: MutableLiveData<List<Food>> = MutableLiveData(mutableListOf())
+    private val _ldFoods: MutableLiveData<List<Food>?> = MutableLiveData(mutableListOf())
     private val _ldResponse: MutableLiveData<Resource<GetResponse>> = MutableLiveData()
 
     fun getFoods(query: String) {

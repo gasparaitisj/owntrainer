@@ -47,15 +47,6 @@ class AddFoodToMealFragment @Inject constructor(
             it?.also { adapter.items = it }
         }
         initUi()
-        adapter.setOnClickListeners(
-            singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
-                viewLifecycleOwner.lifecycleScope.launch {
-                    viewModel.addFoodToMeal(mealWithFoodEntries)
-                    findNavController().popBackStack()
-                }
-            },
-            longClickListener = null
-        )
     }
 
     fun initUi() {
@@ -72,6 +63,15 @@ class AddFoodToMealFragment @Inject constructor(
     private fun initRecyclerView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
+        adapter.setOnClickListeners(
+            singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.addFoodToMeal(mealWithFoodEntries)
+                    findNavController().popBackStack()
+                }
+            },
+            longClickListener = null
+        )
     }
 
     override fun onDestroyView() {

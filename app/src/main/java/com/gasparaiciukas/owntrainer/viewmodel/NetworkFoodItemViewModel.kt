@@ -1,5 +1,6 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -7,8 +8,19 @@ import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import timber.log.Timber
 import javax.inject.Inject
+
+data class NetworkFoodItemUiState(
+    val user: User,
+    val title: String,
+    val carbs: Float,
+    val carbsPercentage: Float,
+    val calories: Float,
+    val fat: Float,
+    val fatPercentage: Float,
+    val protein: Float,
+    val proteinPercentage: Float,
+)
 
 @HiltViewModel
 class NetworkFoodItemViewModel @Inject internal constructor(
@@ -19,39 +31,43 @@ class NetworkFoodItemViewModel @Inject internal constructor(
     private val position: Int? = savedStateHandle["position"]
 
     val ldUser = userRepository.user.asLiveData()
-    lateinit var user: User
-
-    var title = ""
-    var carbs = 0f
-    var carbsPercentage = 0f
-    var calories = 0f
-    var fat = 0f
-    var fatPercentage = 0f
-    var protein = 0f
-    var proteinPercentage = 0f
+    val uiState = MutableLiveData<NetworkFoodItemUiState>()
 
     fun loadData() {
         if (foodItem != null) {
-            // Get nutrients from food item
-            title = foodItem.description.toString()
-            val nutrients = foodItem.foodNutrients
-            if (nutrients != null) {
-                for (nutrient in nutrients) {
-                    val nutrientValue = (nutrient.value ?: 0.0).toFloat()
-                    if (nutrient.nutrientId == 1003) protein = nutrientValue
-                    if (nutrient.nutrientId == 1004) fat = nutrientValue
-                    if (nutrient.nutrientId == 1005) carbs = nutrientValue
-                    if (nutrient.nutrientId == 1008) calories = nutrientValue
+            ldUser.value?.let { user ->
+                // Get nutrients from food item
+                val nutrients = foodItem.foodNutrients
+                var protein = 0f
+                var fat = 0f
+                var carbs = 0f
+                var calories = 0f
+                if (nutrients != null) {
+                    for (nutrient in nutrients) {
+                        val nutrientValue = (nutrient.value ?: 0.0).toFloat()
+                        if (nutrient.nutrientId == 1003) protein = nutrientValue
+                        if (nutrient.nutrientId == 1004) fat = nutrientValue
+                        if (nutrient.nutrientId == 1005) carbs = nutrientValue
+                        if (nutrient.nutrientId == 1008) calories = nutrientValue
+                    }
                 }
-            }
 
-            // Calculate percentage of each item
-            val sum = carbs + fat + protein
-            carbsPercentage = carbs / sum * 100
-            fatPercentage = fat / sum * 100
-            proteinPercentage = protein / sum * 100
-        } else {
-            Timber.e("loadData() failed! foodItem is null.")
+                // Calculate percentage of each item
+                val sum = carbs + fat + protein
+                uiState.postValue(
+                    NetworkFoodItemUiState(
+                        user = user,
+                        title = foodItem.description.toString(),
+                        carbs = carbs,
+                        carbsPercentage = carbs / sum * 100,
+                        calories = calories,
+                        fat = fat,
+                        fatPercentage = fat / sum * 100,
+                        protein = protein,
+                        proteinPercentage = protein / sum * 100
+                    )
+                )
+            }
         }
     }
 }

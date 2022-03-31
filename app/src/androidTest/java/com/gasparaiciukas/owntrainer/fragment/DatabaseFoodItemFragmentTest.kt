@@ -11,11 +11,9 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
-import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 import com.gasparaiciukas.owntrainer.viewmodel.DatabaseFoodItemViewModel
-import com.gasparaiciukas.owntrainer.viewmodel.DiaryViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi

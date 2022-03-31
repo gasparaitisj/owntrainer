@@ -16,13 +16,10 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
-import com.gasparaiciukas.owntrainer.database.DiaryEntry
-import com.gasparaiciukas.owntrainer.database.DiaryEntryMealCrossRef
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
-import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.common.truth.Truth.assertThat
@@ -116,7 +113,8 @@ class MealFragmentTest {
             )
         )
 
-        Espresso.onView(ViewMatchers.withContentDescription(R.string.delete_meal)).inRoot(isPlatformPopup()).perform(
+        Espresso.onView(ViewMatchers.withContentDescription(R.string.delete_meal))
+            .inRoot(isPlatformPopup()).perform(
             ViewActions.click()
         )
 

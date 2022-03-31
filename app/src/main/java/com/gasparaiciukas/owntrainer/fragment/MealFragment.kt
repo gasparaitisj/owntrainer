@@ -8,7 +8,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,7 +16,6 @@ import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealBinding
-import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -48,12 +46,9 @@ class MealFragment @Inject constructor(
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[MealViewModel::class.java]
         viewModel.ldMeals.observe(viewLifecycleOwner) {
-            if (it != null) {
-                adapter.items = it
-                viewModel.meals = it
-                initUi()
-            }
+            it?.also { adapter.items = it }
         }
+        initUi()
     }
 
     override fun onDestroyView() {

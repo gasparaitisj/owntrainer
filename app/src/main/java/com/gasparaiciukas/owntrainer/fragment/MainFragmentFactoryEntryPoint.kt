@@ -3,7 +3,9 @@ package com.gasparaiciukas.owntrainer.fragment
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @EntryPoint
 @InstallIn(ActivityComponent::class)
 interface MainFragmentFactoryEntryPoint {

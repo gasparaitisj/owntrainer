@@ -71,20 +71,18 @@ class DatabaseFoodAdapter @Inject constructor(
         holder.binding.tvCarbs.text = items[position].carbs.roundToInt().toString()
         holder.binding.tvProtein.text = items[position].protein.roundToInt().toString()
         holder.binding.tvFat.text = items[position].fat.roundToInt().toString()
-        if (singleClickListener != null) {
-            holder.binding.layoutItem.setOnClickListener {
-                singleClickListener?.let { click ->
-                    click(
-                        FoodEntryParcelable(
-                            caloriesPer100G = items[position].caloriesPer100G,
-                            proteinPer100G = items[position].proteinPer100G,
-                            fatPer100G = items[position].fatPer100G,
-                            carbsPer100G = items[position].carbsPer100G,
-                            quantityInG = items[position].quantityInG,
-                            title = items[position].title
-                        )
+        holder.binding.layoutItem.setOnClickListener {
+            singleClickListener?.let { click ->
+                click(
+                    FoodEntryParcelable(
+                        caloriesPer100G = items[position].caloriesPer100G,
+                        proteinPer100G = items[position].proteinPer100G,
+                        fatPer100G = items[position].fatPer100G,
+                        carbsPer100G = items[position].carbsPer100G,
+                        quantityInG = items[position].quantityInG,
+                        title = items[position].title
                     )
-                }
+                )
             }
         }
         holder.binding.layoutItem.setOnLongClickListener {

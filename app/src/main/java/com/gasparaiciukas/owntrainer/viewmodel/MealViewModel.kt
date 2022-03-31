@@ -13,7 +13,6 @@ class MealViewModel @Inject internal constructor(
     val diaryRepository: DiaryRepository
 ) : ViewModel() {
     val ldMeals = diaryRepository.getAllMealsWithFoodEntries().asLiveData()
-    lateinit var meals: List<MealWithFoodEntries>
 
     suspend fun deleteMeal(mealId: Int) = diaryRepository.deleteMealById(mealId)
 }

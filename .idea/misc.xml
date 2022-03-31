@@ -30,7 +30,7 @@
         <entry key="app/src/main/res/layout/fragment_intro_details.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_meal.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_meal_item.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_network_food_item.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_network_food_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_progress.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_select_meal_item.xml" value="0.1" />

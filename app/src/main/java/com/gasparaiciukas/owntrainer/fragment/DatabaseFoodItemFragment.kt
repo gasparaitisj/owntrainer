@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentDatabaseFoodItemBinding
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
+import com.gasparaiciukas.owntrainer.viewmodel.DatabaseFoodItemUiState
 import com.gasparaiciukas.owntrainer.viewmodel.DatabaseFoodItemViewModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -41,10 +42,12 @@ class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) 
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[DatabaseFoodItemViewModel::class.java]
         viewModel.ldUser.observe(viewLifecycleOwner) {
-            viewModel.user = it
             viewModel.loadData()
-            initUi()
         }
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+            refreshUi(uiState)
+        }
+        initUi()
     }
 
     override fun onDestroyView() {
@@ -55,18 +58,20 @@ class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) 
 
     private fun initUi() {
         initNavigation()
-        initTextViews()
-        initPieChart()
+    }
+
+    private fun refreshUi(uiState: DatabaseFoodItemUiState) {
+        setTextViews(uiState)
+        setPieChart(uiState)
     }
 
     private fun initNavigation() {
         binding.topAppBar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-        binding.topAppBar.title = viewModel.food?.title
     }
 
-    private fun initPieChart() {
+    private fun setPieChart(uiState: DatabaseFoodItemUiState) {
         // Create colors representing nutrients
         val colors: MutableList<Int> = ArrayList()
         colors.add(ContextCompat.getColor(requireContext(), R.color.colorGold)) // carbs
@@ -76,9 +81,9 @@ class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) 
 
         // Add data to pie chart
         val entries: MutableList<PieEntry> = ArrayList()
-        entries.add(PieEntry(viewModel.carbsPercentage, "Carbohydrates"))
-        entries.add(PieEntry(viewModel.fatPercentage, "Fat"))
-        entries.add(PieEntry(viewModel.proteinPercentage, "Protein"))
+        entries.add(PieEntry(uiState.carbsPercentage, "Carbohydrates"))
+        entries.add(PieEntry(uiState.fatPercentage, "Fat"))
+        entries.add(PieEntry(uiState.proteinPercentage, "Protein"))
         val pieDataSet = PieDataSet(entries, "Data")
 
         // Add style to pie chart
@@ -88,7 +93,7 @@ class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) 
         pieData.setValueTextSize(12f)
         binding.pieChart.data = pieData
         binding.pieChart.centerText =
-            "${viewModel.food?.calories?.roundToInt()}\nkCal" // calorie text inside inner circle
+            "${uiState.food.calories.roundToInt()}\nkCal" // calorie text inside inner circle
         binding.pieChart.setCenterTextSize(14f)
         binding.pieChart.setCenterTextColor(
             ContextCompat.getColor(
@@ -106,31 +111,32 @@ class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) 
         binding.pieChart.invalidate()
     }
 
-    private fun initTextViews() {
-        binding.tvQuantityCount.text = viewModel.food?.quantityInG.toString()
-        binding.tvCarbsWeight.text = viewModel.food?.carbs?.roundToInt().toString()
+    private fun setTextViews(uiState: DatabaseFoodItemUiState) {
+        binding.topAppBar.title = uiState.food.title
+        binding.tvQuantityCount.text = uiState.food.quantityInG.toString()
+        binding.tvCarbsWeight.text = uiState.food.carbs.roundToInt().toString()
         binding.tvCarbsPercentage.text =
             String.format(
                 "%s %%",
-                viewModel.carbsDailyIntakePercentage.roundToInt()
+                uiState.carbsDailyIntakePercentage.roundToInt()
             )
-        binding.tvFatWeight.text = viewModel.food?.fat?.roundToInt().toString()
+        binding.tvFatWeight.text = uiState.food.fat.roundToInt().toString()
         binding.tvFatPercentage.text =
             String.format(
                 "%s %%",
-                viewModel.fatDailyIntakePercentage.roundToInt()
+                uiState.fatDailyIntakePercentage.roundToInt()
             )
-        binding.tvProteinWeight.text = viewModel.food?.protein?.roundToInt().toString()
+        binding.tvProteinWeight.text = uiState.food.protein.roundToInt().toString()
         binding.tvProteinPercentage.text =
             String.format(
                 "%s %%",
-                viewModel.proteinDailyIntakePercentage.roundToInt()
+                uiState.proteinDailyIntakePercentage.roundToInt()
             )
-        binding.tvCaloriesCount.text = viewModel.food?.calories?.roundToInt().toString()
+        binding.tvCaloriesCount.text = uiState.food.calories.roundToInt().toString()
         binding.tvCaloriesPercentage.text =
             String.format(
                 "%s %%",
-                viewModel.caloriesDailyIntakePercentage.roundToInt()
+                uiState.caloriesDailyIntakePercentage.roundToInt()
             )
     }
 

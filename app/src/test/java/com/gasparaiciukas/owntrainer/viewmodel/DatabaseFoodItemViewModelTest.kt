@@ -40,12 +40,25 @@ class DatabaseFoodItemViewModelTest {
 
     @Test
     fun `when loadData() is called, should load data`() = runTest {
-        viewModel.user = userRepository.user.asLiveData().getOrAwaitValueTest()
+        val user = viewModel.ldUser.getOrAwaitValueTest()
         viewModel.loadData()
+        val uiState = viewModel.uiState.getOrAwaitValueTest()
         val sum = (1.1 * 60.0 / 100.0) + (11.0 * 60.0 / 100.0) + (13.0 * 60.0 / 100.0)
-        assertThat(viewModel.carbsPercentage).isEqualTo((1.1 * 60.0 / 100.0 / sum * 100).toFloat())
-        assertThat(viewModel.fatPercentage).isEqualTo((11.0 * 60.0 / 100.0 / sum * 100).toFloat())
-        assertThat(viewModel.proteinPercentage).isEqualTo((13.0 * 60.0 / 100.0 / sum * 100).toFloat())
+        val uiStateTest = DatabaseFoodItemUiState(
+            food = foodEntry,
+            carbsPercentage = (foodEntry.carbs / sum * 100).toFloat(),
+            carbsDailyIntake = user.dailyCarbsIntakeInG.toFloat(),
+            carbsDailyIntakePercentage = (foodEntry.carbs / user.dailyCarbsIntakeInG * 100).toFloat(),
+            caloriesDailyIntake = user.dailyKcalIntake.toFloat(),
+            caloriesDailyIntakePercentage = (foodEntry.calories / user.dailyKcalIntake * 100).toFloat(),
+            fatPercentage = (foodEntry.fat / sum * 100).toFloat(),
+            fatDailyIntake = user.dailyFatIntakeInG.toFloat(),
+            fatDailyIntakePercentage = (foodEntry.fat / user.dailyFatIntakeInG * 100).toFloat(),
+            proteinPercentage = (foodEntry.protein / sum * 100).toFloat(),
+            proteinDailyIntake = user.dailyProteinIntakeInG.toFloat(),
+            proteinDailyIntakePercentage = (foodEntry.protein / user.dailyProteinIntakeInG * 100).toFloat(),
+        )
+        assertThat(uiState).isEqualTo(uiStateTest)
     }
 
     private fun createFoodEntry(): FoodEntryParcelable {

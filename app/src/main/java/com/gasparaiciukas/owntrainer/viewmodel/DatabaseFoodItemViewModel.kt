@@ -1,14 +1,27 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
+import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.repository.UserRepository
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+
+data class DatabaseFoodItemUiState(
+    val food: FoodEntryParcelable,
+    val carbsPercentage: Float,
+    val carbsDailyIntake: Float,
+    val carbsDailyIntakePercentage: Float,
+    val caloriesDailyIntake: Float,
+    val caloriesDailyIntakePercentage: Float,
+    val fatPercentage: Float,
+    val fatDailyIntake: Float,
+    val fatDailyIntakePercentage: Float,
+    val proteinPercentage: Float,
+    val proteinDailyIntake: Float,
+    val proteinDailyIntakePercentage: Float
+)
 
 @HiltViewModel
 class DatabaseFoodItemViewModel @Inject internal constructor(
@@ -17,37 +30,31 @@ class DatabaseFoodItemViewModel @Inject internal constructor(
 ) : ViewModel() {
     val food: FoodEntryParcelable? = savedStateHandle["food"]
 
-    var carbsPercentage = 0f
-    var carbsDailyIntake = 0f
-    var carbsDailyIntakePercentage = 0f
-    var caloriesDailyIntake = 0f
-    var caloriesDailyIntakePercentage = 0f
-    var fatPercentage = 0f
-    var fatDailyIntake = 0f
-    var fatDailyIntakePercentage = 0f
-    var proteinPercentage = 0f
-    var proteinDailyIntake = 0f
-    var proteinDailyIntakePercentage = 0f
-
     val ldUser: LiveData<User> = userRepository.user.asLiveData()
-    lateinit var user: User
+    val uiState = MutableLiveData<DatabaseFoodItemUiState>()
 
     fun loadData() {
         if (food != null) {
-            val sum = food.carbs + food.fat + food.protein
-            carbsPercentage = (food.carbs / sum * 100).toFloat()
-            fatPercentage = (food.fat / sum * 100).toFloat()
-            proteinPercentage = (food.protein / sum * 100).toFloat()
+            ldUser.value?.let { user ->
+                val sum = food.carbs + food.fat + food.protein
 
-            caloriesDailyIntake = user.dailyKcalIntake.toFloat()
-            carbsDailyIntake = user.dailyCarbsIntakeInG.toFloat()
-            fatDailyIntake = user.dailyFatIntakeInG.toFloat()
-            proteinDailyIntake = user.dailyProteinIntakeInG.toFloat()
-
-            carbsDailyIntakePercentage = (food.carbs / carbsDailyIntake * 100).toFloat()
-            caloriesDailyIntakePercentage = (food.calories / caloriesDailyIntake * 100).toFloat()
-            fatDailyIntakePercentage = (food.fat / fatDailyIntake * 100).toFloat()
-            proteinDailyIntakePercentage = (food.protein / proteinDailyIntake * 100).toFloat()
+                uiState.postValue(
+                    DatabaseFoodItemUiState(
+                        food = food,
+                        carbsPercentage = (food.carbs / sum * 100).toFloat(),
+                        carbsDailyIntake = user.dailyCarbsIntakeInG.toFloat(),
+                        carbsDailyIntakePercentage = (food.carbs / user.dailyCarbsIntakeInG * 100).toFloat(),
+                        caloriesDailyIntake = user.dailyKcalIntake.toFloat(),
+                        caloriesDailyIntakePercentage = (food.calories / user.dailyKcalIntake * 100).toFloat(),
+                        fatPercentage = (food.fat / sum * 100).toFloat(),
+                        fatDailyIntake = user.dailyFatIntakeInG.toFloat(),
+                        fatDailyIntakePercentage = (food.fat / user.dailyFatIntakeInG * 100).toFloat(),
+                        proteinPercentage = (food.protein / sum * 100).toFloat(),
+                        proteinDailyIntake = user.dailyProteinIntakeInG.toFloat(),
+                        proteinDailyIntakePercentage = (food.protein / user.dailyProteinIntakeInG * 100).toFloat(),
+                    )
+                )
+            }
         }
     }
 }

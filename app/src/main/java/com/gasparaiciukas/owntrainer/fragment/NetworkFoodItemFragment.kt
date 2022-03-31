@@ -7,14 +7,13 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentNetworkFoodItemBinding
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
-import com.gasparaiciukas.owntrainer.viewmodel.MealItemViewModel
+import com.gasparaiciukas.owntrainer.viewmodel.NetworkFoodItemUiState
 import com.gasparaiciukas.owntrainer.viewmodel.NetworkFoodItemViewModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -50,12 +49,14 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
             if (it != null) {
                 Timber.d("data is loaded...")
                 viewModel.loadData()
-                viewModel.user = it
-                initUi()
             } else {
                 Timber.d("data is not yet loaded...")
             }
         }
+        viewModel.uiState.observe(viewLifecycleOwner) {
+            refreshUi(it)
+        }
+        initUi()
     }
 
     override fun onDestroyView() {
@@ -66,11 +67,14 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
 
     private fun initUi() {
         initNavigation()
-        initTextViews()
-        initPieChart()
     }
 
-    private fun initPieChart() {
+    private fun refreshUi(uiState: NetworkFoodItemUiState) {
+        setTextViews(uiState)
+        setPieChart(uiState)
+    }
+
+    private fun setPieChart(uiState: NetworkFoodItemUiState) {
         // Create colors representing nutrients
         val colors: MutableList<Int> = ArrayList()
         colors.add(ContextCompat.getColor(requireContext(), R.color.colorGold)) // carbs
@@ -79,9 +83,9 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
 
         // Add data to pie chart
         val entries: MutableList<PieEntry> = ArrayList()
-        entries.add(PieEntry(viewModel.carbsPercentage, "Carbohydrates"))
-        entries.add(PieEntry(viewModel.fatPercentage, "Fat"))
-        entries.add(PieEntry(viewModel.proteinPercentage, "Protein"))
+        entries.add(PieEntry(uiState.carbsPercentage, "Carbohydrates"))
+        entries.add(PieEntry(uiState.fatPercentage, "Fat"))
+        entries.add(PieEntry(uiState.proteinPercentage, "Protein"))
         val pieDataSet = PieDataSet(entries, "Data")
 
         // Add style to pie chart
@@ -91,7 +95,7 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
         pieData.setValueTextSize(12f)
         binding.pieChart.data = pieData
         binding.pieChart.centerText =
-            "${viewModel.calories.roundToInt()}\nkCal" // calorie text inside inner circle
+            "${uiState.calories.roundToInt()}\nkCal" // calorie text inside inner circle
         binding.pieChart.setCenterTextSize(14f)
         binding.pieChart.setCenterTextColor(
             ContextCompat.getColor(
@@ -109,46 +113,46 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
         binding.pieChart.invalidate()
     }
 
-    private fun initTextViews() {
-        binding.tvCarbsWeight.text = viewModel.carbs.roundToInt().toString()
+    private fun setTextViews(uiState: NetworkFoodItemUiState) {
+        binding.topAppBar.title = uiState.title
+        binding.tvCarbsWeight.text = uiState.carbs.roundToInt().toString()
         binding.tvCarbsPercentage.text =
             String.format(
                 "%s %%",
-                (viewModel.carbs / viewModel.user.dailyCarbsIntakeInG * 100).roundToInt()
+                (uiState.carbs / uiState.user.dailyCarbsIntakeInG * 100).roundToInt()
             )
-        binding.tvFatWeight.text = viewModel.fat.roundToInt().toString()
+        binding.tvFatWeight.text = uiState.fat.roundToInt().toString()
         binding.tvFatPercentage.text =
             String.format(
                 "%s %%",
-                (viewModel.fat / viewModel.user.dailyFatIntakeInG * 100).roundToInt()
+                (uiState.fat / uiState.user.dailyFatIntakeInG * 100).roundToInt()
             )
-        binding.tvProteinWeight.text = viewModel.protein.roundToInt().toString()
+        binding.tvProteinWeight.text = uiState.protein.roundToInt().toString()
         binding.tvProteinPercentage.text =
             String.format(
                 "%s %%",
-                (viewModel.protein / viewModel.user.dailyProteinIntakeInG * 100).roundToInt()
+                (uiState.protein / uiState.user.dailyProteinIntakeInG * 100).roundToInt()
             )
-        binding.tvCaloriesCount.text = viewModel.calories.roundToInt().toString()
+        binding.tvCaloriesCount.text = uiState.calories.roundToInt().toString()
         binding.tvCaloriesPercentage.text =
             String.format(
                 "%s %%",
-                (viewModel.calories / viewModel.user.dailyKcalIntake * 100).roundToInt()
+                (uiState.calories / uiState.user.dailyKcalIntake * 100).roundToInt()
             )
     }
 
     private fun initNavigation() {
-        binding.topAppBar.title = viewModel.title
         binding.topAppBar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
 
         binding.topAppBar.menu.findItem(R.id.btn_add_to_meal).setOnMenuItemClickListener {
-            val action =
+            findNavController().navigate(
                 NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToAddFoodToMealFragment(
                     args.foodItem,
                     binding.etWeight.text.toString().toInt()
                 )
-            findNavController().navigate(action)
+            )
             true
         }
     }

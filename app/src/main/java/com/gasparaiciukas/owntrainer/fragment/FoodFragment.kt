@@ -11,7 +11,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,29 +19,20 @@ import com.gasparaiciukas.owntrainer.adapter.NetworkFoodAdapter
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodBinding
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.Status
-import com.gasparaiciukas.owntrainer.viewmodel.DatabaseFoodItemViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class FoodFragment : Fragment(R.layout.fragment_food) {
+class FoodFragment @Inject constructor(
+    val adapter: NetworkFoodAdapter
+) : Fragment(R.layout.fragment_food) {
     private var _binding: FragmentFoodBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var adapter: NetworkFoodAdapter
-
-    private val listener: (food: Food, position: Int) -> Unit = { _: Food, position: Int ->
-        val action =
-            FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment(
-                position = position,
-                foodItem = viewModel.foods[position]
-            )
-        findNavController().navigate(action)
-    }
 
     lateinit var viewModel: FoodViewModel
 
@@ -58,7 +48,7 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[FoodViewModel::class.java]
         viewModel.ldFoods.observe(viewLifecycleOwner) {
-            reloadRecyclerView(it)
+            it?.also { refreshUi(it) }
         }
         viewModel.ldResponse.observe(viewLifecycleOwner) {
             if (it.status == Status.ERROR) {
@@ -96,20 +86,29 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
         }
     }
 
-    private fun reloadRecyclerView(foods: List<Food>) {
-        adapter.submitFoods(foods)
-        viewModel.foods = foods
-        if (adapter.itemCount == 0) {
-            binding.cardRecyclerView.visibility = View.INVISIBLE
-        } else {
-            binding.cardRecyclerView.visibility = View.VISIBLE
-        }
-    }
-
     private fun initUi() {
         initNavigation()
         setListeners()
         initRecyclerView()
+    }
+
+    private fun refreshUi(foods: List<Food>) {
+        reloadRecyclerView(foods)
+    }
+
+    private fun reloadRecyclerView(foods: List<Food>) {
+        adapter.items = foods
+        adapter.setOnClickListeners(
+            singleClickListener = { _: Food, position: Int ->
+                findNavController().navigate(
+                    FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment(
+                        position = position,
+                        foodItem = foods[position]
+                    )
+                )
+            },
+            longClickListener = null
+        )
     }
 
     private fun setListeners() {
@@ -242,12 +241,7 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
     }
 
     private fun initRecyclerView() {
-        val layoutManager = LinearLayoutManager(context)
-        adapter = NetworkFoodAdapter(viewModel.foods, listener)
-        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
-        if (adapter.itemCount == 0) {
-            binding.cardRecyclerView.visibility = View.INVISIBLE
-        }
     }
 }

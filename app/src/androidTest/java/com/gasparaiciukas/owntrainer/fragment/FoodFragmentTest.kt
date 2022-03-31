@@ -90,7 +90,7 @@ class FoodFragmentTest {
         Mockito.verify(navController).navigate(
             FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment(
                 position = 0,
-                foodItem = fakeViewModel.ldFoods.getOrAwaitValue()[0]
+                foodItem = fakeViewModel.ldFoods.getOrAwaitValue()!![0]
             )
         )
     }
@@ -123,7 +123,7 @@ class FoodFragmentTest {
         Mockito.verify(navController).navigate(
             FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment(
                 position = 0,
-                foodItem = fakeViewModel.ldFoods.getOrAwaitValue()[0]
+                foodItem = fakeViewModel.ldFoods.getOrAwaitValue()!![0]
             )
         )
     }

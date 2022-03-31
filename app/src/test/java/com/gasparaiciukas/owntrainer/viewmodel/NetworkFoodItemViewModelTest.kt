@@ -3,16 +3,19 @@ package com.gasparaiciukas.owntrainer.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
 import com.gasparaiciukas.owntrainer.MainCoroutineRule
+import com.gasparaiciukas.owntrainer.getOrAwaitValueTest
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.FoodNutrient
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepository
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepository
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class NetworkFoodItemViewModelTest {
     @get:Rule
     val instantTaskRule = InstantTaskExecutorRule()
@@ -36,11 +39,22 @@ class NetworkFoodItemViewModelTest {
 
     @Test
     fun `when loadData() is called, should load data`() = runTest {
+        viewModel.ldUser.getOrAwaitValueTest()
         viewModel.loadData()
-        assertThat(viewModel.calories).isEqualTo(52.0f)
-        assertThat(viewModel.protein).isEqualTo(0.0f)
-        assertThat(viewModel.fat).isEqualTo(0.65f)
-        assertThat(viewModel.carbs).isEqualTo(14.3f)
+        val uiState = viewModel.uiState.getOrAwaitValueTest()
+        val sum = 0.0f + 0.65f + 14.3f
+        val uiStateTest = NetworkFoodItemUiState(
+            user = viewModel.ldUser.getOrAwaitValueTest(),
+            title = foodItem.description.toString(),
+            carbs = 14.3f,
+            carbsPercentage = 14.3f / sum * 100,
+            calories = 52.0f,
+            fat = 0.65f,
+            fatPercentage = 0.65f / sum * 100,
+            protein = 0.0f,
+            proteinPercentage = 0.0f / sum * 100
+        )
+        assertThat(uiState).isEqualTo(uiStateTest)
     }
 
     private fun createFood(): Food {
