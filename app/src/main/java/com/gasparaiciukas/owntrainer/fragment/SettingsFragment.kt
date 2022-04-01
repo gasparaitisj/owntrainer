@@ -59,22 +59,25 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
     }
 
-    private fun setDarkMode(isDarkMode: Boolean) {
+    fun setDarkMode(isDarkMode: Boolean) {
         if (isDarkMode) {
+            println("set to dark mode!")
             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
         } else {
+            println("set to light mode!")
             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
         }
-        activity?.getSharedPreferences("settings", Context.MODE_PRIVATE)
-            ?.edit()
-            ?.putBoolean("darkMode", isDarkMode)
-            ?.apply()
+        requireActivity()
+            .getSharedPreferences("settings", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("darkMode", isDarkMode)
+            .apply()
     }
 
     private fun isDarkMode(): Boolean {
-        return activity?.getSharedPreferences("settings", Context.MODE_PRIVATE)
-            ?.getBoolean("darkMode", false)
-            ?: false
+        return requireActivity()
+            .getSharedPreferences("settings", Context.MODE_PRIVATE)
+            .getBoolean("darkMode", false)
     }
 
     private fun initNavigation() {
