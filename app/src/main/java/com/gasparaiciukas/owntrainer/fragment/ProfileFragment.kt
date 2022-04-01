@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
+import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.databinding.FragmentProfileBinding
 import com.gasparaiciukas.owntrainer.viewmodel.NetworkFoodItemViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.ProfileViewModel
@@ -44,9 +46,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
         viewModel.ldUser.observe(viewLifecycleOwner) {
-            viewModel.user = it
-            initUi()
+            println("ldUser observe: $it")
+            refreshUi(it)
         }
+        initUi()
     }
 
     override fun onDestroyView() {
@@ -56,7 +59,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private fun initUi() {
         initNavigation()
-        setTextFields()
+    }
+
+    private fun refreshUi(user: User) {
+        setTextFields(user)
+        setNavigation(user)
     }
 
     private fun isAgeCorrect(s: String): String {
@@ -98,23 +105,19 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         return ""
     }
 
-    private fun setTextFields() {
+    private fun setTextFields(user: User) {
         // Insert current data into fields
-        binding.etSex.setText(viewModel.user.sex)
-        binding.etAge.setText(viewModel.user.ageInYears.toString())
-        binding.etHeight.setText(viewModel.user.heightInCm.toString())
-        binding.etWeight.setText(viewModel.user.weightInKg.toString())
-        binding.etLifestyle.setText(viewModel.user.lifestyle)
+        binding.etSex.setText(user.sex)
+        binding.etAge.setText(user.ageInYears.toString())
+        binding.etHeight.setText(user.heightInCm.toString())
+        binding.etWeight.setText(user.weightInKg.toString())
+        binding.etLifestyle.setText(user.lifestyle)
 
         // Set up listeners
         val sexList: List<String?> = ArrayList(listOf("Male", "Female"))
         val sexAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(requireContext(), R.layout.details_list_item, sexList)
         binding.etSex.setAdapter(sexAdapter)
-        binding.etSex.onItemClickListener =
-            AdapterView.OnItemClickListener { _, _, _, _ ->
-                viewModel.user.sex = binding.etSex.text.toString()
-            }
         binding.etAge.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // do nothing
@@ -127,7 +130,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             override fun afterTextChanged(s: Editable) {
                 val validation = isAgeCorrect(s.toString())
                 if (validation == "") {
-                    viewModel.user.ageInYears = s.toString().toInt()
                     binding.layoutEtAge.error = null
                 } else {
                     binding.layoutEtAge.error = validation
@@ -146,7 +148,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             override fun afterTextChanged(s: Editable) {
                 val validation = isHeightCorrect(s.toString())
                 if (validation == "") {
-                    viewModel.user.heightInCm = s.toString().toInt()
                     binding.layoutEtHeight.error = null
                 } else {
                     binding.layoutEtHeight.error = validation
@@ -165,17 +166,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             override fun afterTextChanged(s: Editable) {
                 val validation = isWeightCorrect(s.toString())
                 if (validation == "") {
-                    viewModel.user.weightInKg = s.toString().toDouble()
                     binding.layoutEtWeight.error = null
                 } else {
                     binding.layoutEtWeight.error = validation
                 }
             }
         })
-        binding.etLifestyle.onItemClickListener =
-            AdapterView.OnItemClickListener { _, _, _, _ ->
-                viewModel.user.lifestyle = binding.etLifestyle.text.toString()
-            }
         val lifestyleList: List<String?> = ArrayList(
             listOf(
                 "Sedentary",
@@ -190,16 +186,58 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         binding.etLifestyle.setAdapter(lifestyleAdapter)
     }
 
+    private fun setNavigation(user: User) {
+        println("setNavigation()")
+        binding.topAppBar.menu.findItem(R.id.btn_save).setOnMenuItemClickListener {
+            println("menuItemClickListener")
+            when {
+                binding.layoutEtSex.error != null -> {
+                    println("layoutEtSex.error != null")
+                    Toast.makeText(requireContext(), binding.layoutEtSex.error.toString(), Toast.LENGTH_SHORT).show()
+                    false
+                }
+                binding.layoutEtAge.error != null -> {
+                    Toast.makeText(requireContext(), binding.layoutEtAge.error.toString(), Toast.LENGTH_SHORT).show()
+                    false
+                }
+                binding.layoutEtHeight.error != null -> {
+                    Toast.makeText(requireContext(), binding.layoutEtHeight.error.toString(), Toast.LENGTH_SHORT).show()
+                    false
+                }
+                binding.layoutEtWeight.error != null -> {
+                    Toast.makeText(requireContext(), binding.layoutEtWeight.error.toString(), Toast.LENGTH_SHORT).show()
+                    false
+                }
+                binding.layoutEtLifestyle.error != null -> {
+                    Toast.makeText(requireContext(), binding.layoutEtLifestyle.error.toString(), Toast.LENGTH_SHORT).show()
+                    false
+                }
+                else -> {
+                    println("update user")
+                    viewModel.updateUser(
+                        User(
+                            userId = user.userId,
+                            sex = binding.etSex.text.toString(),
+                            ageInYears = binding.etAge.text.toString().toInt(),
+                            heightInCm = binding.etHeight.text.toString().toInt(),
+                            weightInKg = binding.etWeight.text.toString().toDouble(),
+                            lifestyle = binding.etLifestyle.text.toString(),
+                            year = user.year,
+                            month = user.month,
+                            dayOfYear = user.dayOfYear,
+                            dayOfMonth = user.dayOfMonth,
+                            dayOfWeek = user.dayOfWeek
+                        )
+                    )
+                    true
+                }
+            }
+        }
+    }
+
     private fun initNavigation() {
         binding.topAppBar.setNavigationOnClickListener {
             binding.drawerLayout.open()
-        }
-
-        binding.topAppBar.menu.findItem(R.id.btn_save).setOnMenuItemClickListener {
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.updateUser()
-            }
-            return@setOnMenuItemClickListener true
         }
 
         binding.navigationView.setCheckedItem(R.id.profile)
@@ -211,9 +249,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action =
+                            findNavController().navigate(
                                 ProfileFragmentDirections.actionProfileFragmentToDiaryFragment()
-                            findNavController().navigate(action)
+                            )
                         }
                     })
                     binding.drawerLayout.close()
@@ -223,9 +261,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action =
+                            findNavController().navigate(
                                 ProfileFragmentDirections.actionProfileFragmentToFoodFragment()
-                            findNavController().navigate(action)
+                            )
                         }
                     })
                     binding.drawerLayout.close()
@@ -235,9 +273,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action =
+                            findNavController().navigate(
                                 ProfileFragmentDirections.actionProfileFragmentToMealFragment()
-                            findNavController().navigate(action)
+                            )
                         }
                     })
                     binding.drawerLayout.close()
@@ -247,9 +285,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action =
+                            findNavController().navigate(
                                 ProfileFragmentDirections.actionProfileFragmentToProgressFragment()
-                            findNavController().navigate(action)
+                            )
                         }
                     })
                     binding.drawerLayout.close()
@@ -259,8 +297,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action = ProfileFragmentDirections.actionProfileFragmentSelf()
-                            findNavController().navigate(action)
+                            findNavController().navigate(
+                                ProfileFragmentDirections.actionProfileFragmentSelf()
+                            )
                         }
                     })
                     binding.drawerLayout.close()
@@ -270,9 +309,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         DrawerLayout.SimpleDrawerListener() {
                         override fun onDrawerClosed(drawerView: View) {
                             super.onDrawerClosed(drawerView)
-                            val action =
+                            findNavController().navigate(
                                 ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
-                            findNavController().navigate(action)
+                            )
                         }
                     })
                     binding.drawerLayout.close()

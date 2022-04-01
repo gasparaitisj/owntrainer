@@ -50,18 +50,8 @@ class DiaryFragment @Inject constructor(
 
         // Data loading chain:
         // User -> DiaryEntryWithMeals -> UiState
-        viewModel.ldUser.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                Timber.d("ldUser observe!")
-                Timber.d("user loaded! ${user.month} ${user.dayOfMonth}")
-            } else {
-                Timber.d("user is null or not found...")
-            }
-        }
-
         viewModel.ldDiaryEntryWithMeals.observe(viewLifecycleOwner) { diaryEntryWithMeals ->
             if (diaryEntryWithMeals != null) {
-                Timber.d("ldDiaryEntryWithMeals observe!")
                 viewModel.calculateData()
             } else {
                 Timber.d("diaryEntryWithMeals is null... creating new entry.")
@@ -70,9 +60,10 @@ class DiaryFragment @Inject constructor(
         }
 
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+            Timber.d("uiState.observe()")
             refreshUi(uiState)
         }
-
+        Timber.d("onViewCreated()")
         initUi()
     }
 
@@ -123,6 +114,7 @@ class DiaryFragment @Inject constructor(
             binding.drawerLayout.open()
         }
         binding.navigationView.setCheckedItem(R.id.home)
+        Timber.d("setCheckedItem home")
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
             when (menuItem.itemId) {
@@ -241,17 +233,18 @@ class DiaryFragment @Inject constructor(
     private fun initRecyclerView() {
         binding.cardMeals.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.cardMeals.recyclerView.adapter = adapter
-        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-            // Scroll up
-            if (scrollY < oldScrollY) {
-                slideBottomNavigationUp()
-                binding.fab.show()
-            }
-            // Scroll down
-            if (scrollY > oldScrollY) {
-                slideBottomNavigationDown()
-                binding.fab.hide()
-            }
+        binding.scrollView.setOnScrollChangeListener(
+            NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+                // Scroll up
+                if (scrollY < oldScrollY) {
+                    slideBottomNavigationUp()
+                    binding.fab.show()
+                }
+                // Scroll down
+                if (scrollY > oldScrollY) {
+                    slideBottomNavigationDown()
+                    binding.fab.hide()
+                }
         })
     }
 

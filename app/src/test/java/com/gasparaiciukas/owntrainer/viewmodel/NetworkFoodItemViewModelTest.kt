@@ -45,6 +45,7 @@ class NetworkFoodItemViewModelTest {
         val sum = 0.0f + 0.65f + 14.3f
         val uiStateTest = NetworkFoodItemUiState(
             user = viewModel.ldUser.getOrAwaitValueTest(),
+            foodItem = foodItem,
             title = foodItem.description.toString(),
             carbs = 14.3f,
             carbsPercentage = 14.3f / sum * 100,

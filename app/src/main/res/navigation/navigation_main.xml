@@ -50,10 +50,13 @@
         android:label="NetworkFoodItemFragment">
         <argument
             android:name="position"
-            app:argType="integer" />
+            app:argType="integer"
+            android:defaultValue="0"/>
         <argument
             android:name="foodItem"
-            app:argType="com.gasparaiciukas.owntrainer.network.Food" />
+            app:argType="com.gasparaiciukas.owntrainer.network.Food"
+            android:defaultValue="@null"
+            app:nullable="true"/>
     </fragment>
     <fragment
         android:id="@+id/addFoodToMealFragment"

@@ -10,6 +10,7 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
+import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.FoodNutrient
@@ -81,6 +82,7 @@ class NetworkFoodItemFragmentTest {
         // fails to click somehow
         launchFragmentInHiltContainer<NetworkFoodItemFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
+            fakeViewModel = viewModel
         }
 
         Espresso.onView(

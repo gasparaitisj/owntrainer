@@ -21,7 +21,7 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentProgressBinding.inflate(inflater, container, false)
         return binding.root
     }

@@ -6,11 +6,13 @@ import com.gasparaiciukas.owntrainer.MainCoroutineRule
 import com.gasparaiciukas.owntrainer.getOrAwaitValueTest
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepository
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class ProfileViewModelTest {
     @get:Rule
     val instantTaskRule = InstantTaskExecutorRule()
@@ -29,11 +31,10 @@ class ProfileViewModelTest {
 
     @Test
     fun `when updateUser() is called, should update user`() = runTest {
-        viewModel.user = userRepository.user.asLiveData().getOrAwaitValueTest()
-        val oldUser = viewModel.user.copy()
-        viewModel.user.weightInKg = 70.0
-        viewModel.updateUser()
-        val updatedUser = userRepository.user.asLiveData().getOrAwaitValueTest()
-        assertThat(updatedUser).isNotEqualTo(oldUser)
+        val user = userRepository.user.asLiveData().getOrAwaitValueTest().copy()
+        user.weightInKg = 50.0
+        viewModel.updateUser(user)
+        val userTest = userRepository.user.asLiveData().getOrAwaitValueTest().copy()
+        assertThat(user).isEqualTo(userTest)
     }
 }

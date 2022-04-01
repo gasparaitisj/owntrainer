@@ -1,19 +1,22 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject internal constructor(
-    private val userRepository: UserRepository
+    val userRepository: UserRepository
 ) : ViewModel() {
-    val ldUser: LiveData<User> = userRepository.user.asLiveData()
-    lateinit var user: User
+    val ldUser = userRepository.user.asLiveData() as MutableLiveData<User>
 
-    suspend fun updateUser() = userRepository.updateUser(user)
+    fun updateUser(user: User) {
+        viewModelScope.launch {
+            userRepository.updateUser(user)
+            ldUser.postValue(user)
+        }
+    }
 }

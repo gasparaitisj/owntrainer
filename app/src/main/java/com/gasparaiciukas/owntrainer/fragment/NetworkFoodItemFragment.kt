@@ -9,7 +9,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentNetworkFoodItemBinding
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
@@ -28,8 +27,6 @@ import kotlin.math.roundToInt
 class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
     private var _binding: FragmentNetworkFoodItemBinding? = null
     private val binding get() = _binding!!
-
-    private val args: NetworkFoodItemFragmentArgs by navArgs()
 
     lateinit var viewModel: NetworkFoodItemViewModel
 
@@ -69,9 +66,16 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
         initNavigation()
     }
 
+    private fun initNavigation() {
+        binding.topAppBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
     private fun refreshUi(uiState: NetworkFoodItemUiState) {
         setTextViews(uiState)
         setPieChart(uiState)
+        setNavigation(uiState)
     }
 
     private fun setPieChart(uiState: NetworkFoodItemUiState) {
@@ -141,15 +145,11 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
             )
     }
 
-    private fun initNavigation() {
-        binding.topAppBar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
-
+    private fun setNavigation(uiState: NetworkFoodItemUiState) {
         binding.topAppBar.menu.findItem(R.id.btn_add_to_meal).setOnMenuItemClickListener {
             findNavController().navigate(
                 NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToAddFoodToMealFragment(
-                    args.foodItem,
+                    uiState.foodItem,
                     binding.etWeight.text.toString().toInt()
                 )
             )
