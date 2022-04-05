@@ -63,6 +63,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private fun refreshUi(user: User) {
         setTextFields(user)
         setNavigation(user)
+        binding.scrollView.visibility = View.VISIBLE
     }
 
     private fun isAgeCorrect(s: String): String {

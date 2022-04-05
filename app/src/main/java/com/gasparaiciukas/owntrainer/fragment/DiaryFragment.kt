@@ -48,8 +48,6 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[DiaryViewModel::class.java]
 
-        // Data loading chain:
-        // User -> DiaryEntryWithMeals -> UiState
         viewModel.ldDiaryEntryWithMeals.observe(viewLifecycleOwner) { diaryEntryWithMeals ->
             if (diaryEntryWithMeals != null) {
                 viewModel.calculateData()
@@ -73,12 +71,12 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
     fun initUi() {
         initNavigation()
         initRecyclerView()
-        binding.scrollView.visibility = View.VISIBLE
     }
 
     fun refreshUi(uiState: DiaryUiState) {
         setStatistics(uiState)
         setRecyclerView(uiState)
+        binding.scrollView.visibility = View.VISIBLE
     }
 
     fun initNavigation() {

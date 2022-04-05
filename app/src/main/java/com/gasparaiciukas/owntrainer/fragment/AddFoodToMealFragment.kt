@@ -19,8 +19,6 @@ import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddFoodToMealFragment : Fragment(R.layout.fragment_add_food_to_meal) {
@@ -44,7 +42,7 @@ class AddFoodToMealFragment : Fragment(R.layout.fragment_add_food_to_meal) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[AddFoodToMealViewModel::class.java]
         viewModel.ldMeals.observe(viewLifecycleOwner) {
-            it?.also { adapter.items = it }
+            it?.also { refreshUi(it) }
         }
         initUi()
     }
@@ -52,6 +50,11 @@ class AddFoodToMealFragment : Fragment(R.layout.fragment_add_food_to_meal) {
     fun initUi() {
         initNavigation()
         initRecyclerView()
+    }
+
+    fun refreshUi(items: List<MealWithFoodEntries>) {
+        adapter.items = items
+        binding.scrollView.visibility = View.VISIBLE
     }
 
     private fun initNavigation() {

@@ -63,6 +63,7 @@ class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) 
     private fun refreshUi(uiState: DatabaseFoodItemUiState) {
         setTextViews(uiState)
         setPieChart(uiState)
+        binding.scrollView.visibility = View.VISIBLE
     }
 
     private fun initNavigation() {

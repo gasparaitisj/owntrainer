@@ -63,16 +63,17 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
         initNavigation()
     }
 
-    private fun initNavigation() {
-        binding.topAppBar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
-    }
-
     private fun refreshUi(uiState: NetworkFoodItemUiState) {
         setTextViews(uiState)
         setPieChart(uiState)
         setNavigation(uiState)
+        binding.scrollView.visibility = View.VISIBLE
+    }
+
+    private fun initNavigation() {
+        binding.topAppBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun setPieChart(uiState: NetworkFoodItemUiState) {

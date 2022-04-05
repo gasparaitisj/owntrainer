@@ -90,6 +90,7 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
         initNavigation()
         setListeners()
         initRecyclerView()
+        binding.scrollView.visibility = View.VISIBLE
     }
 
     private fun refreshUi(foods: List<Food>) {

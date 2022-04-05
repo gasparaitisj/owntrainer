@@ -39,6 +39,7 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
 
     private fun initUi() {
         initNavigation()
+        binding.scrollView.visibility = View.VISIBLE
     }
 
     private fun initNavigation() {

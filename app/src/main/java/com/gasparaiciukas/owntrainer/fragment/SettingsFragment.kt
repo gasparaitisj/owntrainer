@@ -46,6 +46,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private fun initUi() {
         initNavigation()
         setTextFields()
+        binding.scrollView.visibility = View.VISIBLE
     }
 
     private fun setTextFields() {

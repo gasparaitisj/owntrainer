@@ -45,7 +45,7 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[MealViewModel::class.java]
         viewModel.ldMeals.observe(viewLifecycleOwner) {
-            it?.also { adapter.items = it }
+            it?.also { refreshUi(it) }
         }
         initUi()
     }
@@ -60,6 +60,11 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
         initNavigation()
         setListeners()
         initRecyclerView()
+    }
+
+    private fun refreshUi(items: List<MealWithFoodEntries>) {
+        adapter.items = items
+        binding.scrollView.visibility = View.VISIBLE
     }
 
     private fun initNavigation() {

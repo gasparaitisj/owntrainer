@@ -75,6 +75,7 @@ class MealItemFragment : Fragment(R.layout.fragment_meal_item) {
         setTextViews(uiState)
         setPieChart(uiState)
         adapter.items = uiState.mealWithFoodEntries.foodEntries
+        binding.scrollView.visibility = View.VISIBLE
     }
 
     private fun initNavigation() {

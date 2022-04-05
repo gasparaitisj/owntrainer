@@ -46,6 +46,7 @@ class CreateMealItemFragment : Fragment(R.layout.fragment_create_meal_item) {
 
     fun initUi() {
         initNavigation()
+        binding.scrollView.visibility = View.VISIBLE
     }
 
     private fun initNavigation() {

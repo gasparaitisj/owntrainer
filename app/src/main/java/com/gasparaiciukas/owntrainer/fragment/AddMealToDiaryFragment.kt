@@ -51,7 +51,7 @@ class AddMealToDiaryFragment : Fragment(R.layout.fragment_add_meal_to_diary) {
     fun initUi() {
         initNavigation()
         initRecyclerView()
-        adapter.items = sharedViewModel.ldAllMeals.value ?: listOf()
+        binding.scrollView.visibility = View.VISIBLE
     }
 
     private fun initNavigation() {
@@ -64,6 +64,7 @@ class AddMealToDiaryFragment : Fragment(R.layout.fragment_add_meal_to_diary) {
 
     private fun initRecyclerView() {
         adapter = MealAdapter()
+        adapter.items = sharedViewModel.ldAllMeals.value ?: listOf()
         adapter.setOnClickListeners(
             singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
                 sharedViewModel.addMealToDiary(mealWithFoodEntries)
