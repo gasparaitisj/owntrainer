@@ -35,7 +35,6 @@ class MealItemViewModel @Inject internal constructor(
 
     fun loadData(user: User) {
         viewModelScope.launch {
-            println("loadData()")
             val mealWithFoodEntries = diaryRepository.getMealWithFoodEntriesById(mealId)
             if (mealWithFoodEntries != null) {
                 for (food in mealWithFoodEntries.foodEntries) {
@@ -61,7 +60,6 @@ class MealItemViewModel @Inject internal constructor(
                         caloriesDailyIntakePercentage = mealWithFoodEntries.meal.calories / user.dailyKcalIntake * 100
                     )
                 )
-                println("uiState.postValue()")
             }
         }
     }

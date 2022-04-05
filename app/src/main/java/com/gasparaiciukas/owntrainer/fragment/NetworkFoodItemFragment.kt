@@ -44,10 +44,7 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
         viewModel = ViewModelProvider(this)[NetworkFoodItemViewModel::class.java]
         viewModel.ldUser.observe(viewLifecycleOwner) {
             if (it != null) {
-                Timber.d("data is loaded...")
                 viewModel.loadData()
-            } else {
-                Timber.d("data is not yet loaded...")
             }
         }
         viewModel.uiState.observe(viewLifecycleOwner) {

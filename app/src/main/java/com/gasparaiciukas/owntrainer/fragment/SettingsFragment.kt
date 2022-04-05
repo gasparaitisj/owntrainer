@@ -61,10 +61,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     fun setDarkMode(isDarkMode: Boolean) {
         if (isDarkMode) {
-            println("set to dark mode!")
             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
         } else {
-            println("set to light mode!")
             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
         }
         requireActivity()

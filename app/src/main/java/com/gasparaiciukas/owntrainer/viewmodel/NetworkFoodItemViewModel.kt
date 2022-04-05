@@ -37,9 +37,7 @@ class NetworkFoodItemViewModel @Inject internal constructor(
     val uiState = MutableLiveData<NetworkFoodItemUiState>()
 
     fun loadData() {
-        println("foodItem is not null")
         ldUser.value?.let { user ->
-            println("user is not null")
             // Get nutrients from food item
             val nutrients = foodItem.foodNutrients
             var protein = 0f

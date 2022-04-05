@@ -11,8 +11,10 @@ import com.gasparaiciukas.owntrainer.fragment.MainFragmentFactory
 import com.gasparaiciukas.owntrainer.fragment.MainFragmentFactoryEntryPoint
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding

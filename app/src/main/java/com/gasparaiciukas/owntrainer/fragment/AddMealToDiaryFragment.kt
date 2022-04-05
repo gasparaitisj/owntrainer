@@ -25,11 +25,11 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class AddMealToDiaryFragment @Inject constructor(
-    val adapter: MealAdapter
-) : Fragment(R.layout.fragment_add_meal_to_diary) {
+class AddMealToDiaryFragment : Fragment(R.layout.fragment_add_meal_to_diary) {
     private var _binding: FragmentAddMealToDiaryBinding? = null
     private val binding get() = _binding!!
+
+    lateinit var adapter: MealAdapter
 
     lateinit var sharedViewModel: DiaryViewModel
 
@@ -45,25 +45,13 @@ class AddMealToDiaryFragment @Inject constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedViewModel = ViewModelProvider(requireActivity())[DiaryViewModel::class.java]
-
-        adapter.setOnClickListeners(
-            singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
-                viewLifecycleOwner.lifecycleScope.launch {
-                    sharedViewModel.addMealToDiary(mealWithFoodEntries)
-                    findNavController().navigate(
-                        AddMealToDiaryFragmentDirections.actionAddMealToDiaryFragmentToDiaryFragment()
-                    )
-                }
-            },
-            longClickListener = null
-        )
-
         initUi()
     }
 
     fun initUi() {
         initNavigation()
         initRecyclerView()
+        adapter.items = sharedViewModel.ldAllMeals.value ?: listOf()
     }
 
     private fun initNavigation() {
@@ -75,6 +63,16 @@ class AddMealToDiaryFragment @Inject constructor(
     }
 
     private fun initRecyclerView() {
+        adapter = MealAdapter()
+        adapter.setOnClickListeners(
+            singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
+                sharedViewModel.addMealToDiary(mealWithFoodEntries)
+                findNavController().navigate(
+                    AddMealToDiaryFragmentDirections.actionAddMealToDiaryFragmentToDiaryFragment()
+                )
+            },
+            longClickListener = null
+        )
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
     }

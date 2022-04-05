@@ -23,11 +23,11 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddFoodToMealFragment @Inject constructor(
-    val adapter: MealAdapter
-) : Fragment(R.layout.fragment_add_food_to_meal) {
+class AddFoodToMealFragment : Fragment(R.layout.fragment_add_food_to_meal) {
     private var _binding: FragmentAddFoodToMealBinding? = null
     private val binding get() = _binding!!
+
+    lateinit var adapter: MealAdapter
 
     lateinit var viewModel: AddFoodToMealViewModel
 
@@ -61,6 +61,7 @@ class AddFoodToMealFragment @Inject constructor(
     }
 
     private fun initRecyclerView() {
+        adapter = MealAdapter()
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
         adapter.setOnClickListeners(

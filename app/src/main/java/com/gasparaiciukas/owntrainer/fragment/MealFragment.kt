@@ -23,14 +23,13 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class MealFragment @Inject constructor(
-    val adapter: MealAdapter
-) : Fragment(R.layout.fragment_meal) {
+class MealFragment : Fragment(R.layout.fragment_meal) {
     private var _binding: FragmentMealBinding? = null
     private val binding get() = _binding!!
+
+    lateinit var adapter: MealAdapter
 
     lateinit var viewModel: MealViewModel
 
@@ -186,6 +185,7 @@ class MealFragment @Inject constructor(
     }
 
     private fun initRecyclerView() {
+        adapter = MealAdapter()
         adapter.setOnClickListeners(
             singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
                 val action = MealFragmentDirections.actionMealFragmentToMealItemFragment(

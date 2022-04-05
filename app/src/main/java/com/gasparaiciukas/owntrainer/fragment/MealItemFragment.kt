@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.DatabaseFoodAdapter
+import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealItemBinding
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
@@ -27,15 +28,14 @@ import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class MealItemFragment @Inject constructor(
-    val adapter: DatabaseFoodAdapter
-) : Fragment(R.layout.fragment_meal_item) {
+class MealItemFragment : Fragment(R.layout.fragment_meal_item) {
     private var _binding: FragmentMealItemBinding? = null
     private val binding get() = _binding!!
+
+    lateinit var adapter: DatabaseFoodAdapter
 
     lateinit var viewModel: MealItemViewModel
 
@@ -52,11 +52,9 @@ class MealItemFragment @Inject constructor(
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[MealItemViewModel::class.java]
         viewModel.ldUser.observe(viewLifecycleOwner) {
-            println("ldUser observe")
             viewModel.loadData(it)
         }
         viewModel.uiState.observe(viewLifecycleOwner) {
-            println("uiState: $it")
             refreshUi(it)
         }
         initUi()
@@ -124,6 +122,7 @@ class MealItemFragment @Inject constructor(
     }
 
     private fun initRecyclerView() {
+        adapter = DatabaseFoodAdapter()
         adapter.setOnClickListeners(
             singleClickListener = { food: FoodEntryParcelable ->
                 findNavController().navigate(

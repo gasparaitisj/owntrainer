@@ -10,11 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.MealRowBinding
-import timber.log.Timber
-import javax.inject.Inject
 
-class MealAdapter @Inject constructor(
-) : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
+class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
 
     class MealViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         val binding = MealRowBinding.bind(view)

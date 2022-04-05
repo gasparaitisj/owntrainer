@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
+import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.adapter.NetworkFoodAdapter
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodBinding
 import com.gasparaiciukas.owntrainer.network.Food
@@ -25,14 +26,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class FoodFragment @Inject constructor(
-    val adapter: NetworkFoodAdapter
-) : Fragment(R.layout.fragment_food) {
+class FoodFragment : Fragment(R.layout.fragment_food) {
     private var _binding: FragmentFoodBinding? = null
     private val binding get() = _binding!!
+
+    lateinit var adapter: NetworkFoodAdapter
 
     lateinit var viewModel: FoodViewModel
 
@@ -124,7 +124,6 @@ class FoodFragment @Inject constructor(
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 if (!TextUtils.isEmpty(binding.etSearch.text)) {
-                    println("im clicked")
                     viewModel.getFoods(binding.etSearch.text.toString())
                 }
                 handled = true
@@ -241,6 +240,7 @@ class FoodFragment @Inject constructor(
     }
 
     private fun initRecyclerView() {
+        adapter = NetworkFoodAdapter()
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
     }

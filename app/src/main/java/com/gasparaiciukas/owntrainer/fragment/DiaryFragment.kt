@@ -28,11 +28,11 @@ import kotlin.math.roundToInt
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class DiaryFragment @Inject constructor(
-    val adapter: MealAdapter
-) : Fragment(R.layout.fragment_diary) {
+class DiaryFragment : Fragment(R.layout.fragment_diary) {
     private var _binding: FragmentDiaryBinding? = null
     private val binding get() = _binding!!
+
+    lateinit var adapter: MealAdapter
 
     lateinit var viewModel: DiaryViewModel
 
@@ -54,16 +54,13 @@ class DiaryFragment @Inject constructor(
             if (diaryEntryWithMeals != null) {
                 viewModel.calculateData()
             } else {
-                Timber.d("diaryEntryWithMeals is null... creating new entry.")
                 viewModel.createDiaryEntry()
             }
         }
 
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            Timber.d("uiState.observe()")
             refreshUi(uiState)
         }
-        Timber.d("onViewCreated()")
         initUi()
     }
 
@@ -114,7 +111,6 @@ class DiaryFragment @Inject constructor(
             binding.drawerLayout.open()
         }
         binding.navigationView.setCheckedItem(R.id.home)
-        Timber.d("setCheckedItem home")
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
             when (menuItem.itemId) {
@@ -231,6 +227,7 @@ class DiaryFragment @Inject constructor(
     }
 
     private fun initRecyclerView() {
+        adapter = MealAdapter()
         binding.cardMeals.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.cardMeals.recyclerView.adapter = adapter
         binding.scrollView.setOnScrollChangeListener(

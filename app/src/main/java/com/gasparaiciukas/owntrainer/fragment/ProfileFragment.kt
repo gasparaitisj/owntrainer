@@ -46,7 +46,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
         viewModel.ldUser.observe(viewLifecycleOwner) {
-            println("ldUser observe: $it")
             refreshUi(it)
         }
         initUi()
@@ -187,12 +186,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     private fun setNavigation(user: User) {
-        println("setNavigation()")
         binding.topAppBar.menu.findItem(R.id.btn_save).setOnMenuItemClickListener {
-            println("menuItemClickListener")
             when {
                 binding.layoutEtSex.error != null -> {
-                    println("layoutEtSex.error != null")
                     Toast.makeText(requireContext(), binding.layoutEtSex.error.toString(), Toast.LENGTH_SHORT).show()
                     false
                 }
@@ -213,7 +209,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     false
                 }
                 else -> {
-                    println("update user")
                     viewModel.updateUser(
                         User(
                             userId = user.userId,

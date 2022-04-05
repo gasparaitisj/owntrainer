@@ -26,14 +26,16 @@ data class DiaryUiState(
     val carbsPercentage: Double
 )
 
-
 @ExperimentalCoroutinesApi
 @HiltViewModel
 class DiaryViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val diaryRepository: DiaryRepository
 ) : ViewModel() {
-    val ldUser: LiveData<User> = userRepository.user.asLiveData()
+    val ldAllMeals = diaryRepository.getAllMealsWithFoodEntries().asLiveData()
+    val ldUser: LiveData<User> = switchMap(ldAllMeals) {
+        userRepository.user.asLiveData()
+    }
 
     val ldDiaryEntryWithMeals: LiveData<DiaryEntryWithMeals> = switchMap(ldUser) {
         diaryRepository.getDiaryEntryWithMeals(it.year, it.dayOfYear).asLiveData()
