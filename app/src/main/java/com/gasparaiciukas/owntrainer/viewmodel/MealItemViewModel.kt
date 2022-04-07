@@ -37,9 +37,6 @@ class MealItemViewModel @Inject internal constructor(
         viewModelScope.launch {
             val mealWithFoodEntries = diaryRepository.getMealWithFoodEntriesById(mealId)
             if (mealWithFoodEntries != null) {
-                for (food in mealWithFoodEntries.foodEntries) {
-                    Timber.d("Title: ${food.title}, Size: ${mealWithFoodEntries.foodEntries.size}")
-                }
                 mealWithFoodEntries.meal.calories = mealWithFoodEntries.calories
                 mealWithFoodEntries.meal.protein = mealWithFoodEntries.protein
                 mealWithFoodEntries.meal.carbs = mealWithFoodEntries.carbs

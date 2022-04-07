@@ -6,25 +6,18 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.databinding.FragmentProfileBinding
-import com.gasparaiciukas.owntrainer.viewmodel.NetworkFoodItemViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.ProfileViewModel
-import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
@@ -190,23 +183,43 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         binding.topAppBar.menu.findItem(R.id.btn_save).setOnMenuItemClickListener {
             when {
                 binding.layoutEtSex.error != null -> {
-                    Toast.makeText(requireContext(), binding.layoutEtSex.error.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        binding.layoutEtSex.error.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     false
                 }
                 binding.layoutEtAge.error != null -> {
-                    Toast.makeText(requireContext(), binding.layoutEtAge.error.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        binding.layoutEtAge.error.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     false
                 }
                 binding.layoutEtHeight.error != null -> {
-                    Toast.makeText(requireContext(), binding.layoutEtHeight.error.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        binding.layoutEtHeight.error.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     false
                 }
                 binding.layoutEtWeight.error != null -> {
-                    Toast.makeText(requireContext(), binding.layoutEtWeight.error.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        binding.layoutEtWeight.error.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     false
                 }
                 binding.layoutEtLifestyle.error != null -> {
-                    Toast.makeText(requireContext(), binding.layoutEtLifestyle.error.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        binding.layoutEtLifestyle.error.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     false
                 }
                 else -> {
@@ -232,110 +245,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     private fun initNavigation() {
+        NavigationUI.setupWithNavController(binding.navigationView, findNavController())
         binding.topAppBar.setNavigationOnClickListener {
             binding.drawerLayout.open()
-        }
-
-        binding.navigationView.setCheckedItem(R.id.profile)
-        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
-            menuItem.isChecked = true
-            when (menuItem.itemId) {
-                R.id.home -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            findNavController().navigate(
-                                ProfileFragmentDirections.actionProfileFragmentToDiaryFragment()
-                            )
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-                R.id.foods -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            findNavController().navigate(
-                                ProfileFragmentDirections.actionProfileFragmentToFoodFragment()
-                            )
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-                R.id.meals -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            findNavController().navigate(
-                                ProfileFragmentDirections.actionProfileFragmentToMealFragment()
-                            )
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-                R.id.progress -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            findNavController().navigate(
-                                ProfileFragmentDirections.actionProfileFragmentToProgressFragment()
-                            )
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-                R.id.profile -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            findNavController().navigate(
-                                ProfileFragmentDirections.actionProfileFragmentSelf()
-                            )
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-                R.id.settings -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            findNavController().navigate(
-                                ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
-                            )
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-            }
-            true
-        }
-    }
-
-    private fun slideBottomNavigationUp() {
-        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        val layoutParams = botNav?.layoutParams
-        if (layoutParams is CoordinatorLayout.LayoutParams) {
-            val behavior = layoutParams.behavior
-            if (behavior is HideBottomViewOnScrollBehavior) {
-                behavior.slideUp(botNav)
-            }
-        }
-    }
-
-    private fun slideBottomNavigationDown() {
-        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        val layoutParams = botNav?.layoutParams
-        if (layoutParams is CoordinatorLayout.LayoutParams) {
-            val behavior = layoutParams.behavior
-            if (behavior is HideBottomViewOnScrollBehavior) {
-                behavior.slideDown(botNav)
-            }
         }
     }
 

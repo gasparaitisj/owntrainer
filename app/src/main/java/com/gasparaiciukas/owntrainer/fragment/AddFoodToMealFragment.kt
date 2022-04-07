@@ -80,29 +80,6 @@ class AddFoodToMealFragment : Fragment(R.layout.fragment_add_food_to_meal) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        slideBottomNavigationUp()
         _binding = null
-    }
-
-    private fun slideBottomNavigationUp() {
-        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        val layoutParams = botNav?.layoutParams
-        if (layoutParams is CoordinatorLayout.LayoutParams) {
-            val behavior = layoutParams.behavior
-            if (behavior is HideBottomViewOnScrollBehavior) {
-                behavior.slideUp(botNav)
-            }
-        }
-    }
-
-    private fun slideBottomNavigationDown() {
-        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        val layoutParams = botNav?.layoutParams
-        if (layoutParams is CoordinatorLayout.LayoutParams) {
-            val behavior = layoutParams.behavior
-            if (behavior is HideBottomViewOnScrollBehavior) {
-                behavior.slideDown(botNav)
-            }
-        }
     }
 }

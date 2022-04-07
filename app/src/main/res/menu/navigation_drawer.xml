@@ -4,20 +4,29 @@
         android:id="@+id/navigation_group"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/home"
+            android:id="@+id/diaryFragment"
+            android:enabled="true"
             android:icon="@drawable/baseline_home_24"
+            android:menuCategory="secondary"
+            android:contentDescription="hello"
             android:title="@string/home" />
         <item
-            android:id="@+id/foods"
+            android:id="@+id/foodFragment"
+            android:enabled="true"
             android:icon="@drawable/outline_lunch_dining_24"
+            android:menuCategory="secondary"
             android:title="@string/foods" />
         <item
-            android:id="@+id/meals"
+            android:id="@+id/mealFragment"
+            android:enabled="true"
             android:icon="@drawable/baseline_local_dining_24"
+            android:menuCategory="secondary"
             android:title="@string/meals" />
         <item
-            android:id="@+id/progress"
+            android:id="@+id/progressFragment"
+            android:enabled="true"
             android:icon="@drawable/baseline_auto_graph_24"
+            android:menuCategory="secondary"
             android:title="@string/progress" />
     </group>
 
@@ -25,12 +34,16 @@
         android:id="@+id/settings_group"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/profile"
+            android:id="@+id/profileFragment"
+            android:enabled="true"
             android:icon="@drawable/baseline_perm_identity_24"
+            android:menuCategory="secondary"
             android:title="@string/profile" />
         <item
-            android:id="@+id/settings"
+            android:id="@+id/settingsFragment"
+            android:enabled="true"
             android:icon="@drawable/baseline_settings_24"
+            android:menuCategory="secondary"
             android:title="@string/settings" />
     </group>
 

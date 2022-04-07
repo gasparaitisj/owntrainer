@@ -65,7 +65,6 @@ class DiaryViewModel @Inject constructor(
                             mealWithFoodEntries.meal.fat = mealWithFoodEntries.fat
                             fatConsumed += mealWithFoodEntries.fat
                             meals.add(mealWithFoodEntries)
-                            Timber.d("Meal calories: " + mealWithFoodEntries.calories)
                         }
                     }
                     uiState.postValue(

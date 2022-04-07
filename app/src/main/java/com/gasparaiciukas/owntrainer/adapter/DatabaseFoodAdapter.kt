@@ -38,7 +38,7 @@ class DatabaseFoodAdapter @Inject constructor(
             oldItem: FoodEntry,
             newItem: FoodEntry
         ): Boolean {
-            return oldItem.mealId == newItem.mealId
+            return oldItem.foodEntryId == newItem.foodEntryId
         }
     }
 
@@ -105,6 +105,6 @@ class DatabaseFoodAdapter @Inject constructor(
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return differ.currentList.size
     }
 }

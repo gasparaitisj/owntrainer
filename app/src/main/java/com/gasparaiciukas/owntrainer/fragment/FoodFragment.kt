@@ -7,22 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.widget.NestedScrollView
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.adapter.NetworkFoodAdapter
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodBinding
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.Status
 import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
-import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,30 +56,7 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        slideBottomNavigationUp()
         _binding = null
-    }
-
-    private fun slideBottomNavigationUp() {
-        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        val layoutParams = botNav?.layoutParams
-        if (layoutParams is CoordinatorLayout.LayoutParams) {
-            val behavior = layoutParams.behavior
-            if (behavior is HideBottomViewOnScrollBehavior) {
-                behavior.slideUp(botNav)
-            }
-        }
-    }
-
-    private fun slideBottomNavigationDown() {
-        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        val layoutParams = botNav?.layoutParams
-        if (layoutParams is CoordinatorLayout.LayoutParams) {
-            val behavior = layoutParams.behavior
-            if (behavior is HideBottomViewOnScrollBehavior) {
-                behavior.slideDown(botNav)
-            }
-        }
     }
 
     private fun initUi() {
@@ -145,98 +118,13 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
-
-        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-            // Scroll down
-            if (scrollY > oldScrollY) {
-                slideBottomNavigationDown()
-            }
-            // Scroll up
-            if (scrollY < oldScrollY) {
-                slideBottomNavigationUp()
-            }
-        })
     }
 
     private fun initNavigation() {
+        NavigationUI.setupWithNavController(binding.bottomNavigation, findNavController())
+        NavigationUI.setupWithNavController(binding.navigationView, findNavController())
         binding.topAppBar.setNavigationOnClickListener {
             binding.drawerLayout.open()
-        }
-        binding.navigationView.setCheckedItem(R.id.foods)
-        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
-            menuItem.isChecked = true
-            when (menuItem.itemId) {
-                R.id.home -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            val action = FoodFragmentDirections.actionFoodFragmentToDiaryFragment()
-                            findNavController().navigate(action)
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-                R.id.foods -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            val action = FoodFragmentDirections.actionFoodFragmentSelf()
-                            findNavController().navigate(action)
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-                R.id.meals -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            val action = FoodFragmentDirections.actionFoodFragmentToMealFragment()
-                            findNavController().navigate(action)
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-                R.id.progress -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            val action =
-                                FoodFragmentDirections.actionFoodFragmentToProgressFragment()
-                            findNavController().navigate(action)
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-                R.id.profile -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            val action =
-                                FoodFragmentDirections.actionFoodFragmentToProfileFragment()
-                            findNavController().navigate(action)
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-                R.id.settings -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            val action =
-                                FoodFragmentDirections.actionFoodFragmentToSettingsFragment()
-                            findNavController().navigate(action)
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-            }
-            true
         }
     }
 
