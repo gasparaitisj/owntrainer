@@ -78,4 +78,5 @@
     <string name="add_meal">Add meal</string>
     <string name="create_meal">Create meal</string>
     <string name="add_meal_to_diary">Add meal to diary</string>
+    <string name="snackbar_meal_deleted">Meal deleted</string>
 </resources>

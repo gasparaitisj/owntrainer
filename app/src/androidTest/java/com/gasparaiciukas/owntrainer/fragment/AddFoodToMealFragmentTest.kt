@@ -74,7 +74,7 @@ class AddFoodToMealFragmentTest {
             title = "title",
             instructions = "instructions"
         )
-        launchFragmentInHiltContainer<AddFoodToMealFragment>(fragmentFactory = fragmentFactory) {
+        launchFragmentInHiltContainer<AddFoodToMealFragment>(fragmentFactory = fragmentFactory, navController = navController) {
             Navigation.setViewNavController(requireView(), navController)
             fakeViewModel = viewModel
         }
@@ -94,7 +94,7 @@ class AddFoodToMealFragmentTest {
 
     @Test
     fun clickOnNavigationBackButton_popBackStack() = runTest {
-        launchFragmentInHiltContainer<AddFoodToMealFragment>(fragmentFactory = fragmentFactory) {
+        launchFragmentInHiltContainer<AddFoodToMealFragment>(fragmentFactory = fragmentFactory, navController = navController) {
             Navigation.setViewNavController(requireView(), navController)
         }
 

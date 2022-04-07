@@ -63,7 +63,7 @@ class MealFragmentTest {
 
     @Test
     fun singleClickOnMeal_navigateToMealItemFragment() = runTest {
-        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory) {
+        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory, navController = navController) {
             Navigation.setViewNavController(requireView(), navController)
             fakeViewModel = viewModel
         }
@@ -93,7 +93,7 @@ class MealFragmentTest {
 
     @Test
     fun longClickOnMeal_deleteMeal() = runTest {
-        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory) {
+        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory, navController = navController) {
             Navigation.setViewNavController(requireView(), navController)
             fakeViewModel = viewModel
         }
@@ -124,7 +124,7 @@ class MealFragmentTest {
 
     @Test
     fun clickFoodsTab_navigateToFoodFragment() {
-        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory) {
+        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory, navController = navController) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
         }
@@ -156,132 +156,6 @@ class MealFragmentTest {
                 tabAtIndex.select()
             }
         }
-    }
-
-    @Test
-    fun clickDrawerHomeButton_navigateToDiaryFragment() {
-        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory) {
-            Navigation.setViewNavController(requireView(), navController)
-            viewModel = fakeViewModel
-        }
-
-        Espresso.onView(
-            Matchers.allOf(
-                Matchers.instanceOf(ImageButton::class.java),
-                ViewMatchers.withParent(ViewMatchers.withId(R.id.top_app_bar))
-            )
-        ).perform(ViewActions.click())
-
-        Espresso.onView(ViewMatchers.withId(R.id.home)).perform(ViewActions.click())
-
-        Mockito.verify(navController).navigate(
-            MealFragmentDirections.actionMealFragmentToDiaryFragment()
-        )
-    }
-
-    @Test
-    fun clickDrawerFoodsButton_navigateToFoodFragment() {
-        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory) {
-            Navigation.setViewNavController(requireView(), navController)
-            viewModel = fakeViewModel
-        }
-
-        Espresso.onView(
-            Matchers.allOf(
-                Matchers.instanceOf(ImageButton::class.java),
-                ViewMatchers.withParent(ViewMatchers.withId(R.id.top_app_bar))
-            )
-        ).perform(ViewActions.click())
-
-        Espresso.onView(ViewMatchers.withId(R.id.foods)).perform(ViewActions.click())
-
-        Mockito.verify(navController).navigate(
-            MealFragmentDirections.actionMealFragmentToFoodFragment()
-        )
-    }
-
-    @Test
-    fun clickDrawerMealsButton_navigateToMealFragment() {
-        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory) {
-            Navigation.setViewNavController(requireView(), navController)
-            viewModel = fakeViewModel
-        }
-
-        Espresso.onView(
-            Matchers.allOf(
-                Matchers.instanceOf(ImageButton::class.java),
-                ViewMatchers.withParent(ViewMatchers.withId(R.id.top_app_bar))
-            )
-        ).perform(ViewActions.click())
-
-        Espresso.onView(ViewMatchers.withId(R.id.meals)).perform(ViewActions.click())
-
-        Mockito.verify(navController).navigate(
-            MealFragmentDirections.actionMealFragmentSelf()
-        )
-    }
-
-    @Test
-    fun clickDrawerProgressButton_navigateToProgressFragment() {
-        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory) {
-            Navigation.setViewNavController(requireView(), navController)
-            viewModel = fakeViewModel
-        }
-
-        Espresso.onView(
-            Matchers.allOf(
-                Matchers.instanceOf(ImageButton::class.java),
-                ViewMatchers.withParent(ViewMatchers.withId(R.id.top_app_bar))
-            )
-        ).perform(ViewActions.click())
-
-        Espresso.onView(ViewMatchers.withId(R.id.progress)).perform(ViewActions.click())
-
-        Mockito.verify(navController).navigate(
-            MealFragmentDirections.actionMealFragmentToProgressFragment()
-        )
-    }
-
-    @Test
-    fun clickDrawerProfileButton_navigateToProfileFragment() {
-        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory) {
-            Navigation.setViewNavController(requireView(), navController)
-            viewModel = fakeViewModel
-        }
-
-        Espresso.onView(
-            Matchers.allOf(
-                Matchers.instanceOf(ImageButton::class.java),
-                ViewMatchers.withParent(ViewMatchers.withId(R.id.top_app_bar))
-            )
-        ).perform(ViewActions.click())
-
-        Espresso.onView(ViewMatchers.withId(R.id.profile)).perform(ViewActions.click())
-
-        Mockito.verify(navController).navigate(
-            MealFragmentDirections.actionMealFragmentToProfileFragment()
-        )
-    }
-
-    @Test
-    fun clickDrawerSettingsButton_navigateToSettingsFragment() {
-        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory) {
-            Navigation.setViewNavController(requireView(), navController)
-            viewModel = fakeViewModel
-        }
-
-        Espresso.onView(
-            Matchers.allOf(
-                Matchers.instanceOf(ImageButton::class.java),
-                ViewMatchers.withParent(ViewMatchers.withId(R.id.top_app_bar))
-            )
-        ).perform(ViewActions.click())
-
-        Espresso.onView(ViewMatchers.withId(R.id.settings)).perform(ViewActions.click())
-
-        Mockito.verify(navController).navigate(
-            MealFragmentDirections.actionMealFragmentToSettingsFragment()
-        )
     }
 
 }

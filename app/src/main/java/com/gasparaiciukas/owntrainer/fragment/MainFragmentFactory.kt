@@ -15,14 +15,6 @@ import javax.inject.Inject
 class MainFragmentFactory @Inject constructor() : FragmentFactory() {
 
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
-        return when(className) {
-            AddFoodToMealFragment::class.java.name -> AddFoodToMealFragment()
-            AddMealToDiaryFragment::class.java.name -> AddMealToDiaryFragment()
-            DiaryFragment::class.java.name -> DiaryFragment()
-            FoodFragment::class.java.name -> FoodFragment()
-            MealFragment::class.java.name -> MealFragment()
-            MealItemFragment::class.java.name -> MealItemFragment()
-            else -> super.instantiate(classLoader, className)
-        }
+        return super.instantiate(classLoader, className)
     }
 }

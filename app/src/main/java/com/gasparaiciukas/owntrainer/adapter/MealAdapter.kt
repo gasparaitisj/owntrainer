@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.MealRowBinding
+import timber.log.Timber
 
 class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
 
@@ -69,6 +70,7 @@ class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
         if (singleClickListener != null) {
             holder.binding.layoutItem.setOnClickListener {
                 singleClickListener?.let { click ->
+                    println("singleClick items[$position]: " + items[position])
                     click(items[position], position)
                 }
             }
@@ -81,6 +83,7 @@ class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
                 popup.show()
                 popup.setOnMenuItemClickListener {
                     longClickListener?.let { click ->
+                        println("longClick items[$position]: " + items[position])
                         click(items[position].meal.mealId, position)
                     }
                     true
@@ -91,6 +94,6 @@ class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return differ.currentList.size
     }
 }

@@ -62,7 +62,7 @@ class NetworkFoodItemFragmentTest {
 
     @Test
     fun clickOnNavigationBackButton_popBackStack() {
-        launchFragmentInHiltContainer<NetworkFoodItemFragment>(fragmentFactory = fragmentFactory) {
+        launchFragmentInHiltContainer<NetworkFoodItemFragment>(fragmentFactory = fragmentFactory, navController = navController) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
         }
@@ -80,7 +80,7 @@ class NetworkFoodItemFragmentTest {
     @Test
     fun clickAddNavigationButton_navigateToAddFoodToMealFragment() = runTest {
         // fails to click somehow
-        launchFragmentInHiltContainer<NetworkFoodItemFragment>(fragmentFactory = fragmentFactory) {
+        launchFragmentInHiltContainer<NetworkFoodItemFragment>(fragmentFactory = fragmentFactory, navController = navController) {
             Navigation.setViewNavController(requireView(), navController)
             fakeViewModel = viewModel
         }

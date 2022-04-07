@@ -32,29 +32,13 @@ object TestDatabaseModule {
         .build()
 
     @Provides
-    fun provideDiaryEntryDao(appDatabase: AppDatabase): DiaryEntryDao {
-        return appDatabase.diaryEntryDao()
-    }
+    fun provideDiaryEntryDao(appDatabase: AppDatabase): DiaryEntryDao = appDatabase.diaryEntryDao()
 
     @Provides
-    fun provideDiaryEntryWithMealsDao(appDatabase: AppDatabase): DiaryEntryWithMealsDao {
-        return appDatabase.diaryEntryWithMealsDao()
-    }
+    fun provideMealDao(appDatabase: AppDatabase): MealDao = appDatabase.mealDao()
 
     @Provides
-    fun provideFoodEntryDao(appDatabase: AppDatabase): FoodEntryDao {
-        return appDatabase.foodEntryDao()
-    }
-
-    @Provides
-    fun provideMealDao(appDatabase: AppDatabase): MealDao {
-        return appDatabase.mealDao()
-    }
-
-    @Provides
-    fun provideUserDao(appDatabase: AppDatabase): UserDao {
-        return appDatabase.userDao()
-    }
+    fun provideUserDao(appDatabase: AppDatabase): UserDao = appDatabase.userDao()
 
     @Singleton
     @Provides

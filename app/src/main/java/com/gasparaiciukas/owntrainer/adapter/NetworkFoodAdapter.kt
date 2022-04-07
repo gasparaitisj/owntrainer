@@ -93,6 +93,6 @@ class NetworkFoodAdapter @Inject constructor(
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return differ.currentList.size
     }
 }

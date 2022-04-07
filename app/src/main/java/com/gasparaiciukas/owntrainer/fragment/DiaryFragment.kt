@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.widget.NestedScrollView
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI.setupWithNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
@@ -18,12 +18,8 @@ import com.gasparaiciukas.owntrainer.databinding.FragmentDiaryBinding
 import com.gasparaiciukas.owntrainer.utils.DateFormatter
 import com.gasparaiciukas.owntrainer.viewmodel.DiaryUiState
 import com.gasparaiciukas.owntrainer.viewmodel.DiaryViewModel
-import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import timber.log.Timber
-import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @ExperimentalCoroutinesApi
@@ -41,6 +37,7 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDiaryBinding.inflate(inflater, container, false)
+        println("binding...")
         return binding.root
     }
 
@@ -64,7 +61,6 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        slideBottomNavigationUp()
         _binding = null
     }
 
@@ -80,6 +76,13 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
     }
 
     fun initNavigation() {
+        setupWithNavController(binding.bottomNavigation, findNavController())
+        setupWithNavController(binding.navigationView, findNavController())
+
+        binding.topAppBar.setNavigationOnClickListener {
+            binding.drawerLayout.open()
+        }
+
         // Add meal to diary on FAB clicked
         binding.fab.setOnClickListener {
             findNavController().navigate(
@@ -103,86 +106,6 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
         binding.cardNavigation.btnForward.setOnClickListener {
             // Refresh fragment and show next day
             viewModel.updateUserToNextDay()
-        }
-
-        binding.topAppBar.setNavigationOnClickListener {
-            binding.drawerLayout.open()
-        }
-        binding.navigationView.setCheckedItem(R.id.home)
-        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
-            menuItem.isChecked = true
-            when (menuItem.itemId) {
-                R.id.home -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            val action = DiaryFragmentDirections.actionDiaryFragmentSelf()
-                            findNavController().navigate(action)
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-                R.id.foods -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            val action = DiaryFragmentDirections.actionDiaryFragmentToFoodFragment()
-                            findNavController().navigate(action)
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-                R.id.meals -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            val action = DiaryFragmentDirections.actionDiaryFragmentToMealFragment()
-                            findNavController().navigate(action)
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-                R.id.progress -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            val action =
-                                DiaryFragmentDirections.actionDiaryFragmentToProgressFragment()
-                            findNavController().navigate(action)
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-                R.id.profile -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            val action =
-                                DiaryFragmentDirections.actionDiaryFragmentToProfileFragment()
-                            findNavController().navigate(action)
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-                R.id.settings -> {
-                    binding.drawerLayout.addDrawerListener(object :
-                        DrawerLayout.SimpleDrawerListener() {
-                        override fun onDrawerClosed(drawerView: View) {
-                            super.onDrawerClosed(drawerView)
-                            val action =
-                                DiaryFragmentDirections.actionDiaryFragmentToSettingsFragment()
-                            findNavController().navigate(action)
-                        }
-                    })
-                    binding.drawerLayout.close()
-                }
-            }
-            true
         }
     }
 
@@ -232,15 +155,15 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
             NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
                 // Scroll up
                 if (scrollY < oldScrollY) {
-                    slideBottomNavigationUp()
+                    // slideBottomNavigationUp()
                     binding.fab.show()
                 }
                 // Scroll down
                 if (scrollY > oldScrollY) {
-                    slideBottomNavigationDown()
+                    //slideBottomNavigationDown()
                     binding.fab.hide()
                 }
-        })
+            })
     }
 
     private fun setRecyclerView(uiState: DiaryUiState) {
@@ -261,27 +184,5 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
             }
         )
         adapter.items = uiState.meals
-    }
-
-    fun slideBottomNavigationUp() {
-        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        val layoutParams = botNav?.layoutParams
-        if (layoutParams is CoordinatorLayout.LayoutParams) {
-            val behavior = layoutParams.behavior
-            if (behavior is HideBottomViewOnScrollBehavior) {
-                behavior.slideUp(botNav)
-            }
-        }
-    }
-
-    fun slideBottomNavigationDown() {
-        val botNav = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        val layoutParams = botNav?.layoutParams
-        if (layoutParams is CoordinatorLayout.LayoutParams) {
-            val behavior = layoutParams.behavior
-            if (behavior is HideBottomViewOnScrollBehavior) {
-                behavior.slideDown(botNav)
-            }
-        }
     }
 }
