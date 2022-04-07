@@ -109,6 +109,9 @@ dependencies {
     // Splash Screen
     implementation "androidx.core:core-splashscreen:$rootProject.splashScreenVersion"
 
+    // DataStore
+    implementation "androidx.datastore:datastore-preferences:$rootProject.dataStoreVersion"
+
     // Testing
     // Local Unit Tests
     implementation "androidx.test:core:$rootProject.testCoreVersion"

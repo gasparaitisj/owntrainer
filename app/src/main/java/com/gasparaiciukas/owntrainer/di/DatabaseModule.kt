@@ -4,6 +4,7 @@ import android.content.Context
 import com.gasparaiciukas.owntrainer.database.*
 import com.gasparaiciukas.owntrainer.network.DefaultGetService
 import com.gasparaiciukas.owntrainer.repository.*
+import com.gasparaiciukas.owntrainer.prefs.PrefsStoreImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +15,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 class DatabaseModule {
+
+    @Singleton
+    @Provides
+    fun providePrefsStore(@ApplicationContext context: Context): PrefsStoreImpl {
+        return PrefsStoreImpl(context)
+    }
 
     @Singleton
     @Provides
