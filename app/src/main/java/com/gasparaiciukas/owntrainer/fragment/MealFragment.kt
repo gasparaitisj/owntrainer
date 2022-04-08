@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
@@ -89,25 +90,8 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
                     )
                 }
             }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {
-                // do nothing
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab) {
-                // do nothing
-            }
-        })
-
-        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-            // Scroll down
-            if (scrollY > oldScrollY) {
-                binding.fab.hide()
-            }
-            // Scroll up
-            if (scrollY < oldScrollY) {
-                binding.fab.show()
-            }
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
         })
     }
 
@@ -134,5 +118,18 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
         )
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    binding.bottomNavigation.visibility = View.GONE
+                    binding.fab.hide()
+                }
+                else {
+                    binding.bottomNavigation.visibility = View.VISIBLE
+                    binding.fab.show()
+                }
+            }
+        })
     }
 }
