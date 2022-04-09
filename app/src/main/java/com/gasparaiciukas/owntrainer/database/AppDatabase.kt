@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.gasparaiciukas.owntrainer.utils.Constants.DATABASE_NAME
+import com.gasparaiciukas.owntrainer.utils.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
@@ -46,7 +46,7 @@ abstract class AppDatabase : RoomDatabase() {
                 .databaseBuilder(
                     context,
                     AppDatabase::class.java,
-                    DATABASE_NAME
+                    Constants.DATABASE_NAME
                 )
                 .addCallback(AppDatabaseCallback(CoroutineScope(SupervisorJob())))
                 .build()
@@ -74,11 +74,11 @@ abstract class AppDatabase : RoomDatabase() {
         private fun createUser(): User {
             val currentDate = LocalDate.now()
             return User(
-                sex = "Male",
+                sex = Constants.Data.SEX_MALE,
                 ageInYears = 25,
                 heightInCm = 180,
                 weightInKg = 80.0,
-                lifestyle = "Lightly active",
+                lifestyle = Constants.Data.LIFESTYLE_LIGHTLY_ACTIVE,
                 year = currentDate.year,
                 month = currentDate.monthValue,
                 dayOfYear = currentDate.dayOfYear,

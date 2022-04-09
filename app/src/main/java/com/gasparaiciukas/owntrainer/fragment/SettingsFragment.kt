@@ -4,20 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentSettingsBinding
-import com.gasparaiciukas.owntrainer.viewmodel.ProfileViewModel
+import com.gasparaiciukas.owntrainer.utils.Constants
+import com.gasparaiciukas.owntrainer.viewmodel.AppearanceMode
 import com.gasparaiciukas.owntrainer.viewmodel.SettingsUiState
 import com.gasparaiciukas.owntrainer.viewmodel.SettingsViewModel
-import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,7 +36,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[SettingsViewModel::class.java]
-        viewModel.ldIsDarkMode.observe(viewLifecycleOwner) {
+        viewModel.ldAppearanceMode.observe(viewLifecycleOwner) {
             viewModel.loadUiState()
         }
 
@@ -65,10 +62,36 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     }
 
     private fun setTextViews(uiState: SettingsUiState) {
-        binding.switchDarkMode.isChecked = uiState.isDarkMode
-        binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.setDarkMode(isChecked)
-            requireActivity().recreate()
+        binding.tvAppearance.setOnClickListener {
+            val singleItems = arrayOf(
+                getString(R.string.follow_system),
+                getString(R.string.light_mode),
+                getString(R.string.dark_mode)
+            )
+            val checkedItem = uiState.appearanceMode
+            var selectedItem = uiState.appearanceMode
+
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.appearance))
+                .setNeutralButton(getString(R.string.cancel)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
+                    dialog.dismiss()
+                    val appearanceMode = AppearanceMode.values()[selectedItem]
+                    viewModel.setAppearanceMode(appearanceMode)
+                    requireActivity().recreate()
+                }
+                .setSingleChoiceItems(singleItems, checkedItem) { _, which ->
+                    selectedItem = which
+                }
+                .show()
+        }
+
+        binding.tvProfile.setOnClickListener {
+            findNavController().navigate(
+                SettingsFragmentDirections.actionSettingsFragmentToProfileFragment()
+            )
         }
     }
 

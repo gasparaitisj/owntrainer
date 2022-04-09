@@ -8,7 +8,6 @@
             android:enabled="true"
             android:icon="@drawable/baseline_home_24"
             android:menuCategory="secondary"
-            android:contentDescription="hello"
             android:title="@string/home" />
         <item
             android:id="@+id/foodFragment"
@@ -33,12 +32,6 @@
     <group
         android:id="@+id/settings_group"
         android:checkableBehavior="single">
-        <item
-            android:id="@+id/profileFragment"
-            android:enabled="true"
-            android:icon="@drawable/baseline_perm_identity_24"
-            android:menuCategory="secondary"
-            android:title="@string/profile" />
         <item
             android:id="@+id/settingsFragment"
             android:enabled="true"

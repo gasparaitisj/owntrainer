@@ -1,8 +1,9 @@
 package com.gasparaiciukas.owntrainer.prefs
 
+import com.gasparaiciukas.owntrainer.viewmodel.AppearanceMode
 import kotlinx.coroutines.flow.Flow
 
 interface PrefsStore {
-    fun isDarkMode(): Flow<Boolean>
-    suspend fun setDarkMode(isDarkMode: Boolean)
+    fun getAppearanceMode(): Flow<Int>
+    suspend fun setAppearanceMode(appearanceMode: AppearanceMode)
 }

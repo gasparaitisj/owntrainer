@@ -3,6 +3,7 @@ package com.gasparaiciukas.owntrainer.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.gasparaiciukas.owntrainer.utils.Constants
 
 
 @Entity(tableName = "user")
@@ -38,7 +39,7 @@ data class User(
         age: Int,
         sex: String
     ): Double {
-        return if (sex == "Male") {
+        return if (sex == Constants.Data.SEX_MALE) {
             // Men: BMR = 10W + 6.25H - 5A + 5
             10 * weightInKg + 6.25 * heightInCm - 5 * age + 5
         } else {
@@ -52,11 +53,11 @@ data class User(
      */
     private fun calculateDailyKcalIntake(bmr: Double, lifestyle: String?): Double {
         return when (lifestyle) {
-            "Sedentary" -> bmr * 1.2
-            "Lightly active" -> bmr * 1.375
-            "Moderately active" -> bmr * 1.55
-            "Very active" -> bmr * 1.725
-            "Extra active" -> bmr * 1.9
+            Constants.Data.LIFESTYLE_SEDENTARY -> bmr * 1.2
+            Constants.Data.LIFESTYLE_LIGHTLY_ACTIVE -> bmr * 1.375
+            Constants.Data.LIFESTYLE_MODERATELY_ACTIVE -> bmr * 1.55
+            Constants.Data.LIFESTYLE_VERY_ACTIVE -> bmr * 1.725
+            Constants.Data.LIFESTYLE_EXTRA_ACTIVE -> bmr * 1.9
             else -> 0.0
         }
     }

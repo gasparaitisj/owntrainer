@@ -11,36 +11,45 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class SettingsUiState(
-    val isDarkMode: Boolean
+    val appearanceMode: Int
 )
 
 @HiltViewModel
 class SettingsViewModel @Inject internal constructor(
     private val prefsStore: PrefsStoreImpl
 ) : ViewModel() {
-    val ldIsDarkMode = prefsStore.isDarkMode().asLiveData()
+    val ldAppearanceMode = prefsStore.getAppearanceMode().asLiveData()
 
     val uiState = MutableLiveData<SettingsUiState>()
 
     fun loadUiState() {
-        ldIsDarkMode.value?.let {
+        ldAppearanceMode.value?.let { appearanceMode ->
             uiState.postValue(
                 SettingsUiState(
-                    isDarkMode = it
+                    appearanceMode = appearanceMode
                 )
             )
         }
     }
 
-    fun setDarkMode(isDarkMode: Boolean) {
+    fun setAppearanceMode(appearanceMode: AppearanceMode) {
         viewModelScope.launch {
-            if (isDarkMode) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                prefsStore.setDarkMode(true)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                prefsStore.setDarkMode(false)
+            when(appearanceMode) {
+                AppearanceMode.SYSTEM_DEFAULT -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+                AppearanceMode.DAY -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+                AppearanceMode.NIGHT -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
             }
+            prefsStore.setAppearanceMode(appearanceMode)
         }
     }
+}
+
+enum class AppearanceMode {
+    SYSTEM_DEFAULT, DAY, NIGHT
 }

@@ -1,21 +1,19 @@
 package com.gasparaiciukas.owntrainer.fragment
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.databinding.FragmentProfileBinding
+import com.gasparaiciukas.owntrainer.utils.Constants
 import com.gasparaiciukas.owntrainer.viewmodel.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,6 +23,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private val binding get() = _binding!!
 
     lateinit var viewModel: ProfileViewModel
+
+    private var onBackPressedCallback: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {}
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,10 +67,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         try {
             age = s.toInt()
         } catch (e: NumberFormatException) {
-            return "Number must be valid"
+            return getString(R.string.number_must_be_valid)
         }
         if (age <= 0) {
-            return "Age must be valid"
+            return getString(R.string.age_must_be_valid)
         }
         return ""
     }
@@ -77,10 +80,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         try {
             height = s.toInt()
         } catch (e: NumberFormatException) {
-            return "Number must be valid"
+            return getString(R.string.number_must_be_valid)
         }
         if (height <= 0) {
-            return "Height must be valid"
+            return getString(R.string.height_must_be_valid)
         }
         return ""
     }
@@ -90,10 +93,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         try {
             weight = s.toDouble()
         } catch (e: NumberFormatException) {
-            return "Number must be valid"
+            return getString(R.string.number_must_be_valid)
         }
         if (weight <= 0) {
-            return "Height must be valid"
+            return getString(R.string.height_must_be_valid)
         }
         return ""
     }
@@ -107,88 +110,65 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         binding.etLifestyle.setText(user.lifestyle)
 
         // Set up listeners
-        val sexList: List<String?> = ArrayList(listOf("Male", "Female"))
-        val sexAdapter: ArrayAdapter<*> =
-            ArrayAdapter<Any?>(requireContext(), R.layout.details_list_item, sexList)
-        binding.etSex.setAdapter(sexAdapter)
-        binding.etAge.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                // do nothing
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                // do nothing
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                val validation = isAgeCorrect(s.toString())
-                if (validation == "") {
-                    binding.layoutEtAge.error = null
-                } else {
-                    binding.layoutEtAge.error = validation
-                }
-            }
-        })
-        binding.etHeight.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                // do nothing
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                // do nothing
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                val validation = isHeightCorrect(s.toString())
-                if (validation == "") {
-                    binding.layoutEtHeight.error = null
-                } else {
-                    binding.layoutEtHeight.error = validation
-                }
-            }
-        })
-        binding.etWeight.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                // do nothing
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                // do nothing
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                val validation = isWeightCorrect(s.toString())
-                if (validation == "") {
-                    binding.layoutEtWeight.error = null
-                } else {
-                    binding.layoutEtWeight.error = validation
-                }
-            }
-        })
-        val lifestyleList: List<String?> = ArrayList(
-            listOf(
-                "Sedentary",
-                "Lightly active",
-                "Moderately active",
-                "Very active",
-                "Extra active"
+        binding.etSex.setAdapter(
+            ArrayAdapter<Any?>(
+                requireContext(),
+                R.layout.details_list_item,
+                listOf(
+                    Constants.Data.SEX_MALE,
+                    Constants.Data.SEX_FEMALE
+                )
             )
         )
-        val lifestyleAdapter: ArrayAdapter<*> =
-            ArrayAdapter<Any?>(requireContext(), R.layout.details_list_item, lifestyleList)
-        binding.etLifestyle.setAdapter(lifestyleAdapter)
+        binding.etAge.doOnTextChanged { text, _, _, _ ->
+            val validation = isAgeCorrect(text.toString())
+            if (validation == "") {
+                binding.layoutEtAge.error = null
+            } else {
+                binding.layoutEtAge.error = validation
+            }
+        }
+        binding.etHeight.doOnTextChanged { text, _, _, _ ->
+            val validation = isHeightCorrect(text.toString())
+            if (validation == "") {
+                binding.layoutEtHeight.error = null
+            } else {
+                binding.layoutEtHeight.error = validation
+            }
+        }
+        binding.etWeight.doOnTextChanged { text, _, _, _ ->
+            val validation = isWeightCorrect(text.toString())
+            if (validation == "") {
+                binding.layoutEtWeight.error = null
+            } else {
+                binding.layoutEtWeight.error = validation
+            }
+        }
+        binding.etLifestyle.setAdapter(
+            ArrayAdapter<Any?>(
+                requireContext(),
+                R.layout.details_list_item,
+                listOf(
+                    Constants.Data.LIFESTYLE_SEDENTARY,
+                    Constants.Data.LIFESTYLE_LIGHTLY_ACTIVE,
+                    Constants.Data.LIFESTYLE_MODERATELY_ACTIVE,
+                    Constants.Data.LIFESTYLE_VERY_ACTIVE,
+                    Constants.Data.LIFESTYLE_EXTRA_ACTIVE
+                )
+            )
+        )
     }
 
+
     private fun setNavigation(user: User) {
-        binding.topAppBar.menu.findItem(R.id.btn_save).setOnMenuItemClickListener {
-            when {
+        onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() = when {
                 binding.layoutEtSex.error != null -> {
                     Toast.makeText(
                         requireContext(),
                         binding.layoutEtSex.error.toString(),
                         Toast.LENGTH_SHORT
                     ).show()
-                    false
                 }
                 binding.layoutEtAge.error != null -> {
                     Toast.makeText(
@@ -196,7 +176,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         binding.layoutEtAge.error.toString(),
                         Toast.LENGTH_SHORT
                     ).show()
-                    false
                 }
                 binding.layoutEtHeight.error != null -> {
                     Toast.makeText(
@@ -204,7 +183,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         binding.layoutEtHeight.error.toString(),
                         Toast.LENGTH_SHORT
                     ).show()
-                    false
                 }
                 binding.layoutEtWeight.error != null -> {
                     Toast.makeText(
@@ -212,7 +190,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         binding.layoutEtWeight.error.toString(),
                         Toast.LENGTH_SHORT
                     ).show()
-                    false
                 }
                 binding.layoutEtLifestyle.error != null -> {
                     Toast.makeText(
@@ -220,7 +197,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         binding.layoutEtLifestyle.error.toString(),
                         Toast.LENGTH_SHORT
                     ).show()
-                    false
                 }
                 else -> {
                     viewModel.updateUser(
@@ -238,17 +214,19 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                             dayOfWeek = user.dayOfWeek
                         )
                     )
-                    true
                 }
             }
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
     }
 
     private fun initNavigation() {
-        NavigationUI.setupWithNavController(binding.navigationView, findNavController())
         binding.topAppBar.setNavigationOnClickListener {
-            binding.drawerLayout.open()
+            ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
         }
     }
-
 }

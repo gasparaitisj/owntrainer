@@ -17,11 +17,11 @@ class FakeUserRepository : UserRepository {
     private fun createUser(): User {
         val currentDate = LocalDate.now()
         return User(
-            sex = "Male",
+            sex = Constants.Data.SEX_MALE,
             ageInYears = 25,
             heightInCm = 180,
             weightInKg = 80.0,
-            lifestyle = "Lightly active",
+            lifestyle = Constants.Data.LIFESTYLE_LIGHTLY_ACTIVE,
             year = currentDate.year,
             month = currentDate.monthValue,
             dayOfYear = currentDate.dayOfYear,

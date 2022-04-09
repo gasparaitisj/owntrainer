@@ -65,16 +65,16 @@ class ProfileFragmentTest {
         }
 
         val user = fakeViewModel.ldUser.getOrAwaitValue().copy()
-        user.sex = "Female"
+        user.sex = Constants.Data.SEX_FEMALE
         user.ageInYears = 20
         user.heightInCm = 160
         user.weightInKg = 45.0
-        user.lifestyle = "Sedentary"
+        user.lifestyle = Constants.Data.LIFESTYLE_SEDENTARY
 
         Espresso.onView(ViewMatchers.withId(R.id.et_sex))
             .perform(ViewActions.click())
 
-        Espresso.onView(ViewMatchers.withText("Female"))
+        Espresso.onView(ViewMatchers.withText(Constants.Data.SEX_FEMALE))
             .inRoot(RootMatchers.isPlatformPopup())
             .perform(ViewActions.click())
 
@@ -90,7 +90,7 @@ class ProfileFragmentTest {
         Espresso.onView(ViewMatchers.withId(R.id.et_lifestyle))
             .perform(ViewActions.click())
 
-        Espresso.onView(ViewMatchers.withText("Sedentary"))
+        Espresso.onView(ViewMatchers.withText(Constants.Data.LIFESTYLE_SEDENTARY))
             .inRoot(RootMatchers.isPlatformPopup())
             .perform(ViewActions.click())
 

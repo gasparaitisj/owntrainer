@@ -1,11 +1,12 @@
 package com.gasparaiciukas.owntrainer.prefs
 
 import android.content.Context
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.gasparaiciukas.owntrainer.prefs.PreferencesKeys.SETTINGS_PREFERENCE_NAME
+import com.gasparaiciukas.owntrainer.viewmodel.AppearanceMode
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -17,23 +18,23 @@ class PrefsStoreImpl @Inject constructor(
 ) : PrefsStore {
     private val Context.dataStore by preferencesDataStore(SETTINGS_PREFERENCE_NAME)
 
-    override fun isDarkMode() = context.dataStore.data.catch { exception ->
+    override fun getAppearanceMode() = context.dataStore.data.catch { exception ->
         // dataStore.data throws an IOException if it can't read the data
         if (exception is IOException) {
             emit(emptyPreferences())
         } else {
             throw exception
         }
-    }.map { it[PreferencesKeys.IS_DARK_MODE] ?: false }
+    }.map { it[PreferencesKeys.APPEARANCE_MODE] ?: AppearanceMode.SYSTEM_DEFAULT.ordinal }
 
-    override suspend fun setDarkMode(isDarkMode: Boolean) {
+    override suspend fun setAppearanceMode(appearanceMode: AppearanceMode) {
         context.dataStore.edit {
-            it[PreferencesKeys.IS_DARK_MODE] = isDarkMode
+            it[PreferencesKeys.APPEARANCE_MODE] = appearanceMode.ordinal
         }
     }
 }
 
 private object PreferencesKeys {
-    val IS_DARK_MODE = booleanPreferencesKey("IS_DARK_MODE")
+    val APPEARANCE_MODE = intPreferencesKey("APPEARANCE_MODE")
     const val SETTINGS_PREFERENCE_NAME = "settings"
 }

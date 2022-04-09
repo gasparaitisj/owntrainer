@@ -34,7 +34,7 @@
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_progress.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_select_meal_item.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_step.xml" value="0.21145833333333333" />
         <entry key="app/src/main/res/layout/header_navigation_drawer.xml" value="0.25" />
         <entry key="app/src/main/res/layout/meal_row.xml" value="0.2526041666666667" />

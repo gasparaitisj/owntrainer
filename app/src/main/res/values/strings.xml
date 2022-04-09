@@ -79,4 +79,15 @@
     <string name="create_meal">Create meal</string>
     <string name="add_meal_to_diary">Add meal to diary</string>
     <string name="snackbar_meal_deleted">Meal deleted</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="cancel">Cancel</string>
+    <string name="appearance">Appearance</string>
+    <string name="ok">OK</string>
+    <string name="system">System</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="follow_system">Follow System</string>
+    <string name="number_must_be_valid">Number must be valid</string>
+    <string name="age_must_be_valid">Age must be valid</string>
+    <string name="height_must_be_valid">Height must be valid</string>
 </resources>
