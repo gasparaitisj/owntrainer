@@ -1,6 +1,5 @@
 package com.gasparaiciukas.owntrainer.repository
 
-import com.gasparaiciukas.owntrainer.BuildConfig
 import com.gasparaiciukas.owntrainer.database.*
 import com.gasparaiciukas.owntrainer.network.GetResponse
 import com.gasparaiciukas.owntrainer.network.DefaultGetService
@@ -47,15 +46,33 @@ class DefaultDiaryRepository @Inject constructor(
     override suspend fun deleteMealById(mealId: Int) =
         mealDao.deleteMealById(mealId)
 
-    override suspend fun getFoods(query: String): Resource<GetResponse> {
+    override suspend fun getFoods(
+        query: String,
+        dataType: String?,
+        numberOfResultsPerPage: Int?,
+        pageSize: Int?,
+        pageNumber: Int?,
+        sortBy: String?,
+        sortOrder: String?,
+        requireAllWords: Boolean?
+    ): Resource<GetResponse> {
         return try {
-            val response = defaultGetService.getFoods(BuildConfig.API_KEY, query)
+            val response = defaultGetService.getFoods(
+                query = query,
+                dataType = dataType,
+                pageSize = pageSize,
+                numberOfResultsPerPage = numberOfResultsPerPage,
+                pageNumber = pageNumber,
+                sortBy = sortBy,
+                sortOrder = sortOrder,
+                requireAllWords = requireAllWords
+            )
             if (response.isSuccessful) {
                 response.body()?.let {
                     return@let Resource.success(it)
-                } ?: Resource.error("An unknown error occurred.", null)
+                } ?: Resource.error(response.message(), null)
             } else {
-                Resource.error("An unknown error occurred.", null)
+                Resource.error(response.message(), null)
             }
         } catch (e: Exception) {
             Resource.error("Couldn't reach the server. Check your internet connection.", null)

@@ -1,9 +1,11 @@
 package com.gasparaiciukas.owntrainer.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -71,8 +73,31 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
 
     private fun initNavigation() {
         binding.topAppBar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            // Navigate back to FoodFragment manually, because popping back stack will cause
+            // all RecyclerView items to recreate again, which is going to cause lag
+            findNavController().navigate(
+                NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToFoodFragment()
+            )
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true)
+            {
+                override fun handleOnBackPressed() {
+                    // Navigate back to FoodFragment manually, because popping back stack will cause
+                    // all RecyclerView items to recreate again, which is going to cause lag
+                    findNavController().navigate(
+                        NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToFoodFragment()
+                    )
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            callback
+        )
     }
 
     private fun setPieChart(uiState: NetworkFoodItemUiState) {

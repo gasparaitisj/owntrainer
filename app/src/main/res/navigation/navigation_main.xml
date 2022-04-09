@@ -197,6 +197,10 @@
     <action
         android:id="@+id/action_networkFoodItemFragment_to_addFoodToMealFragment"
         app:destination="@id/addFoodToMealFragment" />
+
+    <action
+        android:id="@+id/action_networkFoodItemFragment_to_foodFragment"
+        app:destination="@id/foodFragment" />
     <action
         android:id="@+id/action_settingsFragment_to_diaryFragment"
         app:destination="@id/diaryFragment" />

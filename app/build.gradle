@@ -80,9 +80,10 @@ dependencies {
     // Material UI
     implementation "com.google.android.material:material:$rootProject.materialVersion"
 
-    // Retrofit
-    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
+    // Retrofit, Moshi, HttpLoggingInterceptor
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-moshi:$rootProject.moshiVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.httpLoggingInterceptorVersion"
     
     // Circular progress bar
     implementation "com.mikhaellopez:circularprogressbar:$rootProject.circularProgressBarVersion"
@@ -99,7 +100,7 @@ dependencies {
     // Hilt
     implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"
     kapt "com.google.dagger:hilt-compiler:$rootProject.hiltVersion"
-    kapt 'androidx.hilt:hilt-compiler:1.0.0'
+    kapt "androidx.hilt:hilt-compiler:$rootProject.hiltKaptCompilerVersion"
 
     // Room
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"

@@ -26,7 +26,16 @@ interface DiaryRepository {
 
     suspend fun deleteMealById(mealId: Int)
 
-    suspend fun getFoods(query: String): Resource<GetResponse>
+    suspend fun getFoods(
+        query: String,
+        dataType: String? = null,
+        numberOfResultsPerPage: Int? = null,
+        pageSize: Int? = null,
+        pageNumber: Int? = null,
+        sortBy: String? = null,
+        sortOrder: String? = null,
+        requireAllWords: Boolean? = null
+    ): Resource<GetResponse>
 
     fun getAllFoodEntries(): Flow<List<FoodEntry>?>
 

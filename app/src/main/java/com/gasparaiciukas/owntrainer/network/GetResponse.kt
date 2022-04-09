@@ -1,30 +1,23 @@
 package com.gasparaiciukas.owntrainer.network
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
 
 class GetResponse(
-    @SerializedName("totalHits")
-    @Expose
-    var totalHits: Int? = null,
+    @field:Json(name = "totalHits")
+    var totalHits: Int,
 
-    @SerializedName("currentPage")
-    @Expose
-    var currentPage: Int? = null,
+    @field:Json(name = "currentPage")
+    var currentPage: Int,
 
-    @SerializedName("totalPages")
-    @Expose
-    var totalPages: Int? = null,
+    @field:Json(name = "totalPages")
+    var totalPages: Int,
 
-    @SerializedName("pageList")
-    @Expose
+    @field:Json(name = "pageList")
     var pageList: List<Int>? = null,
 
-    @SerializedName("foodSearchCriteria")
-    @Expose
+    @field:Json(name = "foodSearchCriteria")
     var foodSearchCriteria: FoodSearchCriteria? = null,
 
-    @SerializedName("foods")
-    @Expose
-    var foods: List<Food>? = null
+    @field:Json(name = "foods")
+    var foods: MutableList<Food>? = null
 )

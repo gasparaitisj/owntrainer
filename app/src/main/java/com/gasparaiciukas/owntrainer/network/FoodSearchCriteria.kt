@@ -1,14 +1,23 @@
 package com.gasparaiciukas.owntrainer.network
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
 
-data class FoodSearchCriteria
-    (
-    @SerializedName("query") @Expose var query: String? = null,
-    @SerializedName("generalSearchInput") @Expose var generalSearchInput: String? = null,
-    @SerializedName("pageNumber") @Expose var pageNumber: Int? = null,
-    @SerializedName("numberOfResultsPerPage") @Expose var numberOfResultsPerPage: Int? = null,
-    @SerializedName("pageSize") @Expose var pageSize: Int? = null,
-    @SerializedName("requireAllWords") @Expose var requireAllWords: Boolean? = null
+data class FoodSearchCriteria(
+    @field:Json(name = "query")
+    var query: String? = null,
+
+    @field:Json(name = "generalSearchInput")
+    var generalSearchInput: String? = null,
+
+    @field:Json(name = "pageNumber")
+    var pageNumber: Int? = null,
+
+    @field:Json(name = "numberOfResultsPerPage")
+    var numberOfResultsPerPage: Int? = null,
+
+    @field:Json(name = "pageSize")
+    var pageSize: Int? = null,
+
+    @field:Json(name = "requireAllWords")
+    var requireAllWords: Boolean? = null
 )

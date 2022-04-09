@@ -1,25 +1,50 @@
 package com.gasparaiciukas.owntrainer.network
 
 import android.os.Parcelable
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Food
-    (
-    @SerializedName("fdcId") @Expose var fdcId: Int? = null,
-    @SerializedName("description") @Expose var description: String? = null,
-    @SerializedName("lowercaseDescription") @Expose var lowercaseDescription: String? = null,
-    @SerializedName("dataType") @Expose var dataType: String? = null,
-    @SerializedName("gtinUpc") @Expose var gtinUpc: String? = null,
-    @SerializedName("publishedDate") @Expose var publishedDate: String? = null,
-    @SerializedName("brandOwner") @Expose var brandOwner: String? = null,
-    @SerializedName("brandName") @Expose var brandName: String? = null,
-    @SerializedName("ingredients") @Expose var ingredients: String? = null,
-    @SerializedName("marketCountry") @Expose var marketCountry: String? = null,
-    @SerializedName("foodCategory") @Expose var foodCategory: String? = null,
-    @SerializedName("allHighlightFields") @Expose var allHighlightFields: String? = null,
-    @SerializedName("score") @Expose var score: Double? = null,
-    @SerializedName("foodNutrients") @Expose var foodNutrients: List<FoodNutrient>? = null
+data class Food(
+    @field:Json(name = "fdcId")
+    var fdcId: Int? = null,
+
+    @field:Json(name = "description")
+    var description: String? = null,
+
+    @field:Json(name = "lowercaseDescription")
+    var lowercaseDescription: String? = null,
+
+    @field:Json(name = "dataType")
+    var dataType: String? = null,
+
+    @field:Json(name = "gtinUpc")
+    var gtinUpc: String? = null,
+
+    @field:Json(name = "publishedDate")
+    var publishedDate: String? = null,
+
+    @field:Json(name = "brandOwner")
+    var brandOwner: String? = null,
+
+    @field:Json(name = "brandName")
+    var brandName: String? = null,
+
+    @field:Json(name = "ingredients")
+    var ingredients: String? = null,
+
+    @field:Json(name = "marketCountry")
+    var marketCountry: String? = null,
+
+    @field:Json(name = "foodCategory")
+    var foodCategory: String? = null,
+
+    @field:Json(name = "allHighlightFields")
+    var allHighlightFields: String? = null,
+
+    @field:Json(name = "score")
+    var score: Double? = null,
+
+    @field:Json(name = "foodNutrients")
+    var foodNutrients: List<FoodNutrient>? = null
 ) : Parcelable

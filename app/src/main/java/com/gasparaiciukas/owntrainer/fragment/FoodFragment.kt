@@ -2,16 +2,18 @@ package com.gasparaiciukas.owntrainer.fragment
 
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
+import android.widget.*
+import androidx.cardview.widget.CardView
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
@@ -19,6 +21,8 @@ import com.gasparaiciukas.owntrainer.adapter.NetworkFoodAdapter
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodBinding
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.Status
+import com.gasparaiciukas.owntrainer.utils.Constants
+import com.gasparaiciukas.owntrainer.utils.Constants.Api.QUERY_PAGE_SIZE
 import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -33,6 +37,10 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
 
     lateinit var viewModel: FoodViewModel
 
+    var isLoading = false
+    var isLastPage = false
+    var isScrolling = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,12 +52,41 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[FoodViewModel::class.java]
-        viewModel.ldFoods.observe(viewLifecycleOwner) {
-            it?.also { refreshUi(it) }
-        }
-        viewModel.ldResponse.observe(viewLifecycleOwner) {
-            if (it.status == Status.ERROR) {
-                Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+        viewModel.ldResponse.observe(viewLifecycleOwner) { response ->
+            when (response.status) {
+                Status.SUCCESS -> {
+                    binding.paginationProgressBar.visibility = View.INVISIBLE
+                    isLoading = false
+                    response.data?.foods?.let { refreshUi(it.toList()) }
+                    val totalPages: Int? = (response.data?.totalHits?.div(QUERY_PAGE_SIZE)?.plus(2))
+                    isLastPage = viewModel.pageNumber == totalPages
+                    response?.data?.foods?.size?.let { size ->
+                        if (size == 0) {
+                            if (isLastPage && viewModel.pageNumber != 2) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Could not find any more matching foods.",
+                                    Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Could not find any matching foods.",
+                                    Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+                Status.ERROR -> {
+                    binding.paginationProgressBar.visibility = View.INVISIBLE
+                    isLoading = false
+                    response.message?.let { message ->
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                Status.LOADING -> {
+                    binding.paginationProgressBar.visibility = View.VISIBLE
+                    isLoading = true
+                }
             }
         }
         initUi()
@@ -106,6 +143,13 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
             handled
         }
 
+        binding.etSearch.doOnTextChanged { _, _, _, _ ->
+            viewModel.onQueryChanged()
+            if (adapter.items.isNotEmpty()) {
+                reloadRecyclerView(listOf())
+            }
+        }
+
         // Tabs (foods or meals)
         binding.layoutTab.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -129,10 +173,43 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
         }
     }
 
+
+
     private fun initRecyclerView() {
         adapter = NetworkFoodAdapter()
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+
+                val isNotLoadingAndNotLastPage = !isLoading && !isLastPage
+                val isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount
+                val isNotAtBeginning = firstVisibleItemPosition >= 0
+                val isTotalMoreThanVisible = totalItemCount >= Constants.Api.QUERY_PAGE_SIZE
+                val shouldPaginate =
+                    isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning &&
+                            isTotalMoreThanVisible && isScrolling
+                if (shouldPaginate) {
+                    viewModel.getFoods(binding.etSearch.text.toString())
+                    isScrolling = false
+                } else {
+                    binding.recyclerView.setPadding(0, 0, 0, 0)
+                }
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    isScrolling = true
+                }
+            }
+        })
     }
 }
