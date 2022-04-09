@@ -18,12 +18,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fillViewport="true"
+                android:paddingBottom="72dp"
                 android:visibility="invisible"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layout_et_search"
@@ -112,7 +113,7 @@
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottom_navigation"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="72dp"
                 android:layout_gravity="bottom"
                 app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
                 app:menu="@menu/bottom_navigation_menu"/>

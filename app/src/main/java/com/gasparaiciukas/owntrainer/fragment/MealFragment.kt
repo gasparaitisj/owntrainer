@@ -97,6 +97,7 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
 
     private fun initRecyclerView() {
         adapter = MealAdapter()
+        binding.recyclerView.setHasFixedSize(true)
         adapter.setOnClickListeners(
             singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
                 findNavController().navigate(
@@ -118,18 +119,5 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
         )
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) {
-                    binding.bottomNavigation.visibility = View.GONE
-                    binding.fab.hide()
-                }
-                else {
-                    binding.bottomNavigation.visibility = View.VISIBLE
-                    binding.fab.show()
-                }
-            }
-        })
     }
 }

@@ -96,4 +96,8 @@ class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
 }

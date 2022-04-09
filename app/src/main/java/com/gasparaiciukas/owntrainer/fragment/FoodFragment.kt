@@ -134,12 +134,5 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) { binding.bottomNavigation.visibility = View.GONE }
-                else { binding.bottomNavigation.visibility = View.VISIBLE }
-            }
-        })
     }
 }

@@ -17,6 +17,8 @@
                 android:id="@+id/scroll_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:paddingBottom="72dp"
                 android:visibility="invisible"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -39,12 +41,39 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/card_navigation" />
 
-                    <include
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/card_meals"
-                        layout="@layout/diary_card_meals"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/card_statistics" />
+                        app:layout_constraintTop_toBottomOf="@+id/card_statistics">
+
+                        <LinearLayout
+                            android:id="@+id/layout_meals"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/TextAppearance.OwnTrainer.Headline6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/meals_eaten" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recycler_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="5dp" />
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.core.widget.NestedScrollView>
@@ -78,7 +107,7 @@
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottom_navigation"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="72dp"
                 android:layout_gravity="bottom"
                 app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
                 app:menu="@menu/bottom_navigation_menu"/>

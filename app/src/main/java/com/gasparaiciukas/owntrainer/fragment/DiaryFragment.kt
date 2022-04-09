@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
-import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
@@ -37,7 +36,6 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDiaryBinding.inflate(inflater, container, false)
-        println("binding...")
         return binding.root
     }
 
@@ -149,18 +147,17 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
 
     private fun initRecyclerView() {
         adapter = MealAdapter()
-        binding.cardMeals.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.cardMeals.recyclerView.adapter = adapter
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = adapter
         binding.scrollView.setOnScrollChangeListener(
             NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
                 // Scroll up
                 if (scrollY < oldScrollY) {
-                    // slideBottomNavigationUp()
                     binding.fab.show()
                 }
                 // Scroll down
                 if (scrollY > oldScrollY) {
-                    //slideBottomNavigationDown()
                     binding.fab.hide()
                 }
             })
