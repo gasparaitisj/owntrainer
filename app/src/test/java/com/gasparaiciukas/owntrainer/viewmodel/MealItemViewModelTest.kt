@@ -85,13 +85,13 @@ class MealItemViewModelTest {
         val uiStateTest = MealItemUiState(
             user = user,
             mealWithFoodEntries = mealWithFoodEntries,
-            carbsPercentage = mealWithFoodEntries.meal.carbs / sum * 100,
-            fatPercentage = mealWithFoodEntries.meal.fat / sum * 100,
-            proteinPercentage = mealWithFoodEntries.meal.protein / sum * 100,
-            carbsDailyIntakePercentage = mealWithFoodEntries.meal.carbs / user.dailyCarbsIntakeInG * 100,
-            fatDailyIntakePercentage = mealWithFoodEntries.meal.fat / user.dailyFatIntakeInG * 100,
-            proteinDailyIntakePercentage = mealWithFoodEntries.meal.protein / user.dailyProteinIntakeInG * 100,
-            caloriesDailyIntakePercentage = mealWithFoodEntries.meal.calories / user.dailyKcalIntake * 100
+            carbsPercentage = (mealWithFoodEntries.meal.carbs / sum * 100).toFloat(),
+            fatPercentage = (mealWithFoodEntries.meal.fat / sum * 100).toFloat(),
+            proteinPercentage = (mealWithFoodEntries.meal.protein / sum * 100).toFloat(),
+            carbsDailyIntakePercentage = (mealWithFoodEntries.meal.carbs / user.dailyCarbsIntakeInG * 100).toFloat(),
+            fatDailyIntakePercentage = (mealWithFoodEntries.meal.fat / user.dailyFatIntakeInG * 100).toFloat(),
+            proteinDailyIntakePercentage = (mealWithFoodEntries.meal.protein / user.dailyProteinIntakeInG * 100).toFloat(),
+            caloriesDailyIntakePercentage = (mealWithFoodEntries.meal.calories / user.dailyKcalIntake * 100).toFloat()
         )
         assertThat(uiState).isEqualTo(uiStateTest)
     }

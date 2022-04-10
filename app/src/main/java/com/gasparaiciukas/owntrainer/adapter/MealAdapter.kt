@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.MealRowBinding
-import timber.log.Timber
 
 class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
 
@@ -47,8 +46,8 @@ class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
         set(value) = differ.submitList(value)
 
     fun setOnClickListeners(
-        singleClickListener: ((mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit)?,
-        longClickListener: ((mealId: Int, position: Int) -> Unit)?
+        singleClickListener: ((mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit)? = null,
+        longClickListener: ((mealId: Int, position: Int) -> Unit)? = null
     ) {
         this.singleClickListener = singleClickListener
         this.longClickListener = longClickListener
@@ -67,29 +66,25 @@ class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
         // Display information of each row
         holder.binding.tvTitle.text = title
         holder.binding.tvCalories.text = calories.toString()
-        if (singleClickListener != null) {
-            holder.binding.layoutItem.setOnClickListener {
-                singleClickListener?.let { click ->
-                    println("singleClick items[$position]: " + items[position])
-                    click(items[position], position)
-                }
+        holder.binding.layoutItem.setOnClickListener {
+            singleClickListener?.let { click ->
+                println("singleClick items[$position]: " + items[position])
+                click(items[position], position)
             }
         }
-        if (longClickListener != null) {
-            holder.binding.layoutItem.setOnLongClickListener {
-                val popup = PopupMenu(holder.binding.layoutItem.context, holder.binding.layoutItem)
-                val inflater = popup.menuInflater
-                inflater.inflate(R.menu.meal_menu, popup.menu)
-                popup.show()
-                popup.setOnMenuItemClickListener {
-                    longClickListener?.let { click ->
-                        println("longClick items[$position]: " + items[position])
-                        click(items[position].meal.mealId, position)
-                    }
-                    true
+        holder.binding.layoutItem.setOnLongClickListener {
+            val popup = PopupMenu(holder.binding.layoutItem.context, holder.binding.layoutItem)
+            val inflater = popup.menuInflater
+            inflater.inflate(R.menu.meal_menu, popup.menu)
+            popup.show()
+            popup.setOnMenuItemClickListener {
+                longClickListener?.let { click ->
+                    println("longClick items[$position]: " + items[position])
+                    click(items[position].meal.mealId, position)
                 }
                 true
             }
+            true
         }
     }
 

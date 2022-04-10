@@ -2,9 +2,7 @@ package com.gasparaiciukas.owntrainer.repository
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
-import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.*
-import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.FoodNutrient
 import com.gasparaiciukas.owntrainer.network.GetResponse
@@ -106,13 +104,25 @@ class FakeDiaryRepositoryTest : DiaryRepository {
         shouldReturnNetworkError = value
     }
 
-    override suspend fun getFoods(query: String): Resource<GetResponse> {
+    override suspend fun getFoods(
+        query: String,
+        dataType: String?,
+        numberOfResultsPerPage: Int?,
+        pageSize: Int?,
+        pageNumber: Int?,
+        sortBy: String?,
+        sortOrder: String?,
+        requireAllWords: Boolean?
+    ): Resource<GetResponse> {
         return if (shouldReturnNetworkError) {
             Resource.error("Error", null)
         } else {
             Resource.success(
                 GetResponse(
-                    foods = listOf(
+                    totalHits = 0,
+                    currentPage = 0,
+                    totalPages = 0,
+                    foods = mutableListOf(
                         Food(
                             fdcId = 454004,
                             description = "APPLE",

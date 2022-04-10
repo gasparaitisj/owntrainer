@@ -1,32 +1,32 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
 import androidx.lifecycle.*
-import com.gasparaiciukas.owntrainer.database.*
+import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
+import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.fragment.MealItemFragmentArgs
 import com.gasparaiciukas.owntrainer.repository.DiaryRepository
 import com.gasparaiciukas.owntrainer.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 data class MealItemUiState(
     val user: User,
     val mealWithFoodEntries: MealWithFoodEntries,
-    val carbsPercentage: Double,
-    val fatPercentage: Double,
-    val proteinPercentage: Double,
-    val carbsDailyIntakePercentage: Double,
-    val fatDailyIntakePercentage: Double,
-    val proteinDailyIntakePercentage: Double,
-    val caloriesDailyIntakePercentage: Double
+    val carbsPercentage: Float,
+    val fatPercentage: Float,
+    val proteinPercentage: Float,
+    val carbsDailyIntakePercentage: Float,
+    val fatDailyIntakePercentage: Float,
+    val proteinDailyIntakePercentage: Float,
+    val caloriesDailyIntakePercentage: Float,
 )
 
 @HiltViewModel
 class MealItemViewModel @Inject internal constructor(
-    private val userRepository: UserRepository,
+    userRepository: UserRepository,
     val diaryRepository: DiaryRepository,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val mealId: Int = MealItemFragmentArgs.fromSavedStateHandle(savedStateHandle).mealId
 
@@ -48,20 +48,22 @@ class MealItemViewModel @Inject internal constructor(
                     MealItemUiState(
                         user = user,
                         mealWithFoodEntries = mealWithFoodEntries,
-                        carbsPercentage = mealWithFoodEntries.meal.carbs / sum * 100,
-                        fatPercentage = mealWithFoodEntries.meal.fat / sum * 100,
-                        proteinPercentage = mealWithFoodEntries.meal.protein / sum * 100,
-                        carbsDailyIntakePercentage = mealWithFoodEntries.meal.carbs / user.dailyCarbsIntakeInG * 100,
-                        fatDailyIntakePercentage = mealWithFoodEntries.meal.fat / user.dailyFatIntakeInG * 100,
-                        proteinDailyIntakePercentage = mealWithFoodEntries.meal.protein / user.dailyProteinIntakeInG * 100,
-                        caloriesDailyIntakePercentage = mealWithFoodEntries.meal.calories / user.dailyKcalIntake * 100
+                        carbsPercentage = (mealWithFoodEntries.meal.carbs / sum * 100).toFloat(),
+                        fatPercentage = (mealWithFoodEntries.meal.fat / sum * 100).toFloat(),
+                        proteinPercentage = (mealWithFoodEntries.meal.protein / sum * 100).toFloat(),
+                        carbsDailyIntakePercentage = (mealWithFoodEntries.meal.carbs / user.dailyCarbsIntakeInG * 100).toFloat(),
+                        fatDailyIntakePercentage = (mealWithFoodEntries.meal.fat / user.dailyFatIntakeInG * 100).toFloat(),
+                        proteinDailyIntakePercentage = (mealWithFoodEntries.meal.protein / user.dailyProteinIntakeInG * 100).toFloat(),
+                        caloriesDailyIntakePercentage = (mealWithFoodEntries.meal.calories / user.dailyKcalIntake * 100).toFloat()
                     )
                 )
             }
         }
     }
 
-    suspend fun deleteFoodFromMeal(foodEntryId: Int) {
-        diaryRepository.deleteFoodById(foodEntryId)
+    fun deleteFoodFromMeal(foodEntryId: Int) {
+        viewModelScope.launch {
+            diaryRepository.deleteFoodById(foodEntryId)
+        }
     }
 }

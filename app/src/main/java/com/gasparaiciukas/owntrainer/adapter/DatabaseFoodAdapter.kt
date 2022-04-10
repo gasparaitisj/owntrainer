@@ -51,8 +51,8 @@ class DatabaseFoodAdapter @Inject constructor(
         set(value) = differ.submitList(value)
 
     fun setOnClickListeners(
-        singleClickListener: ((foodEntryParcelable: FoodEntryParcelable) -> Unit)?,
-        longClickListener: ((foodEntry: FoodEntry) -> Unit)?
+        singleClickListener: ((foodEntryParcelable: FoodEntryParcelable) -> Unit)? = null,
+        longClickListener: ((foodEntry: FoodEntry) -> Unit)? = null
     ) {
         this.singleClickListener = singleClickListener
         this.longClickListener = longClickListener
@@ -91,12 +91,10 @@ class DatabaseFoodAdapter @Inject constructor(
             inflater.inflate(R.menu.food_menu, popup.menu)
             popup.show()
             popup.setOnMenuItemClickListener {
-                if (longClickListener != null) {
-                    longClickListener?.let { click ->
-                        click(
-                            items[position]
-                        )
-                    }
+                longClickListener?.let { click ->
+                    click(
+                        items[position]
+                    )
                 }
                 true
             }

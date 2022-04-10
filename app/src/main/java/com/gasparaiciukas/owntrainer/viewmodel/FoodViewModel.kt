@@ -19,7 +19,6 @@ class FoodViewModel @Inject internal constructor(
     private val diaryRepository: DiaryRepository
 ) : ViewModel() {
     val ldResponse: LiveData<Resource<GetResponse>> get() = _ldResponse
-
     private val _ldResponse: MutableLiveData<Resource<GetResponse>> = MutableLiveData()
 
     var pageNumber = 1

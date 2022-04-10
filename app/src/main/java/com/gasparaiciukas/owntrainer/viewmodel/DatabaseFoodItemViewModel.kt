@@ -1,7 +1,6 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
 import androidx.lifecycle.*
-import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.repository.UserRepository
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
@@ -25,8 +24,8 @@ data class DatabaseFoodItemUiState(
 
 @HiltViewModel
 class DatabaseFoodItemViewModel @Inject internal constructor(
-    private val userRepository: UserRepository,
-    private val savedStateHandle: SavedStateHandle
+    userRepository: UserRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val food: FoodEntryParcelable? = savedStateHandle["food"]
 

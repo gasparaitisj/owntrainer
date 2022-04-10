@@ -20,8 +20,9 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideGetService(): DefaultGetService {
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.apply { loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY }
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            this.level = HttpLoggingInterceptor.Level.BODY
+        }
 
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)

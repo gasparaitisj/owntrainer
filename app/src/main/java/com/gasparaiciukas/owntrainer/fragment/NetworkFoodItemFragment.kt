@@ -6,23 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentNetworkFoodItemBinding
-import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
 import com.gasparaiciukas.owntrainer.viewmodel.NetworkFoodItemUiState
 import com.gasparaiciukas.owntrainer.viewmodel.NetworkFoodItemViewModel
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
-import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -45,9 +36,7 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[NetworkFoodItemViewModel::class.java]
         viewModel.ldUser.observe(viewLifecycleOwner) {
-            if (it != null) {
-                viewModel.loadData()
-            }
+            viewModel.loadData()
         }
         viewModel.uiState.observe(viewLifecycleOwner) {
             refreshUi(it)
@@ -66,7 +55,14 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
 
     private fun refreshUi(uiState: NetworkFoodItemUiState) {
         setTextViews(uiState)
-        setPieChart(uiState)
+        setPieChart(
+            carbsPercentage = uiState.carbsPercentage,
+            fatPercentage = uiState.fatPercentage,
+            proteinPercentage = uiState.proteinPercentage,
+            calories = uiState.calories,
+            pieChart = binding.pieChart,
+            context = requireContext()
+        )
         setNavigation(uiState)
         binding.scrollView.visibility = View.VISIBLE
     }
@@ -84,8 +80,7 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val callback: OnBackPressedCallback =
-            object : OnBackPressedCallback(true)
-            {
+            object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     // Navigate back to FoodFragment manually, because popping back stack will cause
                     // all RecyclerView items to recreate again, which is going to cause lag
@@ -98,45 +93,6 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
             this,
             callback
         )
-    }
-
-    private fun setPieChart(uiState: NetworkFoodItemUiState) {
-        // Create colors representing nutrients
-        val colors: MutableList<Int> = ArrayList()
-        colors.add(ContextCompat.getColor(requireContext(), R.color.colorGold)) // carbs
-        colors.add(ContextCompat.getColor(requireContext(), R.color.colorOrange)) // fat
-        colors.add(ContextCompat.getColor(requireContext(), R.color.colorSmoke)) // protein
-
-        // Add data to pie chart
-        val entries: MutableList<PieEntry> = ArrayList()
-        entries.add(PieEntry(uiState.carbsPercentage, "Carbohydrates"))
-        entries.add(PieEntry(uiState.fatPercentage, "Fat"))
-        entries.add(PieEntry(uiState.proteinPercentage, "Protein"))
-        val pieDataSet = PieDataSet(entries, "Data")
-
-        // Add style to pie chart
-        pieDataSet.colors = colors // chart colors
-        val pieData = PieData(pieDataSet)
-        pieData.setValueFormatter(NutrientValueFormatter()) // adjust labels
-        pieData.setValueTextSize(12f)
-        binding.pieChart.data = pieData
-        binding.pieChart.centerText =
-            "${uiState.calories.roundToInt()}\nkCal" // calorie text inside inner circle
-        binding.pieChart.setCenterTextSize(14f)
-        binding.pieChart.setCenterTextColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.colorWhite
-            )
-        )
-        binding.pieChart.centerTextRadiusPercent = 100f
-        binding.pieChart.setHoleColor(ContextCompat.getColor(requireContext(), R.color.colorRed))
-        binding.pieChart.holeRadius = 30f
-        binding.pieChart.transparentCircleRadius = 0f
-        binding.pieChart.legend.isEnabled = false
-        binding.pieChart.description.isEnabled = false
-        binding.pieChart.setTouchEnabled(false)
-        binding.pieChart.invalidate()
     }
 
     private fun setTextViews(uiState: NetworkFoodItemUiState) {

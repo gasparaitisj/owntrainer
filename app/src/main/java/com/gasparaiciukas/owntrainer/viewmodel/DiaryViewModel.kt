@@ -5,10 +5,10 @@ import androidx.lifecycle.Transformations.switchMap
 import com.gasparaiciukas.owntrainer.database.*
 import com.gasparaiciukas.owntrainer.repository.DiaryRepository
 import com.gasparaiciukas.owntrainer.repository.UserRepository
+import com.gasparaiciukas.owntrainer.utils.safeLet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -50,39 +50,37 @@ class DiaryViewModel @Inject constructor(
             var proteinConsumed = 0.0
             var fatConsumed = 0.0
             var carbsConsumed = 0.0
-            ldDiaryEntryWithMeals.value?.let { diaryEntryWithMeals ->
-                ldUser.value?.let { user ->
-                    for (meal in diaryEntryWithMeals.meals) {
-                        val mealWithFoodEntries =
-                            diaryRepository.getMealWithFoodEntriesById(meal.mealId)
-                        if (mealWithFoodEntries != null) {
-                            mealWithFoodEntries.meal.calories = mealWithFoodEntries.calories
-                            caloriesConsumed += mealWithFoodEntries.calories
-                            mealWithFoodEntries.meal.protein = mealWithFoodEntries.protein
-                            proteinConsumed += mealWithFoodEntries.protein
-                            mealWithFoodEntries.meal.carbs = mealWithFoodEntries.carbs
-                            carbsConsumed += mealWithFoodEntries.carbs
-                            mealWithFoodEntries.meal.fat = mealWithFoodEntries.fat
-                            fatConsumed += mealWithFoodEntries.fat
-                            meals.add(mealWithFoodEntries)
-                        }
+            safeLet(ldDiaryEntryWithMeals.value, ldUser.value) { diaryEntryWithMeals, user ->
+                for (meal in diaryEntryWithMeals.meals) {
+                    val mealWithFoodEntries =
+                        diaryRepository.getMealWithFoodEntriesById(meal.mealId)
+                    if (mealWithFoodEntries != null) {
+                        mealWithFoodEntries.meal.calories = mealWithFoodEntries.calories
+                        caloriesConsumed += mealWithFoodEntries.calories
+                        mealWithFoodEntries.meal.protein = mealWithFoodEntries.protein
+                        proteinConsumed += mealWithFoodEntries.protein
+                        mealWithFoodEntries.meal.carbs = mealWithFoodEntries.carbs
+                        carbsConsumed += mealWithFoodEntries.carbs
+                        mealWithFoodEntries.meal.fat = mealWithFoodEntries.fat
+                        fatConsumed += mealWithFoodEntries.fat
+                        meals.add(mealWithFoodEntries)
                     }
-                    uiState.postValue(
-                        DiaryUiState(
-                            meals = meals,
-                            user = user,
-                            diaryEntryWithMeals = diaryEntryWithMeals,
-                            proteinConsumed = proteinConsumed,
-                            fatConsumed = fatConsumed,
-                            carbsConsumed = carbsConsumed,
-                            caloriesConsumed = caloriesConsumed,
-                            caloriesPercentage = (caloriesConsumed / user.dailyKcalIntake) * 100,
-                            proteinPercentage = (proteinConsumed / user.dailyProteinIntakeInG) * 100,
-                            fatPercentage = (fatConsumed / user.dailyFatIntakeInG) * 100,
-                            carbsPercentage = (carbsConsumed / user.dailyCarbsIntakeInG) * 100
-                        )
-                    )
                 }
+                uiState.postValue(
+                    DiaryUiState(
+                        meals = meals,
+                        user = user,
+                        diaryEntryWithMeals = diaryEntryWithMeals,
+                        proteinConsumed = proteinConsumed,
+                        fatConsumed = fatConsumed,
+                        carbsConsumed = carbsConsumed,
+                        caloriesConsumed = caloriesConsumed,
+                        caloriesPercentage = (caloriesConsumed / user.dailyKcalIntake) * 100,
+                        proteinPercentage = (proteinConsumed / user.dailyProteinIntakeInG) * 100,
+                        fatPercentage = (fatConsumed / user.dailyFatIntakeInG) * 100,
+                        carbsPercentage = (carbsConsumed / user.dailyCarbsIntakeInG) * 100
+                    )
+                )
             }
         }
     }

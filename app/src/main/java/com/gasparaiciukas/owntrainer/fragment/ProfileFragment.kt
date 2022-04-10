@@ -159,6 +159,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         )
     }
 
+    private fun initNavigation() {
+        binding.topAppBar.setNavigationOnClickListener {
+            ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
+        }
+    }
 
     private fun setNavigation(user: User) {
         onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -222,11 +227,5 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             viewLifecycleOwner,
             onBackPressedCallback
         )
-    }
-
-    private fun initNavigation() {
-        binding.topAppBar.setNavigationOnClickListener {
-            ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
-        }
     }
 }

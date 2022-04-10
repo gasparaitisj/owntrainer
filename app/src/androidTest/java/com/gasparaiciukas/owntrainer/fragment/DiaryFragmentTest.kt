@@ -77,7 +77,7 @@ class DiaryFragmentTest {
         ) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
-            adapter.items = listOf(
+            mealAdapter.items = listOf(
                 MealWithFoodEntries(
                     Meal(
                         mealId = 10,

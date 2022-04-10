@@ -5,6 +5,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -61,7 +62,7 @@ class NetworkFoodItemFragmentTest {
     }
 
     @Test
-    fun clickOnNavigationBackButton_popBackStack() {
+    fun clickOnNavigationBackButton_navigateToFoodFragment() {
         launchFragmentInHiltContainer<NetworkFoodItemFragment>(fragmentFactory = fragmentFactory, navController = navController) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
@@ -74,12 +75,13 @@ class NetworkFoodItemFragmentTest {
             )
         ).perform(ViewActions.click())
 
-        Mockito.verify(navController).popBackStack()
+        Mockito.verify(navController).navigate(
+            NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToFoodFragment()
+        )
     }
 
     @Test
     fun clickAddNavigationButton_navigateToAddFoodToMealFragment() = runTest {
-        // fails to click somehow
         launchFragmentInHiltContainer<NetworkFoodItemFragment>(fragmentFactory = fragmentFactory, navController = navController) {
             Navigation.setViewNavController(requireView(), navController)
             fakeViewModel = viewModel

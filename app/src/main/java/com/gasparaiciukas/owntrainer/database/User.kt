@@ -23,7 +23,7 @@ data class User(
     @ColumnInfo(name = "kcalBurnedPerStep")
     var kcalBurnedPerStep: Double = 0.0
 
-    val bmr: Double get() = calculateBmr(weightInKg, heightInCm.toDouble(), ageInYears, sex)
+    private val bmr: Double get() = calculateBmr(weightInKg, heightInCm.toDouble(), ageInYears, sex)
     val dailyKcalIntake: Double get() = calculateDailyKcalIntake(bmr, lifestyle)
     val dailyProteinIntakeInG: Double get() = calculateDailyProteinIntakeInG(weightInKg)
     val dailyFatIntakeInG: Double get() = calculateDailyFatIntake(dailyKcalIntake)

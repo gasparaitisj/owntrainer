@@ -4,14 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
@@ -27,7 +24,7 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
     private var _binding: FragmentMealBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var adapter: MealAdapter
+    lateinit var mealAdapter: MealAdapter
 
     lateinit var viewModel: MealViewModel
 
@@ -43,7 +40,7 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[MealViewModel::class.java]
         viewModel.ldMeals.observe(viewLifecycleOwner) {
-            it?.also { refreshUi(it) }
+            it?.let { refreshUi(it) }
         }
         initUi()
     }
@@ -60,7 +57,7 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
     }
 
     private fun refreshUi(items: List<MealWithFoodEntries>) {
-        adapter.items = items
+        mealAdapter.items = items
         binding.scrollView.visibility = View.VISIBLE
     }
 
@@ -96,9 +93,13 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
     }
 
     private fun initRecyclerView() {
-        adapter = MealAdapter()
-        binding.recyclerView.setHasFixedSize(true)
-        adapter.setOnClickListeners(
+        mealAdapter = MealAdapter()
+        binding.recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+            adapter = mealAdapter
+        }
+        mealAdapter.setOnClickListeners(
             singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
                 findNavController().navigate(
                     MealFragmentDirections.actionMealFragmentToMealItemFragment(
@@ -117,7 +118,5 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
                     .show()
             }
         )
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.adapter = adapter
     }
 }

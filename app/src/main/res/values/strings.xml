@@ -90,4 +90,7 @@
     <string name="number_must_be_valid">Number must be valid</string>
     <string name="age_must_be_valid">Age must be valid</string>
     <string name="height_must_be_valid">Height must be valid</string>
+    <string name="could_not_find_any_more_matching_foods">Could not find any more matching foods.</string>
+    <string name="could_not_find_any_matching_foods">Could not find any matching foods.</string>
+    <string name="carbohydrates">Carbohydrates</string>
 </resources>

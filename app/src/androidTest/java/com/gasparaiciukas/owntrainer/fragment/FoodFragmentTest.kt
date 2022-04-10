@@ -1,11 +1,9 @@
 package com.gasparaiciukas.owntrainer.fragment
 
 import android.view.View
-import android.widget.ImageButton
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
@@ -63,7 +61,10 @@ class FoodFragmentTest {
 
     @Test
     fun clickImeButton_navigateToNetworkFoodItemFragment() {
-        launchFragmentInHiltContainer<FoodFragment>(fragmentFactory = fragmentFactory, navController = navController) {
+        launchFragmentInHiltContainer<FoodFragment>(
+            fragmentFactory = fragmentFactory,
+            navController = navController
+        ) {
             Navigation.setViewNavController(requireView(), navController)
             fakeViewModel = viewModel
         }
@@ -88,14 +89,17 @@ class FoodFragmentTest {
         Mockito.verify(navController).navigate(
             FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment(
                 position = 0,
-                foodItem = fakeViewModel.ldFoods.getOrAwaitValue()!![0]
+                foodItem = fakeViewModel.ldResponse.getOrAwaitValue().data?.foods?.get(0)
             )
         )
     }
 
     @Test
     fun clickSearchIcon_navigateToNetworkFoodItemFragment() {
-        launchFragmentInHiltContainer<FoodFragment>(fragmentFactory = fragmentFactory, navController = navController) {
+        launchFragmentInHiltContainer<FoodFragment>(
+            fragmentFactory = fragmentFactory,
+            navController = navController
+        ) {
             Navigation.setViewNavController(requireView(), navController)
             fakeViewModel = viewModel
         }
@@ -122,14 +126,17 @@ class FoodFragmentTest {
         Mockito.verify(navController).navigate(
             FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment(
                 position = 0,
-                foodItem = fakeViewModel.ldFoods.getOrAwaitValue()!![0]
+                foodItem = fakeViewModel.ldResponse.getOrAwaitValue().data?.foods?.get(0)
             )
         )
     }
 
     @Test
     fun clickMealsTab_navigateToMealFragment() {
-        launchFragmentInHiltContainer<FoodFragment>(fragmentFactory = fragmentFactory, navController = navController) {
+        launchFragmentInHiltContainer<FoodFragment>(
+            fragmentFactory = fragmentFactory,
+            navController = navController
+        ) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
         }

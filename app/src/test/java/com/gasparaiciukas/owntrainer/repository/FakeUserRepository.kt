@@ -3,6 +3,7 @@ package com.gasparaiciukas.owntrainer.repository
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
 import com.gasparaiciukas.owntrainer.database.User
+import com.gasparaiciukas.owntrainer.utils.Constants
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 

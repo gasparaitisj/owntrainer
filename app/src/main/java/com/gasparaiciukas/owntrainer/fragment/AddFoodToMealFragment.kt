@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -15,8 +14,6 @@ import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.FragmentAddFoodToMealBinding
 import com.gasparaiciukas.owntrainer.viewmodel.AddFoodToMealViewModel
-import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -25,7 +22,7 @@ class AddFoodToMealFragment : Fragment(R.layout.fragment_add_food_to_meal) {
     private var _binding: FragmentAddFoodToMealBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var adapter: MealAdapter
+    lateinit var mealAdapter: MealAdapter
 
     lateinit var viewModel: AddFoodToMealViewModel
 
@@ -42,7 +39,7 @@ class AddFoodToMealFragment : Fragment(R.layout.fragment_add_food_to_meal) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[AddFoodToMealViewModel::class.java]
         viewModel.ldMeals.observe(viewLifecycleOwner) {
-            it?.also { refreshUi(it) }
+            it?.let { refreshUi(it) }
         }
         initUi()
     }
@@ -52,8 +49,8 @@ class AddFoodToMealFragment : Fragment(R.layout.fragment_add_food_to_meal) {
         initRecyclerView()
     }
 
-    fun refreshUi(items: List<MealWithFoodEntries>) {
-        adapter.items = items
+    private fun refreshUi(items: List<MealWithFoodEntries>) {
+        mealAdapter.items = items
         binding.scrollView.visibility = View.VISIBLE
     }
 
@@ -64,17 +61,18 @@ class AddFoodToMealFragment : Fragment(R.layout.fragment_add_food_to_meal) {
     }
 
     private fun initRecyclerView() {
-        adapter = MealAdapter()
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.adapter = adapter
-        adapter.setOnClickListeners(
+        mealAdapter = MealAdapter()
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = mealAdapter
+        }
+        mealAdapter.setOnClickListeners(
             singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
                 viewLifecycleOwner.lifecycleScope.launch {
                     viewModel.addFoodToMeal(mealWithFoodEntries)
                     findNavController().popBackStack()
                 }
-            },
-            longClickListener = null
+            }
         )
     }
 

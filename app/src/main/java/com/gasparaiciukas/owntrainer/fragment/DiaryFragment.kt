@@ -27,7 +27,7 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
     private var _binding: FragmentDiaryBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var adapter: MealAdapter
+    lateinit var mealAdapter: MealAdapter
 
     lateinit var viewModel: DiaryViewModel
 
@@ -67,7 +67,7 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
         initRecyclerView()
     }
 
-    fun refreshUi(uiState: DiaryUiState) {
+    private fun refreshUi(uiState: DiaryUiState) {
         setStatistics(uiState)
         setRecyclerView(uiState)
         binding.scrollView.visibility = View.VISIBLE
@@ -81,28 +81,21 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
             binding.drawerLayout.open()
         }
 
-        // Add meal to diary on FAB clicked
         binding.fab.setOnClickListener {
             findNavController().navigate(
                 DiaryFragmentDirections.actionDiaryFragmentToAddMealToDiaryFragment()
             )
         }
 
-        // Navigation (back button)
         binding.cardNavigation.btnBack.setOnClickListener {
-            // Refresh fragment and show previous day
             viewModel.updateUserToPreviousDay()
         }
 
-        // Navigation (date layout)
         binding.cardNavigation.layoutDate.setOnClickListener {
-            // Refresh fragment and show current day
             viewModel.updateUserToCurrentDay()
         }
 
-        // Navigation (forward button)
         binding.cardNavigation.btnForward.setOnClickListener {
-            // Refresh fragment and show next day
             viewModel.updateUserToNextDay()
         }
     }
@@ -146,25 +139,16 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
     }
 
     private fun initRecyclerView() {
-        adapter = MealAdapter()
-        binding.recyclerView.setHasFixedSize(true)
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.adapter = adapter
-        binding.scrollView.setOnScrollChangeListener(
-            NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-                // Scroll up
-                if (scrollY < oldScrollY) {
-                    binding.fab.show()
-                }
-                // Scroll down
-                if (scrollY > oldScrollY) {
-                    binding.fab.hide()
-                }
-            })
+        mealAdapter = MealAdapter()
+        binding.recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+            adapter = mealAdapter
+        }
     }
 
     private fun setRecyclerView(uiState: DiaryUiState) {
-        adapter.setOnClickListeners(
+        mealAdapter.setOnClickListeners(
             singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
                 findNavController().navigate(
                     DiaryFragmentDirections.actionDiaryFragmentToMealItemFragment(
@@ -180,6 +164,6 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
                 )
             }
         )
-        adapter.items = uiState.meals
+        mealAdapter.items = uiState.meals
     }
 }

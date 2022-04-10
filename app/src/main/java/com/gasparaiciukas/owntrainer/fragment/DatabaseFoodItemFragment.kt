@@ -4,21 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentDatabaseFoodItemBinding
-import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
 import com.gasparaiciukas.owntrainer.viewmodel.DatabaseFoodItemUiState
 import com.gasparaiciukas.owntrainer.viewmodel.DatabaseFoodItemViewModel
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
-import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 
@@ -61,7 +53,14 @@ class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) 
 
     private fun refreshUi(uiState: DatabaseFoodItemUiState) {
         setTextViews(uiState)
-        setPieChart(uiState)
+        setPieChart(
+            carbsPercentage = uiState.carbsPercentage,
+            fatPercentage = uiState.fatPercentage,
+            proteinPercentage = uiState.proteinPercentage,
+            calories = uiState.food.calories.toFloat(),
+            pieChart = binding.pieChart,
+            context = requireContext()
+        )
         binding.scrollView.visibility = View.VISIBLE
     }
 
@@ -69,46 +68,6 @@ class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) 
         binding.topAppBar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-    }
-
-    private fun setPieChart(uiState: DatabaseFoodItemUiState) {
-        // Create colors representing nutrients
-        val colors: MutableList<Int> = ArrayList()
-        colors.add(ContextCompat.getColor(requireContext(), R.color.colorGold)) // carbs
-        colors.add(ContextCompat.getColor(requireContext(), R.color.colorOrange)) // fat
-        colors.add(ContextCompat.getColor(requireContext(), R.color.colorSmoke)) // protein
-
-
-        // Add data to pie chart
-        val entries: MutableList<PieEntry> = ArrayList()
-        entries.add(PieEntry(uiState.carbsPercentage, "Carbohydrates"))
-        entries.add(PieEntry(uiState.fatPercentage, "Fat"))
-        entries.add(PieEntry(uiState.proteinPercentage, "Protein"))
-        val pieDataSet = PieDataSet(entries, "Data")
-
-        // Add style to pie chart
-        pieDataSet.colors = colors // chart colors
-        val pieData = PieData(pieDataSet)
-        pieData.setValueFormatter(NutrientValueFormatter()) // adjust labels
-        pieData.setValueTextSize(12f)
-        binding.pieChart.data = pieData
-        binding.pieChart.centerText =
-            "${uiState.food.calories.roundToInt()}\nkCal" // calorie text inside inner circle
-        binding.pieChart.setCenterTextSize(14f)
-        binding.pieChart.setCenterTextColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.colorWhite
-            )
-        )
-        binding.pieChart.centerTextRadiusPercent = 100f
-        binding.pieChart.setHoleColor(ContextCompat.getColor(requireContext(), R.color.colorRed))
-        binding.pieChart.holeRadius = 30f
-        binding.pieChart.transparentCircleRadius = 0f
-        binding.pieChart.legend.isEnabled = false
-        binding.pieChart.description.isEnabled = false
-        binding.pieChart.setTouchEnabled(false)
-        binding.pieChart.invalidate()
     }
 
     private fun setTextViews(uiState: DatabaseFoodItemUiState) {

@@ -2,8 +2,6 @@ package com.gasparaiciukas.owntrainer.fragment
 
 import android.widget.ImageButton
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.fragment.app.FragmentFactory
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.espresso.Espresso.onView
@@ -30,7 +28,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
-import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltAndroidTest
@@ -67,7 +64,7 @@ class AddMealToDiaryFragmentTest {
         launchFragmentInHiltContainer<AddMealToDiaryFragment>(fragmentFactory = fragmentFactory, navController = navController) {
             Navigation.setViewNavController(requireView(), navController)
             sharedViewModel = fakeViewModel
-            adapter.items = listOf(
+            mealAdapter.items = listOf(
                 MealWithFoodEntries(
                     Meal(
                         title = "title",

@@ -8,10 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.NetworkFoodAdapter.NetworkFoodViewHolder
-import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.databinding.FoodRowBinding
 import com.gasparaiciukas.owntrainer.network.Food
-import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 import javax.inject.Inject
 
 
@@ -47,8 +45,8 @@ class NetworkFoodAdapter @Inject constructor(
         set(value) = differ.submitList(value)
 
     fun setOnClickListeners(
-        singleClickListener: ((food: Food, position: Int) -> Unit)?,
-        longClickListener: (Unit)?
+        singleClickListener: ((food: Food, position: Int) -> Unit)? = null,
+        longClickListener: (Unit)? = null
     ) {
         this.singleClickListener = singleClickListener
         this.longClickListener = longClickListener
@@ -69,13 +67,11 @@ class NetworkFoodAdapter @Inject constructor(
         var carbs = 0.0
 
         val nutrients = items[position].foodNutrients
-        if (nutrients != null) {
-            for (nutrient in nutrients) {
-                if (nutrient.nutrientId == 1003) protein = nutrient.value ?: 0.0
-                if (nutrient.nutrientId == 1004) fat = nutrient.value ?: 0.0
-                if (nutrient.nutrientId == 1005) carbs = nutrient.value ?: 0.0
-                if (nutrient.nutrientId == 1008) calories = nutrient.value ?: 0.0
-            }
+        nutrients?.forEach { nutrient ->
+            if (nutrient.nutrientId == 1003) protein = nutrient.value ?: 0.0
+            if (nutrient.nutrientId == 1004) fat = nutrient.value ?: 0.0
+            if (nutrient.nutrientId == 1005) carbs = nutrient.value ?: 0.0
+            if (nutrient.nutrientId == 1008) calories = nutrient.value ?: 0.0
         }
 
         // Display information of each row

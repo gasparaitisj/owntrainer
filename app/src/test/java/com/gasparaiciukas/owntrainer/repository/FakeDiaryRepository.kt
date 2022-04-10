@@ -19,10 +19,6 @@ class FakeDiaryRepository : DiaryRepository {
     private var foodEntries = mutableListOf<FoodEntry>()
     private var shouldReturnNetworkError = false
 
-    fun setFoodEntries(foodEntries: MutableList<FoodEntry>) {
-        this.foodEntries = foodEntries
-    }
-
     override suspend fun insertDiaryEntry(diaryEntry: DiaryEntry) {
         diaryEntries.add(diaryEntry)
     }
@@ -98,11 +94,27 @@ class FakeDiaryRepository : DiaryRepository {
         shouldReturnNetworkError = value
     }
 
-    override suspend fun getFoods(query: String): Resource<GetResponse> {
+    override suspend fun getFoods(
+        query: String,
+        dataType: String?,
+        numberOfResultsPerPage: Int?,
+        pageSize: Int?,
+        pageNumber: Int?,
+        sortBy: String?,
+        sortOrder: String?,
+        requireAllWords: Boolean?
+    ): Resource<GetResponse> {
         return if (shouldReturnNetworkError) {
             Resource.error("Error", null)
         } else {
-            Resource.success(GetResponse(foods = listOf()))
+            Resource.success(
+                GetResponse(
+                    totalHits = 0,
+                    currentPage = 0,
+                    totalPages = 0,
+                    foods = mutableListOf()
+                )
+            )
         }
     }
 
