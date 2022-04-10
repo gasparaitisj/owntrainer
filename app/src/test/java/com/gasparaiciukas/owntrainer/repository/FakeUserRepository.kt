@@ -2,6 +2,8 @@ package com.gasparaiciukas.owntrainer.repository
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
+import com.gasparaiciukas.owntrainer.database.Lifestyle
+import com.gasparaiciukas.owntrainer.database.Sex
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.utils.Constants
 import kotlinx.coroutines.flow.Flow
@@ -18,11 +20,11 @@ class FakeUserRepository : UserRepository {
     private fun createUser(): User {
         val currentDate = LocalDate.now()
         return User(
-            sex = Constants.Data.SEX_MALE,
+            sex = Sex.MALE.ordinal,
             ageInYears = 25,
             heightInCm = 180,
             weightInKg = 80.0,
-            lifestyle = Constants.Data.LIFESTYLE_LIGHTLY_ACTIVE,
+            lifestyle = Lifestyle.LIGHTLY_ACTIVE.ordinal,
             year = currentDate.year,
             month = currentDate.monthValue,
             dayOfYear = currentDate.dayOfYear,

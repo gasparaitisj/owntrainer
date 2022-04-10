@@ -31,7 +31,7 @@ class NetworkFoodItemViewModel @Inject internal constructor(
     userRepository: UserRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val foodItem: Food? = NetworkFoodItemFragmentArgs.fromSavedStateHandle(savedStateHandle).foodItem
+    var foodItem: Food? = NetworkFoodItemFragmentArgs.fromSavedStateHandle(savedStateHandle).foodItem
     private val position: Int = NetworkFoodItemFragmentArgs.fromSavedStateHandle(savedStateHandle).position
 
     val ldUser = userRepository.user.asLiveData()

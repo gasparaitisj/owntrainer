@@ -9,11 +9,12 @@ import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
+import com.gasparaiciukas.owntrainer.database.Lifestyle
+import com.gasparaiciukas.owntrainer.database.Sex
 import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
-import com.gasparaiciukas.owntrainer.utils.Constants
 import com.gasparaiciukas.owntrainer.viewmodel.ProfileViewModel
 import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -63,16 +64,16 @@ class ProfileFragmentTest {
         }
 
         val user = fakeViewModel.ldUser.getOrAwaitValue().copy()
-        user.sex = Constants.Data.SEX_FEMALE
+        user.sex = Sex.FEMALE.ordinal
         user.ageInYears = 20
         user.heightInCm = 160
         user.weightInKg = 45.0
-        user.lifestyle = Constants.Data.LIFESTYLE_SEDENTARY
+        user.lifestyle = Lifestyle.SEDENTARY.ordinal
 
         Espresso.onView(ViewMatchers.withId(R.id.et_sex))
             .perform(ViewActions.click())
 
-        Espresso.onView(ViewMatchers.withText(Constants.Data.SEX_FEMALE))
+        Espresso.onView(ViewMatchers.withText(Sex.FEMALE.ordinal))
             .inRoot(RootMatchers.isPlatformPopup())
             .perform(ViewActions.click())
 
@@ -88,7 +89,7 @@ class ProfileFragmentTest {
         Espresso.onView(ViewMatchers.withId(R.id.et_lifestyle))
             .perform(ViewActions.click())
 
-        Espresso.onView(ViewMatchers.withText(Constants.Data.LIFESTYLE_SEDENTARY))
+        Espresso.onView(ViewMatchers.withText(Lifestyle.SEDENTARY.ordinal))
             .inRoot(RootMatchers.isPlatformPopup())
             .perform(ViewActions.click())
 

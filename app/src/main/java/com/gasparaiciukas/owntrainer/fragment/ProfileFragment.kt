@@ -11,9 +11,10 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.gasparaiciukas.owntrainer.R
+import com.gasparaiciukas.owntrainer.database.Lifestyle
+import com.gasparaiciukas.owntrainer.database.Sex
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.databinding.FragmentProfileBinding
-import com.gasparaiciukas.owntrainer.utils.Constants
 import com.gasparaiciukas.owntrainer.viewmodel.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -103,11 +104,15 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private fun setTextFields(user: User) {
         // Insert current data into fields
-        binding.etSex.setText(user.sex)
+        binding.etSex.setText(Sex.values()[user.sex].selectionDescription(requireContext()))
         binding.etAge.setText(user.ageInYears.toString())
         binding.etHeight.setText(user.heightInCm.toString())
         binding.etWeight.setText(user.weightInKg.toString())
-        binding.etLifestyle.setText(user.lifestyle)
+        binding.etLifestyle.setText(
+            Lifestyle.values()[user.lifestyle].selectionDescription(
+                requireContext()
+            )
+        )
 
         // Set up listeners
         binding.etSex.setAdapter(
@@ -115,8 +120,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 requireContext(),
                 R.layout.details_list_item,
                 listOf(
-                    Constants.Data.SEX_MALE,
-                    Constants.Data.SEX_FEMALE
+                    getString(R.string.male),
+                    getString(R.string.female),
                 )
             )
         )
@@ -149,11 +154,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 requireContext(),
                 R.layout.details_list_item,
                 listOf(
-                    Constants.Data.LIFESTYLE_SEDENTARY,
-                    Constants.Data.LIFESTYLE_LIGHTLY_ACTIVE,
-                    Constants.Data.LIFESTYLE_MODERATELY_ACTIVE,
-                    Constants.Data.LIFESTYLE_VERY_ACTIVE,
-                    Constants.Data.LIFESTYLE_EXTRA_ACTIVE
+                    getString(R.string.sedentary),
+                    getString(R.string.lightly_active),
+                    getString(R.string.moderately_active),
+                    getString(R.string.very_active),
+                    getString(R.string.extra_active),
                 )
             )
         )
@@ -204,14 +209,18 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     ).show()
                 }
                 else -> {
+                    val sex = Sex.values().find { it.value == binding.etSex.text.toString() }
+                        ?: Sex.MALE
+                    val lifestyle = Lifestyle.values().find { it.value == binding.etLifestyle.text.toString() }
+                        ?: Lifestyle.SEDENTARY
                     viewModel.updateUser(
                         User(
                             userId = user.userId,
-                            sex = binding.etSex.text.toString(),
+                            sex = sex.ordinal,
                             ageInYears = binding.etAge.text.toString().toInt(),
                             heightInCm = binding.etHeight.text.toString().toInt(),
                             weightInKg = binding.etWeight.text.toString().toDouble(),
-                            lifestyle = binding.etLifestyle.text.toString(),
+                            lifestyle = lifestyle.ordinal,
                             year = user.year,
                             month = user.month,
                             dayOfYear = user.dayOfYear,

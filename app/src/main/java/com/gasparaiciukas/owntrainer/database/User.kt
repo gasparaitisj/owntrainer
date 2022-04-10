@@ -1,19 +1,21 @@
 package com.gasparaiciukas.owntrainer.database
 
+import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.utils.Constants
 
 
 @Entity(tableName = "user")
 data class User(
     @PrimaryKey(autoGenerate = true) var userId: Int = 0,
-    @ColumnInfo(name = "sex") var sex: String,
+    @ColumnInfo(name = "sex") var sex: Int,
     @ColumnInfo(name = "ageInYears") var ageInYears: Int,
     @ColumnInfo(name = "heightInCm") var heightInCm: Int,
     @ColumnInfo(name = "weightInKg") var weightInKg: Double,
-    @ColumnInfo(name = "lifestyle") var lifestyle: String,
+    @ColumnInfo(name = "lifestyle") var lifestyle: Int,
     @ColumnInfo(name = "year") var year: Int,
     @ColumnInfo(name = "month") var month: Int,
     @ColumnInfo(name = "dayOfYear") var dayOfYear: Int,
@@ -23,8 +25,14 @@ data class User(
     @ColumnInfo(name = "kcalBurnedPerStep")
     var kcalBurnedPerStep: Double = 0.0
 
-    private val bmr: Double get() = calculateBmr(weightInKg, heightInCm.toDouble(), ageInYears, sex)
-    val dailyKcalIntake: Double get() = calculateDailyKcalIntake(bmr, lifestyle)
+    private val bmr: Double
+        get() = calculateBmr(
+            weightInKg,
+            heightInCm.toDouble(),
+            ageInYears,
+            Sex.values()[sex]
+        )
+    val dailyKcalIntake: Double get() = calculateDailyKcalIntake(bmr, Lifestyle.values()[lifestyle])
     val dailyProteinIntakeInG: Double get() = calculateDailyProteinIntakeInG(weightInKg)
     val dailyFatIntakeInG: Double get() = calculateDailyFatIntake(dailyKcalIntake)
     val dailyCarbsIntakeInG: Double get() = calculateDailyCarbsIntake(dailyKcalIntake)
@@ -37,9 +45,9 @@ data class User(
         weightInKg: Double,
         heightInCm: Double,
         age: Int,
-        sex: String
+        sex: Sex
     ): Double {
-        return if (sex == Constants.Data.SEX_MALE) {
+        return if (sex == Sex.MALE) {
             // Men: BMR = 10W + 6.25H - 5A + 5
             10 * weightInKg + 6.25 * heightInCm - 5 * age + 5
         } else {
@@ -51,13 +59,13 @@ data class User(
     /*
     Daily kCal intake calculator, based on the Mifflin-St Jeor Equation
      */
-    private fun calculateDailyKcalIntake(bmr: Double, lifestyle: String?): Double {
+    private fun calculateDailyKcalIntake(bmr: Double, lifestyle: Lifestyle?): Double {
         return when (lifestyle) {
-            Constants.Data.LIFESTYLE_SEDENTARY -> bmr * 1.2
-            Constants.Data.LIFESTYLE_LIGHTLY_ACTIVE -> bmr * 1.375
-            Constants.Data.LIFESTYLE_MODERATELY_ACTIVE -> bmr * 1.55
-            Constants.Data.LIFESTYLE_VERY_ACTIVE -> bmr * 1.725
-            Constants.Data.LIFESTYLE_EXTRA_ACTIVE -> bmr * 1.9
+            Lifestyle.SEDENTARY -> bmr * 1.2
+            Lifestyle.LIGHTLY_ACTIVE -> bmr * 1.375
+            Lifestyle.MODERATELY_ACTIVE -> bmr * 1.55
+            Lifestyle.VERY_ACTIVE -> bmr * 1.725
+            Lifestyle.EXTRA_ACTIVE -> bmr * 1.9
             else -> 0.0
         }
     }
@@ -87,4 +95,47 @@ data class User(
     private fun calculateDailyCarbsIntake(dailyKcalIntake: Double): Double {
         return dailyKcalIntake * 0.55 / 4
     }
+}
+
+enum class Sex(val value: String) {
+    MALE(Constants.EN.male) {
+        override fun selectionDescription(context: Context): String {
+            return context.getString(R.string.male)
+        }
+    },
+    FEMALE(Constants.EN.female) {
+        override fun selectionDescription(context: Context): String {
+            return context.getString(R.string.female)
+        }
+    };
+    abstract fun selectionDescription(context: Context): String
+}
+
+enum class Lifestyle(val value: String) {
+    SEDENTARY(Constants.EN.sedentary) {
+        override fun selectionDescription(context: Context): String {
+            return context.getString(R.string.sedentary)
+        }
+    },
+    LIGHTLY_ACTIVE(Constants.EN.lightly_active) {
+        override fun selectionDescription(context: Context): String {
+            return context.getString(R.string.lightly_active)
+        }
+    },
+    MODERATELY_ACTIVE(Constants.EN.moderately_active) {
+        override fun selectionDescription(context: Context): String {
+            return context.getString(R.string.moderately_active)
+        }
+    },
+    VERY_ACTIVE(Constants.EN.very_active) {
+        override fun selectionDescription(context: Context): String {
+            return context.getString(R.string.very_active)
+        }
+    },
+    EXTRA_ACTIVE(Constants.EN.extra_active) {
+        override fun selectionDescription(context: Context): String {
+            return context.getString(R.string.extra_active)
+        }
+    };
+    abstract fun selectionDescription(context: Context): String
 }

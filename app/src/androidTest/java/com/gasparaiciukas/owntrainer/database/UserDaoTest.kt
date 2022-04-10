@@ -4,7 +4,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.asLiveData
 import androidx.test.filters.SmallTest
 import com.gasparaiciukas.owntrainer.getOrAwaitValue
-import com.gasparaiciukas.owntrainer.utils.Constants
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -49,11 +48,11 @@ class UserDaoTest {
         val currentDate = LocalDate.now()
         val user = User(
             userId = 1,
-            sex = Constants.Data.SEX_MALE,
+            sex = Sex.MALE.ordinal,
             ageInYears = 25,
             heightInCm = 180,
             weightInKg = 80.0,
-            lifestyle = Constants.Data.LIFESTYLE_LIGHTLY_ACTIVE,
+            lifestyle = Lifestyle.LIGHTLY_ACTIVE.ordinal,
             year = currentDate.year,
             month = currentDate.monthValue,
             dayOfYear = currentDate.dayOfYear,
@@ -71,11 +70,11 @@ class UserDaoTest {
         val currentDate = LocalDate.now()
         var user = User(
             userId = 1,
-            sex = Constants.Data.SEX_MALE,
+            sex = Sex.MALE.ordinal,
             ageInYears = 25,
             heightInCm = 180,
             weightInKg = 80.0,
-            lifestyle = Constants.Data.LIFESTYLE_LIGHTLY_ACTIVE,
+            lifestyle = Lifestyle.LIGHTLY_ACTIVE.ordinal,
             year = currentDate.year,
             month = currentDate.monthValue,
             dayOfYear = currentDate.dayOfYear,
@@ -95,11 +94,11 @@ class UserDaoTest {
         val currentDate = LocalDate.now()
         val user = User(
             userId = 1,
-            sex = Constants.Data.SEX_MALE,
+            sex = Sex.MALE.ordinal,
             ageInYears = 25,
             heightInCm = 180,
             weightInKg = 80.0,
-            lifestyle = Constants.Data.LIFESTYLE_LIGHTLY_ACTIVE,
+            lifestyle = Lifestyle.LIGHTLY_ACTIVE.ordinal,
             year = currentDate.year,
             month = currentDate.monthValue,
             dayOfYear = currentDate.dayOfYear,

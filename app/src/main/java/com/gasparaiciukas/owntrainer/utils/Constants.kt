@@ -3,17 +3,6 @@ package com.gasparaiciukas.owntrainer.utils
 object Constants {
     const val DATABASE_NAME = "owntrainer"
 
-    object Data {
-        const val SEX_MALE = "Male"
-        const val SEX_FEMALE = "Female"
-
-        const val LIFESTYLE_SEDENTARY = "Sedentary"
-        const val LIFESTYLE_LIGHTLY_ACTIVE = "Lightly active"
-        const val LIFESTYLE_MODERATELY_ACTIVE = "Moderately active"
-        const val LIFESTYLE_VERY_ACTIVE = "Very active"
-        const val LIFESTYLE_EXTRA_ACTIVE = "Extra active"
-    }
-
     object Api {
         const val BASE_URL = "https://api.nal.usda.gov/fdc/v1/foods/"
         const val QUERY_PAGE_SIZE = 25
@@ -36,6 +25,16 @@ object Constants {
             const val SORT_ORDER_ASCENDING = "asc"
             const val SORT_ORDER_DESCENDING = "desc"
         }
+    }
+
+    object EN {
+        const val male = "Male"
+        const val female = "Female"
+        const val sedentary = "Sedentary"
+        const val lightly_active = "Lightly active"
+        const val moderately_active = "Moderately active"
+        const val very_active = "Very active"
+        const val extra_active = "Extra active"
     }
 }
 

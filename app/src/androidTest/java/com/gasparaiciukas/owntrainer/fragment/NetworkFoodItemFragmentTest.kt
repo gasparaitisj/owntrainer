@@ -1,28 +1,30 @@
 package com.gasparaiciukas.owntrainer.fragment
 
+import android.view.View
 import android.widget.ImageButton
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.FoodNutrient
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
-import com.gasparaiciukas.owntrainer.viewmodel.DatabaseFoodItemViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.NetworkFoodItemViewModel
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.hamcrest.Description
+import org.hamcrest.Matcher
 import org.hamcrest.Matchers
+import org.hamcrest.TypeSafeMatcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -63,7 +65,10 @@ class NetworkFoodItemFragmentTest {
 
     @Test
     fun clickOnNavigationBackButton_navigateToFoodFragment() {
-        launchFragmentInHiltContainer<NetworkFoodItemFragment>(fragmentFactory = fragmentFactory, navController = navController) {
+        launchFragmentInHiltContainer<NetworkFoodItemFragment>(
+            fragmentFactory = fragmentFactory,
+            navController = navController
+        ) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
         }
@@ -82,9 +87,12 @@ class NetworkFoodItemFragmentTest {
 
     @Test
     fun clickAddNavigationButton_navigateToAddFoodToMealFragment() = runTest {
-        launchFragmentInHiltContainer<NetworkFoodItemFragment>(fragmentFactory = fragmentFactory, navController = navController) {
-            Navigation.setViewNavController(requireView(), navController)
-            fakeViewModel = viewModel
+        launchFragmentInHiltContainer<NetworkFoodItemFragment>(
+            fragmentFactory = fragmentFactory,
+            navController = navController
+        ) {
+            viewModel.foodItem = food
+            viewModel.loadData()
         }
 
         Espresso.onView(
@@ -93,9 +101,9 @@ class NetworkFoodItemFragmentTest {
             ViewActions.replaceText("200"),
         )
         Espresso.onView(
-                ViewMatchers.withId(R.id.btn_add_to_meal)
+            ViewMatchers.withId(R.id.btn_add_to_meal)
         ).perform(
-                ViewActions.click()
+            ViewActions.click()
         )
 
         Mockito.verify(navController).navigate(
@@ -106,7 +114,6 @@ class NetworkFoodItemFragmentTest {
         )
     }
 
-
     private fun createFood(): Food {
         return Food(
             fdcId = 454004,
@@ -114,7 +121,7 @@ class NetworkFoodItemFragmentTest {
             lowercaseDescription = "apple",
             dataType = "Branded",
             gtinUpc = "867824000001",
-            publishedDate =  "2019-04-01",
+            publishedDate = "2019-04-01",
             brandOwner = "TREECRISP 2 GO",
             ingredients = "CRISP APPLE.",
             marketCountry = "United States",
@@ -124,7 +131,7 @@ class NetworkFoodItemFragmentTest {
             foodNutrients = listOf(
                 FoodNutrient(
                     nutrientId = 1003,
-                    nutrientName =  "Protein",
+                    nutrientName = "Protein",
                     nutrientNumber = "203",
                     unitName = "G",
                     derivationCode = "LCCS",
@@ -133,7 +140,7 @@ class NetworkFoodItemFragmentTest {
                 ),
                 FoodNutrient(
                     nutrientId = 1005,
-                    nutrientName =  "Carbohydrate, by difference",
+                    nutrientName = "Carbohydrate, by difference",
                     nutrientNumber = "205",
                     unitName = "G",
                     derivationCode = "LCCS",
@@ -142,7 +149,7 @@ class NetworkFoodItemFragmentTest {
                 ),
                 FoodNutrient(
                     nutrientId = 1008,
-                    nutrientName =  "Energy",
+                    nutrientName = "Energy",
                     nutrientNumber = "208",
                     unitName = "G",
                     derivationCode = "LCCS",
@@ -151,7 +158,7 @@ class NetworkFoodItemFragmentTest {
                 ),
                 FoodNutrient(
                     nutrientId = 1004,
-                    nutrientName =  "Total lipid (fat)",
+                    nutrientName = "Total lipid (fat)",
                     nutrientNumber = "204",
                     unitName = "G",
                     derivationCode = "LCSL",

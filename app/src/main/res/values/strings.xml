@@ -93,4 +93,11 @@
     <string name="could_not_find_any_more_matching_foods">Could not find any more matching foods.</string>
     <string name="could_not_find_any_matching_foods">Could not find any matching foods.</string>
     <string name="carbohydrates">Carbohydrates</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="sedentary">Sedentary</string>
+    <string name="extra_active">Extra active</string>
+    <string name="very_active">Very active</string>
+    <string name="moderately_active">Moderately active</string>
+    <string name="lightly_active">Lightly active</string>
 </resources>
