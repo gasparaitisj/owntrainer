@@ -11,7 +11,6 @@ import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.Lifestyle
 import com.gasparaiciukas.owntrainer.database.Sex
-import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
@@ -60,7 +59,7 @@ class ProfileFragmentTest {
             navController = navController
         ) {
             Navigation.setViewNavController(requireView(), navController)
-            fakeViewModel = viewModel
+            fakeViewModel = sharedViewModel
         }
 
         val user = fakeViewModel.ldUser.getOrAwaitValue().copy()

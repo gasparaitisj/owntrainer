@@ -3,148 +3,174 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:visibility="invisible"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/scroll_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="invisible"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/layout_et_sex"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/sex"
-                            android:paddingHorizontal="20dp"
-                            android:paddingTop="30dp"
-                            app:errorEnabled="true"
-                            app:startIconContentDescription="Sex"
-                            app:startIconDrawable="@drawable/outline_male_24">
-
-                            <AutoCompleteTextView
-                                android:id="@+id/et_sex"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="none" />
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/layout_et_age"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/age"
-                            android:paddingHorizontal="20dp"
-                            android:paddingTop="30dp"
-                            app:errorEnabled="true"
-                            app:startIconContentDescription="Age"
-                            app:startIconDrawable="@drawable/outline_accessibility_new_24"
-                            app:suffixText="years">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/et_age"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="number" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/layout_et_height"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/height"
-                            android:paddingHorizontal="20dp"
-                            android:paddingTop="30dp"
-                            app:errorEnabled="true"
-                            app:startIconContentDescription="Height"
-                            app:startIconDrawable="@drawable/baseline_height_24"
-                            app:suffixText="(cm)">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/et_height"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="number" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/layout_et_weight"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/weight"
-                            android:paddingHorizontal="20dp"
-                            android:paddingTop="30dp"
-                            app:errorEnabled="true"
-                            app:startIconContentDescription="Weight"
-                            app:startIconDrawable="@drawable/baseline_monitor_weight_24"
-                            app:suffixText="(kg)">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/et_weight"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="numberDecimal" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/layout_et_lifestyle"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/lifestyle"
-                            android:paddingHorizontal="20dp"
-                            android:paddingTop="30dp"
-                            app:errorEnabled="true"
-                            app:startIconContentDescription="Lifestyle"
-                            app:startIconDrawable="@drawable/outline_run_circle_24">
-
-                            <AutoCompleteTextView
-                                android:id="@+id/et_lifestyle"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="none" />
-                        </com.google.android.material.textfield.TextInputLayout>
-                    </LinearLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.core.widget.NestedScrollView>
-
-            <com.google.android.material.appbar.AppBarLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/top_app_bar"
-                    style="@style/Widget.OwnTrainer.Toolbar"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layout_et_sex"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:menu="@menu/top_app_bar"
-                    app:navigationIcon="@drawable/baseline_arrow_back_24"
-                    app:navigationIconTint="@color/md_theme_light_onPrimary"
-                    app:titleTextAppearance="@style/TextAppearance.OwnTrainer.ActionBar.Title" />
-            </com.google.android.material.appbar.AppBarLayout>
+                    android:layout_height="wrap_content"
+                    android:hint="@string/sex"
+                    android:layout_margin="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:startIconContentDescription="Sex"
+                    app:startIconDrawable="@drawable/outline_male_24">
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_sex"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:inputType="none"
+                        tools:ignore="KeyboardInaccessibleWidget,UnusedAttribute" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layout_et_age"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/age"
+                    android:layout_margin="20dp"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/layout_et_sex"
+                    app:startIconContentDescription="Age"
+                    app:startIconDrawable="@drawable/outline_accessibility_new_24"
+                    app:suffixText="years">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_age"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:inputType="none"
+                        tools:ignore="KeyboardInaccessibleWidget,UnusedAttribute" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layout_et_height"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/height"
+                    android:layout_margin="20dp"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/layout_et_age"
+                    app:startIconContentDescription="Height"
+                    app:startIconDrawable="@drawable/baseline_height_24"
+                    app:suffixText="(cm)">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_height"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:inputType="number"
+                        tools:ignore="KeyboardInaccessibleWidget,UnusedAttribute" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layout_et_weight"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/weight"
+                    android:layout_margin="20dp"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/layout_et_height"
+                    app:startIconContentDescription="Weight"
+                    app:startIconDrawable="@drawable/baseline_monitor_weight_24"
+                    app:suffixText="(kg)">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_weight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:inputType="number"
+                        tools:ignore="KeyboardInaccessibleWidget,UnusedAttribute" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layout_et_lifestyle"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/lifestyle"
+                    android:layout_margin="20dp"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/layout_et_weight"
+                    app:startIconContentDescription="Lifestyle"
+                    app:startIconDrawable="@drawable/outline_run_circle_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_lifestyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:inputType="number"
+                        tools:ignore="KeyboardInaccessibleWidget,UnusedAttribute" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/top_app_bar"
+                style="@style/Widget.OwnTrainer.Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:menu="@menu/top_app_bar"
+                app:navigationIcon="@drawable/baseline_arrow_back_24"
+                app:navigationIconTint="@color/md_theme_light_onPrimary"
+                app:title="@string/edit_profile"
+                app:titleTextAppearance="@style/TextAppearance.OwnTrainer.ActionBar.Title" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -100,4 +100,6 @@
     <string name="very_active">Very active</string>
     <string name="moderately_active">Moderately active</string>
     <string name="lightly_active">Lightly active</string>
+    <string name="age_too_young_alert">You have to be at least 18 years old to use this app.</string>
+    <string name="weight_must_be_valid">Weight must be valid</string>
 </resources>

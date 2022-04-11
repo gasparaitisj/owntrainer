@@ -12,9 +12,13 @@
         <entry key="app/src/main/res/drawable/outline_fitness_center_24.xml" value="0.213" />
         <entry key="app/src/main/res/drawable/outline_menu_24.xml" value="0.2911458333333333" />
         <entry key="app/src/main/res/font/nunito.xml" value="0.2828125" />
+        <entry key="app/src/main/res/layout-v23/fragment_profile.xml" value="0.23854166666666668" />
         <entry key="app/src/main/res/layout/activity_intro.xml" value="0.21145833333333333" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/details_list_item.xml" value="0.21145833333333333" />
+        <entry key="app/src/main/res/layout/dialog_profile_age.xml" value="0.10778443113772455" />
+        <entry key="app/src/main/res/layout/dialog_profile_height.xml" value="0.30910645575032064" />
+        <entry key="app/src/main/res/layout/dialog_profile_weight.xml" value="0.13333333333333333" />
         <entry key="app/src/main/res/layout/diary_card_meals.xml" value="0.275" />
         <entry key="app/src/main/res/layout/diary_card_navigation.xml" value="0.275" />
         <entry key="app/src/main/res/layout/diary_card_statistics.xml" value="0.275" />
@@ -31,7 +35,7 @@
         <entry key="app/src/main/res/layout/fragment_meal.xml" value="0.15185185185185185" />
         <entry key="app/src/main/res/layout/fragment_meal_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_network_food_item.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.14754098360655737" />
         <entry key="app/src/main/res/layout/fragment_progress.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_select_meal_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.25" />

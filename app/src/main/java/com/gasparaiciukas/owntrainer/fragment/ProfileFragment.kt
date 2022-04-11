@@ -1,34 +1,41 @@
 package com.gasparaiciukas.owntrainer.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.Lifestyle
 import com.gasparaiciukas.owntrainer.database.Sex
 import com.gasparaiciukas.owntrainer.database.User
+import com.gasparaiciukas.owntrainer.databinding.DialogProfileAgeBinding
+import com.gasparaiciukas.owntrainer.databinding.DialogProfileHeightBinding
+import com.gasparaiciukas.owntrainer.databinding.DialogProfileWeightBinding
 import com.gasparaiciukas.owntrainer.databinding.FragmentProfileBinding
-import com.gasparaiciukas.owntrainer.viewmodel.ProfileViewModel
+import com.gasparaiciukas.owntrainer.utils.Constants.AGE_MAXIMUM
+import com.gasparaiciukas.owntrainer.utils.Constants.AGE_MINIMUM
+import com.gasparaiciukas.owntrainer.utils.Constants.HEIGHT_MAXIMUM
+import com.gasparaiciukas.owntrainer.utils.Constants.HEIGHT_MINIMUM
+import com.gasparaiciukas.owntrainer.utils.Constants.WEIGHT_MAXIMUM
+import com.gasparaiciukas.owntrainer.utils.Constants.WEIGHT_MINIMUM
+import com.gasparaiciukas.owntrainer.utils.discard
+import com.gasparaiciukas.owntrainer.viewmodel.SettingsViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var viewModel: ProfileViewModel
-
-    private var onBackPressedCallback: OnBackPressedCallback =
-        object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {}
-        }
+    lateinit var sharedViewModel: SettingsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,11 +48,15 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
-        viewModel.ldUser.observe(viewLifecycleOwner) {
-            refreshUi(it)
+        sharedViewModel = ViewModelProvider(requireActivity())[SettingsViewModel::class.java]
+
+        sharedViewModel.ldUser.value?.let { user ->
+            initUi(user)
         }
-        initUi()
+
+        sharedViewModel.ldUser.observe(viewLifecycleOwner) {
+            initUi(it)
+        }
     }
 
     override fun onDestroyView() {
@@ -53,55 +64,57 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         _binding = null
     }
 
-    private fun initUi() {
+    private fun initUi(user: User) {
         initNavigation()
-    }
-
-    private fun refreshUi(user: User) {
         setTextFields(user)
         setNavigation(user)
         binding.scrollView.visibility = View.VISIBLE
     }
 
-    private fun isAgeCorrect(s: String): String {
+    private fun isAgeCorrect(s: String): String? {
         val age: Int
         try {
             age = s.toInt()
         } catch (e: NumberFormatException) {
             return getString(R.string.number_must_be_valid)
         }
-        if (age <= 0) {
-            return getString(R.string.age_must_be_valid)
+        if ((age in AGE_MINIMUM..AGE_MAXIMUM).not()) {
+            return if (age in 1..17) {
+                getString(R.string.age_too_young_alert)
+            } else {
+                getString(R.string.age_must_be_valid)
+            }
         }
-        return ""
+        return null
     }
 
-    private fun isHeightCorrect(s: String): String {
+    private fun isHeightCorrect(s: String): String? {
         val height: Int
         try {
             height = s.toInt()
         } catch (e: NumberFormatException) {
             return getString(R.string.number_must_be_valid)
         }
-        if (height <= 0) {
+        if (((height in HEIGHT_MINIMUM..HEIGHT_MAXIMUM).not())) {
             return getString(R.string.height_must_be_valid)
         }
-        return ""
+        return null
     }
 
-    private fun isWeightCorrect(s: String): String {
+    private fun isWeightCorrect(s: String): String? {
         val weight: Double
         try {
             weight = s.toDouble()
         } catch (e: NumberFormatException) {
             return getString(R.string.number_must_be_valid)
         }
-        if (weight <= 0) {
-            return getString(R.string.height_must_be_valid)
+        if (((weight.roundToInt() in WEIGHT_MINIMUM..WEIGHT_MAXIMUM).not())){
+            return getString(R.string.weight_must_be_valid)
         }
-        return ""
+        return null
     }
 
+    @SuppressLint("InflateParams")
     private fun setTextFields(user: User) {
         // Insert current data into fields
         binding.etSex.setText(Sex.values()[user.sex].selectionDescription(requireContext()))
@@ -114,106 +127,167 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             )
         )
 
-        // Set up listeners
-        binding.etSex.setAdapter(
-            ArrayAdapter<Any?>(
-                requireContext(),
-                R.layout.details_list_item,
-                listOf(
-                    getString(R.string.male),
-                    getString(R.string.female),
-                )
+        binding.etSex.setOnClickListener {
+            val singleItems = arrayOf(
+                getString(R.string.male),
+                getString(R.string.female)
             )
-        )
-        binding.etAge.doOnTextChanged { text, _, _, _ ->
-            val validation = isAgeCorrect(text.toString())
-            if (validation == "") {
-                binding.layoutEtAge.error = null
-            } else {
-                binding.layoutEtAge.error = validation
-            }
+            val checkedItem = user.sex
+            var selectedItem = user.sex
+
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.sex))
+                .setNeutralButton(getString(R.string.cancel)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                    user.sex = selectedItem
+                    sharedViewModel.updateUser(user)
+                }
+                .setSingleChoiceItems(singleItems, checkedItem) { _, which ->
+                    selectedItem = which
+                }
+                .show()
         }
-        binding.etHeight.doOnTextChanged { text, _, _, _ ->
-            val validation = isHeightCorrect(text.toString())
-            if (validation == "") {
-                binding.layoutEtHeight.error = null
-            } else {
-                binding.layoutEtHeight.error = validation
+        binding.etAge.setOnClickListener {
+            val view = layoutInflater.inflate(R.layout.dialog_profile_age, null)
+            val dialogBinding = DialogProfileAgeBinding.bind(view)
+            var age = user.ageInYears.toString()
+            dialogBinding.etAge.setText(age)
+            dialogBinding.etAge.doOnTextChanged { text, _, _, _ ->
+                age = text.toString()
+                val validation = isAgeCorrect(age)
+                if (validation == null) {
+                    dialogBinding.layoutEtAge.error = null
+                } else {
+                    dialogBinding.layoutEtAge.error = validation
+                }
             }
+            MaterialAlertDialogBuilder(requireContext())
+                .setView(view)
+                .setTitle(getString(R.string.age))
+                .setNeutralButton(getString(R.string.cancel)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                    if (isAgeCorrect(age) == null) {
+                        user.ageInYears = age.toInt()
+                        sharedViewModel.updateUser(user)
+                    }
+                }
+                .show()
         }
-        binding.etWeight.doOnTextChanged { text, _, _, _ ->
-            val validation = isWeightCorrect(text.toString())
-            if (validation == "") {
-                binding.layoutEtWeight.error = null
-            } else {
-                binding.layoutEtWeight.error = validation
+
+        binding.etHeight.setOnClickListener {
+            val view = layoutInflater.inflate(R.layout.dialog_profile_height, null)
+            val dialogBinding = DialogProfileHeightBinding.bind(view)
+            var height = user.heightInCm.toString()
+            dialogBinding.etHeight.setText(height)
+            dialogBinding.etHeight.doOnTextChanged { text, _, _, _ ->
+                height = text.toString()
+                val validation = isHeightCorrect(height)
+                if (validation == null) {
+                    dialogBinding.layoutEtHeight.error = null
+                } else {
+                    dialogBinding.layoutEtHeight.error = validation
+                }
             }
+            MaterialAlertDialogBuilder(requireContext())
+                .setView(view)
+                .setTitle(getString(R.string.height))
+                .setNeutralButton(getString(R.string.cancel)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                    if (isHeightCorrect(height) == null) {
+                        user.heightInCm = height.toInt()
+                        sharedViewModel.updateUser(user)
+                    }
+                }
+                .show()
         }
-        binding.etLifestyle.setAdapter(
-            ArrayAdapter<Any?>(
-                requireContext(),
-                R.layout.details_list_item,
-                listOf(
-                    getString(R.string.sedentary),
-                    getString(R.string.lightly_active),
-                    getString(R.string.moderately_active),
-                    getString(R.string.very_active),
-                    getString(R.string.extra_active),
-                )
+        binding.etWeight.setOnClickListener {
+            val view = layoutInflater.inflate(R.layout.dialog_profile_weight, null)
+            val dialogBinding = DialogProfileWeightBinding.bind(view)
+            var weight = user.weightInKg.toString()
+            dialogBinding.etWeight.setText(weight)
+            dialogBinding.etWeight.doOnTextChanged { text, _, _, _ ->
+                weight = text.toString()
+                val validation = isWeightCorrect(weight)
+                if (validation == null) {
+                    dialogBinding.layoutEtWeight.error = null
+                } else {
+                    dialogBinding.layoutEtWeight.error = validation
+                }
+            }
+            MaterialAlertDialogBuilder(requireContext())
+                .setView(view)
+                .setTitle(getString(R.string.weight))
+                .setNeutralButton(getString(R.string.cancel)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                    if (isWeightCorrect(weight) == null) {
+                        user.weightInKg = weight.toDouble()
+                        sharedViewModel.updateUser(user)
+                    }
+                }
+                .show()
+        }
+
+        binding.etLifestyle.setOnClickListener {
+            val singleItems = arrayOf(
+                getString(R.string.sedentary),
+                getString(R.string.lightly_active),
+                getString(R.string.moderately_active),
+                getString(R.string.very_active),
+                getString(R.string.extra_active)
             )
-        )
+            val checkedItem = user.lifestyle
+            var selectedItem = user.lifestyle
+
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.lifestyle))
+                .setNeutralButton(getString(R.string.cancel)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
+                    dialog.dismiss()
+                    user.lifestyle = selectedItem
+                    sharedViewModel.updateUser(user)
+                }
+                .setSingleChoiceItems(singleItems, checkedItem) { _, which ->
+                    selectedItem = which
+                }
+                .show()
+        }
     }
 
     private fun initNavigation() {
         binding.topAppBar.setNavigationOnClickListener {
-            ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
+            findNavController().navigate(
+                ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
+            )
         }
     }
 
     private fun setNavigation(user: User) {
-        onBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() = when {
-                binding.layoutEtSex.error != null -> {
-                    Toast.makeText(
-                        requireContext(),
-                        binding.layoutEtSex.error.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                binding.layoutEtAge.error != null -> {
-                    Toast.makeText(
-                        requireContext(),
-                        binding.layoutEtAge.error.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                binding.layoutEtHeight.error != null -> {
-                    Toast.makeText(
-                        requireContext(),
-                        binding.layoutEtHeight.error.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                binding.layoutEtWeight.error != null -> {
-                    Toast.makeText(
-                        requireContext(),
-                        binding.layoutEtWeight.error.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                binding.layoutEtLifestyle.error != null -> {
-                    Toast.makeText(
-                        requireContext(),
-                        binding.layoutEtLifestyle.error.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                else -> {
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() =
+                if (binding.layoutEtSex.error == null ||
+                    binding.layoutEtAge.error == null ||
+                    binding.layoutEtHeight.error == null ||
+                    binding.layoutEtWeight.error == null ||
+                    binding.layoutEtLifestyle.error == null
+                ) {
+                    findNavController().popBackStack().discard()
+                } else {
                     val sex = Sex.values().find { it.value == binding.etSex.text.toString() }
                         ?: Sex.MALE
-                    val lifestyle = Lifestyle.values().find { it.value == binding.etLifestyle.text.toString() }
-                        ?: Lifestyle.SEDENTARY
-                    viewModel.updateUser(
+                    val lifestyle =
+                        Lifestyle.values().find { it.value == binding.etLifestyle.text.toString() }
+                            ?: Lifestyle.SEDENTARY
+                    sharedViewModel.updateUser(
                         User(
                             userId = user.userId,
                             sex = sex.ordinal,
@@ -228,8 +302,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                             dayOfWeek = user.dayOfWeek
                         )
                     )
+                    findNavController().popBackStack().discard()
                 }
-            }
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(

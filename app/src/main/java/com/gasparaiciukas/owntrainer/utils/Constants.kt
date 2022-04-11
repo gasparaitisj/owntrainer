@@ -3,6 +3,13 @@ package com.gasparaiciukas.owntrainer.utils
 object Constants {
     const val DATABASE_NAME = "owntrainer"
 
+    const val AGE_MINIMUM = 18
+    const val AGE_MAXIMUM = 99
+    const val WEIGHT_MINIMUM = 10
+    const val WEIGHT_MAXIMUM = 800
+    const val HEIGHT_MINIMUM = 80
+    const val HEIGHT_MAXIMUM = 300
+
     object Api {
         const val BASE_URL = "https://api.nal.usda.gov/fdc/v1/foods/"
         const val QUERY_PAGE_SIZE = 25

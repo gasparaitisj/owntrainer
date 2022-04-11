@@ -35,8 +35,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[SettingsViewModel::class.java]
-        viewModel.ldAppearanceMode.observe(viewLifecycleOwner) {
+        viewModel = ViewModelProvider(requireActivity())[SettingsViewModel::class.java]
+        viewModel.ldUser.observe(viewLifecycleOwner) {
             viewModel.loadUiState()
         }
 

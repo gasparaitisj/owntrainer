@@ -105,9 +105,6 @@
         android:id="@+id/action_diaryFragment_to_foodFragment"
         app:destination="@id/foodFragment" />
     <action
-        android:id="@+id/action_diaryFragment_to_profileFragment"
-        app:destination="@id/profileFragment" />
-    <action
         android:id="@+id/action_diaryFragment_to_settingsFragment"
         app:destination="@id/settingsFragment" />
     <action
@@ -125,9 +122,6 @@
     <action
         android:id="@+id/action_mealFragment_self"
         app:destination="@id/mealFragment" />
-    <action
-        android:id="@+id/action_mealFragment_to_profileFragment"
-        app:destination="@id/profileFragment" />
     <action
         android:id="@+id/action_mealFragment_to_settingsFragment"
         app:destination="@id/settingsFragment" />
@@ -150,9 +144,6 @@
         android:id="@+id/action_progressFragment_to_foodFragment"
         app:destination="@id/foodFragment" />
     <action
-        android:id="@+id/action_progressFragment_to_profileFragment"
-        app:destination="@id/profileFragment" />
-    <action
         android:id="@+id/action_progressFragment_to_settingsFragment"
         app:destination="@id/settingsFragment" />
     <action
@@ -167,9 +158,6 @@
     <action
         android:id="@+id/action_profileFragment_to_progressFragment"
         app:destination="@id/progressFragment" />
-    <action
-        android:id="@+id/action_profileFragment_self"
-        app:destination="@id/profileFragment" />
     <action
         android:id="@+id/action_profileFragment_to_settingsFragment"
         app:destination="@id/settingsFragment" />
@@ -188,9 +176,6 @@
     <action
         android:id="@+id/action_foodFragment_to_progressFragment"
         app:destination="@id/progressFragment" />
-    <action
-        android:id="@+id/action_foodFragment_to_profileFragment"
-        app:destination="@id/profileFragment" />
     <action
         android:id="@+id/action_foodFragment_to_settingsFragment"
         app:destination="@id/settingsFragment" />
