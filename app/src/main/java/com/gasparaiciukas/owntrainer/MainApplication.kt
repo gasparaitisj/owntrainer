@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.gasparaiciukas.owntrainer.prefs.PrefsStoreImpl
 import com.gasparaiciukas.owntrainer.viewmodel.AppearanceMode
 import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -26,7 +29,7 @@ class MainApplication : Application() {
                 .take(1)
                 .catch { e -> println(e.stackTrace) }
                 .collect { appearanceMode = AppearanceMode.values()[it] }
-            when(appearanceMode) {
+            when (appearanceMode) {
                 AppearanceMode.SYSTEM_DEFAULT -> {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 }

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu>
 
-<!--    <item-->
-<!--        android:id="@+id/more"-->
-<!--        android:title="@string/show_more"-->
-<!--        android:icon="@drawable/outline_more_vert_24"-->
-<!--        app:iconTint="@color/md_theme_light_onPrimary"-->
-<!--        android:contentDescription="@string/show_more"-->
-<!--        app:showAsAction="always" />-->
+    <!--    <item-->
+    <!--        android:id="@+id/more"-->
+    <!--        android:title="@string/show_more"-->
+    <!--        android:icon="@drawable/outline_more_vert_24"-->
+    <!--        app:iconTint="@color/md_theme_light_onPrimary"-->
+    <!--        android:contentDescription="@string/show_more"-->
+    <!--        app:showAsAction="always" />-->
 
 </menu>

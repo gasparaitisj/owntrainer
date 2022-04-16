@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentProgressBinding
 

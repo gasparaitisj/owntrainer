@@ -1,17 +1,17 @@
 package com.gasparaiciukas.owntrainer.fragment
 
+import android.content.Context
 import android.widget.ImageButton
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.asLiveData
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
@@ -20,7 +20,7 @@ import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
-import com.gasparaiciukas.owntrainer.viewmodel.CreateMealItemViewModel
+import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
 import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -44,8 +44,9 @@ class CreateMealItemFragmentTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     lateinit var navController: NavController
-    lateinit var fakeViewModel: CreateMealItemViewModel
+    lateinit var fakeViewModel: MealViewModel
     lateinit var diaryRepository: FakeDiaryRepositoryTest
+    private val testContext: Context = ApplicationProvider.getApplicationContext()
 
     @Before
     fun setup() {
@@ -53,34 +54,60 @@ class CreateMealItemFragmentTest {
 
         navController = Mockito.mock(NavController::class.java)
         diaryRepository = FakeDiaryRepositoryTest()
-        fakeViewModel = CreateMealItemViewModel(diaryRepository)
+        fakeViewModel = MealViewModel(diaryRepository)
     }
 
     @Test
     fun clickSaveButton_popBackStack() {
         launchFragmentInHiltContainer<CreateMealItemFragment> {
             Navigation.setViewNavController(requireView(), navController)
-            viewModel = fakeViewModel
+            sharedViewModel = fakeViewModel
         }
 
-        onView(
-            withId(R.id.et_title)
-        ).perform(replaceText("Title"))
+        val title = "Random title"
+        val instructions = "Instructions"
+        fakeViewModel.ldMeals.getOrAwaitValue()
 
-        onView(
-            withId(R.id.et_instructions)
-        ).perform(replaceText("Instructions"))
+        // Title
+        Espresso.onView(
+            ViewMatchers.withId(R.id.et_title)
+        ).perform(click())
 
+        Espresso.onView(
+            ViewMatchers.withId(R.id.dialog_et_title)
+        ).perform(replaceText(title))
+
+        Espresso.onView(
+            ViewMatchers.withId(android.R.id.button1)
+        ).perform(click())
+
+
+        // Instructions
+        Espresso.onView(
+            ViewMatchers.withId(R.id.et_instructions)
+        ).perform(click())
+
+        Espresso.onView(
+            ViewMatchers.withId(R.id.dialog_et_instructions)
+        ).perform(replaceText(instructions))
+
+        Espresso.onView(
+            ViewMatchers.withId(android.R.id.button1)
+        ).perform(click())
+
+        // Save button
         onView(
             withId(R.id.btn_save)
         ).perform(click())
 
-        Truth.assertThat(diaryRepository.getAllMealsWithFoodEntries().asLiveData().getOrAwaitValue())
+        Truth.assertThat(
+            diaryRepository.getAllMealsWithFoodEntries().asLiveData().getOrAwaitValue()
+        )
             .contains(
                 MealWithFoodEntries(
                     Meal(
-                        title = "Title",
-                        instructions = "Instructions"
+                        title = title,
+                        instructions = instructions
                     ),
                     listOf()
                 )
@@ -93,7 +120,7 @@ class CreateMealItemFragmentTest {
     fun clickOnNavigationBackButton_popBackStack() {
         launchFragmentInHiltContainer<CreateMealItemFragment> {
             Navigation.setViewNavController(requireView(), navController)
-            viewModel = fakeViewModel
+            sharedViewModel = fakeViewModel
         }
 
         onView(

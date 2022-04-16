@@ -13,10 +13,13 @@ data class Meal(
 ) {
     @ColumnInfo(name = "calories")
     var calories: Double = 0.0
+
     @ColumnInfo(name = "carbs")
     var carbs: Double = 0.0
+
     @ColumnInfo(name = "fat")
     var fat: Double = 0.0
+
     @ColumnInfo(name = "protein")
     var protein: Double = 0.0
 }

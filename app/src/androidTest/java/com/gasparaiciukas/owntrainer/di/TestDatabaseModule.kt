@@ -2,8 +2,15 @@ package com.gasparaiciukas.owntrainer.di
 
 import android.content.Context
 import androidx.room.Room
-import com.gasparaiciukas.owntrainer.database.*
-import com.gasparaiciukas.owntrainer.repository.*
+import com.gasparaiciukas.owntrainer.database.AppDatabase
+import com.gasparaiciukas.owntrainer.database.DiaryEntryDao
+import com.gasparaiciukas.owntrainer.database.MealDao
+import com.gasparaiciukas.owntrainer.database.UserDao
+import com.gasparaiciukas.owntrainer.prefs.PrefsStoreImpl
+import com.gasparaiciukas.owntrainer.repository.DiaryRepository
+import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
+import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
+import com.gasparaiciukas.owntrainer.repository.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -13,9 +20,17 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-@TestInstallIn(components = [SingletonComponent::class],
-    replaces = [DatabaseModule::class])
+@TestInstallIn(
+    components = [SingletonComponent::class],
+    replaces = [DatabaseModule::class]
+)
 object TestDatabaseModule {
+
+    @Singleton
+    @Provides
+    fun providePrefsStore(@ApplicationContext context: Context): PrefsStoreImpl {
+        return PrefsStoreImpl(context)
+    }
 
     @Provides
     @Named("test_db")
@@ -28,8 +43,8 @@ object TestDatabaseModule {
     @Provides
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase =
         Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
-        .allowMainThreadQueries()
-        .build()
+            .allowMainThreadQueries()
+            .build()
 
     @Provides
     fun provideDiaryEntryDao(appDatabase: AppDatabase): DiaryEntryDao = appDatabase.diaryEntryDao()

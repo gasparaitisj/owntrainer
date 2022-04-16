@@ -8,9 +8,9 @@
         android:layout_height="match_parent">
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/scroll_view"
             android:visibility="invisible"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -283,16 +283,16 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/ingredients"
-                            android:textAlignment="center"/>
+                            android:textAlignment="center" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btn_add_food"
                             style="@style/Widget.Material3.Button.TextButton.Icon"
                             android:layout_width="wrap_content"
-                            android:layout_gravity="end"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="end"
                             android:text="@string/add_food"
-                            app:icon="@drawable/baseline_add_24"/>
+                            app:icon="@drawable/baseline_add_24" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recycler_view"

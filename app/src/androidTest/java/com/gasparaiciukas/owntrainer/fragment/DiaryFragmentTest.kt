@@ -3,19 +3,27 @@ package com.gasparaiciukas.owntrainer.fragment
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.RootMatchers
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
+import com.gasparaiciukas.owntrainer.database.DiaryEntry
+import com.gasparaiciukas.owntrainer.database.DiaryEntryMealCrossRef
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
+import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
 import com.gasparaiciukas.owntrainer.viewmodel.DiaryViewModel
+import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,6 +33,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
+import java.time.LocalDate
 import javax.inject.Inject
 
 @MediumTest
@@ -101,5 +110,60 @@ class DiaryFragmentTest {
                 diaryEntryId = 0
             )
         )
+    }
+
+    @Test
+    fun longClickOnMeal_deleteMeal() = runTest {
+        val meal = Meal(
+            mealId = 10,
+            title = "title",
+            instructions = "instructions"
+        )
+        val date = LocalDate.of(2022, 7, 19)
+        val diaryEntry = DiaryEntry(
+            diaryEntryId = 1,
+            year = date.year,
+            dayOfYear = date.dayOfYear,
+            dayOfWeek = date.dayOfWeek.value,
+            monthOfYear = date.monthValue,
+            dayOfMonth = date.dayOfMonth
+        )
+
+        diaryRepository.insertDiaryEntry(diaryEntry)
+        diaryRepository.insertMeal(meal)
+        diaryRepository.insertDiaryEntryMealCrossRef(
+            DiaryEntryMealCrossRef(
+                diaryEntryId = diaryEntry.diaryEntryId,
+                mealId = meal.mealId
+            )
+        )
+
+        launchFragmentInHiltContainer<DiaryFragment>(
+            fragmentFactory = fragmentFactory,
+            navController = navController
+        ) {
+            fakeViewModel = viewModel
+            mealAdapter.items = listOf(
+                MealWithFoodEntries(
+                    meal,
+                    listOf()
+                )
+            )
+        }
+
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_view)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<MealAdapter.MealViewHolder>(
+                0,
+                ViewActions.longClick()
+            )
+        )
+
+        Espresso.onView(ViewMatchers.withContentDescription(R.string.delete_meal))
+            .inRoot(RootMatchers.isPlatformPopup()).perform(
+                ViewActions.click()
+            )
+
+        Truth.assertThat(fakeViewModel.ldDiaryEntryWithMeals.getOrAwaitValue().meals)
+            .doesNotContain(meal)
     }
 }

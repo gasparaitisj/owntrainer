@@ -1,8 +1,8 @@
 package com.gasparaiciukas.owntrainer.repository
 
 import com.gasparaiciukas.owntrainer.database.*
-import com.gasparaiciukas.owntrainer.network.GetResponse
 import com.gasparaiciukas.owntrainer.network.DefaultGetService
+import com.gasparaiciukas.owntrainer.network.GetResponse
 import com.gasparaiciukas.owntrainer.network.Resource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -15,7 +15,7 @@ class DefaultDiaryRepository @Inject constructor(
     private val mealDao: MealDao,
     private val foodEntryDao: FoodEntryDao,
     private val defaultGetService: DefaultGetService
-): DiaryRepository {
+) : DiaryRepository {
     override suspend fun insertDiaryEntry(diaryEntry: DiaryEntry) =
         diaryEntryDao.insertDiaryEntry(diaryEntry)
 

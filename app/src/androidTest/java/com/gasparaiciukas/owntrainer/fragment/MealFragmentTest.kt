@@ -1,7 +1,6 @@
 package com.gasparaiciukas.owntrainer.fragment
 
 import android.view.View
-import android.widget.ImageButton
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -63,7 +62,10 @@ class MealFragmentTest {
 
     @Test
     fun singleClickOnMeal_navigateToMealItemFragment() = runTest {
-        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory, navController = navController) {
+        launchFragmentInHiltContainer<MealFragment>(
+            fragmentFactory = fragmentFactory,
+            navController = navController
+        ) {
             Navigation.setViewNavController(requireView(), navController)
             fakeViewModel = viewModel
         }
@@ -93,7 +95,10 @@ class MealFragmentTest {
 
     @Test
     fun longClickOnMeal_deleteMeal() = runTest {
-        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory, navController = navController) {
+        launchFragmentInHiltContainer<MealFragment>(
+            fragmentFactory = fragmentFactory,
+            navController = navController
+        ) {
             Navigation.setViewNavController(requireView(), navController)
             fakeViewModel = viewModel
         }
@@ -115,8 +120,8 @@ class MealFragmentTest {
 
         Espresso.onView(ViewMatchers.withContentDescription(R.string.delete_meal))
             .inRoot(isPlatformPopup()).perform(
-            ViewActions.click()
-        )
+                ViewActions.click()
+            )
 
         assertThat(fakeViewModel.ldMeals.getOrAwaitValue()).doesNotContain(meal)
     }
@@ -124,7 +129,10 @@ class MealFragmentTest {
 
     @Test
     fun clickFoodsTab_navigateToFoodFragment() {
-        launchFragmentInHiltContainer<MealFragment>(fragmentFactory = fragmentFactory, navController = navController) {
+        launchFragmentInHiltContainer<MealFragment>(
+            fragmentFactory = fragmentFactory,
+            navController = navController
+        ) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
         }

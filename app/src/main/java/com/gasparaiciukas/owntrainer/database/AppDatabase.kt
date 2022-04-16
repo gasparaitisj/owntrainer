@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.gasparaiciukas.owntrainer.utils.Constants
 import kotlinx.coroutines.CoroutineScope
@@ -18,16 +19,19 @@ import java.time.LocalDate
         DiaryEntryMealCrossRef::class,
         FoodEntry::class,
         Meal::class,
+        Reminder::class,
         User::class
     ],
     version = 1,
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun diaryEntryDao(): DiaryEntryDao
     abstract fun diaryEntryWithMealsDao(): DiaryEntryWithMealsDao
     abstract fun foodEntryDao(): FoodEntryDao
     abstract fun mealDao(): MealDao
+    abstract fun reminderDao(): ReminderDao
     abstract fun userDao(): UserDao
 
     companion object {

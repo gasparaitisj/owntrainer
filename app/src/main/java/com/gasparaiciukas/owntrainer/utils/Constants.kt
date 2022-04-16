@@ -10,6 +10,11 @@ object Constants {
     const val HEIGHT_MINIMUM = 80
     const val HEIGHT_MAXIMUM = 300
 
+
+    const val NOTIFICATION_REMINDER_ID = 1
+    const val NOTIFICATION_REMINDER_TITLE_EXTRA = "NOTIFICATION_REMINDER_TITLE_EXTRA"
+    const val REMINDER_WAKE_LOCK_TAG = "owntrainer::ReminderWakeLock"
+
     object Api {
         const val BASE_URL = "https://api.nal.usda.gov/fdc/v1/foods/"
         const val QUERY_PAGE_SIZE = 25

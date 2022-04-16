@@ -6,7 +6,6 @@ import com.gasparaiciukas.owntrainer.MainCoroutineRule
 import com.gasparaiciukas.owntrainer.getOrAwaitValueTest
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.FoodNutrient
-import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepository
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepository
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -65,7 +64,7 @@ class NetworkFoodItemViewModelTest {
             lowercaseDescription = "apple",
             dataType = "Branded",
             gtinUpc = "867824000001",
-            publishedDate =  "2019-04-01",
+            publishedDate = "2019-04-01",
             brandOwner = "TREECRISP 2 GO",
             ingredients = "CRISP APPLE.",
             marketCountry = "United States",
@@ -75,7 +74,7 @@ class NetworkFoodItemViewModelTest {
             foodNutrients = listOf(
                 FoodNutrient(
                     nutrientId = 1003,
-                    nutrientName =  "Protein",
+                    nutrientName = "Protein",
                     nutrientNumber = "203",
                     unitName = "G",
                     derivationCode = "LCCS",
@@ -84,7 +83,7 @@ class NetworkFoodItemViewModelTest {
                 ),
                 FoodNutrient(
                     nutrientId = 1005,
-                    nutrientName =  "Carbohydrate, by difference",
+                    nutrientName = "Carbohydrate, by difference",
                     nutrientNumber = "205",
                     unitName = "G",
                     derivationCode = "LCCS",
@@ -93,7 +92,7 @@ class NetworkFoodItemViewModelTest {
                 ),
                 FoodNutrient(
                     nutrientId = 1008,
-                    nutrientName =  "Energy",
+                    nutrientName = "Energy",
                     nutrientNumber = "208",
                     unitName = "G",
                     derivationCode = "LCCS",
@@ -102,7 +101,7 @@ class NetworkFoodItemViewModelTest {
                 ),
                 FoodNutrient(
                     nutrientId = 1004,
-                    nutrientName =  "Total lipid (fat)",
+                    nutrientName = "Total lipid (fat)",
                     nutrientNumber = "204",
                     unitName = "G",
                     derivationCode = "LCSL",

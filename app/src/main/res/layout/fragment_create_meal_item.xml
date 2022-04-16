@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -37,15 +38,19 @@
                         android:paddingHorizontal="20dp"
                         android:paddingTop="30dp"
                         app:endIconMode="clear_text"
-                        app:startIconContentDescription="Age"
+                        app:startIconContentDescription="@string/title"
                         app:startIconDrawable="@drawable/outline_title_24">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/et_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textShortMessage"
-                            android:maxLength="50" />
+                            android:clickable="true"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:inputType="none"
+                            tools:ignore="KeyboardInaccessibleWidget,UnusedAttribute" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,7 +62,6 @@
                         android:hint="@string/instructions"
                         android:paddingHorizontal="20dp"
                         android:paddingTop="30dp"
-                        app:endIconMode="clear_text"
                         app:startIconContentDescription="Meal instructions"
                         app:startIconDrawable="@drawable/outline_description_24">
 
@@ -65,8 +69,12 @@
                             android:id="@+id/et_instructions"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textMultiLine"
-                            android:maxLength="1000" />
+                            android:clickable="true"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:inputType="none"
+                            tools:ignore="KeyboardInaccessibleWidget,UnusedAttribute" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 

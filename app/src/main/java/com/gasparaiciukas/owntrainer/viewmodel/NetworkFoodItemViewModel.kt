@@ -7,7 +7,6 @@ import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.fragment.NetworkFoodItemFragmentArgs
 import com.gasparaiciukas.owntrainer.network.Food
-import com.gasparaiciukas.owntrainer.network.FoodNutrient
 import com.gasparaiciukas.owntrainer.repository.UserRepository
 import com.gasparaiciukas.owntrainer.utils.safeLet
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,8 +30,10 @@ class NetworkFoodItemViewModel @Inject internal constructor(
     userRepository: UserRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    var foodItem: Food? = NetworkFoodItemFragmentArgs.fromSavedStateHandle(savedStateHandle).foodItem
-    private val position: Int = NetworkFoodItemFragmentArgs.fromSavedStateHandle(savedStateHandle).position
+    var foodItem: Food? =
+        NetworkFoodItemFragmentArgs.fromSavedStateHandle(savedStateHandle).foodItem
+    private val position: Int =
+        NetworkFoodItemFragmentArgs.fromSavedStateHandle(savedStateHandle).position
 
     val ldUser = userRepository.user.asLiveData()
     val uiState = MutableLiveData<NetworkFoodItemUiState>()

@@ -10,17 +10,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.DatabaseFoodAdapter.DatabaseFoodViewHolder
 import com.gasparaiciukas.owntrainer.database.FoodEntry
-import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
-import com.gasparaiciukas.owntrainer.databinding.FoodRowBinding
+import com.gasparaiciukas.owntrainer.databinding.RowFoodBinding
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class DatabaseFoodAdapter @Inject constructor(
 ) : RecyclerView.Adapter<DatabaseFoodViewHolder>() {
-    
+
     class DatabaseFoodViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
-        val binding = FoodRowBinding.bind(view)
+        val binding = RowFoodBinding.bind(view)
+
         init {
             this.itemView.isLongClickable = true
         }
@@ -59,7 +59,7 @@ class DatabaseFoodAdapter @Inject constructor(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DatabaseFoodViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.food_row, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.row_food, parent, false)
         return DatabaseFoodViewHolder(view)
     }
 

@@ -53,4 +53,18 @@ class MealViewModelTest {
         )
         assertThat(meals).doesNotContain(meal1WithFoodEntries)
     }
+
+    @Test
+    fun `when createMeal() is called, should create meal`() = runTest {
+        val meal = MealWithFoodEntries(
+            Meal(
+                title = "Omelette",
+                instructions = "Put in pan"
+            ),
+            listOf()
+        )
+        viewModel.createMeal("Omelette", "Put in pan")
+        val meals = diaryRepository.getAllMealsWithFoodEntries().asLiveData().getOrAwaitValueTest()
+        assertThat(meals).contains(meal)
+    }
 }

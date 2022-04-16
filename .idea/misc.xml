@@ -16,6 +16,9 @@
         <entry key="app/src/main/res/layout/activity_intro.xml" value="0.21145833333333333" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/details_list_item.xml" value="0.21145833333333333" />
+        <entry key="app/src/main/res/layout/dialog_create_meal_item_instructions.xml" value="0.30910645575032064" />
+        <entry key="app/src/main/res/layout/dialog_create_meal_item_title.xml" value="0.30910645575032064" />
+        <entry key="app/src/main/res/layout/dialog_create_reminder_title.xml" value="0.16973065412569474" />
         <entry key="app/src/main/res/layout/dialog_profile_age.xml" value="0.10778443113772455" />
         <entry key="app/src/main/res/layout/dialog_profile_height.xml" value="0.30910645575032064" />
         <entry key="app/src/main/res/layout/dialog_profile_weight.xml" value="0.13333333333333333" />
@@ -27,6 +30,7 @@
         <entry key="app/src/main/res/layout/fragment_add_food_to_meal.xml" value="0.3765625" />
         <entry key="app/src/main/res/layout/fragment_add_meal_to_diary.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_create_meal_item.xml" value="0.21145833333333333" />
+        <entry key="app/src/main/res/layout/fragment_create_reminder.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_database_food_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_diary.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_food.xml" value="0.22" />
@@ -37,17 +41,22 @@
         <entry key="app/src/main/res/layout/fragment_network_food_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.14754098360655737" />
         <entry key="app/src/main/res/layout/fragment_progress.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_reminder.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_select_meal_item.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.13333333333333333" />
         <entry key="app/src/main/res/layout/fragment_step.xml" value="0.21145833333333333" />
         <entry key="app/src/main/res/layout/header_navigation_drawer.xml" value="0.25" />
         <entry key="app/src/main/res/layout/meal_row.xml" value="0.2526041666666667" />
+        <entry key="app/src/main/res/layout/reminder_fragment.xml" value="0.20649850363403163" />
+        <entry key="app/src/main/res/layout/row_meal.xml" value="0.16981132075471697" />
+        <entry key="app/src/main/res/layout/row_reminder.xml" value="0.33" />
         <entry key="app/src/main/res/menu/create_meal_top_app_bar.xml" value="0.2" />
         <entry key="app/src/main/res/menu/food_menu.xml" value="0.2552083333333333" />
         <entry key="app/src/main/res/menu/meal_menu.xml" value="0.33" />
         <entry key="app/src/main/res/menu/navigation_drawer.xml" value="0.1" />
         <entry key="app/src/main/res/menu/network_food_item_top_app_bar.xml" value="0.25" />
         <entry key="app/src/main/res/menu/profile_top_app_bar.xml" value="0.3765625" />
+        <entry key="app/src/main/res/menu/reminder_menu.xml" value="0.20649850363403163" />
         <entry key="app/src/main/res/menu/settings_top_app_bar.xml" value="0.21145833333333333" />
         <entry key="app/src/main/res/menu/top_app_bar.xml" value="0.1" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.213" />

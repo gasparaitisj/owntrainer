@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gasparaiciukas.owntrainer">
 
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".MainApplication"
@@ -15,14 +15,17 @@
         android:theme="@style/Theme.OwnTrainer.Starting">
         <activity
             android:name=".MainActivity"
+            android:configChanges="uiMode"
             android:exported="true"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
-            android:configChanges="uiMode">
+            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver
+            android:name=".notif.ReminderNotification"
+            android:enabled="true" />
     </application>
 
 </manifest>

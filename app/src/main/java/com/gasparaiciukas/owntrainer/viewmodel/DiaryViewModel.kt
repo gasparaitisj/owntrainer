@@ -30,7 +30,7 @@ data class DiaryUiState(
 @HiltViewModel
 class DiaryViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val diaryRepository: DiaryRepository
+    val diaryRepository: DiaryRepository
 ) : ViewModel() {
     val ldAllMeals = diaryRepository.getAllMealsWithFoodEntries().asLiveData()
     val ldUser: LiveData<User> = switchMap(ldAllMeals) {

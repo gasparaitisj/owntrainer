@@ -2,12 +2,6 @@ package com.gasparaiciukas.owntrainer.fragment
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
-import com.gasparaiciukas.owntrainer.adapter.DatabaseFoodAdapter
-import com.gasparaiciukas.owntrainer.adapter.MealAdapter
-import com.gasparaiciukas.owntrainer.adapter.NetworkFoodAdapter
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 

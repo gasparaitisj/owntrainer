@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentSettingsBinding
-import com.gasparaiciukas.owntrainer.utils.Constants
 import com.gasparaiciukas.owntrainer.viewmodel.AppearanceMode
 import com.gasparaiciukas.owntrainer.viewmodel.SettingsUiState
 import com.gasparaiciukas.owntrainer.viewmodel.SettingsViewModel
@@ -93,10 +92,16 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                 SettingsFragmentDirections.actionSettingsFragmentToProfileFragment()
             )
         }
+
+        binding.tvReminders.setOnClickListener {
+            findNavController().navigate(
+                SettingsFragmentDirections.actionSettingsFragmentToReminderFragment()
+            )
+        }
     }
 
     private fun initNavigation() {
-        NavigationUI.setupWithNavController(binding.navigationView, findNavController())
+        binding.navigationView.setupWithNavController(findNavController())
         binding.topAppBar.setNavigationOnClickListener {
             binding.drawerLayout.open()
         }

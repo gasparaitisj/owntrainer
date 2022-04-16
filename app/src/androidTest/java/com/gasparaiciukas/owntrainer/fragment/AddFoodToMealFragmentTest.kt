@@ -74,7 +74,10 @@ class AddFoodToMealFragmentTest {
             title = "title",
             instructions = "instructions"
         )
-        launchFragmentInHiltContainer<AddFoodToMealFragment>(fragmentFactory = fragmentFactory, navController = navController) {
+        launchFragmentInHiltContainer<AddFoodToMealFragment>(
+            fragmentFactory = fragmentFactory,
+            navController = navController
+        ) {
             Navigation.setViewNavController(requireView(), navController)
             fakeViewModel = viewModel
         }
@@ -88,13 +91,21 @@ class AddFoodToMealFragmentTest {
             )
         )
 
-        assertThat(fakeViewModel.ldMeals.getOrAwaitValue()).contains(MealWithFoodEntries(meal, listOf()))
+        assertThat(fakeViewModel.ldMeals.getOrAwaitValue()).contains(
+            MealWithFoodEntries(
+                meal,
+                listOf()
+            )
+        )
         Mockito.verify(navController).popBackStack()
     }
 
     @Test
     fun clickOnNavigationBackButton_popBackStack() = runTest {
-        launchFragmentInHiltContainer<AddFoodToMealFragment>(fragmentFactory = fragmentFactory, navController = navController) {
+        launchFragmentInHiltContainer<AddFoodToMealFragment>(
+            fragmentFactory = fragmentFactory,
+            navController = navController
+        ) {
             Navigation.setViewNavController(requireView(), navController)
         }
 

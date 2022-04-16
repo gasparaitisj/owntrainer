@@ -50,13 +50,13 @@
         android:label="NetworkFoodItemFragment">
         <argument
             android:name="position"
-            app:argType="integer"
-            android:defaultValue="0"/>
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="foodItem"
-            app:argType="com.gasparaiciukas.owntrainer.network.Food"
             android:defaultValue="@null"
-            app:nullable="true"/>
+            app:argType="com.gasparaiciukas.owntrainer.network.Food"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/addFoodToMealFragment"
@@ -82,6 +82,10 @@
         android:id="@+id/settingsFragment"
         android:name="com.gasparaiciukas.owntrainer.fragment.SettingsFragment"
         android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/reminderFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.ReminderFragment"
+        android:label="ReminderFragment" />
 
     <action
         android:id="@+id/action_addMealToDiaryFragment_to_diaryFragment"
@@ -107,6 +111,12 @@
     <action
         android:id="@+id/action_diaryFragment_to_settingsFragment"
         app:destination="@id/settingsFragment" />
+    <action
+        android:id="@+id/action_settingsFragment_to_reminderFragment"
+        app:destination="@id/reminderFragment" />
+    <action
+        android:id="@+id/action_reminderFragment_to_createReminderFragment"
+        app:destination="@id/createReminderFragment" />
     <action
         android:id="@+id/action_mealFragment_to_mealItemFragment"
         app:destination="@id/mealItemFragment" />
@@ -207,4 +217,8 @@
     <action
         android:id="@+id/action_mealFragment_to_foodFragment"
         app:destination="@id/foodFragment" />
+    <fragment
+        android:id="@+id/createReminderFragment"
+        android:name="com.gasparaiciukas.owntrainer.fragment.CreateReminderFragment"
+        android:label="CreateReminderFragment" />
 </navigation>

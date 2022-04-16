@@ -6,8 +6,8 @@ import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.gasparaiciukas.owntrainer.database.Reminder
 import com.gasparaiciukas.owntrainer.database.User
-import com.gasparaiciukas.owntrainer.prefs.PrefsStoreImpl
 import com.gasparaiciukas.owntrainer.repository.UserRepository
 import com.gasparaiciukas.owntrainer.utils.safeLet
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,14 +21,20 @@ data class SettingsUiState(
 
 @HiltViewModel
 class SettingsViewModel @Inject internal constructor(
-    private val userRepository: UserRepository,
-    private val prefsStore: PrefsStoreImpl
+    private val userRepository: UserRepository
 ) : ViewModel() {
-    val ldAppearanceMode = prefsStore.getAppearanceMode().asLiveData()
+    val ldReminders = userRepository.getReminders().asLiveData()
+    val ldAppearanceMode = userRepository.getAppearanceMode().asLiveData()
     val ldUser = switchMap(ldAppearanceMode) {
         userRepository.user.asLiveData()
     }
     val uiState = MutableLiveData<SettingsUiState>()
+
+    var hour = 0
+    var minute = 0
+    var title = ""
+    var isTitleCorrect = false
+    var isTimeCorrect = false
 
     fun loadUiState() {
         safeLet(ldAppearanceMode.value, ldUser.value) { appearanceMode, user ->
@@ -43,7 +49,7 @@ class SettingsViewModel @Inject internal constructor(
 
     fun setAppearanceMode(appearanceMode: AppearanceMode) {
         viewModelScope.launch {
-            when(appearanceMode) {
+            when (appearanceMode) {
                 AppearanceMode.SYSTEM_DEFAULT -> {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 }
@@ -54,13 +60,31 @@ class SettingsViewModel @Inject internal constructor(
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 }
             }
-            prefsStore.setAppearanceMode(appearanceMode)
+            userRepository.setAppearanceMode(appearanceMode)
         }
     }
 
     fun updateUser(user: User) {
         viewModelScope.launch {
             userRepository.updateUser(user)
+        }
+    }
+
+    fun createReminder(title: String, hour: Int, minute: Int) {
+        viewModelScope.launch {
+            userRepository.insertReminder(
+                Reminder(
+                    title = title,
+                    hour = hour,
+                    minute = minute
+                )
+            )
+        }
+    }
+
+    fun deleteReminder(reminderId: Int) {
+        viewModelScope.launch {
+            userRepository.deleteReminderById(reminderId)
         }
     }
 }

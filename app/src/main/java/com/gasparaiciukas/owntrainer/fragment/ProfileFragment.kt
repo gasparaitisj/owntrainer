@@ -65,53 +65,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     private fun initUi(user: User) {
-        initNavigation()
         setTextFields(user)
         setNavigation(user)
         binding.scrollView.visibility = View.VISIBLE
-    }
-
-    private fun isAgeCorrect(s: String): String? {
-        val age: Int
-        try {
-            age = s.toInt()
-        } catch (e: NumberFormatException) {
-            return getString(R.string.number_must_be_valid)
-        }
-        if ((age in AGE_MINIMUM..AGE_MAXIMUM).not()) {
-            return if (age in 1..17) {
-                getString(R.string.age_too_young_alert)
-            } else {
-                getString(R.string.age_must_be_valid)
-            }
-        }
-        return null
-    }
-
-    private fun isHeightCorrect(s: String): String? {
-        val height: Int
-        try {
-            height = s.toInt()
-        } catch (e: NumberFormatException) {
-            return getString(R.string.number_must_be_valid)
-        }
-        if (((height in HEIGHT_MINIMUM..HEIGHT_MAXIMUM).not())) {
-            return getString(R.string.height_must_be_valid)
-        }
-        return null
-    }
-
-    private fun isWeightCorrect(s: String): String? {
-        val weight: Double
-        try {
-            weight = s.toDouble()
-        } catch (e: NumberFormatException) {
-            return getString(R.string.number_must_be_valid)
-        }
-        if (((weight.roundToInt() in WEIGHT_MINIMUM..WEIGHT_MAXIMUM).not())){
-            return getString(R.string.weight_must_be_valid)
-        }
-        return null
     }
 
     @SuppressLint("InflateParams")
@@ -153,14 +109,14 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             val view = layoutInflater.inflate(R.layout.dialog_profile_age, null)
             val dialogBinding = DialogProfileAgeBinding.bind(view)
             var age = user.ageInYears.toString()
-            dialogBinding.etAge.setText(age)
-            dialogBinding.etAge.doOnTextChanged { text, _, _, _ ->
+            dialogBinding.dialogEtAge.setText(age)
+            dialogBinding.dialogEtAge.doOnTextChanged { text, _, _, _ ->
                 age = text.toString()
                 val validation = isAgeCorrect(age)
                 if (validation == null) {
-                    dialogBinding.layoutEtAge.error = null
+                    dialogBinding.dialogLayoutEtAge.error = null
                 } else {
-                    dialogBinding.layoutEtAge.error = validation
+                    dialogBinding.dialogLayoutEtAge.error = validation
                 }
             }
             MaterialAlertDialogBuilder(requireContext())
@@ -182,14 +138,14 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             val view = layoutInflater.inflate(R.layout.dialog_profile_height, null)
             val dialogBinding = DialogProfileHeightBinding.bind(view)
             var height = user.heightInCm.toString()
-            dialogBinding.etHeight.setText(height)
-            dialogBinding.etHeight.doOnTextChanged { text, _, _, _ ->
+            dialogBinding.dialogEtHeight.setText(height)
+            dialogBinding.dialogEtHeight.doOnTextChanged { text, _, _, _ ->
                 height = text.toString()
                 val validation = isHeightCorrect(height)
                 if (validation == null) {
-                    dialogBinding.layoutEtHeight.error = null
+                    dialogBinding.dialogLayoutEtHeight.error = null
                 } else {
-                    dialogBinding.layoutEtHeight.error = validation
+                    dialogBinding.dialogLayoutEtHeight.error = validation
                 }
             }
             MaterialAlertDialogBuilder(requireContext())
@@ -210,14 +166,14 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             val view = layoutInflater.inflate(R.layout.dialog_profile_weight, null)
             val dialogBinding = DialogProfileWeightBinding.bind(view)
             var weight = user.weightInKg.toString()
-            dialogBinding.etWeight.setText(weight)
-            dialogBinding.etWeight.doOnTextChanged { text, _, _, _ ->
+            dialogBinding.dialogEtWeight.setText(weight)
+            dialogBinding.dialogEtWeight.doOnTextChanged { text, _, _, _ ->
                 weight = text.toString()
                 val validation = isWeightCorrect(weight)
                 if (validation == null) {
-                    dialogBinding.layoutEtWeight.error = null
+                    dialogBinding.dialogLayoutEtWeight.error = null
                 } else {
-                    dialogBinding.layoutEtWeight.error = validation
+                    dialogBinding.dialogLayoutEtWeight.error = validation
                 }
             }
             MaterialAlertDialogBuilder(requireContext())
@@ -263,52 +219,94 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
-    private fun initNavigation() {
-        binding.topAppBar.setNavigationOnClickListener {
-            findNavController().navigate(
-                ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
-            )
-        }
-    }
-
     private fun setNavigation(user: User) {
+        binding.topAppBar.setNavigationOnClickListener {
+            onBackPressed(user)
+        }
+
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() =
-                if (binding.layoutEtSex.error == null ||
-                    binding.layoutEtAge.error == null ||
-                    binding.layoutEtHeight.error == null ||
-                    binding.layoutEtWeight.error == null ||
-                    binding.layoutEtLifestyle.error == null
-                ) {
-                    findNavController().popBackStack().discard()
-                } else {
-                    val sex = Sex.values().find { it.value == binding.etSex.text.toString() }
-                        ?: Sex.MALE
-                    val lifestyle =
-                        Lifestyle.values().find { it.value == binding.etLifestyle.text.toString() }
-                            ?: Lifestyle.SEDENTARY
-                    sharedViewModel.updateUser(
-                        User(
-                            userId = user.userId,
-                            sex = sex.ordinal,
-                            ageInYears = binding.etAge.text.toString().toInt(),
-                            heightInCm = binding.etHeight.text.toString().toInt(),
-                            weightInKg = binding.etWeight.text.toString().toDouble(),
-                            lifestyle = lifestyle.ordinal,
-                            year = user.year,
-                            month = user.month,
-                            dayOfYear = user.dayOfYear,
-                            dayOfMonth = user.dayOfMonth,
-                            dayOfWeek = user.dayOfWeek
-                        )
-                    )
-                    findNavController().popBackStack().discard()
-                }
+            override fun handleOnBackPressed() = onBackPressed(user)
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             onBackPressedCallback
         )
+    }
+
+    private fun onBackPressed(user: User) {
+        if (binding.layoutEtSex.error == null ||
+            binding.layoutEtAge.error == null ||
+            binding.layoutEtHeight.error == null ||
+            binding.layoutEtWeight.error == null ||
+            binding.layoutEtLifestyle.error == null
+        ) {
+            findNavController().popBackStack().discard()
+        } else {
+            val sex = Sex.values().find { it.value == binding.etSex.text.toString() }
+                ?: Sex.MALE
+            val lifestyle =
+                Lifestyle.values().find { it.value == binding.etLifestyle.text.toString() }
+                    ?: Lifestyle.SEDENTARY
+            sharedViewModel.updateUser(
+                User(
+                    userId = user.userId,
+                    sex = sex.ordinal,
+                    ageInYears = binding.etAge.text.toString().toInt(),
+                    heightInCm = binding.etHeight.text.toString().toInt(),
+                    weightInKg = binding.etWeight.text.toString().toDouble(),
+                    lifestyle = lifestyle.ordinal,
+                    year = user.year,
+                    month = user.month,
+                    dayOfYear = user.dayOfYear,
+                    dayOfMonth = user.dayOfMonth,
+                    dayOfWeek = user.dayOfWeek
+                )
+            )
+            findNavController().popBackStack().discard()
+        }
+    }
+
+    private fun isAgeCorrect(s: String): String? {
+        val age: Int
+        try {
+            age = s.toInt()
+        } catch (e: NumberFormatException) {
+            return getString(R.string.number_must_be_valid)
+        }
+        if ((age in AGE_MINIMUM..AGE_MAXIMUM).not()) {
+            return if (age in 1..17) {
+                getString(R.string.age_too_young_alert)
+            } else {
+                getString(R.string.age_must_be_valid)
+            }
+        }
+        return null
+    }
+
+    private fun isHeightCorrect(s: String): String? {
+        val height: Int
+        try {
+            height = s.toInt()
+        } catch (e: NumberFormatException) {
+            return getString(R.string.number_must_be_valid)
+        }
+        if (((height in HEIGHT_MINIMUM..HEIGHT_MAXIMUM).not())) {
+            return getString(R.string.height_must_be_valid)
+        }
+        return null
+    }
+
+    private fun isWeightCorrect(s: String): String? {
+        val weight: Double
+        try {
+            weight = s.toDouble()
+        } catch (e: NumberFormatException) {
+            return getString(R.string.number_must_be_valid)
+        }
+        if (((weight.roundToInt() in WEIGHT_MINIMUM..WEIGHT_MAXIMUM).not())) {
+            return getString(R.string.weight_must_be_valid)
+        }
+        return null
     }
 }

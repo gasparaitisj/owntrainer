@@ -38,7 +38,7 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[MealViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[MealViewModel::class.java]
         viewModel.ldMeals.observe(viewLifecycleOwner) {
             it?.let { refreshUi(it) }
         }
@@ -87,6 +87,7 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
                     )
                 }
             }
+
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })

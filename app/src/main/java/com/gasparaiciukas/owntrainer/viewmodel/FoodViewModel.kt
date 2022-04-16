@@ -4,10 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.GetResponse
 import com.gasparaiciukas.owntrainer.network.Resource
-import com.gasparaiciukas.owntrainer.network.Status
 import com.gasparaiciukas.owntrainer.repository.DiaryRepository
 import com.gasparaiciukas.owntrainer.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel

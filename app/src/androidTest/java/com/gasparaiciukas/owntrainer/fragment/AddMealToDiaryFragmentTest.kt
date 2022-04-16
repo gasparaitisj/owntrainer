@@ -12,7 +12,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
-import com.gasparaiciukas.owntrainer.database.*
+import com.gasparaiciukas.owntrainer.database.Meal
+import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
@@ -61,7 +62,10 @@ class AddMealToDiaryFragmentTest {
 
     @Test
     fun clickOnMeal_navigateToDiaryFragment() = runTest {
-        launchFragmentInHiltContainer<AddMealToDiaryFragment>(fragmentFactory = fragmentFactory, navController = navController) {
+        launchFragmentInHiltContainer<AddMealToDiaryFragment>(
+            fragmentFactory = fragmentFactory,
+            navController = navController
+        ) {
             Navigation.setViewNavController(requireView(), navController)
             sharedViewModel = fakeViewModel
             mealAdapter.items = listOf(
@@ -91,7 +95,10 @@ class AddMealToDiaryFragmentTest {
     fun clickOnNavigationBackButton_navigateToDiaryFragment() = runTest {
         val navController = Mockito.mock(NavController::class.java)
 
-        launchFragmentInHiltContainer<AddMealToDiaryFragment>(fragmentFactory = fragmentFactory, navController = navController) {
+        launchFragmentInHiltContainer<AddMealToDiaryFragment>(
+            fragmentFactory = fragmentFactory,
+            navController = navController
+        ) {
             Navigation.setViewNavController(requireView(), navController)
         }
 

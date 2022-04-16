@@ -148,10 +148,10 @@ class DiaryViewModelTest {
         val uiState = viewModel.uiState.getOrAwaitValueTest()
 
         val proteinConsumed = mealsWithFoodEntries[0].protein +
-                    mealsWithFoodEntries[0].protein +
-                    mealsWithFoodEntries[1].protein +
-                    mealsWithFoodEntries[2].protein +
-                    mealsWithFoodEntries[2].protein
+                mealsWithFoodEntries[0].protein +
+                mealsWithFoodEntries[1].protein +
+                mealsWithFoodEntries[2].protein +
+                mealsWithFoodEntries[2].protein
 
         val fatConsumed = mealsWithFoodEntries[0].fat +
                 mealsWithFoodEntries[0].fat +
@@ -267,7 +267,8 @@ class DiaryViewModelTest {
         diaryRepository.insertMeal(meal)
         diaryRepository.insertDiaryEntryMealCrossRef(crossRef)
         viewModel.deleteMealFromDiary(diaryEntry.diaryEntryId, meal.mealId)
-        val diaryEntryWithMeals = diaryRepository.getDiaryEntryWithMeals(1, 1).asLiveData().getOrAwaitValueTest()
+        val diaryEntryWithMeals =
+            diaryRepository.getDiaryEntryWithMeals(1, 1).asLiveData().getOrAwaitValueTest()
 
         assertThat(diaryEntryWithMeals.meals).doesNotContain(meal)
     }

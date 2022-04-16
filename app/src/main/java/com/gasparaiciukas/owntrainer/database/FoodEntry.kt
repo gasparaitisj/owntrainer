@@ -15,7 +15,7 @@ data class FoodEntry(
     @ColumnInfo(name = "proteinPer100G") var proteinPer100G: Double,
     @ColumnInfo(name = "quantityInG") var quantityInG: Double,
 ) {
-    val calories: Double get() =  caloriesPer100G / 100 * quantityInG
+    val calories: Double get() = caloriesPer100G / 100 * quantityInG
     val carbs: Double get() = carbsPer100G / 100 * quantityInG
     val fat: Double get() = fatPer100G / 100 * quantityInG
     val protein: Double get() = proteinPer100G / 100 * quantityInG

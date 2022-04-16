@@ -1,34 +1,41 @@
 package com.gasparaiciukas.owntrainer.fragment
 
+import android.content.Context
+import android.widget.ImageButton
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.asLiveData
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.matcher.RootMatchers
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.Lifestyle
 import com.gasparaiciukas.owntrainer.database.Sex
+import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
-import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
-import com.gasparaiciukas.owntrainer.viewmodel.ProfileViewModel
+import com.gasparaiciukas.owntrainer.viewmodel.SettingsViewModel
 import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.hamcrest.Matchers
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
+import org.mockito.Mockito.mock
 import javax.inject.Inject
 
 @MediumTest
 @HiltAndroidTest
 @ExperimentalCoroutinesApi
 class ProfileFragmentTest {
+
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
@@ -39,61 +46,111 @@ class ProfileFragmentTest {
     lateinit var fragmentFactory: MainFragmentFactory
 
     lateinit var navController: NavController
-    lateinit var fakeViewModel: ProfileViewModel
+    lateinit var fakeViewModel: SettingsViewModel
     lateinit var userRepository: FakeUserRepositoryTest
-    lateinit var diaryRepository: FakeDiaryRepositoryTest
+    private val testContext: Context = ApplicationProvider.getApplicationContext()
 
     @Before
     fun setup() {
         hiltRule.inject()
 
-        navController = Mockito.mock(NavController::class.java)
+        navController = mock(NavController::class.java)
         userRepository = FakeUserRepositoryTest()
-        fakeViewModel = ProfileViewModel(userRepository)
+        fakeViewModel = SettingsViewModel(userRepository)
     }
 
     @Test
-    fun clickSaveButton_shouldUpdateUserCorrectly() {
+    fun editProfile_popBackStack() {
         launchFragmentInHiltContainer<ProfileFragment>(
             fragmentFactory = fragmentFactory,
             navController = navController
         ) {
             Navigation.setViewNavController(requireView(), navController)
-            fakeViewModel = sharedViewModel
+            sharedViewModel = fakeViewModel
         }
 
-        val user = fakeViewModel.ldUser.getOrAwaitValue().copy()
+        val user = userRepository.user.asLiveData().getOrAwaitValue().copy()
         user.sex = Sex.FEMALE.ordinal
-        user.ageInYears = 20
-        user.heightInCm = 160
-        user.weightInKg = 45.0
-        user.lifestyle = Lifestyle.SEDENTARY.ordinal
+        user.ageInYears = 30
+        user.heightInCm = 170
+        user.weightInKg = 71.6
+        user.lifestyle = Lifestyle.MODERATELY_ACTIVE.ordinal
 
-        Espresso.onView(ViewMatchers.withId(R.id.et_sex))
-            .perform(ViewActions.click())
+        // Sex
+        Espresso.onView(
+            ViewMatchers.withId(R.id.et_sex)
+        ).perform(click())
 
-        Espresso.onView(ViewMatchers.withText(Sex.FEMALE.ordinal))
-            .inRoot(RootMatchers.isPlatformPopup())
-            .perform(ViewActions.click())
+        Espresso.onView(
+            ViewMatchers.withText(testContext.getString(R.string.female))
+        ).perform(click())
 
-        Espresso.onView(ViewMatchers.withId(R.id.et_age))
-            .perform(ViewActions.replaceText("20"))
+        // android.R.id.button1 is the positive button id
+        Espresso.onView(
+            ViewMatchers.withId(android.R.id.button1)
+        ).perform(click())
 
-        Espresso.onView(ViewMatchers.withId(R.id.et_height))
-            .perform(ViewActions.replaceText("160"))
+        // Age
+        Espresso.onView(
+            ViewMatchers.withId(R.id.et_age)
+        ).perform(click())
 
-        Espresso.onView(ViewMatchers.withId(R.id.et_weight))
-            .perform(ViewActions.replaceText("45.0"))
+        Espresso.onView(
+            ViewMatchers.withId(R.id.dialog_et_age)
+        ).perform(replaceText(user.ageInYears.toString()))
 
-        Espresso.onView(ViewMatchers.withId(R.id.et_lifestyle))
-            .perform(ViewActions.click())
+        Espresso.onView(
+            ViewMatchers.withId(android.R.id.button1)
+        ).perform(click())
 
-        Espresso.onView(ViewMatchers.withText(Lifestyle.SEDENTARY.ordinal))
-            .inRoot(RootMatchers.isPlatformPopup())
-            .perform(ViewActions.click())
+        // Height
+        Espresso.onView(
+            ViewMatchers.withId(R.id.et_height)
+        ).perform(click())
 
-        Espresso.onView(ViewMatchers.withId(R.id.btn_save)).perform(ViewActions.click())
+        Espresso.onView(
+            ViewMatchers.withId(R.id.dialog_et_height)
+        ).perform(replaceText(user.heightInCm.toString()))
 
-        Truth.assertThat(fakeViewModel.ldUser.getOrAwaitValue()).isEqualTo(user)
+        Espresso.onView(
+            ViewMatchers.withId(android.R.id.button1)
+        ).perform(click())
+
+        // Weight
+        Espresso.onView(
+            ViewMatchers.withId(R.id.et_weight)
+        ).perform(click())
+
+        Espresso.onView(
+            ViewMatchers.withId(R.id.dialog_et_weight)
+        ).perform(replaceText(user.weightInKg.toString()))
+
+        Espresso.onView(
+            ViewMatchers.withId(android.R.id.button1)
+        ).perform(click())
+
+        // Lifestyle
+        Espresso.onView(
+            ViewMatchers.withId(R.id.et_lifestyle)
+        ).perform(click())
+
+        Espresso.onView(
+            ViewMatchers.withText(testContext.getString(R.string.moderately_active))
+        ).perform(click())
+
+        Espresso.onView(
+            ViewMatchers.withId(android.R.id.button1)
+        ).perform(click())
+
+        // Back button
+        Espresso.onView(
+            Matchers.allOf(
+                Matchers.instanceOf(ImageButton::class.java),
+                ViewMatchers.withParent(ViewMatchers.withId(R.id.top_app_bar))
+            )
+        ).perform(click())
+
+        Truth.assertThat(userRepository.user.asLiveData().getOrAwaitValue()).isEqualTo(user)
+        Mockito.verify(navController).popBackStack()
     }
 }

@@ -58,7 +58,10 @@ class DatabaseFoodItemFragmentTest {
 
     @Test
     fun clickOnNavigationBackButton_popBackStack() {
-        launchFragmentInHiltContainer<DatabaseFoodItemFragment>(fragmentFactory = fragmentFactory, navController = navController) {
+        launchFragmentInHiltContainer<DatabaseFoodItemFragment>(
+            fragmentFactory = fragmentFactory,
+            navController = navController
+        ) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
         }

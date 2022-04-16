@@ -6,7 +6,7 @@
         <activity
             android:name=".HiltTestActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents"/>
+            android:theme="@style/Theme.MaterialComponents" />
     </application>
 
 </manifest>

@@ -1,6 +1,5 @@
 package com.gasparaiciukas.owntrainer.fragment
 
-import android.view.View
 import android.widget.ImageButton
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
@@ -16,15 +15,11 @@ import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.FoodNutrient
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
 import com.gasparaiciukas.owntrainer.viewmodel.NetworkFoodItemViewModel
-import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.hamcrest.Description
-import org.hamcrest.Matcher
 import org.hamcrest.Matchers
-import org.hamcrest.TypeSafeMatcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

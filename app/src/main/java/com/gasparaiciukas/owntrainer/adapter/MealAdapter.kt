@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
-import com.gasparaiciukas.owntrainer.databinding.MealRowBinding
+import com.gasparaiciukas.owntrainer.databinding.RowMealBinding
 
 class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
 
     class MealViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
-        val binding = MealRowBinding.bind(view)
+        val binding = RowMealBinding.bind(view)
 
         init {
             this.itemView.isLongClickable = true
@@ -54,7 +54,7 @@ class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.meal_row, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.row_meal, parent, false)
         return MealViewHolder(view)
     }
 

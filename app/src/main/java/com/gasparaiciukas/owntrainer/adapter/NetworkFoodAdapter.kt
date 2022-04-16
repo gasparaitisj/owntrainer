@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.NetworkFoodAdapter.NetworkFoodViewHolder
-import com.gasparaiciukas.owntrainer.databinding.FoodRowBinding
+import com.gasparaiciukas.owntrainer.databinding.RowFoodBinding
 import com.gasparaiciukas.owntrainer.network.Food
 import javax.inject.Inject
 
@@ -17,7 +17,7 @@ class NetworkFoodAdapter @Inject constructor(
 ) : RecyclerView.Adapter<NetworkFoodViewHolder>() {
 
     class NetworkFoodViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
-        val binding = FoodRowBinding.bind(view)
+        val binding = RowFoodBinding.bind(view)
     }
 
     private val diffCallback = object : DiffUtil.ItemCallback<Food>() {
@@ -53,7 +53,7 @@ class NetworkFoodAdapter @Inject constructor(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NetworkFoodViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.food_row, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.row_food, parent, false)
         return NetworkFoodViewHolder(view)
     }
 

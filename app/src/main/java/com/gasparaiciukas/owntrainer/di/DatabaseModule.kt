@@ -3,8 +3,11 @@ package com.gasparaiciukas.owntrainer.di
 import android.content.Context
 import com.gasparaiciukas.owntrainer.database.*
 import com.gasparaiciukas.owntrainer.network.DefaultGetService
-import com.gasparaiciukas.owntrainer.repository.*
 import com.gasparaiciukas.owntrainer.prefs.PrefsStoreImpl
+import com.gasparaiciukas.owntrainer.repository.DefaultDiaryRepository
+import com.gasparaiciukas.owntrainer.repository.DefaultUserRepository
+import com.gasparaiciukas.owntrainer.repository.DiaryRepository
+import com.gasparaiciukas.owntrainer.repository.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,6 +52,11 @@ class DatabaseModule {
     }
 
     @Provides
+    fun provideReminderDao(appDatabase: AppDatabase): ReminderDao {
+        return appDatabase.reminderDao()
+    }
+
+    @Provides
     fun provideUserDao(appDatabase: AppDatabase): UserDao {
         return appDatabase.userDao()
     }
@@ -61,11 +69,19 @@ class DatabaseModule {
         mealDao: MealDao,
         foodEntryDao: FoodEntryDao,
         defaultGetService: DefaultGetService
-    ) = DefaultDiaryRepository(diaryEntryDao, diaryEntryWithMealsDao, mealDao, foodEntryDao, defaultGetService) as DiaryRepository
+    ) = DefaultDiaryRepository(
+        diaryEntryDao,
+        diaryEntryWithMealsDao,
+        mealDao,
+        foodEntryDao,
+        defaultGetService
+    ) as DiaryRepository
 
     @Singleton
     @Provides
     fun provideDefaultUserRepository(
-        userDao: UserDao
-    ) = DefaultUserRepository(userDao) as UserRepository
+        userDao: UserDao,
+        reminderDao: ReminderDao,
+        prefsStore: PrefsStoreImpl
+    ) = DefaultUserRepository(userDao, reminderDao, prefsStore) as UserRepository
 }

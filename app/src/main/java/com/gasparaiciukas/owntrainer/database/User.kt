@@ -108,6 +108,7 @@ enum class Sex(val value: String) {
             return context.getString(R.string.female)
         }
     };
+
     abstract fun selectionDescription(context: Context): String
 }
 
@@ -137,5 +138,6 @@ enum class Lifestyle(val value: String) {
             return context.getString(R.string.extra_active)
         }
     };
+
     abstract fun selectionDescription(context: Context): String
 }

@@ -102,4 +102,23 @@
     <string name="lightly_active">Lightly active</string>
     <string name="age_too_young_alert">You have to be at least 18 years old to use this app.</string>
     <string name="weight_must_be_valid">Weight must be valid</string>
+    <string name="add_new_reminder">Add new reminder</string>
+    <string name="kcal_per_portion">kcal per portion</string>
+    <string name="delete_reminder">Delete Reminder</string>
+    <string name="reminders">Reminders</string>
+    <string name="new_reminder">New reminder</string>
+    <string name="time">Time</string>
+    <string name="select_reminder_time">Select reminder time</string>
+    <string name="error">Error</string>
+    <string name="reminder_with_this_time_already_exists">A reminder with specified time already exists.</string>
+    <string name="daily_reminder">"Daily %1$s reminder. Open the app to log your activity."</string>
+    <string name="notification_reminder_channel_id">Daily reminders</string>
+    <string name="notification_channel_daily_reminders_title">Daily reminders</string>
+    <string name="notification_channel_daily_reminders_description">Receive notifications about your daily reminders.</string>
+    <string name="title_must_be_valid">Title must be valid</string>
+    <string name="title_must_not_be_empty">Title must not be empty</string>
+    <string name="reminder_with_this_title_already_exists">Reminder with this title already exists</string>
+    <string name="instructions_must_not_be_empty">Instructions must not be empty</string>
+    <string name="meal_with_this_title_already_exists">Meal with this title already exists</string>
+    <string name="time_must_not_be_empty">Time must not be empty</string>
 </resources>

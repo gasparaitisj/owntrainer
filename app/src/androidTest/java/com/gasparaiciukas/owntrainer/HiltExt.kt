@@ -7,7 +7,6 @@ import androidx.core.util.Preconditions
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.Navigation
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
@@ -26,7 +25,10 @@ inline fun <reified T : Fragment> launchFragmentInHiltContainer(
             ApplicationProvider.getApplicationContext(),
             HiltTestActivity::class.java
         )
-    ).putExtra("androidx.fragment.app.testing.FragmentScenario.EmptyFragmentActivity.THEME_EXTRAS_BUNDLE_KEY", themeResId)
+    ).putExtra(
+        "androidx.fragment.app.testing.FragmentScenario.EmptyFragmentActivity.THEME_EXTRAS_BUNDLE_KEY",
+        themeResId
+    )
 
     ActivityScenario.launch<HiltTestActivity>(mainActivityIntent).onActivity { activity ->
         fragmentFactory?.let {
