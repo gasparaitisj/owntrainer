@@ -16,9 +16,9 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
-import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
+import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
 import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import com.google.android.material.internal.CheckableImageButton
 import com.google.android.material.tabs.TabLayout
@@ -49,6 +49,7 @@ class FoodFragmentTest {
     lateinit var navController: NavController
     lateinit var fakeViewModel: FoodViewModel
     lateinit var diaryRepository: FakeDiaryRepositoryTest
+    lateinit var userRepository: FakeUserRepositoryTest
 
     @Before
     fun setup() {
@@ -56,7 +57,8 @@ class FoodFragmentTest {
 
         navController = Mockito.mock(NavController::class.java)
         diaryRepository = FakeDiaryRepositoryTest()
-        fakeViewModel = FoodViewModel(diaryRepository)
+        userRepository = FakeUserRepositoryTest()
+        fakeViewModel = FoodViewModel(diaryRepository, userRepository)
     }
 
     @Test
@@ -87,10 +89,7 @@ class FoodFragmentTest {
         )
 
         Mockito.verify(navController).navigate(
-            FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment(
-                position = 0,
-                foodItem = fakeViewModel.ldResponse.getOrAwaitValue().data?.foods?.get(0)
-            )
+            FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment()
         )
     }
 
@@ -124,10 +123,7 @@ class FoodFragmentTest {
         )
 
         Mockito.verify(navController).navigate(
-            FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment(
-                position = 0,
-                foodItem = fakeViewModel.ldResponse.getOrAwaitValue().data?.foods?.get(0)
-            )
+            FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment()
         )
     }
 

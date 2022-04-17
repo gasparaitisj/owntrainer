@@ -1,18 +1,22 @@
 package com.gasparaiciukas.owntrainer.fragment
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
+import com.gasparaiciukas.owntrainer.databinding.DialogNetworkFoodItemQuantityBinding
 import com.gasparaiciukas.owntrainer.databinding.FragmentNetworkFoodItemBinding
+import com.gasparaiciukas.owntrainer.utils.Constants
+import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.NetworkFoodItemUiState
-import com.gasparaiciukas.owntrainer.viewmodel.NetworkFoodItemViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 
@@ -21,7 +25,7 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
     private var _binding: FragmentNetworkFoodItemBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var viewModel: NetworkFoodItemViewModel
+    lateinit var sharedViewModel: FoodViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,11 +38,13 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[NetworkFoodItemViewModel::class.java]
-        viewModel.ldUser.observe(viewLifecycleOwner) {
-            viewModel.loadData()
+        sharedViewModel = ViewModelProvider(requireActivity())[FoodViewModel::class.java]
+        sharedViewModel.ldUser.observe(viewLifecycleOwner) {
+            println("ldUser.observe()")
+            sharedViewModel.loadNetworkFoodItemUiState()
         }
-        viewModel.uiState.observe(viewLifecycleOwner) {
+        sharedViewModel.networkFoodItemUiState.observe(viewLifecycleOwner) {
+            println("uiState.observe()")
             refreshUi(it)
         }
         initUi()
@@ -54,6 +60,7 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
     }
 
     private fun refreshUi(uiState: NetworkFoodItemUiState) {
+        setNavigation()
         setTextViews(uiState)
         setPieChart(
             carbsPercentage = uiState.carbsPercentage,
@@ -63,8 +70,16 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
             pieChart = binding.pieChart,
             context = requireContext()
         )
-        setNavigation(uiState)
         binding.scrollView.visibility = View.VISIBLE
+    }
+
+    private fun setNavigation() {
+        binding.topAppBar.menu.findItem(R.id.btn_add_to_meal).setOnMenuItemClickListener {
+            findNavController().navigate(
+                NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToAddFoodToMealFragment()
+            )
+            true
+        }
     }
 
     private fun initNavigation() {
@@ -75,10 +90,7 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
                 NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToFoodFragment()
             )
         }
-    }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
@@ -89,10 +101,7 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
                     )
                 }
             }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,
-            callback
-        )
+        requireActivity().onBackPressedDispatcher.addCallback(callback)
     }
 
     private fun setTextViews(uiState: NetworkFoodItemUiState) {
@@ -121,17 +130,46 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
                 "%s %%",
                 (uiState.calories / uiState.user.dailyKcalIntake * 100).roundToInt()
             )
+        binding.etQuantity.setText(sharedViewModel.quantity.toString())
+        binding.etQuantity.setOnClickListener {
+            val view = layoutInflater.inflate(R.layout.dialog_network_food_item_quantity, null)
+            val dialogBinding = DialogNetworkFoodItemQuantityBinding.bind(view)
+            var quantity = ""
+            dialogBinding.dialogEtQuantity.doOnTextChanged { text, _, _, _ ->
+                quantity = text.toString()
+                val validation = isQuantityCorrect(quantity)
+                if (validation == null) {
+                    dialogBinding.dialogLayoutEtQuantity.error = null
+                } else {
+                    dialogBinding.dialogLayoutEtQuantity.error = validation
+                }
+            }
+            MaterialAlertDialogBuilder(requireContext())
+                .setView(view)
+                .setTitle(getString(R.string.quantity_no_colon))
+                .setNeutralButton(getString(R.string.cancel)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                    if (isQuantityCorrect(quantity) == null) {
+                        sharedViewModel.quantity = quantity.toInt()
+                        binding.etQuantity.setText(sharedViewModel.quantity.toString())
+                    }
+                }
+                .show()
+        }
     }
 
-    private fun setNavigation(uiState: NetworkFoodItemUiState) {
-        binding.topAppBar.menu.findItem(R.id.btn_add_to_meal).setOnMenuItemClickListener {
-            findNavController().navigate(
-                NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToAddFoodToMealFragment(
-                    uiState.foodItem,
-                    binding.etWeight.text.toString().toInt()
-                )
-            )
-            true
+    private fun isQuantityCorrect(s: String): String? {
+        val quantity: Int
+        try {
+            quantity = s.toInt()
+        } catch (e: NumberFormatException) {
+            return getString(R.string.number_must_be_valid)
         }
+        if ((quantity in Constants.QUANTITY_MINIMUM..Constants.QUANTITY_MAXIMUM).not()) {
+            return getString(R.string.quantity_must_be_valid)
+        }
+        return null
     }
 }

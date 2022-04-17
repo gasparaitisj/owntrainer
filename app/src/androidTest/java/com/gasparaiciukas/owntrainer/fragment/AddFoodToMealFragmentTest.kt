@@ -2,7 +2,6 @@ package com.gasparaiciukas.owntrainer.fragment
 
 import android.widget.ImageButton
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.espresso.Espresso
@@ -16,11 +15,9 @@ import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
-import com.gasparaiciukas.owntrainer.network.Food
-import com.gasparaiciukas.owntrainer.network.FoodNutrient
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
-import com.gasparaiciukas.owntrainer.viewmodel.AddFoodToMealViewModel
+import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -48,10 +45,9 @@ class AddFoodToMealFragmentTest {
     lateinit var fragmentFactory: MainFragmentFactory
 
     lateinit var navController: NavController
-    lateinit var fakeViewModel: AddFoodToMealViewModel
+    lateinit var fakeViewModel: FoodViewModel
     lateinit var userRepository: FakeUserRepositoryTest
     lateinit var diaryRepository: FakeDiaryRepositoryTest
-    lateinit var savedStateHandle: SavedStateHandle
 
     @Before
     fun setup() {
@@ -60,12 +56,8 @@ class AddFoodToMealFragmentTest {
         navController = Mockito.mock(NavController::class.java)
         userRepository = FakeUserRepositoryTest()
         diaryRepository = FakeDiaryRepositoryTest()
-        savedStateHandle = SavedStateHandle().apply {
-            set("foodItem", createFood())
-            set("quantity", 150)
-        }
 
-        fakeViewModel = AddFoodToMealViewModel(diaryRepository, savedStateHandle)
+        fakeViewModel = FoodViewModel(diaryRepository, userRepository)
     }
 
     @Test
@@ -79,7 +71,7 @@ class AddFoodToMealFragmentTest {
             navController = navController
         ) {
             Navigation.setViewNavController(requireView(), navController)
-            fakeViewModel = viewModel
+            fakeViewModel = sharedViewModel
         }
 
         fakeViewModel.diaryRepository.insertMeal(meal)
@@ -119,58 +111,4 @@ class AddFoodToMealFragmentTest {
         Mockito.verify(navController).popBackStack()
     }
 
-    private fun createFood(): Food {
-        return Food(
-            fdcId = 454004,
-            description = "APPLE",
-            lowercaseDescription = "apple",
-            dataType = "Branded",
-            gtinUpc = "867824000001",
-            publishedDate = "2019-04-01",
-            brandOwner = "TREECRISP 2 GO",
-            ingredients = "CRISP APPLE.",
-            marketCountry = "United States",
-            foodCategory = "Pre-Packaged Fruit & Vegetables",
-            allHighlightFields = "<b>Ingredients</b>: CRISP <em>APPLE</em>.",
-            score = 932.4247,
-            foodNutrients = listOf(
-                FoodNutrient(
-                    nutrientId = 1003,
-                    nutrientName = "Protein",
-                    nutrientNumber = "203",
-                    unitName = "G",
-                    derivationCode = "LCCS",
-                    derivationDescription = "Calculated from value per serving size measure",
-                    value = 0.0
-                ),
-                FoodNutrient(
-                    nutrientId = 1005,
-                    nutrientName = "Carbohydrate, by difference",
-                    nutrientNumber = "205",
-                    unitName = "G",
-                    derivationCode = "LCCS",
-                    derivationDescription = "Calculated from value per serving size measure",
-                    value = 14.3
-                ),
-                FoodNutrient(
-                    nutrientId = 1008,
-                    nutrientName = "Energy",
-                    nutrientNumber = "208",
-                    unitName = "G",
-                    derivationCode = "LCCS",
-                    derivationDescription = "Calculated from value per serving size measure",
-                    value = 52.0
-                ),
-                FoodNutrient(
-                    nutrientId = 1004,
-                    nutrientName = "Total lipid (fat)",
-                    nutrientNumber = "204",
-                    unitName = "G",
-                    derivationCode = "LCSL",
-                    derivationDescription = "Calculated from a less than value per serving size measure",
-                    value = 0.65
-                ),
-            )
-        )
-    }
 }

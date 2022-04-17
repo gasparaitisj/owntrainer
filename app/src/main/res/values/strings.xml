@@ -121,4 +121,6 @@
     <string name="instructions_must_not_be_empty">Instructions must not be empty</string>
     <string name="meal_with_this_title_already_exists">Meal with this title already exists</string>
     <string name="time_must_not_be_empty">Time must not be empty</string>
+    <string name="quantity_must_be_valid">Quantity must be valid</string>
+    <string name="quantity_no_colon">Quantity</string>
 </resources>

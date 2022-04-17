@@ -9,6 +9,8 @@ object Constants {
     const val WEIGHT_MAXIMUM = 800
     const val HEIGHT_MINIMUM = 80
     const val HEIGHT_MAXIMUM = 300
+    const val QUANTITY_MINIMUM = 1
+    const val QUANTITY_MAXIMUM = 10000
 
 
     const val NOTIFICATION_REMINDER_ID = 1

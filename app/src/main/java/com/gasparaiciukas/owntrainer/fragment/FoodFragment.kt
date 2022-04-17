@@ -49,7 +49,7 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[FoodViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[FoodViewModel::class.java]
         viewModel.ldResponse.observe(viewLifecycleOwner) { response ->
             when (response.status) {
                 Status.SUCCESS -> {
@@ -113,11 +113,9 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
         networkFoodAdapter.items = foods
         networkFoodAdapter.setOnClickListeners(
             singleClickListener = { _: Food, position: Int ->
+                viewModel.foodItem = foods[position]
                 findNavController().navigate(
-                    FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment(
-                        position = position,
-                        foodItem = foods[position]
-                    )
+                    FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment()
                 )
             }
         )
@@ -166,6 +164,9 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
     }
 
     private fun initNavigation() {
+        findNavController().addOnDestinationChangedListener { _, _, _ ->
+            viewModel.clearFoods()
+        }
         NavigationUI.setupWithNavController(binding.bottomNavigation, findNavController())
         NavigationUI.setupWithNavController(binding.navigationView, findNavController())
         binding.topAppBar.setNavigationOnClickListener {

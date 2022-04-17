@@ -272,4 +272,42 @@ class DiaryViewModelTest {
 
         assertThat(diaryEntryWithMeals.meals).doesNotContain(meal)
     }
+
+    @Test
+    fun `when addMealToDiary() is called, should add meal to diary`() = runTest {
+        val foodEntry = FoodEntry(
+            mealId = 1,
+            title = "Apple",
+            caloriesPer100G = 52.0,
+            carbsPer100G = 14.3,
+            fatPer100G = 0.65,
+            proteinPer100G = 0.0,
+            quantityInG = 60.0
+        )
+        val meal = Meal(
+            mealId = 1,
+            title = "Apple pie",
+            instructions = "Put in oven"
+        )
+        val diaryEntry = DiaryEntry(
+            diaryEntryId = 1,
+            year = 2021,
+            dayOfYear = 1,
+            dayOfWeek = 1,
+            monthOfYear = 1,
+            dayOfMonth = 1
+        )
+        diaryRepository.insertMeal(meal)
+        diaryRepository.insertFood(foodEntry)
+        diaryRepository.insertDiaryEntry(diaryEntry)
+        diaryRepository.insertDiaryEntryMealCrossRef(DiaryEntryMealCrossRef(1, 1))
+
+        val diaryEntryWithMeals = diaryRepository.getDiaryEntryWithMeals(
+            year = 2021,
+            dayOfYear = 1
+        ).asLiveData().getOrAwaitValueTest()
+        viewModel.calculateData()
+
+        assertThat(diaryEntryWithMeals.meals).contains(meal)
+    }
 }

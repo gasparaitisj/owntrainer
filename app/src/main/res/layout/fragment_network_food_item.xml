@@ -11,6 +11,7 @@
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fillViewport="true"
             android:visibility="invisible"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -18,36 +19,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:id="@+id/layout_weight"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layout_et_quantity"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_margin="20dp"
+                    android:hint="@string/quantity_no_colon"
+                    app:errorEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:startIconContentDescription="Quantity"
+                    app:startIconDrawable="@drawable/ic_baseline_shopping_bag_24"
+                    app:suffixText="(g)">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/layout_et_weight"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_quantity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/food_weight"
-                        android:paddingHorizontal="20dp"
-                        app:endIconMode="clear_text"
-                        app:suffixText="(g)">
+                        android:clickable="true"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:inputType="none"
+                        tools:ignore="KeyboardInaccessibleWidget,UnusedAttribute" />
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/et_weight"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number"
-                            android:text="100"
-                            tools:ignore="HardcodedText" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </LinearLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_nutrition"
@@ -56,7 +54,7 @@
                     android:layout_margin="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layout_weight">
+                    app:layout_constraintTop_toBottomOf="@+id/layout_et_quantity">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -244,16 +242,7 @@
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/card_nutrition" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
-
         </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.appbar.AppBarLayout

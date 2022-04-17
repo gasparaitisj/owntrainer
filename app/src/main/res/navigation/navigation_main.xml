@@ -48,28 +48,11 @@
         android:id="@+id/networkFoodItemFragment"
         android:name="com.gasparaiciukas.owntrainer.fragment.NetworkFoodItemFragment"
         android:label="NetworkFoodItemFragment">
-        <argument
-            android:name="position"
-            android:defaultValue="0"
-            app:argType="integer" />
-        <argument
-            android:name="foodItem"
-            android:defaultValue="@null"
-            app:argType="com.gasparaiciukas.owntrainer.network.Food"
-            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/addFoodToMealFragment"
         android:name="com.gasparaiciukas.owntrainer.fragment.AddFoodToMealFragment"
-        android:label="AddFoodToMealFragment">
-        <argument
-            android:name="foodItem"
-            app:argType="com.gasparaiciukas.owntrainer.network.Food" />
-        <argument
-            android:name="quantity"
-            android:defaultValue="0"
-            app:argType="integer" />
-    </fragment>
+        android:label="AddFoodToMealFragment" />
     <fragment
         android:id="@+id/databaseFoodItemFragment"
         android:name="com.gasparaiciukas.owntrainer.fragment.DatabaseFoodItemFragment"

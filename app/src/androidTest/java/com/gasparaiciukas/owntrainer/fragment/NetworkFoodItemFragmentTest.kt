@@ -1,10 +1,11 @@
 package com.gasparaiciukas.owntrainer.fragment
 
+import android.content.Context
 import android.widget.ImageButton
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -13,8 +14,10 @@ import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.FoodNutrient
+import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
-import com.gasparaiciukas.owntrainer.viewmodel.NetworkFoodItemViewModel
+import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
+import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,21 +44,21 @@ class NetworkFoodItemFragmentTest {
     lateinit var fragmentFactory: MainFragmentFactory
 
     lateinit var navController: NavController
-    lateinit var fakeViewModel: NetworkFoodItemViewModel
+    lateinit var fakeViewModel: FoodViewModel
     lateinit var userRepository: FakeUserRepositoryTest
-    lateinit var savedStateHandle: SavedStateHandle
+    lateinit var diaryRepository: FakeDiaryRepositoryTest
+    private val testContext: Context = ApplicationProvider.getApplicationContext()
+
     private val food = createFood()
 
     @Before
     fun setup() {
         hiltRule.inject()
 
-        savedStateHandle = SavedStateHandle().apply {
-            set("food", food)
-        }
         navController = Mockito.mock(NavController::class.java)
         userRepository = FakeUserRepositoryTest()
-        fakeViewModel = NetworkFoodItemViewModel(userRepository, savedStateHandle)
+        diaryRepository = FakeDiaryRepositoryTest()
+        fakeViewModel = FoodViewModel(diaryRepository, userRepository)
     }
 
     @Test
@@ -65,7 +68,7 @@ class NetworkFoodItemFragmentTest {
             navController = navController
         ) {
             Navigation.setViewNavController(requireView(), navController)
-            viewModel = fakeViewModel
+            sharedViewModel = fakeViewModel
         }
 
         Espresso.onView(
@@ -86,27 +89,36 @@ class NetworkFoodItemFragmentTest {
             fragmentFactory = fragmentFactory,
             navController = navController
         ) {
-            viewModel.foodItem = food
-            viewModel.loadData()
+            fakeViewModel = sharedViewModel
+            sharedViewModel.foodItem = food
+            sharedViewModel.loadNetworkFoodItemUiState()
         }
 
+        val quantity = 200
+
+        // Quantity
         Espresso.onView(
-            ViewMatchers.withId(R.id.et_weight)
-        ).perform(
-            ViewActions.replaceText("200"),
-        )
+            ViewMatchers.withId(R.id.et_quantity)
+        ).perform(ViewActions.click())
+
+        Espresso.onView(
+            ViewMatchers.withId(R.id.dialog_et_quantity)
+        ).perform(ViewActions.replaceText(quantity.toString()))
+
+        Espresso.onView(
+            ViewMatchers.withId(android.R.id.button1)
+        ).perform(ViewActions.click())
+
+        // Save button
         Espresso.onView(
             ViewMatchers.withId(R.id.btn_add_to_meal)
-        ).perform(
-            ViewActions.click()
-        )
+        ).perform(ViewActions.click())
+
 
         Mockito.verify(navController).navigate(
-            NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToAddFoodToMealFragment(
-                food,
-                200
-            )
+            NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToAddFoodToMealFragment()
         )
+        Truth.assertThat(fakeViewModel.quantity).isEqualTo(quantity)
     }
 
     private fun createFood(): Food {
