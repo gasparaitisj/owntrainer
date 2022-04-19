@@ -8,21 +8,26 @@ import androidx.navigation.Navigation
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.filters.MediumTest
+import com.gasparaiciukas.owntrainer.MainCoroutineRuleTest
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.DatabaseFoodAdapter
 import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.database.Meal
-import com.gasparaiciukas.owntrainer.getOrAwaitValue
+import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
+import com.gasparaiciukas.owntrainer.viewmodel.MealItemUiState
 import com.gasparaiciukas.owntrainer.viewmodel.MealItemViewModel
+import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.Matchers
 import org.junit.Before
@@ -41,6 +46,9 @@ class MealItemFragmentTest {
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    val mainCoroutineRule = MainCoroutineRuleTest()
 
     @Inject
     lateinit var fragmentFactory: MainFragmentFactory
@@ -66,46 +74,44 @@ class MealItemFragmentTest {
     }
 
     @Test
-    fun clickOnFoodEntry_navigateToDatabaseFoodItemFragment() = runTest {
+    fun singleClickOnFoodEntry_navigateToDatabaseFoodItemFragment() = runTest {
+        val foodEntry = FoodEntry(
+            mealId = 0,
+            title = "Banana",
+            caloriesPer100G = 89.0,
+            carbsPer100G = 23.0,
+            fatPer100G = 0.3,
+            proteinPer100G = 1.1,
+            quantityInG = 120.0
+        )
+        val mealWithFoodEntries = MealWithFoodEntries(
+            Meal(
+                title = "title",
+                instructions = "instructions"
+            ),
+            listOf(
+                foodEntry
+            )
+        )
+        val uiState = MealItemUiState(
+            user = userRepository.user.first(),
+            mealWithFoodEntries = mealWithFoodEntries,
+            carbsPercentage = 0f,
+            fatPercentage = 0f,
+            proteinPercentage = 0f,
+            carbsDailyIntakePercentage = 0f,
+            fatDailyIntakePercentage = 0f,
+            proteinDailyIntakePercentage = 0f,
+            caloriesDailyIntakePercentage = 0f
+        )
         launchFragmentInHiltContainer<MealItemFragment>(
             fragmentFactory = fragmentFactory,
             navController = navController
         ) {
             Navigation.setViewNavController(requireView(), navController)
-            fakeViewModel = viewModel
+            viewModel = fakeViewModel
+            refreshUi(uiState)
         }
-        fakeViewModel.diaryRepository.insertMeal(
-            Meal(
-                mealId = 0,
-                title = "title",
-                instructions = "instructions"
-            )
-        )
-        fakeViewModel.diaryRepository.insertFood(
-            FoodEntry(
-                foodEntryId = 1,
-                mealId = 0,
-                title = "Banana",
-                caloriesPer100G = 89.0,
-                carbsPer100G = 23.0,
-                fatPer100G = 0.3,
-                proteinPer100G = 1.1,
-                quantityInG = 120.0
-            )
-        )
-        fakeViewModel.diaryRepository.insertFood(
-            FoodEntry(
-                foodEntryId = 2,
-                mealId = 0,
-                title = "Egg",
-                caloriesPer100G = 155.0,
-                carbsPer100G = 1.1,
-                fatPer100G = 11.0,
-                proteinPer100G = 13.0,
-                quantityInG = 60.0
-            )
-        )
-        fakeViewModel.loadData(fakeViewModel.ldUser.getOrAwaitValue())
 
         Espresso.onView(ViewMatchers.withId(R.id.recycler_view)).perform(
             RecyclerViewActions.actionOnItemAtPosition<DatabaseFoodAdapter.DatabaseFoodViewHolder>(
@@ -122,6 +128,10 @@ class MealItemFragmentTest {
                     carbsPer100G = 23.0,
                     fatPer100G = 0.3,
                     proteinPer100G = 1.1,
+                    calories = mealWithFoodEntries.calories,
+                    carbs = mealWithFoodEntries.carbs,
+                    fat = mealWithFoodEntries.fat,
+                    protein = mealWithFoodEntries.protein,
                     quantityInG = 120.0
                 )
             )

@@ -2,12 +2,16 @@ package com.gasparaiciukas.owntrainer.database
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
+import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -22,7 +26,6 @@ class FoodEntryDaoTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Inject
-    @Named("test_db")
     lateinit var database: AppDatabase
 
     private lateinit var foodEntryDao: FoodEntryDao
@@ -40,5 +43,54 @@ class FoodEntryDaoTest {
         database.close()
     }
 
+    @Test
+    fun insertFoodEntry() = runTest {
+        val meal = Meal(
+            mealId = 1,
+            title = "Omelette",
+            instructions = "Put egg in pan"
+        )
+        val foodEntry = FoodEntry(
+            foodEntryId = 1,
+            mealId = meal.mealId,
+            title = "Egg",
+            caloriesPer100G = 100.0,
+            carbsPer100G = 100.0,
+            fatPer100G = 100.0,
+            proteinPer100G = 100.0,
+            quantityInG = 100.0
+        )
+
+        foodEntryDao.insertFoodEntry(foodEntry)
+
+        val allFoodEntries = foodEntryDao.getAllFoodEntries().first()
+        assertThat(allFoodEntries).contains(foodEntry)
+    }
+
+    @Test
+    fun deleteFoodEntry() = runTest {
+        val meal = Meal(
+            mealId = 1,
+            title = "Omelette",
+            instructions = "Put egg in pan"
+        )
+        val foodEntry = FoodEntry(
+            foodEntryId = 1,
+            mealId = meal.mealId,
+            title = "Egg",
+            caloriesPer100G = 100.0,
+            carbsPer100G = 100.0,
+            fatPer100G = 100.0,
+            proteinPer100G = 100.0,
+            quantityInG = 100.0
+        )
+
+        foodEntryDao.insertFoodEntry(foodEntry)
+        val foodEntryId = foodEntryDao.getAllFoodEntries().first()[0].foodEntryId
+        foodEntryDao.deleteFoodEntryById(foodEntryId)
+
+        val allFoodEntries = foodEntryDao.getAllFoodEntries().first()
+        assertThat(allFoodEntries).doesNotContain(foodEntry)
+    }
 
 }

@@ -47,8 +47,7 @@
     <fragment
         android:id="@+id/networkFoodItemFragment"
         android:name="com.gasparaiciukas.owntrainer.fragment.NetworkFoodItemFragment"
-        android:label="NetworkFoodItemFragment">
-    </fragment>
+        android:label="NetworkFoodItemFragment" />
     <fragment
         android:id="@+id/addFoodToMealFragment"
         android:name="com.gasparaiciukas.owntrainer.fragment.AddFoodToMealFragment"
@@ -59,7 +58,9 @@
         android:label="DatabaseFoodItemFragment">
         <argument
             android:name="food"
-            app:argType="com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable" />
+            android:defaultValue="@null"
+            app:argType="com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

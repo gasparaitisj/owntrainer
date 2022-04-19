@@ -1,13 +1,12 @@
 package com.gasparaiciukas.owntrainer.database
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.asLiveData
 import androidx.test.filters.SmallTest
-import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -28,7 +27,6 @@ class UserDaoTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Inject
-    @Named("test_db")
     lateinit var database: AppDatabase
     private lateinit var userDao: UserDao
 
@@ -61,7 +59,7 @@ class UserDaoTest {
         )
         userDao.insertUser(user)
 
-        val userRoom = userDao.getUser().asLiveData().getOrAwaitValue()
+        val userRoom = userDao.getUser().first()
         assertThat(userRoom).isEqualTo(user)
     }
 
@@ -82,10 +80,10 @@ class UserDaoTest {
             dayOfWeek = currentDate.dayOfWeek.value
         )
         userDao.insertUser(user)
-        user = userDao.getUser().asLiveData().getOrAwaitValue()
+        user = userDao.getUser().first()
         user.heightInCm = 155
         userDao.updateUser(user)
-        val userRoom = userDao.getUser().asLiveData().getOrAwaitValue()
+        val userRoom = userDao.getUser().first()
         assertThat(userRoom).isEqualTo(user)
     }
 
@@ -106,9 +104,9 @@ class UserDaoTest {
             dayOfWeek = currentDate.dayOfWeek.value
         )
         userDao.insertUser(user)
-        val userId = userDao.getUser().asLiveData().getOrAwaitValue().userId
+        val userId = userDao.getUser().first().userId
         userDao.deleteUserById(userId)
-        val userRoom = userDao.getUser().asLiveData().getOrAwaitValue()
+        val userRoom = userDao.getUser().first()
         assertThat(userRoom).isEqualTo(null)
     }
 }

@@ -6,15 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
+import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.DialogCreateMealItemInstructionsBinding
 import com.gasparaiciukas.owntrainer.databinding.DialogCreateMealItemTitleBinding
 import com.gasparaiciukas.owntrainer.databinding.FragmentCreateMealItemBinding
 import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CreateMealItemFragment : Fragment(R.layout.fragment_create_meal_item) {
@@ -35,6 +41,13 @@ class CreateMealItemFragment : Fragment(R.layout.fragment_create_meal_item) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedViewModel = ViewModelProvider(requireActivity())[MealViewModel::class.java]
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.meals.collectLatest { meals ->
+                    meals?.let { refreshUi(it) }
+                }
+            }
+        }
         initUi()
     }
 
@@ -48,11 +61,17 @@ class CreateMealItemFragment : Fragment(R.layout.fragment_create_meal_item) {
         binding.scrollView.visibility = View.VISIBLE
     }
 
+    fun refreshUi(mealsWithFoodEntries: List<MealWithFoodEntries>) {
+        setNavigation(mealsWithFoodEntries)
+    }
+
     private fun initNavigation() {
         binding.topAppBar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
+    }
 
+    private fun setNavigation(mealsWithFoodEntries: List<MealWithFoodEntries>) {
         binding.topAppBar.menu.findItem(R.id.btn_save).setOnMenuItemClickListener {
             if (sharedViewModel.isTitleCorrect &&
                 sharedViewModel.isInstructionsCorrect
@@ -81,7 +100,7 @@ class CreateMealItemFragment : Fragment(R.layout.fragment_create_meal_item) {
             dialogBinding.dialogEtTitle.setText("")
             dialogBinding.dialogEtTitle.doOnTextChanged { text, _, _, _ ->
                 titleTemp = text.toString()
-                val validation = isTitleCorrect(titleTemp)
+                val validation = isTitleCorrect(titleTemp, mealsWithFoodEntries)
                 if (validation == null) {
                     dialogBinding.dialogLayoutEtTitle.error = null
                 } else {
@@ -95,13 +114,11 @@ class CreateMealItemFragment : Fragment(R.layout.fragment_create_meal_item) {
                     dialog.dismiss()
                 }
                 .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                    if (isTitleCorrect(titleTemp) == null) {
+                    if (isTitleCorrect(titleTemp, mealsWithFoodEntries) == null) {
                         sharedViewModel.title = titleTemp
                         binding.etTitle.setText(sharedViewModel.title)
                         sharedViewModel.isTitleCorrect = true
                         binding.layoutEtTitle.error = null
-                    } else {
-                        println(isTitleCorrect(titleTemp))
                     }
                 }
                 .show()
@@ -139,22 +156,21 @@ class CreateMealItemFragment : Fragment(R.layout.fragment_create_meal_item) {
         }
     }
 
-    private fun isTitleCorrect(text: String): String? {
+    private fun isTitleCorrect(
+        text: String,
+        mealsWithFoodEntries: List<MealWithFoodEntries>
+    ): String? {
         if (text.isBlank()) {
             return getString(R.string.title_must_not_be_empty)
         }
-        sharedViewModel.ldMeals.value?.let { mealsWithFoodEntries ->
-            println(mealsWithFoodEntries)
-            val titleExists = mealsWithFoodEntries.any { mealWithFoodEntries ->
-                mealWithFoodEntries.meal.title == text
-            }
-            if (titleExists) {
-                return getString(R.string.meal_with_this_title_already_exists)
-            } else {
-                return null
-            }
+        val titleExists = mealsWithFoodEntries.any { mealWithFoodEntries ->
+            mealWithFoodEntries.meal.title == text
         }
-        return getString(R.string.title_must_be_valid)
+        return if (titleExists) {
+            getString(R.string.meal_with_this_title_already_exists)
+        } else {
+            null
+        }
     }
 
     private fun isInstructionsCorrect(text: String): String? {

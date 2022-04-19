@@ -1,6 +1,7 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.database.User
@@ -12,6 +13,7 @@ import com.gasparaiciukas.owntrainer.repository.UserRepository
 import com.gasparaiciukas.owntrainer.utils.Constants
 import com.gasparaiciukas.owntrainer.utils.safeLet
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,20 +39,58 @@ class FoodViewModel @Inject internal constructor(
     var foodItem: Food? = null
     var quantity = 100
 
-    val ldMeals = diaryRepository.getAllMealsWithFoodEntries().asLiveData()
-    val ldUser = userRepository.user.asLiveData()
-    val networkFoodItemUiState = MutableLiveData<NetworkFoodItemUiState>()
+    val meals = diaryRepository.getAllMealsWithFoodEntries()
+    val user = userRepository.user
+
+    val networkFoodItemUiState = combine(meals, user) { lMeals, lUser ->
+        safeLet(lMeals, foodItem) { _, foodItem ->
+            // Get nutrients from food item
+            val nutrients = foodItem.foodNutrients
+            var protein = 0f
+            var fat = 0f
+            var carbs = 0f
+            var calories = 0f
+            nutrients?.forEach { nutrient ->
+                val nutrientValue = (nutrient.value ?: 0.0).toFloat()
+                if (nutrient.nutrientId == 1003) protein = nutrientValue
+                if (nutrient.nutrientId == 1004) fat = nutrientValue
+                if (nutrient.nutrientId == 1005) carbs = nutrientValue
+                if (nutrient.nutrientId == 1008) calories = nutrientValue
+            }
+            // Calculate percentage of each item
+            val sum = carbs + fat + protein
+            return@combine Resource.success(
+                NetworkFoodItemUiState(
+                    user = lUser,
+                    foodItem = foodItem,
+                    title = foodItem.description.toString(),
+                    carbs = carbs,
+                    carbsPercentage = carbs / sum * 100,
+                    calories = calories,
+                    fat = fat,
+                    fatPercentage = fat / sum * 100,
+                    protein = protein,
+                    proteinPercentage = protein / sum * 100
+                )
+            )
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = Resource.loading(null)
+    )
 
 
-    val ldResponse: LiveData<Resource<GetResponse>> get() = _ldResponse
-    private val _ldResponse: MutableLiveData<Resource<GetResponse>> = MutableLiveData()
+    private val _response: MutableStateFlow<Resource<GetResponse>> =
+        MutableStateFlow(Resource.loading(null))
+    val response: StateFlow<Resource<GetResponse>> = _response.asStateFlow()
 
     var pageNumber = 1
     var foodsResponse: Resource<GetResponse>? = null
 
     fun getFoods(query: String) {
         viewModelScope.launch {
-            _ldResponse.postValue(Resource.loading(null))
+            _response.value = Resource.loading(null)
             val response = diaryRepository.getFoods(
                 query = query,
                 dataType = Constants.Api.DataType.DATATYPE_BRANDED + "," +
@@ -70,51 +110,17 @@ class FoodViewModel @Inject internal constructor(
                     oldFoods?.addAll(newFoods)
                 }
             }
-            _ldResponse.postValue(foodsResponse ?: response)
+            _response.value = foodsResponse ?: response
         }
     }
 
     fun clearFoods() {
-        _ldResponse.value = Resource.success(null)
+        _response.value = Resource.success(null)
     }
 
     fun onQueryChanged() {
         pageNumber = 1
         foodsResponse = null
-    }
-
-    fun loadNetworkFoodItemUiState() {
-        safeLet(ldUser.value, foodItem) { user, foodItem ->
-            // Get nutrients from food item
-            val nutrients = foodItem.foodNutrients
-            var protein = 0f
-            var fat = 0f
-            var carbs = 0f
-            var calories = 0f
-            nutrients?.forEach { nutrient ->
-                val nutrientValue = (nutrient.value ?: 0.0).toFloat()
-                if (nutrient.nutrientId == 1003) protein = nutrientValue
-                if (nutrient.nutrientId == 1004) fat = nutrientValue
-                if (nutrient.nutrientId == 1005) carbs = nutrientValue
-                if (nutrient.nutrientId == 1008) calories = nutrientValue
-            }
-            // Calculate percentage of each item
-            val sum = carbs + fat + protein
-            networkFoodItemUiState.postValue(
-                NetworkFoodItemUiState(
-                    user = user,
-                    foodItem = foodItem,
-                    title = foodItem.description.toString(),
-                    carbs = carbs,
-                    carbsPercentage = carbs / sum * 100,
-                    calories = calories,
-                    fat = fat,
-                    fatPercentage = fat / sum * 100,
-                    protein = protein,
-                    proteinPercentage = protein / sum * 100
-                )
-            )
-        }
     }
 
     fun addFoodToMeal(mealWithFoodEntries: MealWithFoodEntries) {

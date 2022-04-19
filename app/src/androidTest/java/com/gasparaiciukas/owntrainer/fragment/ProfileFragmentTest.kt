@@ -3,7 +3,6 @@ package com.gasparaiciukas.owntrainer.fragment
 import android.content.Context
 import android.widget.ImageButton
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.asLiveData
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.core.app.ApplicationProvider
@@ -15,7 +14,6 @@ import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.Lifestyle
 import com.gasparaiciukas.owntrainer.database.Sex
-import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
 import com.gasparaiciukas.owntrainer.viewmodel.SettingsViewModel
@@ -23,6 +21,8 @@ import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
 import org.hamcrest.Matchers
 import org.junit.Before
 import org.junit.Rule
@@ -60,7 +60,7 @@ class ProfileFragmentTest {
     }
 
     @Test
-    fun editProfile_popBackStack() {
+    fun editProfile_popBackStack() = runTest {
         launchFragmentInHiltContainer<ProfileFragment>(
             fragmentFactory = fragmentFactory,
             navController = navController
@@ -69,7 +69,7 @@ class ProfileFragmentTest {
             sharedViewModel = fakeViewModel
         }
 
-        val user = userRepository.user.asLiveData().getOrAwaitValue().copy()
+        val user = userRepository.user.first().copy()
         user.sex = Sex.FEMALE.ordinal
         user.ageInYears = 30
         user.heightInCm = 170
@@ -150,7 +150,7 @@ class ProfileFragmentTest {
             )
         ).perform(click())
 
-        Truth.assertThat(userRepository.user.asLiveData().getOrAwaitValue()).isEqualTo(user)
+        Truth.assertThat(userRepository.user.first()).isEqualTo(user)
         Mockito.verify(navController).popBackStack()
     }
 }

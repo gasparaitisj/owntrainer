@@ -1,14 +1,13 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.MainCoroutineRule
 import com.gasparaiciukas.owntrainer.database.*
-import com.gasparaiciukas.owntrainer.getOrAwaitValueTest
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepository
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepository
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -36,7 +35,7 @@ class DiaryViewModelTest {
     }
 
     @Test
-    fun `when calculateData() is called, should calculate data correctly`() = runTest {
+    fun `when loading UI state, should load UI state correctly`() = runTest {
         // Testing data
         val meals = listOf(
             Meal(1, "Agirdi", "Nuklausau"),
@@ -134,7 +133,7 @@ class DiaryViewModelTest {
             dayOfMonth = date.dayOfMonth
         )
         diaryRepository.insertDiaryEntry(diaryEntry)
-        val user = viewModel.ldUser.getOrAwaitValueTest()
+        val user = viewModel.user.first()
         user.dayOfMonth = date.dayOfMonth
         user.dayOfWeek = date.dayOfWeek.value
         user.dayOfYear = date.dayOfYear
@@ -143,9 +142,8 @@ class DiaryViewModelTest {
         userRepository.updateUser(user)
 
         // Perform calculations
-        val diaryEntryWithMeals = viewModel.ldDiaryEntryWithMeals.getOrAwaitValueTest()
-        viewModel.calculateData()
-        val uiState = viewModel.uiState.getOrAwaitValueTest()
+        val diaryEntryWithMeals = viewModel.diaryEntryWithMeals.first()
+        val uiStateData = viewModel.uiState.first()?.data
 
         val proteinConsumed = mealsWithFoodEntries[0].protein +
                 mealsWithFoodEntries[0].protein +
@@ -174,7 +172,7 @@ class DiaryViewModelTest {
         val uiStateTest = DiaryUiState(
             meals = mealsWithFoodEntries,
             user = user,
-            diaryEntryWithMeals = diaryEntryWithMeals,
+            diaryEntryWithMeals = diaryEntryWithMeals!!,
             proteinConsumed = proteinConsumed,
             fatConsumed = fatConsumed,
             carbsConsumed = carbsConsumed,
@@ -185,23 +183,23 @@ class DiaryViewModelTest {
             carbsPercentage = (carbsConsumed / user.dailyCarbsIntakeInG) * 100
         )
         // Assertions
-        assertThat(uiState.meals).isEqualTo(uiStateTest.meals)
-        assertThat(uiState.user).isEqualTo(uiStateTest.user)
-        assertThat(uiState.diaryEntryWithMeals).isEqualTo(uiStateTest.diaryEntryWithMeals)
-        assertThat(uiState.proteinConsumed).isEqualTo(uiStateTest.proteinConsumed)
-        assertThat(uiState.fatConsumed).isEqualTo(uiStateTest.fatConsumed)
-        assertThat(uiState.carbsConsumed).isEqualTo(uiStateTest.carbsConsumed)
-        assertThat(uiState.caloriesConsumed).isEqualTo(uiStateTest.caloriesConsumed)
-        assertThat(uiState.caloriesPercentage).isEqualTo(uiStateTest.caloriesPercentage)
-        assertThat(uiState.proteinPercentage).isEqualTo(uiStateTest.proteinPercentage)
-        assertThat(uiState.proteinConsumed).isEqualTo(uiStateTest.proteinConsumed)
-        assertThat(uiState.fatPercentage).isEqualTo(uiStateTest.fatPercentage)
-        assertThat(uiState.carbsPercentage).isEqualTo(uiStateTest.carbsPercentage)
+        assertThat(uiStateData?.meals).isEqualTo(uiStateTest.meals)
+        assertThat(uiStateData?.user).isEqualTo(uiStateTest.user)
+        assertThat(uiStateData?.diaryEntryWithMeals).isEqualTo(uiStateTest.diaryEntryWithMeals)
+        assertThat(uiStateData?.proteinConsumed).isEqualTo(uiStateTest.proteinConsumed)
+        assertThat(uiStateData?.fatConsumed).isEqualTo(uiStateTest.fatConsumed)
+        assertThat(uiStateData?.carbsConsumed).isEqualTo(uiStateTest.carbsConsumed)
+        assertThat(uiStateData?.caloriesConsumed).isEqualTo(uiStateTest.caloriesConsumed)
+        assertThat(uiStateData?.caloriesPercentage).isEqualTo(uiStateTest.caloriesPercentage)
+        assertThat(uiStateData?.proteinPercentage).isEqualTo(uiStateTest.proteinPercentage)
+        assertThat(uiStateData?.proteinConsumed).isEqualTo(uiStateTest.proteinConsumed)
+        assertThat(uiStateData?.fatPercentage).isEqualTo(uiStateTest.fatPercentage)
+        assertThat(uiStateData?.carbsPercentage).isEqualTo(uiStateTest.carbsPercentage)
     }
 
     @Test
     fun `when createDiaryEntry() is called, should create diary entry`() = runTest {
-        val user = viewModel.ldUser.getOrAwaitValueTest()
+        val user = viewModel.user.first()
         val diaryEntry = DiaryEntry(
             year = user.year,
             dayOfYear = user.dayOfYear,
@@ -209,37 +207,47 @@ class DiaryViewModelTest {
             monthOfYear = user.month,
             dayOfMonth = user.dayOfMonth
         )
-        viewModel.createDiaryEntry()
+        viewModel.createDiaryEntry(user)
         assertThat(
             diaryRepository.getDiaryEntry(
                 user.year,
                 user.dayOfYear
-            ).asLiveData().getOrAwaitValueTest()
+            ).first()
         ).isEqualTo(diaryEntry)
     }
 
     @Test
     fun `when updateUserToPreviousDay() is called, should update user to previous day`() = runTest {
-        val user = viewModel.ldUser.getOrAwaitValueTest().copy()
+        val user = viewModel.user.first().copy()
+        viewModel.createDiaryEntry(user)
+        viewModel.uiState.first()
+
+
         viewModel.updateUserToPreviousDay()
-        val userTest = viewModel.ldUser.getOrAwaitValueTest().copy()
+        val userTest = viewModel.user.first().copy()
         assertThat(LocalDate.ofYearDay(user.year, user.dayOfYear).minusDays(1))
             .isEqualTo(LocalDate.ofYearDay(userTest.year, userTest.dayOfYear))
     }
 
     @Test
     fun `when updateUserToCurrentDay() is called, should update user to current day`() = runTest {
+        val user = viewModel.user.first().copy()
+        viewModel.createDiaryEntry(user)
+
         viewModel.updateUserToCurrentDay()
-        val userTest = viewModel.ldUser.getOrAwaitValueTest().copy()
+        val userTest = viewModel.user.first().copy()
         assertThat(LocalDate.now())
             .isEqualTo(LocalDate.ofYearDay(userTest.year, userTest.dayOfYear))
     }
 
     @Test
     fun `when updateUserToNextDay() is called, should update user to next day`() = runTest {
-        val user = viewModel.ldUser.getOrAwaitValueTest().copy()
+        val user = viewModel.user.first().copy()
+        viewModel.createDiaryEntry(user)
+        viewModel.uiState.first()
+
         viewModel.updateUserToNextDay()
-        val userTest = viewModel.ldUser.getOrAwaitValueTest().copy()
+        val userTest = viewModel.user.first().copy()
         assertThat(LocalDate.ofYearDay(user.year, user.dayOfYear).plusDays(1))
             .isEqualTo(LocalDate.ofYearDay(userTest.year, userTest.dayOfYear))
     }
@@ -268,46 +276,46 @@ class DiaryViewModelTest {
         diaryRepository.insertDiaryEntryMealCrossRef(crossRef)
         viewModel.deleteMealFromDiary(diaryEntry.diaryEntryId, meal.mealId)
         val diaryEntryWithMeals =
-            diaryRepository.getDiaryEntryWithMeals(1, 1).asLiveData().getOrAwaitValueTest()
+            diaryRepository.getDiaryEntryWithMeals(1, 1).first()
 
-        assertThat(diaryEntryWithMeals.meals).doesNotContain(meal)
+        assertThat(diaryEntryWithMeals?.meals).doesNotContain(meal)
     }
 
     @Test
     fun `when addMealToDiary() is called, should add meal to diary`() = runTest {
-        val foodEntry = FoodEntry(
-            mealId = 1,
-            title = "Apple",
-            caloriesPer100G = 52.0,
-            carbsPer100G = 14.3,
-            fatPer100G = 0.65,
-            proteinPer100G = 0.0,
-            quantityInG = 60.0
-        )
         val meal = Meal(
             mealId = 1,
             title = "Apple pie",
             instructions = "Put in oven"
         )
         val diaryEntry = DiaryEntry(
-            diaryEntryId = 1,
             year = 2021,
             dayOfYear = 1,
             dayOfWeek = 1,
             monthOfYear = 1,
             dayOfMonth = 1
         )
-        diaryRepository.insertMeal(meal)
-        diaryRepository.insertFood(foodEntry)
         diaryRepository.insertDiaryEntry(diaryEntry)
-        diaryRepository.insertDiaryEntryMealCrossRef(DiaryEntryMealCrossRef(1, 1))
+        diaryRepository.insertMeal(meal)
+
+        val user = viewModel.user.first()
+        user.year = diaryEntry.year
+        user.dayOfYear = diaryEntry.dayOfYear
+        userRepository.updateUser(user)
+
+        viewModel.uiState.first()
+        viewModel.addMealToDiary(
+            MealWithFoodEntries(
+                meal,
+                listOf()
+            )
+        )
 
         val diaryEntryWithMeals = diaryRepository.getDiaryEntryWithMeals(
             year = 2021,
             dayOfYear = 1
-        ).asLiveData().getOrAwaitValueTest()
-        viewModel.calculateData()
+        ).first()
 
-        assertThat(diaryEntryWithMeals.meals).contains(meal)
+        assertThat(diaryEntryWithMeals?.meals).contains(meal)
     }
 }

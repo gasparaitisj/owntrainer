@@ -1,13 +1,12 @@
 package com.gasparaiciukas.owntrainer.database
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.asLiveData
 import androidx.test.filters.SmallTest
-import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -27,7 +26,6 @@ class ReminderDaoTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Inject
-    @Named("test_db")
     lateinit var database: AppDatabase
     private lateinit var reminderDao: ReminderDao
 
@@ -52,7 +50,7 @@ class ReminderDaoTest {
         )
         reminderDao.insertReminder(reminder)
 
-        val reminders = reminderDao.getReminders().asLiveData().getOrAwaitValue()
+        val reminders = reminderDao.getReminders().first()
         assertThat(reminders).contains(reminder)
     }
 
@@ -71,7 +69,7 @@ class ReminderDaoTest {
         reminder.minute = 0
         reminderDao.updateReminder(reminder)
 
-        val reminders = reminderDao.getReminders().asLiveData().getOrAwaitValue()
+        val reminders = reminderDao.getReminders().first()
         assertThat(reminders).contains(reminder)
     }
 
@@ -85,7 +83,7 @@ class ReminderDaoTest {
         )
         reminderDao.insertReminder(reminder)
         reminderDao.deleteReminderById(reminder.reminderId)
-        val reminders = reminderDao.getReminders().asLiveData().getOrAwaitValue()
+        val reminders = reminderDao.getReminders().first()
         assertThat(reminders).doesNotContain(reminder)
     }
 }

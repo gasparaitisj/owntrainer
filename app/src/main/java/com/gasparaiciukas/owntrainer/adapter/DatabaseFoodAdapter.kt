@@ -75,12 +75,16 @@ class DatabaseFoodAdapter @Inject constructor(
             singleClickListener?.let { click ->
                 click(
                     FoodEntryParcelable(
+                        title = items[position].title,
                         caloriesPer100G = items[position].caloriesPer100G,
                         proteinPer100G = items[position].proteinPer100G,
                         fatPer100G = items[position].fatPer100G,
                         carbsPer100G = items[position].carbsPer100G,
+                        calories = items[position].calories,
+                        protein = items[position].protein,
+                        fat = items[position].fat,
+                        carbs = items[position].carbs,
                         quantityInG = items[position].quantityInG,
-                        title = items[position].title
                     )
                 )
             }

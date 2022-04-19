@@ -17,10 +17,12 @@ import com.gasparaiciukas.owntrainer.network.FoodNutrient
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
 import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
+import com.gasparaiciukas.owntrainer.viewmodel.NetworkFoodItemUiState
 import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.Matchers
 import org.junit.Before
@@ -85,13 +87,24 @@ class NetworkFoodItemFragmentTest {
 
     @Test
     fun clickAddNavigationButton_navigateToAddFoodToMealFragment() = runTest {
+        val uiState = NetworkFoodItemUiState(
+            user = fakeViewModel.user.first(),
+            foodItem = food,
+            title = food.description.toString(),
+            carbs = 14.3f,
+            carbsPercentage = 14.3f,
+            calories = 52.0f,
+            fat = 0.65f,
+            fatPercentage = 0.65f,
+            protein = 0.0f,
+            proteinPercentage = 0.0f
+        )
         launchFragmentInHiltContainer<NetworkFoodItemFragment>(
             fragmentFactory = fragmentFactory,
             navController = navController
         ) {
             fakeViewModel = sharedViewModel
-            sharedViewModel.foodItem = food
-            sharedViewModel.loadNetworkFoodItemUiState()
+            refreshUi(uiState)
         }
 
         val quantity = 200

@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.Lifestyle
@@ -25,9 +28,12 @@ import com.gasparaiciukas.owntrainer.utils.Constants.HEIGHT_MINIMUM
 import com.gasparaiciukas.owntrainer.utils.Constants.WEIGHT_MAXIMUM
 import com.gasparaiciukas.owntrainer.utils.Constants.WEIGHT_MINIMUM
 import com.gasparaiciukas.owntrainer.utils.discard
+import com.gasparaiciukas.owntrainer.viewmodel.SettingsUiState
 import com.gasparaiciukas.owntrainer.viewmodel.SettingsViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -50,12 +56,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         super.onViewCreated(view, savedInstanceState)
         sharedViewModel = ViewModelProvider(requireActivity())[SettingsViewModel::class.java]
 
-        sharedViewModel.ldUser.value?.let { user ->
-            initUi(user)
-        }
-
-        sharedViewModel.ldUser.observe(viewLifecycleOwner) {
-            initUi(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.uiState.collectLatest {
+                    initUi(it)
+                }
+            }
         }
     }
 
@@ -64,21 +70,21 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         _binding = null
     }
 
-    private fun initUi(user: User) {
-        setTextFields(user)
-        setNavigation(user)
+    private fun initUi(uiState: SettingsUiState) {
+        setTextFields(uiState)
+        setNavigation(uiState)
         binding.scrollView.visibility = View.VISIBLE
     }
 
     @SuppressLint("InflateParams")
-    private fun setTextFields(user: User) {
+    private fun setTextFields(uiState: SettingsUiState) {
         // Insert current data into fields
-        binding.etSex.setText(Sex.values()[user.sex].selectionDescription(requireContext()))
-        binding.etAge.setText(user.ageInYears.toString())
-        binding.etHeight.setText(user.heightInCm.toString())
-        binding.etWeight.setText(user.weightInKg.toString())
+        binding.etSex.setText(Sex.values()[uiState.user.sex].selectionDescription(requireContext()))
+        binding.etAge.setText(uiState.user.ageInYears.toString())
+        binding.etHeight.setText(uiState.user.heightInCm.toString())
+        binding.etWeight.setText(uiState.user.weightInKg.toString())
         binding.etLifestyle.setText(
-            Lifestyle.values()[user.lifestyle].selectionDescription(
+            Lifestyle.values()[uiState.user.lifestyle].selectionDescription(
                 requireContext()
             )
         )
@@ -88,8 +94,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 getString(R.string.male),
                 getString(R.string.female)
             )
-            val checkedItem = user.sex
-            var selectedItem = user.sex
+            val checkedItem = uiState.user.sex
+            var selectedItem = uiState.user.sex
 
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.sex))
@@ -97,8 +103,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     dialog.dismiss()
                 }
                 .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                    user.sex = selectedItem
-                    sharedViewModel.updateUser(user)
+                    uiState.user.sex = selectedItem
+                    sharedViewModel.updateUser(uiState.user)
                 }
                 .setSingleChoiceItems(singleItems, checkedItem) { _, which ->
                     selectedItem = which
@@ -108,7 +114,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         binding.etAge.setOnClickListener {
             val view = layoutInflater.inflate(R.layout.dialog_profile_age, null)
             val dialogBinding = DialogProfileAgeBinding.bind(view)
-            var age = user.ageInYears.toString()
+            var age = uiState.user.ageInYears.toString()
             dialogBinding.dialogEtAge.setText(age)
             dialogBinding.dialogEtAge.doOnTextChanged { text, _, _, _ ->
                 age = text.toString()
@@ -127,8 +133,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 }
                 .setPositiveButton(getString(R.string.ok)) { _, _ ->
                     if (isAgeCorrect(age) == null) {
-                        user.ageInYears = age.toInt()
-                        sharedViewModel.updateUser(user)
+                        uiState.user.ageInYears = age.toInt()
+                        sharedViewModel.updateUser(uiState.user)
                     }
                 }
                 .show()
@@ -137,7 +143,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         binding.etHeight.setOnClickListener {
             val view = layoutInflater.inflate(R.layout.dialog_profile_height, null)
             val dialogBinding = DialogProfileHeightBinding.bind(view)
-            var height = user.heightInCm.toString()
+            var height = uiState.user.heightInCm.toString()
             dialogBinding.dialogEtHeight.setText(height)
             dialogBinding.dialogEtHeight.doOnTextChanged { text, _, _, _ ->
                 height = text.toString()
@@ -156,8 +162,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 }
                 .setPositiveButton(getString(R.string.ok)) { _, _ ->
                     if (isHeightCorrect(height) == null) {
-                        user.heightInCm = height.toInt()
-                        sharedViewModel.updateUser(user)
+                        uiState.user.heightInCm = height.toInt()
+                        sharedViewModel.updateUser(uiState.user)
                     }
                 }
                 .show()
@@ -165,7 +171,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         binding.etWeight.setOnClickListener {
             val view = layoutInflater.inflate(R.layout.dialog_profile_weight, null)
             val dialogBinding = DialogProfileWeightBinding.bind(view)
-            var weight = user.weightInKg.toString()
+            var weight = uiState.user.weightInKg.toString()
             dialogBinding.dialogEtWeight.setText(weight)
             dialogBinding.dialogEtWeight.doOnTextChanged { text, _, _, _ ->
                 weight = text.toString()
@@ -184,8 +190,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 }
                 .setPositiveButton(getString(R.string.ok)) { _, _ ->
                     if (isWeightCorrect(weight) == null) {
-                        user.weightInKg = weight.toDouble()
-                        sharedViewModel.updateUser(user)
+                        uiState.user.weightInKg = weight.toDouble()
+                        sharedViewModel.updateUser(uiState.user)
                     }
                 }
                 .show()
@@ -199,8 +205,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 getString(R.string.very_active),
                 getString(R.string.extra_active)
             )
-            val checkedItem = user.lifestyle
-            var selectedItem = user.lifestyle
+            val checkedItem = uiState.user.lifestyle
+            var selectedItem = uiState.user.lifestyle
 
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.lifestyle))
@@ -209,8 +215,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 }
                 .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                     dialog.dismiss()
-                    user.lifestyle = selectedItem
-                    sharedViewModel.updateUser(user)
+                    uiState.user.lifestyle = selectedItem
+                    sharedViewModel.updateUser(uiState.user)
                 }
                 .setSingleChoiceItems(singleItems, checkedItem) { _, which ->
                     selectedItem = which
@@ -219,13 +225,13 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
-    private fun setNavigation(user: User) {
+    private fun setNavigation(uiState: SettingsUiState) {
         binding.topAppBar.setNavigationOnClickListener {
-            onBackPressed(user)
+            onBackPressed(uiState)
         }
 
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() = onBackPressed(user)
+            override fun handleOnBackPressed() = onBackPressed(uiState)
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -234,7 +240,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         )
     }
 
-    private fun onBackPressed(user: User) {
+    private fun onBackPressed(uiState: SettingsUiState) {
         if (binding.layoutEtSex.error == null ||
             binding.layoutEtAge.error == null ||
             binding.layoutEtHeight.error == null ||
@@ -250,17 +256,17 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     ?: Lifestyle.SEDENTARY
             sharedViewModel.updateUser(
                 User(
-                    userId = user.userId,
+                    userId = uiState.user.userId,
                     sex = sex.ordinal,
                     ageInYears = binding.etAge.text.toString().toInt(),
                     heightInCm = binding.etHeight.text.toString().toInt(),
                     weightInKg = binding.etWeight.text.toString().toDouble(),
                     lifestyle = lifestyle.ordinal,
-                    year = user.year,
-                    month = user.month,
-                    dayOfYear = user.dayOfYear,
-                    dayOfMonth = user.dayOfMonth,
-                    dayOfWeek = user.dayOfWeek
+                    year = uiState.user.year,
+                    month = uiState.user.month,
+                    dayOfYear = uiState.user.dayOfYear,
+                    dayOfMonth = uiState.user.dayOfMonth,
+                    dayOfWeek = uiState.user.dayOfWeek
                 )
             )
             findNavController().popBackStack().discard()

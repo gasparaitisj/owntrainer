@@ -1,7 +1,5 @@
 package com.gasparaiciukas.owntrainer.repository
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
 import com.gasparaiciukas.owntrainer.database.Lifestyle
 import com.gasparaiciukas.owntrainer.database.Reminder
 import com.gasparaiciukas.owntrainer.database.Sex
@@ -12,12 +10,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import java.time.LocalDate
 
 class FakeUserRepository : UserRepository {
-    override var user: Flow<User> = MutableLiveData(createUser()).asFlow()
+    override var user: Flow<User> = MutableStateFlow(createUser())
     private val reminders: MutableStateFlow<List<Reminder>> = MutableStateFlow(listOf())
     private val appearanceMode = MutableStateFlow(AppearanceMode.SYSTEM_DEFAULT.ordinal)
 
     override suspend fun updateUser(user: User) {
-        this.user = MutableLiveData(user).asFlow()
+        this.user = MutableStateFlow(user)
     }
 
     override fun getReminders(): Flow<List<Reminder>> = reminders

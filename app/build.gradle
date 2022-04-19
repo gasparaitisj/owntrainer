@@ -57,11 +57,11 @@ dependencies {
     // Fragment KTX
     implementation "androidx.fragment:fragment-ktx:$rootProject.fragmentVersion"
 
-    // ViewModel
+    // Lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.lifecycleVersion"
-
-    // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$rootProject.lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$rootProject.lifecycleVersion"
+
 
     // WorkManager
     implementation "androidx.work:work-runtime-ktx:$rootProject.workVersion"

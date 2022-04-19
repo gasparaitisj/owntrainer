@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
@@ -15,6 +18,7 @@ import com.gasparaiciukas.owntrainer.databinding.FragmentAddMealToDiaryBinding
 import com.gasparaiciukas.owntrainer.viewmodel.DiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
@@ -38,6 +42,14 @@ class AddMealToDiaryFragment : Fragment(R.layout.fragment_add_meal_to_diary) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedViewModel = ViewModelProvider(requireActivity())[DiaryViewModel::class.java]
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.allMeals.collect { meals ->
+                    meals?.let { refreshUi(it) }
+                }
+            }
+        }
         initUi()
     }
 
@@ -45,6 +57,10 @@ class AddMealToDiaryFragment : Fragment(R.layout.fragment_add_meal_to_diary) {
         initNavigation()
         initRecyclerView()
         binding.scrollView.visibility = View.VISIBLE
+    }
+
+    fun refreshUi(items: List<MealWithFoodEntries>) {
+        mealAdapter.items = items
     }
 
     private fun initNavigation() {
@@ -57,7 +73,6 @@ class AddMealToDiaryFragment : Fragment(R.layout.fragment_add_meal_to_diary) {
 
     private fun initRecyclerView() {
         mealAdapter = MealAdapter()
-        mealAdapter.items = sharedViewModel.ldAllMeals.value ?: listOf()
         mealAdapter.setOnClickListeners(
             singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
                 sharedViewModel.addMealToDiary(mealWithFoodEntries)

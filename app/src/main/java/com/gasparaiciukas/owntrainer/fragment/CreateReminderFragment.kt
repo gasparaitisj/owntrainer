@@ -13,20 +13,27 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
+import com.gasparaiciukas.owntrainer.database.Reminder
 import com.gasparaiciukas.owntrainer.databinding.DialogCreateReminderTitleBinding
 import com.gasparaiciukas.owntrainer.databinding.FragmentCreateReminderBinding
 import com.gasparaiciukas.owntrainer.notif.ReminderNotification
 import com.gasparaiciukas.owntrainer.utils.Constants.NOTIFICATION_REMINDER_ID
 import com.gasparaiciukas.owntrainer.utils.Constants.NOTIFICATION_REMINDER_TITLE_EXTRA
+import com.gasparaiciukas.owntrainer.viewmodel.SettingsUiState
 import com.gasparaiciukas.owntrainer.viewmodel.SettingsViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.util.*
 
 @AndroidEntryPoint
@@ -49,6 +56,13 @@ class CreateReminderFragment : Fragment(R.layout.fragment_create_reminder) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedViewModel = ViewModelProvider(requireActivity())[SettingsViewModel::class.java]
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.uiState.collectLatest {
+                    refreshUi(it)
+                }
+            }
+        }
         initUi()
     }
 
@@ -59,13 +73,9 @@ class CreateReminderFragment : Fragment(R.layout.fragment_create_reminder) {
 
     private fun initUi() {
         initNavigation()
-        binding.scrollView.visibility = View.VISIBLE
     }
 
-    private fun initNavigation() {
-        binding.topAppBar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
+    private fun refreshUi(uiState: SettingsUiState) {
         binding.topAppBar.menu.findItem(R.id.btn_save).setOnMenuItemClickListener {
             if (sharedViewModel.isTitleCorrect &&
                 sharedViewModel.isTimeCorrect
@@ -94,7 +104,7 @@ class CreateReminderFragment : Fragment(R.layout.fragment_create_reminder) {
             dialogBinding.dialogEtTitle.setText("")
             dialogBinding.dialogEtTitle.doOnTextChanged { text, _, _, _ ->
                 titleTemp = text.toString()
-                val validation = isTitleCorrect(titleTemp)
+                val validation = isTitleCorrect(titleTemp, uiState.reminders)
                 if (validation == null) {
                     dialogBinding.dialogLayoutEtTitle.error = null
                 } else {
@@ -108,7 +118,7 @@ class CreateReminderFragment : Fragment(R.layout.fragment_create_reminder) {
                     dialog.dismiss()
                 }
                 .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                    if (isTitleCorrect(titleTemp) == null) {
+                    if (isTitleCorrect(titleTemp, uiState.reminders) == null) {
                         sharedViewModel.title = titleTemp
                         binding.etTitle.setText(sharedViewModel.title)
                         sharedViewModel.isTitleCorrect = true
@@ -118,27 +128,30 @@ class CreateReminderFragment : Fragment(R.layout.fragment_create_reminder) {
                 .show()
         }
         binding.etTime.setOnClickListener {
-            showTimePicker()
+            showTimePicker(uiState.reminders)
+        }
+        binding.scrollView.visibility = View.VISIBLE
+    }
+
+    private fun initNavigation() {
+        binding.topAppBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
-    private fun isTitleCorrect(text: String): String? {
+    private fun isTitleCorrect(text: String, reminders: List<Reminder>): String? {
         if (text.isBlank()) {
             return getString(R.string.title_must_not_be_empty)
         }
-        sharedViewModel.ldReminders.value?.let { reminders ->
-            println(reminders)
-            val titleExists = reminders.any { reminder -> reminder.title == text }
-            if (titleExists) {
-                return getString(R.string.reminder_with_this_title_already_exists)
-            } else {
-                return null
-            }
+        val titleExists = reminders.any { reminder -> reminder.title == text }
+        return if (titleExists) {
+            getString(R.string.reminder_with_this_title_already_exists)
+        } else {
+            null
         }
-        return getString(R.string.title_must_be_valid)
     }
 
-    private fun showTimePicker() {
+    private fun showTimePicker(reminders: List<Reminder>) {
         val picker = MaterialTimePicker.Builder()
             .setTimeFormat(TimeFormat.CLOCK_24H)
             .setHour(12)
@@ -146,18 +159,16 @@ class CreateReminderFragment : Fragment(R.layout.fragment_create_reminder) {
             .setTitleText(getString(R.string.select_reminder_time))
             .build()
         picker.addOnPositiveButtonClickListener {
-            sharedViewModel.ldReminders.value?.let { reminders ->
-                if (reminders.any { reminder -> reminder.hour == picker.hour && reminder.minute == picker.minute }) {
-                    showIncorrectTimeDialog()
-                } else {
-                    sharedViewModel.hour = picker.hour
-                    sharedViewModel.minute = picker.minute
-                    binding.etTime.setText(
-                        String.format("%02d:%02d", sharedViewModel.hour, sharedViewModel.minute)
-                    )
-                    sharedViewModel.isTimeCorrect = true
-                    binding.layoutEtTime.error = null
-                }
+            if (reminders.any { reminder -> reminder.hour == picker.hour && reminder.minute == picker.minute }) {
+                showIncorrectTimeDialog()
+            } else {
+                sharedViewModel.hour = picker.hour
+                sharedViewModel.minute = picker.minute
+                binding.etTime.setText(
+                    String.format("%02d:%02d", sharedViewModel.hour, sharedViewModel.minute)
+                )
+                sharedViewModel.isTimeCorrect = true
+                binding.layoutEtTime.error = null
             }
         }
         picker.show(parentFragmentManager, "TIME_PICKER")

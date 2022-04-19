@@ -1,15 +1,16 @@
 package com.gasparaiciukas.owntrainer.repository
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.database.*
-import com.gasparaiciukas.owntrainer.getOrAwaitValueTest
 import com.gasparaiciukas.owntrainer.network.GetResponse
 import com.gasparaiciukas.owntrainer.network.Resource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
 import java.time.LocalDate
 
+@ExperimentalCoroutinesApi
 class FakeDiaryRepository : DiaryRepository {
 
     private val diaryEntries = mutableListOf<DiaryEntry>()
@@ -27,7 +28,7 @@ class FakeDiaryRepository : DiaryRepository {
         diaryEntries.removeIf { it.year == year && it.dayOfYear == dayOfYear }
     }
 
-    override fun getDiaryEntry(year: Int, dayOfYear: Int): Flow<DiaryEntry> {
+    override fun getDiaryEntry(year: Int, dayOfYear: Int): Flow<DiaryEntry?> {
         val date = LocalDate.ofYearDay(year, dayOfYear)
         val diaryEntry = DiaryEntry(
             year = date.year,
@@ -37,14 +38,17 @@ class FakeDiaryRepository : DiaryRepository {
             dayOfMonth = date.dayOfMonth
         )
         return if (diaryEntries.any { d -> d.year == year && d.dayOfYear == dayOfYear }) {
-            MutableLiveData(diaryEntry).asFlow()
+            MutableStateFlow(diaryEntry)
         } else {
-            throw RuntimeException("getDiaryEntry() couldn't find diary entry")
+            MutableStateFlow(null)
         }
     }
 
-    override fun getDiaryEntryWithMeals(year: Int, dayOfYear: Int): Flow<DiaryEntryWithMeals> {
-        val diaryEntry = getDiaryEntry(year, dayOfYear).asLiveData().getOrAwaitValueTest()
+    override fun getDiaryEntryWithMeals(year: Int, dayOfYear: Int): Flow<DiaryEntryWithMeals?> {
+        var diaryEntry: DiaryEntry? = null
+        runTest {
+            diaryEntry = getDiaryEntry(year, dayOfYear).first()
+        }
         val diaryEntryMeals = mutableListOf<Meal>()
         for (meal in meals) {
             val crossRef = DiaryEntryMealCrossRef(
@@ -55,12 +59,15 @@ class FakeDiaryRepository : DiaryRepository {
                 diaryEntryMeals.add(meal)
             }
         }
-        return MutableLiveData(
-            DiaryEntryWithMeals(
-                diaryEntry,
-                diaryEntryMeals
+        diaryEntry?.let {
+            return MutableStateFlow(
+                DiaryEntryWithMeals(
+                    it,
+                    diaryEntryMeals
+                )
             )
-        ).asFlow()
+        }
+        return MutableStateFlow(null)
     }
 
     override suspend fun insertDiaryEntryMealCrossRef(crossRef: DiaryEntryMealCrossRef) {
@@ -71,13 +78,13 @@ class FakeDiaryRepository : DiaryRepository {
         diaryEntryMealCrossRefs.removeIf { it.diaryEntryId == diaryEntryId && it.mealId == mealId }
     }
 
-    override fun getAllMealsWithFoodEntries(): Flow<List<MealWithFoodEntries>> {
-        return MutableLiveData(mealsWithFoodEntries).asFlow()
+    override fun getAllMealsWithFoodEntries(): Flow<List<MealWithFoodEntries>?> {
+        return MutableStateFlow(mealsWithFoodEntries)
     }
 
-    override suspend fun getMealWithFoodEntriesById(id: Int): MealWithFoodEntries {
-        return getAllMealsWithFoodEntries().asLiveData().getOrAwaitValueTest()
-            .first { it.meal.mealId == id }
+    override suspend fun getMealWithFoodEntriesById(id: Int): MealWithFoodEntries? {
+        return getAllMealsWithFoodEntries().first()
+            ?.first { it.meal.mealId == id }
     }
 
     override suspend fun insertMeal(meal: Meal) {
@@ -119,7 +126,7 @@ class FakeDiaryRepository : DiaryRepository {
     }
 
     override fun getAllFoodEntries(): Flow<List<FoodEntry>> {
-        return MutableLiveData(foodEntries).asFlow()
+        return MutableStateFlow(foodEntries)
     }
 
     override suspend fun insertFood(foodEntry: FoodEntry) {

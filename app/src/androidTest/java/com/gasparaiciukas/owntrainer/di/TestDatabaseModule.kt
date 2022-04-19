@@ -32,13 +32,6 @@ object TestDatabaseModule {
         return PrefsStoreImpl(context)
     }
 
-    @Provides
-    @Named("test_db")
-    fun provideInMemoryDb(@ApplicationContext context: Context) =
-        Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
-            .allowMainThreadQueries()
-            .build()
-
     @Singleton
     @Provides
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase =

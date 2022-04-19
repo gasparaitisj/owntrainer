@@ -3,15 +3,17 @@ package com.gasparaiciukas.owntrainer.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
 import com.gasparaiciukas.owntrainer.MainCoroutineRule
-import com.gasparaiciukas.owntrainer.getOrAwaitValueTest
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepository
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class DatabaseFoodItemViewModelTest {
     @get:Rule
     val instantTaskRule = InstantTaskExecutorRule()
@@ -35,10 +37,8 @@ class DatabaseFoodItemViewModelTest {
 
     @Test
     fun `when loadData() is called, should load data`() = runTest {
-        val user = viewModel.ldUser.getOrAwaitValueTest()
-        viewModel.loadData()
-        val uiState = viewModel.uiState.getOrAwaitValueTest()
-        val sum = (1.1 * 60.0 / 100.0) + (11.0 * 60.0 / 100.0) + (13.0 * 60.0 / 100.0)
+        val user = viewModel.user.first()
+        val sum = foodEntry.carbs + foodEntry.protein + foodEntry.fat
         val uiStateTest = DatabaseFoodItemUiState(
             food = foodEntry,
             carbsPercentage = (foodEntry.carbs / sum * 100).toFloat(),
@@ -53,7 +53,7 @@ class DatabaseFoodItemViewModelTest {
             proteinDailyIntake = user.dailyProteinIntakeInG.toFloat(),
             proteinDailyIntakePercentage = (foodEntry.protein / user.dailyProteinIntakeInG * 100).toFloat(),
         )
-        assertThat(uiState).isEqualTo(uiStateTest)
+        assertThat(viewModel.uiState.first().data).isEqualTo(uiStateTest)
     }
 
     private fun createFoodEntry(): FoodEntryParcelable {

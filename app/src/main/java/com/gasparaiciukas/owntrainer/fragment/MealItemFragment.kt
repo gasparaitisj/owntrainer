@@ -6,19 +6,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.DatabaseFoodAdapter
 import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.databinding.FragmentMealItemBinding
+import com.gasparaiciukas.owntrainer.network.Status
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 import com.gasparaiciukas.owntrainer.viewmodel.MealItemUiState
 import com.gasparaiciukas.owntrainer.viewmodel.MealItemViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class MealItemFragment : Fragment(R.layout.fragment_meal_item) {
     private var _binding: FragmentMealItemBinding? = null
@@ -40,11 +48,17 @@ class MealItemFragment : Fragment(R.layout.fragment_meal_item) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[MealItemViewModel::class.java]
-        viewModel.ldUser.observe(viewLifecycleOwner) {
-            viewModel.loadData(it)
-        }
-        viewModel.uiState.observe(viewLifecycleOwner) {
-            refreshUi(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collectLatest { uiState ->
+                    when (uiState?.status) {
+                        Status.SUCCESS -> {
+                            uiState.data?.let { refreshUi(it) }
+                        }
+                        else -> {}
+                    }
+                }
+            }
         }
         initUi()
     }
@@ -59,7 +73,7 @@ class MealItemFragment : Fragment(R.layout.fragment_meal_item) {
         initRecyclerView()
     }
 
-    private fun refreshUi(uiState: MealItemUiState) {
+    fun refreshUi(uiState: MealItemUiState) {
         setTextViews(uiState)
         setPieChart(
             carbsPercentage = uiState.carbsPercentage,

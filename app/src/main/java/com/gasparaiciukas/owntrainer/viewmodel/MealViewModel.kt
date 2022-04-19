@@ -1,7 +1,6 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.repository.DiaryRepository
@@ -13,7 +12,7 @@ import javax.inject.Inject
 class MealViewModel @Inject internal constructor(
     val diaryRepository: DiaryRepository
 ) : ViewModel() {
-    val ldMeals = diaryRepository.getAllMealsWithFoodEntries().asLiveData()
+    val meals = diaryRepository.getAllMealsWithFoodEntries()
 
     var title = ""
     var instructions = ""

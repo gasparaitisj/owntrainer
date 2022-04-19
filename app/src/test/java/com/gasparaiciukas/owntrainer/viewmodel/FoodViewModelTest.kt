@@ -5,7 +5,6 @@ import com.gasparaiciukas.owntrainer.MainCoroutineRule
 import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
-import com.gasparaiciukas.owntrainer.getOrAwaitValueTest
 import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.FoodNutrient
 import com.gasparaiciukas.owntrainer.network.Status
@@ -14,6 +13,7 @@ import com.gasparaiciukas.owntrainer.repository.FakeUserRepository
 import com.gasparaiciukas.owntrainer.repository.UserRepository
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -42,7 +42,7 @@ class FoodViewModelTest {
     fun `when getFoods() is called successfully, should get foods`() = runTest {
         diaryRepository.setShouldReturnNetworkError(false)
         viewModel.getFoods("test")
-        val response = viewModel.ldResponse.getOrAwaitValueTest()
+        val response = viewModel.response.first()
         assertThat(response.status).isEqualTo(Status.SUCCESS)
     }
 
@@ -50,20 +50,18 @@ class FoodViewModelTest {
     fun `when getFoods() is called unsuccessfully, should return error`() = runTest {
         diaryRepository.setShouldReturnNetworkError(true)
         viewModel.getFoods("test")
-        val response = viewModel.ldResponse.getOrAwaitValueTest()
+        val response = viewModel.response.first()
         assertThat(response.status).isEqualTo(Status.ERROR)
     }
 
     @Test
     fun `when loadNetworkFoodItemUiState() is called, should load UI state`() = runTest {
-        viewModel.ldUser.getOrAwaitValueTest()
         viewModel.foodItem = createFood()
-        viewModel.loadNetworkFoodItemUiState()
 
-        val uiState = viewModel.networkFoodItemUiState.getOrAwaitValueTest()
+        val uiStateData = viewModel.networkFoodItemUiState.first()?.data
         val sum = 0.0f + 0.65f + 14.3f
         val uiStateTest = NetworkFoodItemUiState(
-            user = viewModel.ldUser.getOrAwaitValueTest(),
+            user = viewModel.user.first(),
             foodItem = viewModel.foodItem!!,
             title = viewModel.foodItem!!.description.toString(),
             carbs = 14.3f,
@@ -74,7 +72,7 @@ class FoodViewModelTest {
             protein = 0.0f,
             proteinPercentage = 0.0f / sum * 100
         )
-        assertThat(uiState).isEqualTo(uiStateTest)
+        assertThat(uiStateData).isEqualTo(uiStateTest)
     }
 
     @Test
@@ -101,7 +99,7 @@ class FoodViewModelTest {
             listOf(foodEntry)
         )
         viewModel.addFoodToMeal(MealWithFoodEntries(meal, listOf()))
-        assertThat(viewModel.ldMeals.getOrAwaitValueTest()).contains(mealWithFoodEntries)
+        assertThat(viewModel.meals.first()).contains(mealWithFoodEntries)
     }
 
     private fun createFood(): Food {

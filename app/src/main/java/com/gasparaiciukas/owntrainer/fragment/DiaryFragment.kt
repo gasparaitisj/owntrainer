@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,11 +16,14 @@ import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.FragmentDiaryBinding
+import com.gasparaiciukas.owntrainer.network.Status
 import com.gasparaiciukas.owntrainer.utils.DateFormatter
 import com.gasparaiciukas.owntrainer.viewmodel.DiaryUiState
 import com.gasparaiciukas.owntrainer.viewmodel.DiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @ExperimentalCoroutinesApi
@@ -42,16 +48,17 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[DiaryViewModel::class.java]
 
-        viewModel.ldDiaryEntryWithMeals.observe(viewLifecycleOwner) { diaryEntryWithMeals ->
-            if (diaryEntryWithMeals != null) {
-                viewModel.calculateData()
-            } else {
-                viewModel.createDiaryEntry()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collectLatest { uiState ->
+                    when (uiState?.status) {
+                        Status.SUCCESS -> {
+                            uiState.data?.let { refreshUi(it) }
+                        }
+                        else -> {}
+                    }
+                }
             }
-        }
-
-        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            refreshUi(uiState)
         }
         initUi()
     }

@@ -10,7 +10,10 @@ import android.widget.AbsListView
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +28,8 @@ import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FoodFragment : Fragment(R.layout.fragment_food) {
@@ -50,46 +55,52 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[FoodViewModel::class.java]
-        viewModel.ldResponse.observe(viewLifecycleOwner) { response ->
-            when (response.status) {
-                Status.SUCCESS -> {
-                    binding.paginationProgressBar.visibility = View.INVISIBLE
-                    isLoading = false
-                    response.data?.foods?.let { refreshUi(it.toList()) }
-                    val totalPages: Int? =
-                        (response.data?.totalHits?.div(Constants.Api.QUERY_PAGE_SIZE)?.plus(2))
-                    isLastPage = viewModel.pageNumber == totalPages
-                    response?.data?.foods?.size?.let { size ->
-                        if (size == 0) {
-                            if (isLastPage && viewModel.pageNumber != 2) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    getString(R.string.could_not_find_any_more_matching_foods),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
-                                Toast.makeText(
-                                    requireContext(),
-                                    getString(R.string.could_not_find_any_matching_foods),
-                                    Toast.LENGTH_SHORT
-                                ).show()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.response.collectLatest { response ->
+                    when (response.status) {
+                        Status.SUCCESS -> {
+                            binding.paginationProgressBar.visibility = View.INVISIBLE
+                            isLoading = false
+                            response.data?.foods?.let { refreshUi(it.toList()) }
+                            val totalPages: Int? =
+                                (response.data?.totalHits?.div(Constants.Api.QUERY_PAGE_SIZE)
+                                    ?.plus(2))
+                            isLastPage = viewModel.pageNumber == totalPages
+                            response.data?.foods?.size?.let { size ->
+                                if (size == 0) {
+                                    if (isLastPage && viewModel.pageNumber != 2) {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            getString(R.string.could_not_find_any_more_matching_foods),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            getString(R.string.could_not_find_any_matching_foods),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
                             }
+                        }
+                        Status.ERROR -> {
+                            binding.paginationProgressBar.visibility = View.INVISIBLE
+                            isLoading = false
+                            response.message?.let { message ->
+                                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        Status.LOADING -> {
+                            binding.paginationProgressBar.visibility = View.VISIBLE
+                            isLoading = true
                         }
                     }
                 }
-                Status.ERROR -> {
-                    binding.paginationProgressBar.visibility = View.INVISIBLE
-                    isLoading = false
-                    response.message?.let { message ->
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                    }
-                }
-                Status.LOADING -> {
-                    binding.paginationProgressBar.visibility = View.VISIBLE
-                    isLoading = true
-                }
             }
         }
+
         initUi()
     }
 

@@ -7,17 +7,22 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.DialogNetworkFoodItemQuantityBinding
 import com.gasparaiciukas.owntrainer.databinding.FragmentNetworkFoodItemBinding
+import com.gasparaiciukas.owntrainer.network.Status
 import com.gasparaiciukas.owntrainer.utils.Constants
 import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import com.gasparaiciukas.owntrainer.viewmodel.NetworkFoodItemUiState
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -39,14 +44,20 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedViewModel = ViewModelProvider(requireActivity())[FoodViewModel::class.java]
-        sharedViewModel.ldUser.observe(viewLifecycleOwner) {
-            println("ldUser.observe()")
-            sharedViewModel.loadNetworkFoodItemUiState()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.networkFoodItemUiState.collectLatest { uiState ->
+                    when (uiState?.status) {
+                        Status.SUCCESS -> {
+                            uiState.data?.let { refreshUi(it) }
+                        }
+                        else -> {}
+                    }
+                }
+            }
         }
-        sharedViewModel.networkFoodItemUiState.observe(viewLifecycleOwner) {
-            println("uiState.observe()")
-            refreshUi(it)
-        }
+
         initUi()
     }
 
@@ -59,7 +70,7 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
         initNavigation()
     }
 
-    private fun refreshUi(uiState: NetworkFoodItemUiState) {
+    fun refreshUi(uiState: NetworkFoodItemUiState) {
         setNavigation()
         setTextViews(uiState)
         setPieChart(

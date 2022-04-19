@@ -11,7 +11,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
@@ -20,9 +23,12 @@ import com.gasparaiciukas.owntrainer.database.Reminder
 import com.gasparaiciukas.owntrainer.databinding.FragmentReminderBinding
 import com.gasparaiciukas.owntrainer.notif.ReminderNotification
 import com.gasparaiciukas.owntrainer.utils.Constants
+import com.gasparaiciukas.owntrainer.viewmodel.SettingsUiState
 import com.gasparaiciukas.owntrainer.viewmodel.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
@@ -47,8 +53,12 @@ class ReminderFragment : Fragment(R.layout.fragment_reminder) {
         super.onViewCreated(view, savedInstanceState)
         sharedViewModel = ViewModelProvider(requireActivity())[SettingsViewModel::class.java]
 
-        sharedViewModel.ldReminders.observe(viewLifecycleOwner) { reminders ->
-            refreshUi(reminders)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.uiState.collectLatest {
+                    refreshUi(it)
+                }
+            }
         }
 
         initUi()
@@ -62,14 +72,11 @@ class ReminderFragment : Fragment(R.layout.fragment_reminder) {
     private fun initUi() {
         initNavigation()
         initRecyclerView()
-        sharedViewModel.ldReminders.value?.let { reminders ->
-            refreshUi(reminders)
-        }
         binding.scrollView.visibility = View.VISIBLE
     }
 
-    private fun refreshUi(reminders: List<Reminder>) {
-        reminderAdapter.items = reminders
+    private fun refreshUi(uiState: SettingsUiState) {
+        reminderAdapter.items = uiState.reminders
     }
 
     private fun initRecyclerView() {

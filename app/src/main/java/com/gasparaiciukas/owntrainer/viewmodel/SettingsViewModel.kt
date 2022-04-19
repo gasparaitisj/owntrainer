@@ -1,51 +1,42 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.gasparaiciukas.owntrainer.database.Reminder
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.repository.UserRepository
-import com.gasparaiciukas.owntrainer.utils.safeLet
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class SettingsUiState(
     val appearanceMode: Int,
-    val user: User
+    val user: User,
+    val reminders: List<Reminder>
 )
 
 @HiltViewModel
 class SettingsViewModel @Inject internal constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
-    val ldReminders = userRepository.getReminders().asLiveData()
-    val ldAppearanceMode = userRepository.getAppearanceMode().asLiveData()
-    val ldUser = switchMap(ldAppearanceMode) {
-        userRepository.user.asLiveData()
+    val reminders = userRepository.getReminders()
+    val appearanceMode = userRepository.getAppearanceMode()
+    val user = userRepository.user
+    val uiState = combine(reminders, appearanceMode, user) { lReminders, lAppearanceMode, lUser ->
+        SettingsUiState(
+            appearanceMode = lAppearanceMode,
+            user = lUser,
+            reminders = lReminders
+        )
     }
-    val uiState = MutableLiveData<SettingsUiState>()
 
     var hour = 0
     var minute = 0
     var title = ""
     var isTitleCorrect = false
     var isTimeCorrect = false
-
-    fun loadUiState() {
-        safeLet(ldAppearanceMode.value, ldUser.value) { appearanceMode, user ->
-            uiState.postValue(
-                SettingsUiState(
-                    appearanceMode = appearanceMode,
-                    user = user
-                )
-            )
-        }
-    }
 
     fun setAppearanceMode(appearanceMode: AppearanceMode) {
         viewModelScope.launch {

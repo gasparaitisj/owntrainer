@@ -11,7 +11,6 @@ import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.database.Reminder
-import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
 import com.gasparaiciukas.owntrainer.viewmodel.SettingsViewModel
@@ -19,6 +18,7 @@ import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -67,7 +67,7 @@ class ReminderFragmentTest {
     }
 
     @Test
-    fun longClickOnReminder_deleteReminder() {
+    fun longClickOnReminder_deleteReminder() = runTest {
         val reminder = Reminder(
             reminderId = 1,
             title = "Breakfast",
@@ -95,6 +95,6 @@ class ReminderFragmentTest {
                 ViewActions.click()
             )
 
-        Truth.assertThat(fakeViewModel.ldReminders.getOrAwaitValue()).doesNotContain(reminder)
+        Truth.assertThat(fakeViewModel.reminders.first()).doesNotContain(reminder)
     }
 }

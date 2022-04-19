@@ -68,7 +68,6 @@ class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
         holder.binding.tvCalories.text = calories.toString()
         holder.binding.layoutItem.setOnClickListener {
             singleClickListener?.let { click ->
-                println("singleClick items[$position]: " + items[position])
                 click(items[position], position)
             }
         }
@@ -79,7 +78,6 @@ class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
             popup.show()
             popup.setOnMenuItemClickListener {
                 longClickListener?.let { click ->
-                    println("longClick items[$position]: " + items[position])
                     click(items[position].meal.mealId, position)
                 }
                 true

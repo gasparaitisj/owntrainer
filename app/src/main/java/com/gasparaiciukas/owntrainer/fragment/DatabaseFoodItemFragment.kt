@@ -5,16 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentDatabaseFoodItemBinding
+import com.gasparaiciukas.owntrainer.network.Status
 import com.gasparaiciukas.owntrainer.viewmodel.DatabaseFoodItemUiState
 import com.gasparaiciukas.owntrainer.viewmodel.DatabaseFoodItemViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
+@ExperimentalCoroutinesApi
 class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) {
     private var _binding: FragmentDatabaseFoodItemBinding? = null
     private val binding get() = _binding!!
@@ -33,11 +41,18 @@ class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[DatabaseFoodItemViewModel::class.java]
-        viewModel.ldUser.observe(viewLifecycleOwner) {
-            viewModel.loadData()
-        }
-        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            refreshUi(uiState)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collectLatest { uiState ->
+                    when (uiState.status) {
+                        Status.SUCCESS -> {
+                            uiState.data?.let { refreshUi(it) }
+                        }
+                        else -> {}
+                    }
+                    uiState.data?.let { refreshUi(it) }
+                }
+            }
         }
         initUi()
     }

@@ -2,7 +2,6 @@ package com.gasparaiciukas.owntrainer.fragment
 
 import android.widget.ImageButton
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.asLiveData
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.espresso.Espresso
@@ -12,7 +11,6 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.Reminder
-import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
 import com.gasparaiciukas.owntrainer.viewmodel.SettingsViewModel
@@ -20,6 +18,7 @@ import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.Matchers
 import org.junit.Before
@@ -76,7 +75,7 @@ class CreateReminderFragmentTest {
     }
 
     @Test
-    fun clickSaveButton_popBackStack() {
+    fun clickSaveButton_popBackStack() = runTest {
         launchFragmentInHiltContainer<CreateReminderFragment> {
             Navigation.setViewNavController(requireView(), navController)
             sharedViewModel = fakeViewModel
@@ -86,7 +85,7 @@ class CreateReminderFragmentTest {
         val hour = 20
         val minute = 0
         val time = "20:00"
-        fakeViewModel.ldReminders.getOrAwaitValue()
+        fakeViewModel.reminders.first()
 
         // Title
         Espresso.onView(
@@ -121,7 +120,7 @@ class CreateReminderFragmentTest {
         ).perform(ViewActions.click())
 
         Truth.assertThat(
-            userRepository.getReminders().asLiveData().getOrAwaitValue()
+            userRepository.getReminders().first()
         )
             .contains(
                 Reminder(

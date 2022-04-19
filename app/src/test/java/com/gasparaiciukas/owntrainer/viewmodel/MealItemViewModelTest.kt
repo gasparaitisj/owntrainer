@@ -2,16 +2,15 @@ package com.gasparaiciukas.owntrainer.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.asLiveData
 import com.gasparaiciukas.owntrainer.MainCoroutineRule
 import com.gasparaiciukas.owntrainer.database.FoodEntry
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
-import com.gasparaiciukas.owntrainer.getOrAwaitValueTest
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepository
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepository
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -76,12 +75,18 @@ class MealItemViewModelTest {
         diaryRepository.insertMeal(meal)
         diaryRepository.insertFood(foodEntry1)
         diaryRepository.insertFood(foodEntry2)
-        val user = viewModel.ldUser.getOrAwaitValueTest()
-        viewModel.loadData(user)
+        println(diaryRepository.getAllMealsWithFoodEntries().first())
+        println(viewModel.mealWithFoodEntries.first())
+
+        mealWithFoodEntries.meal.calories = mealWithFoodEntries.calories
+        mealWithFoodEntries.meal.protein = mealWithFoodEntries.protein
+        mealWithFoodEntries.meal.carbs = mealWithFoodEntries.carbs
+        mealWithFoodEntries.meal.fat = mealWithFoodEntries.fat
         val sum = mealWithFoodEntries.meal.carbs +
                 mealWithFoodEntries.meal.fat +
                 mealWithFoodEntries.meal.protein
-        val uiState = viewModel.uiState.getOrAwaitValueTest()
+
+        val user = viewModel.user.first()
         val uiStateTest = MealItemUiState(
             user = user,
             mealWithFoodEntries = mealWithFoodEntries,
@@ -93,7 +98,7 @@ class MealItemViewModelTest {
             proteinDailyIntakePercentage = (mealWithFoodEntries.meal.protein / user.dailyProteinIntakeInG * 100).toFloat(),
             caloriesDailyIntakePercentage = (mealWithFoodEntries.meal.calories / user.dailyKcalIntake * 100).toFloat()
         )
-        assertThat(uiState).isEqualTo(uiStateTest)
+        assertThat(viewModel.uiState.first()?.data).isEqualTo(uiStateTest)
     }
 
     @Test
@@ -127,7 +132,7 @@ class MealItemViewModelTest {
 
         viewModel.deleteFoodFromMeal(foodEntry1.foodEntryId)
 
-        val foodEntries = diaryRepository.getAllFoodEntries().asLiveData().getOrAwaitValueTest()
+        val foodEntries = diaryRepository.getAllFoodEntries().first()
         assertThat(foodEntries).doesNotContain(foodEntry1)
     }
 }

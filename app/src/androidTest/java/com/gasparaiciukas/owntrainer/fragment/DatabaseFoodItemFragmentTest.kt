@@ -64,6 +64,7 @@ class DatabaseFoodItemFragmentTest {
         ) {
             Navigation.setViewNavController(requireView(), navController)
             viewModel = fakeViewModel
+            viewModel.food = foodEntry
         }
 
         Espresso.onView(

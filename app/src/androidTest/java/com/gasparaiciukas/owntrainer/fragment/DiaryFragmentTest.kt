@@ -18,7 +18,6 @@ import com.gasparaiciukas.owntrainer.database.DiaryEntry
 import com.gasparaiciukas.owntrainer.database.DiaryEntryMealCrossRef
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
-import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
 import com.gasparaiciukas.owntrainer.repository.FakeUserRepositoryTest
@@ -27,6 +26,7 @@ import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -163,7 +163,7 @@ class DiaryFragmentTest {
                 ViewActions.click()
             )
 
-        Truth.assertThat(fakeViewModel.ldDiaryEntryWithMeals.getOrAwaitValue().meals)
+        Truth.assertThat(fakeViewModel.diaryEntryWithMeals.first()?.meals)
             .doesNotContain(meal)
     }
 }

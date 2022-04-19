@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
@@ -16,6 +17,7 @@ import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.databinding.FragmentAddFoodToMealBinding
 import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -40,14 +42,14 @@ class AddFoodToMealFragment : Fragment(R.layout.fragment_add_food_to_meal) {
         super.onViewCreated(view, savedInstanceState)
         sharedViewModel = ViewModelProvider(requireActivity())[FoodViewModel::class.java]
 
-        sharedViewModel.ldMeals.observe(viewLifecycleOwner) {
-            it?.let { refreshUi(it) }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.meals.collectLatest {
+                    it?.let { refreshUi(it) }
+                }
+            }
         }
         initUi()
-
-        sharedViewModel.ldMeals.value?.let {
-            refreshUi(it)
-        }
     }
 
     fun initUi() {

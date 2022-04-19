@@ -1,12 +1,17 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.fragment.MealItemFragmentArgs
+import com.gasparaiciukas.owntrainer.network.Resource
 import com.gasparaiciukas.owntrainer.repository.DiaryRepository
 import com.gasparaiciukas.owntrainer.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,6 +28,7 @@ data class MealItemUiState(
 )
 
 @HiltViewModel
+@ExperimentalCoroutinesApi
 class MealItemViewModel @Inject internal constructor(
     userRepository: UserRepository,
     val diaryRepository: DiaryRepository,
@@ -30,36 +36,40 @@ class MealItemViewModel @Inject internal constructor(
 ) : ViewModel() {
     private val mealId: Int = MealItemFragmentArgs.fromSavedStateHandle(savedStateHandle).mealId
 
-    val ldUser: LiveData<User> = userRepository.user.asLiveData()
-    val uiState = MutableLiveData<MealItemUiState>()
+    val user = userRepository.user
 
-    fun loadData(user: User) {
-        viewModelScope.launch {
-            val mealWithFoodEntries = diaryRepository.getMealWithFoodEntriesById(mealId)
-            if (mealWithFoodEntries != null) {
-                mealWithFoodEntries.meal.calories = mealWithFoodEntries.calories
-                mealWithFoodEntries.meal.protein = mealWithFoodEntries.protein
-                mealWithFoodEntries.meal.carbs = mealWithFoodEntries.carbs
-                mealWithFoodEntries.meal.fat = mealWithFoodEntries.fat
-
-                val sum =
-                    mealWithFoodEntries.meal.carbs + mealWithFoodEntries.meal.fat + mealWithFoodEntries.meal.protein
-                uiState.postValue(
-                    MealItemUiState(
-                        user = user,
-                        mealWithFoodEntries = mealWithFoodEntries,
-                        carbsPercentage = (mealWithFoodEntries.meal.carbs / sum * 100).toFloat(),
-                        fatPercentage = (mealWithFoodEntries.meal.fat / sum * 100).toFloat(),
-                        proteinPercentage = (mealWithFoodEntries.meal.protein / sum * 100).toFloat(),
-                        carbsDailyIntakePercentage = (mealWithFoodEntries.meal.carbs / user.dailyCarbsIntakeInG * 100).toFloat(),
-                        fatDailyIntakePercentage = (mealWithFoodEntries.meal.fat / user.dailyFatIntakeInG * 100).toFloat(),
-                        proteinDailyIntakePercentage = (mealWithFoodEntries.meal.protein / user.dailyProteinIntakeInG * 100).toFloat(),
-                        caloriesDailyIntakePercentage = (mealWithFoodEntries.meal.calories / user.dailyKcalIntake * 100).toFloat()
-                    )
-                )
-            }
-        }
+    val mealWithFoodEntries = diaryRepository.getAllMealsWithFoodEntries().map {
+        it?.firstOrNull { m -> m.meal.mealId == mealId }
     }
+
+    val uiState = combine(user, mealWithFoodEntries) { lUser, lMealWithFoodEntries ->
+        lMealWithFoodEntries?.let { it ->
+            it.meal.calories = it.calories
+            it.meal.protein = it.protein
+            it.meal.carbs = it.carbs
+            it.meal.fat = it.fat
+
+            val sum =
+                it.meal.carbs + it.meal.fat + it.meal.protein
+            return@combine Resource.success(
+                MealItemUiState(
+                    user = lUser,
+                    mealWithFoodEntries = it,
+                    carbsPercentage = (it.meal.carbs / sum * 100).toFloat(),
+                    fatPercentage = (it.meal.fat / sum * 100).toFloat(),
+                    proteinPercentage = (it.meal.protein / sum * 100).toFloat(),
+                    carbsDailyIntakePercentage = (it.meal.carbs / lUser.dailyCarbsIntakeInG * 100).toFloat(),
+                    fatDailyIntakePercentage = (it.meal.fat / lUser.dailyFatIntakeInG * 100).toFloat(),
+                    proteinDailyIntakePercentage = (it.meal.protein / lUser.dailyProteinIntakeInG * 100).toFloat(),
+                    caloriesDailyIntakePercentage = (it.meal.calories / lUser.dailyKcalIntake * 100).toFloat()
+                )
+            )
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = Resource.loading(null)
+    )
 
     fun deleteFoodFromMeal(foodEntryId: Int) {
         viewModelScope.launch {

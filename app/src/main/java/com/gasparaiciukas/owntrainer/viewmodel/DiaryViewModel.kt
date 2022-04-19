@@ -1,13 +1,18 @@
 package com.gasparaiciukas.owntrainer.viewmodel
 
-import androidx.lifecycle.*
-import androidx.lifecycle.Transformations.switchMap
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.gasparaiciukas.owntrainer.database.*
+import com.gasparaiciukas.owntrainer.network.Resource
 import com.gasparaiciukas.owntrainer.repository.DiaryRepository
 import com.gasparaiciukas.owntrainer.repository.UserRepository
-import com.gasparaiciukas.owntrainer.utils.safeLet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -32,78 +37,76 @@ class DiaryViewModel @Inject constructor(
     private val userRepository: UserRepository,
     val diaryRepository: DiaryRepository
 ) : ViewModel() {
-    val ldAllMeals = diaryRepository.getAllMealsWithFoodEntries().asLiveData()
-    val ldUser: LiveData<User> = switchMap(ldAllMeals) {
-        userRepository.user.asLiveData()
+    val allMeals = diaryRepository.getAllMealsWithFoodEntries()
+    val user = userRepository.user
+
+    val diaryEntryWithMeals: Flow<DiaryEntryWithMeals?> = user.flatMapLatest { u ->
+        diaryRepository.getDiaryEntryWithMeals(u.year, u.dayOfYear)
     }
 
-    val ldDiaryEntryWithMeals: LiveData<DiaryEntryWithMeals> = switchMap(ldUser) {
-        diaryRepository.getDiaryEntryWithMeals(it.year, it.dayOfYear).asLiveData()
-    }
-
-    val uiState = MutableLiveData<DiaryUiState>()
-
-    fun calculateData() {
-        viewModelScope.launch {
+    val uiState =
+        combine(allMeals, user, diaryEntryWithMeals) { _, lUser, lDiaryEntryWithMeals ->
+            if (lDiaryEntryWithMeals == null) {
+                createDiaryEntry(lUser)
+            }
             val meals = mutableListOf<MealWithFoodEntries>()
             var caloriesConsumed = 0.0
             var proteinConsumed = 0.0
             var fatConsumed = 0.0
             var carbsConsumed = 0.0
-            safeLet(ldDiaryEntryWithMeals.value, ldUser.value) { diaryEntryWithMeals, user ->
+            lDiaryEntryWithMeals?.let { diaryEntryWithMeals ->
                 for (meal in diaryEntryWithMeals.meals) {
                     val mealWithFoodEntries =
                         diaryRepository.getMealWithFoodEntriesById(meal.mealId)
-                    if (mealWithFoodEntries != null) {
-                        mealWithFoodEntries.meal.calories = mealWithFoodEntries.calories
-                        caloriesConsumed += mealWithFoodEntries.calories
-                        mealWithFoodEntries.meal.protein = mealWithFoodEntries.protein
-                        proteinConsumed += mealWithFoodEntries.protein
-                        mealWithFoodEntries.meal.carbs = mealWithFoodEntries.carbs
-                        carbsConsumed += mealWithFoodEntries.carbs
-                        mealWithFoodEntries.meal.fat = mealWithFoodEntries.fat
-                        fatConsumed += mealWithFoodEntries.fat
-                        meals.add(mealWithFoodEntries)
+                    mealWithFoodEntries?.let {
+                        it.meal.calories = it.calories
+                        caloriesConsumed += it.calories
+                        it.meal.protein = it.protein
+                        proteinConsumed += it.protein
+                        it.meal.carbs = it.carbs
+                        carbsConsumed += it.carbs
+                        it.meal.fat = it.fat
+                        fatConsumed += it.fat
+                        meals.add(it)
                     }
                 }
-                uiState.postValue(
+                return@combine Resource.success(
                     DiaryUiState(
                         meals = meals,
-                        user = user,
+                        user = lUser,
                         diaryEntryWithMeals = diaryEntryWithMeals,
                         proteinConsumed = proteinConsumed,
                         fatConsumed = fatConsumed,
                         carbsConsumed = carbsConsumed,
                         caloriesConsumed = caloriesConsumed,
-                        caloriesPercentage = (caloriesConsumed / user.dailyKcalIntake) * 100,
-                        proteinPercentage = (proteinConsumed / user.dailyProteinIntakeInG) * 100,
-                        fatPercentage = (fatConsumed / user.dailyFatIntakeInG) * 100,
-                        carbsPercentage = (carbsConsumed / user.dailyCarbsIntakeInG) * 100
+                        caloriesPercentage = (caloriesConsumed / lUser.dailyKcalIntake) * 100,
+                        proteinPercentage = (proteinConsumed / lUser.dailyProteinIntakeInG) * 100,
+                        fatPercentage = (fatConsumed / lUser.dailyFatIntakeInG) * 100,
+                        carbsPercentage = (carbsConsumed / lUser.dailyCarbsIntakeInG) * 100
                     )
                 )
             }
-        }
-    }
+        }.stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5000),
+            initialValue = Resource.loading(null)
+        )
 
-    fun createDiaryEntry() {
+    suspend fun createDiaryEntry(user: User) {
         // Current day's entry does not exist - insert it to the database
-        ldUser.value?.let {
-            val currentDay = LocalDate.ofYearDay(it.year, it.dayOfYear)
-            viewModelScope.launch {
-                val diaryEntry = DiaryEntry(
-                    year = currentDay.year,
-                    dayOfYear = currentDay.dayOfYear,
-                    dayOfWeek = currentDay.dayOfWeek.value,
-                    monthOfYear = currentDay.monthValue,
-                    dayOfMonth = currentDay.dayOfMonth
-                )
-                diaryRepository.insertDiaryEntry(diaryEntry)
-            }
-        }
+        val currentDay = LocalDate.ofYearDay(user.year, user.dayOfYear)
+        val diaryEntry = DiaryEntry(
+            year = currentDay.year,
+            dayOfYear = currentDay.dayOfYear,
+            dayOfWeek = currentDay.dayOfWeek.value,
+            monthOfYear = currentDay.monthValue,
+            dayOfMonth = currentDay.dayOfMonth
+        )
+        diaryRepository.insertDiaryEntry(diaryEntry)
     }
 
     fun updateUserToPreviousDay() {
-        ldUser.value?.let {
+        uiState.value?.data?.user?.let {
             val currentDay = LocalDate.ofYearDay(it.year, it.dayOfYear)
             updateUserDate(currentDay.minusDays(1))
         }
@@ -114,7 +117,7 @@ class DiaryViewModel @Inject constructor(
     }
 
     fun updateUserToNextDay() {
-        ldUser.value?.let {
+        uiState.value?.data?.user?.let {
             val currentDay = LocalDate.ofYearDay(it.year, it.dayOfYear)
             updateUserDate(currentDay.plusDays(1))
         }
@@ -122,14 +125,13 @@ class DiaryViewModel @Inject constructor(
 
     private fun updateUserDate(currentDay: LocalDate) {
         viewModelScope.launch {
-            val user = ldUser.value
-            if (user != null) {
-                user.year = currentDay.year
-                user.month = currentDay.monthValue
-                user.dayOfYear = currentDay.dayOfYear
-                user.dayOfMonth = currentDay.dayOfMonth
-                user.dayOfWeek = currentDay.dayOfWeek.value
-                userRepository.updateUser(user)
+            uiState.value?.data?.user?.let {
+                it.year = currentDay.year
+                it.month = currentDay.monthValue
+                it.dayOfYear = currentDay.dayOfYear
+                it.dayOfMonth = currentDay.dayOfMonth
+                it.dayOfWeek = currentDay.dayOfWeek.value
+                userRepository.updateUser(it)
             }
         }
     }
@@ -142,7 +144,7 @@ class DiaryViewModel @Inject constructor(
 
     fun addMealToDiary(mealWithFoodEntries: MealWithFoodEntries) {
         viewModelScope.launch {
-            ldDiaryEntryWithMeals.value?.let { diaryEntryWithMeals ->
+            uiState.value?.data?.diaryEntryWithMeals?.let { diaryEntryWithMeals ->
                 diaryRepository.insertDiaryEntryMealCrossRef(
                     DiaryEntryMealCrossRef(
                         diaryEntryWithMeals.diaryEntry.diaryEntryId,

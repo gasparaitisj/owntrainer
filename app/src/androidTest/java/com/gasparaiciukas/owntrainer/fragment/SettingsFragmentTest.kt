@@ -18,6 +18,8 @@ import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
@@ -60,7 +62,7 @@ class SettingsFragmentTest {
                 "with error:\n View androidx.drawerlayout.widget.DrawerLayout{17d6f28 VFE...... ......I. 0,0-0,0 #7f0900fb" +
                 "app:id/drawer_layout} does not have a NavController set"
     )
-    fun changeAppearanceMode_shouldChangeAppearanceMode() {
+    fun changeAppearanceMode_shouldChangeAppearanceMode() = runTest {
         launchFragmentInHiltContainer<SettingsFragment>(
             fragmentFactory = fragmentFactory,
             navController = navController
@@ -81,7 +83,7 @@ class SettingsFragmentTest {
             ViewMatchers.withId(android.R.id.button1)
         ).perform(ViewActions.click())
 
-        Truth.assertThat(fakeViewModel.ldAppearanceMode.value).isEqualTo(AppearanceMode.DAY.ordinal)
+        Truth.assertThat(fakeViewModel.appearanceMode.first()).isEqualTo(AppearanceMode.DAY.ordinal)
         Truth.assertThat(AppCompatDelegate.getDefaultNightMode())
             .isEqualTo(AppCompatDelegate.MODE_NIGHT_NO)
     }

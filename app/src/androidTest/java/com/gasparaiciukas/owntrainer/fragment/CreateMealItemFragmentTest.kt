@@ -3,7 +3,6 @@ package com.gasparaiciukas.owntrainer.fragment
 import android.content.Context
 import android.widget.ImageButton
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.asLiveData
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.core.app.ApplicationProvider
@@ -17,7 +16,6 @@ import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.Meal
 import com.gasparaiciukas.owntrainer.database.MealWithFoodEntries
-import com.gasparaiciukas.owntrainer.getOrAwaitValue
 import com.gasparaiciukas.owntrainer.launchFragmentInHiltContainer
 import com.gasparaiciukas.owntrainer.repository.FakeDiaryRepositoryTest
 import com.gasparaiciukas.owntrainer.viewmodel.MealViewModel
@@ -25,6 +23,8 @@ import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.not
 import org.junit.Before
@@ -58,7 +58,7 @@ class CreateMealItemFragmentTest {
     }
 
     @Test
-    fun clickSaveButton_popBackStack() {
+    fun clickSaveButton_popBackStack() = runTest {
         launchFragmentInHiltContainer<CreateMealItemFragment> {
             Navigation.setViewNavController(requireView(), navController)
             sharedViewModel = fakeViewModel
@@ -66,7 +66,7 @@ class CreateMealItemFragmentTest {
 
         val title = "Random title"
         val instructions = "Instructions"
-        fakeViewModel.ldMeals.getOrAwaitValue()
+        fakeViewModel.meals.first()
 
         // Title
         Espresso.onView(
@@ -101,7 +101,7 @@ class CreateMealItemFragmentTest {
         ).perform(click())
 
         Truth.assertThat(
-            diaryRepository.getAllMealsWithFoodEntries().asLiveData().getOrAwaitValue()
+            diaryRepository.getAllMealsWithFoodEntries().first()
         )
             .contains(
                 MealWithFoodEntries(

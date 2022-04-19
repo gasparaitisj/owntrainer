@@ -3,5 +3,6 @@
     <item
         android:id="@+id/delete"
         android:icon="@drawable/baseline_delete_outline_24"
-        android:title="@string/delete_food" />
+        android:title="@string/delete_food"
+        android:contentDescription="@string/delete_food"/>
 </menu>
