@@ -5,6 +5,7 @@ import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -80,7 +81,7 @@ class MealItemFragment : Fragment(R.layout.fragment_meal_item) {
             fatPercentage = uiState.fatPercentage,
             proteinPercentage = uiState.proteinPercentage,
             calories = uiState.mealWithFoodEntries.calories.toFloat(),
-            pieChart = binding.pieChart,
+            pieChart = binding.cardNutrition.pieChart,
             context = requireContext()
         )
         databaseFoodAdapter.items = uiState.mealWithFoodEntries.foodEntries
@@ -102,37 +103,54 @@ class MealItemFragment : Fragment(R.layout.fragment_meal_item) {
         binding.topAppBar.title = uiState.mealWithFoodEntries.meal.title
         binding.tvInstructions.text = uiState.mealWithFoodEntries.meal.instructions
         binding.tvInstructions.movementMethod = ScrollingMovementMethod()
-        binding.tvCarbsWeight.text =
+
+        binding.cardNutrition.tvCarbsWeight.text = getString(
+            R.string.append_g,
             uiState.mealWithFoodEntries.meal.carbs.roundToInt().toString()
-        binding.tvCarbsPercentage.text =
-            String.format(
-                "%s %%",
-                uiState.carbsDailyIntakePercentage.roundToInt()
-            )
-        binding.tvFatWeight.text = uiState.mealWithFoodEntries.meal.fat.roundToInt().toString()
-        binding.tvFatPercentage.text =
-            String.format(
-                "%s %%",
-                uiState.fatDailyIntakePercentage.roundToInt()
-            )
-        binding.tvProteinWeight.text =
+        )
+
+        binding.cardNutrition.tvCarbsPercentage.text = getString(
+            R.string.append_percent_sign,
+            uiState.carbsDailyIntakePercentage.roundToInt().toString()
+        )
+        binding.cardNutrition.tvFatWeight.text = getString(
+            R.string.append_g,
+            uiState.mealWithFoodEntries.meal.fat.roundToInt().toString()
+        )
+        binding.cardNutrition.tvFatPercentage.text = getString(
+            R.string.append_percent_sign,
+            uiState.fatDailyIntakePercentage.roundToInt().toString()
+        )
+        binding.cardNutrition.tvProteinWeight.text = getString(
+            R.string.append_g,
             uiState.mealWithFoodEntries.meal.protein.roundToInt().toString()
-        binding.tvProteinPercentage.text =
-            String.format(
-                "%s %%",
-                uiState.proteinDailyIntakePercentage.roundToInt()
-            )
-        binding.tvCaloriesCount.text =
+        )
+        binding.cardNutrition.tvProteinPercentage.text = getString(
+            R.string.append_percent_sign,
+            uiState.proteinDailyIntakePercentage.roundToInt().toString()
+        )
+        binding.cardNutrition.tvCaloriesWeight.text = getString(
+            R.string.append_kcal,
             uiState.mealWithFoodEntries.meal.calories.roundToInt().toString()
-        binding.tvCaloriesPercentage.text =
-            String.format(
-                "%s %%",
-                uiState.caloriesDailyIntakePercentage.roundToInt()
-            )
+        )
+        binding.cardNutrition.tvCaloriesPercentage.text = getString(
+            R.string.append_g,
+            uiState.caloriesDailyIntakePercentage.roundToInt().toString()
+        )
     }
 
     private fun initRecyclerView() {
-        databaseFoodAdapter = DatabaseFoodAdapter()
+        databaseFoodAdapter = DatabaseFoodAdapter().apply {
+            setFormatStrings(
+                DatabaseFoodAdapter.DatabaseFoodAdapterFormatStrings(
+                    quantity = getString(R.string.row_food_quantity),
+                    calories = getString(R.string.row_food_calories),
+                    protein = getString(R.string.row_food_protein),
+                    carbs = getString(R.string.row_food_carbs),
+                    fat = getString(R.string.row_food_fat)
+                )
+            )
+        }
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = databaseFoodAdapter

@@ -57,7 +57,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/layout_et_sex"
                     app:startIconContentDescription="Age"
                     app:startIconDrawable="@drawable/outline_accessibility_new_24"
-                    app:suffixText="years">
+                    app:suffixText="@string/years">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_age"
@@ -85,7 +85,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/layout_et_age"
                     app:startIconContentDescription="Height"
                     app:startIconDrawable="@drawable/baseline_height_24"
-                    app:suffixText="(cm)">
+                    app:suffixText="@string/cm">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_height"

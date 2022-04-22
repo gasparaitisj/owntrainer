@@ -11,6 +11,7 @@ import com.gasparaiciukas.owntrainer.adapter.NetworkFoodAdapter.NetworkFoodViewH
 import com.gasparaiciukas.owntrainer.databinding.RowFoodBinding
 import com.gasparaiciukas.owntrainer.network.Food
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 
 class NetworkFoodAdapter @Inject constructor(
@@ -19,6 +20,14 @@ class NetworkFoodAdapter @Inject constructor(
     class NetworkFoodViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         val binding = RowFoodBinding.bind(view)
     }
+
+    data class NetworkFoodAdapterFormatStrings(
+        val quantity: String,
+        val calories: String,
+        val protein: String,
+        val carbs: String,
+        val fat: String,
+    )
 
     private val diffCallback = object : DiffUtil.ItemCallback<Food>() {
         override fun areItemsTheSame(
@@ -44,12 +53,20 @@ class NetworkFoodAdapter @Inject constructor(
         get() = differ.currentList
         set(value) = differ.submitList(value)
 
+    private lateinit var formatStrings: NetworkFoodAdapterFormatStrings
+
     fun setOnClickListeners(
         singleClickListener: ((food: Food, position: Int) -> Unit)? = null,
         longClickListener: (Unit)? = null
     ) {
         this.singleClickListener = singleClickListener
         this.longClickListener = longClickListener
+    }
+
+    fun setFormatStrings(
+        formatStrings: NetworkFoodAdapterFormatStrings
+    ) {
+        this.formatStrings = formatStrings
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NetworkFoodViewHolder {
@@ -76,11 +93,26 @@ class NetworkFoodAdapter @Inject constructor(
 
         // Display information of each row
         holder.binding.tvTitle.text = title
-        holder.binding.tvCalories.text = calories.toString()
-        holder.binding.tvCarbs.text = carbs.toString()
-        holder.binding.tvProtein.text = protein.toString()
-        holder.binding.tvFat.text = fat.toString()
-        holder.binding.tvQuantity.text = quantity.toString()
+        holder.binding.tvQuantity.text = String.format(
+            formatStrings.quantity,
+            quantity.toString()
+        )
+        holder.binding.tvCalories.text = String.format(
+            formatStrings.calories,
+            calories.toString()
+        )
+        holder.binding.tvProtein.text = String.format(
+            formatStrings.protein,
+            protein.toString()
+        )
+        holder.binding.tvCarbs.text = String.format(
+            formatStrings.carbs,
+            carbs.toString()
+        )
+        holder.binding.tvFat.text = String.format(
+            formatStrings.fat,
+            fat.toString()
+        )
         holder.binding.layoutItem.setOnClickListener {
             singleClickListener?.let { click ->
                 click(items[position], position)

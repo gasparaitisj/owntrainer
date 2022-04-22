@@ -10,6 +10,7 @@
         tools:openDrawer="start">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/coordinator_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -17,6 +18,8 @@
                 android:id="@+id/scroll_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:paddingBottom="72dp"
                 android:visibility="invisible"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -24,15 +27,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        style="@style/TextAppearance.OwnTrainer.Headline6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:text="You are doing a great job!"
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </com.google.android.material.card.MaterialCardView>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.core.widget.NestedScrollView>
 
@@ -48,15 +58,50 @@
                     app:menu="@menu/top_app_bar"
                     app:navigationIcon="@drawable/outline_menu_24"
                     app:navigationIconTint="@color/md_theme_light_onPrimary"
-                    app:title="@string/progress"
+                    app:title="@string/meals"
                     app:titleTextAppearance="@style/TextAppearance.OwnTrainer.ActionBar.Title" />
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/layout_tab"
+                    style="@style/Widget.OwnTrainer.TabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_scrollFlags="scroll|enterAlways"
+                    app:tabMode="fixed">
+
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tab_foods"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/foods" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tab_meals"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/meals" />
+                </com.google.android.material.tabs.TabLayout>
             </com.google.android.material.appbar.AppBarLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="120dp"
+                android:contentDescription="@string/add_new_meal"
+                app:srcCompat="@drawable/baseline_add_24" />
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottom_navigation"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="72dp"
                 android:layout_gravity="bottom"
+                app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
                 app:menu="@menu/bottom_navigation_menu" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -70,6 +115,5 @@
             app:menu="@menu/navigation_drawer" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
-
 
 </layout>

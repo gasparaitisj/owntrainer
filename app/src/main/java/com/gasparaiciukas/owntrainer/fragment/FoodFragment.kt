@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.AbsListView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -15,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
@@ -60,7 +60,9 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
                 viewModel.response.collectLatest { response ->
                     when (response.status) {
                         Status.SUCCESS -> {
-                            binding.paginationProgressBar.visibility = View.INVISIBLE
+                            binding.paginationProgressBarTop.visibility = View.INVISIBLE
+                            binding.paginationProgressBarBottom.visibility = View.INVISIBLE
+
                             isLoading = false
                             response.data?.foods?.let { refreshUi(it.toList()) }
                             val totalPages: Int? =
@@ -86,14 +88,29 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
                             }
                         }
                         Status.ERROR -> {
-                            binding.paginationProgressBar.visibility = View.INVISIBLE
+                            binding.paginationProgressBarTop.visibility = View.INVISIBLE
+                            binding.paginationProgressBarBottom.visibility = View.INVISIBLE
                             isLoading = false
-                            response.message?.let { message ->
-                                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                            if (response.messageRes != null) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(response.messageRes),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    response.message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                         Status.LOADING -> {
-                            binding.paginationProgressBar.visibility = View.VISIBLE
+                            if (viewModel.pageNumber == 1) {
+                                binding.paginationProgressBarTop.visibility = View.VISIBLE
+                            } else {
+                                binding.paginationProgressBarBottom.visibility = View.VISIBLE
+                            }
                             isLoading = true
                         }
                     }
@@ -178,15 +195,34 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
         findNavController().addOnDestinationChangedListener { _, _, _ ->
             viewModel.clearFoods()
         }
-        NavigationUI.setupWithNavController(binding.bottomNavigation, findNavController())
-        NavigationUI.setupWithNavController(binding.navigationView, findNavController())
+        setupBottomNavigation(
+            bottomNavigation = binding.bottomNavigation,
+            navController = findNavController(),
+            checkedItemId = R.id.mealFragment
+        )
+        setupNavigationView(
+            navigationView = binding.navigationView,
+            drawerLayout = binding.drawerLayout,
+            navController = findNavController(),
+            checkedItem = R.id.foodFragment
+        )
         binding.topAppBar.setNavigationOnClickListener {
             binding.drawerLayout.open()
         }
     }
 
     private fun initRecyclerView() {
-        networkFoodAdapter = NetworkFoodAdapter()
+        networkFoodAdapter = NetworkFoodAdapter().apply {
+            setFormatStrings(
+                NetworkFoodAdapter.NetworkFoodAdapterFormatStrings(
+                    quantity = getString(R.string.row_food_quantity),
+                    calories = getString(R.string.row_food_calories),
+                    protein = getString(R.string.row_food_protein),
+                    carbs = getString(R.string.row_food_carbs),
+                    fat = getString(R.string.row_food_fat)
+                )
+            )
+        }
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)

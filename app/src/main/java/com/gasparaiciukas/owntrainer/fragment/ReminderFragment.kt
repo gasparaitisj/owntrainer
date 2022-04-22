@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -80,7 +81,13 @@ class ReminderFragment : Fragment(R.layout.fragment_reminder) {
     }
 
     private fun initRecyclerView() {
-        reminderAdapter = ReminderAdapter()
+        reminderAdapter = ReminderAdapter().apply {
+            setFormatStrings(
+                ReminderAdapter.ReminderAdapterFormatStrings(
+                    time = getString(R.string.row_reminder_alarm_text)
+                )
+            )
+        }
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = reminderAdapter

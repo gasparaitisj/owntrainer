@@ -1,15 +1,20 @@
 package com.gasparaiciukas.owntrainer.fragment
 
+import android.view.View
 import android.widget.ImageButton
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.MediumTest
 import com.gasparaiciukas.owntrainer.MainCoroutineRuleTest
 import com.gasparaiciukas.owntrainer.R
@@ -29,7 +34,10 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import org.hamcrest.Matcher
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.core.AnyOf.anyOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -114,6 +122,7 @@ class MealItemFragmentTest {
         }
 
         Espresso.onView(ViewMatchers.withId(R.id.recycler_view)).perform(
+            ScrollToAction(),
             RecyclerViewActions.actionOnItemAtPosition<DatabaseFoodAdapter.DatabaseFoodViewHolder>(
                 0,
                 ViewActions.click()
@@ -135,6 +144,18 @@ class MealItemFragmentTest {
                     quantityInG = 120.0
                 )
             )
+        )
+    }
+
+    class ScrollToAction(
+        private val original: androidx.test.espresso.action.ScrollToAction = androidx.test.espresso.action.ScrollToAction()
+    ) : ViewAction by original {
+
+        override fun getConstraints(): Matcher<View> = anyOf(
+            allOf(
+                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                isDescendantOfA(isAssignableFrom(NestedScrollView::class.java))),
+            original.constraints
         )
     }
 

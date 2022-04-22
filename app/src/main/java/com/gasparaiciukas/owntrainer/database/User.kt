@@ -97,13 +97,13 @@ data class User(
     }
 }
 
-enum class Sex(val value: String) {
-    MALE(Constants.EN.male) {
+enum class Sex {
+    MALE {
         override fun selectionDescription(context: Context): String {
             return context.getString(R.string.male)
         }
     },
-    FEMALE(Constants.EN.female) {
+    FEMALE {
         override fun selectionDescription(context: Context): String {
             return context.getString(R.string.female)
         }
@@ -112,28 +112,28 @@ enum class Sex(val value: String) {
     abstract fun selectionDescription(context: Context): String
 }
 
-enum class Lifestyle(val value: String) {
-    SEDENTARY(Constants.EN.sedentary) {
+enum class Lifestyle {
+    SEDENTARY {
         override fun selectionDescription(context: Context): String {
             return context.getString(R.string.sedentary)
         }
     },
-    LIGHTLY_ACTIVE(Constants.EN.lightly_active) {
+    LIGHTLY_ACTIVE {
         override fun selectionDescription(context: Context): String {
             return context.getString(R.string.lightly_active)
         }
     },
-    MODERATELY_ACTIVE(Constants.EN.moderately_active) {
+    MODERATELY_ACTIVE {
         override fun selectionDescription(context: Context): String {
             return context.getString(R.string.moderately_active)
         }
     },
-    VERY_ACTIVE(Constants.EN.very_active) {
+    VERY_ACTIVE {
         override fun selectionDescription(context: Context): String {
             return context.getString(R.string.very_active)
         }
     },
-    EXTRA_ACTIVE(Constants.EN.extra_active) {
+    EXTRA_ACTIVE {
         override fun selectionDescription(context: Context): String {
             return context.getString(R.string.extra_active)
         }

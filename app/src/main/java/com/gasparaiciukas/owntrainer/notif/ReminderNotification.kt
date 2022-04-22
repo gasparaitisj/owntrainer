@@ -21,10 +21,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class ReminderNotification : BroadcastReceiver() {
     @SuppressLint("UnspecifiedImmutableFlag")
     @Suppress("DEPRECATION")
-    // suppressing deprecation of PowerManager.FULL_WAKE_LOCK due to notification not working properly when using alternatives
+    // suppressing deprecation of PowerManager.FULL_WAKE_LOCK due to
+    // notification not working properly when using alternatives
     override fun onReceive(context: Context, intent: Intent) {
-        val contentText = String.format(
-            context.getString(R.string.daily_reminder),
+        val contentText = context.getString(
+            R.string.daily_reminder,
             intent.getStringExtra(NOTIFICATION_REMINDER_TITLE_EXTRA)
         )
 

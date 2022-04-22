@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -48,6 +50,21 @@ class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) 
                         Status.SUCCESS -> {
                             uiState.data?.let { refreshUi(it) }
                         }
+                        Status.ERROR -> {
+                            if (uiState.messageRes != null) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(uiState.messageRes),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    uiState.message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
                         else -> {}
                     }
                     uiState.data?.let { refreshUi(it) }
@@ -73,7 +90,7 @@ class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) 
             fatPercentage = uiState.fatPercentage,
             proteinPercentage = uiState.proteinPercentage,
             calories = uiState.food.calories.toFloat(),
-            pieChart = binding.pieChart,
+            pieChart = binding.cardNutrition.pieChart,
             context = requireContext()
         )
         binding.scrollView.visibility = View.VISIBLE
@@ -86,31 +103,41 @@ class DatabaseFoodItemFragment : Fragment(R.layout.fragment_database_food_item) 
     }
 
     private fun setTextViews(uiState: DatabaseFoodItemUiState) {
-        binding.topAppBar.title = uiState.food.title
-        binding.tvQuantityCount.text = uiState.food.quantityInG.toString()
-        binding.tvCarbsWeight.text = uiState.food.carbs.roundToInt().toString()
-        binding.tvCarbsPercentage.text =
-            String.format(
-                "%s %%",
-                uiState.carbsDailyIntakePercentage.roundToInt()
-            )
-        binding.tvFatWeight.text = uiState.food.fat.roundToInt().toString()
-        binding.tvFatPercentage.text =
-            String.format(
-                "%s %%",
-                uiState.fatDailyIntakePercentage.roundToInt()
-            )
-        binding.tvProteinWeight.text = uiState.food.protein.roundToInt().toString()
-        binding.tvProteinPercentage.text =
-            String.format(
-                "%s %%",
-                uiState.proteinDailyIntakePercentage.roundToInt()
-            )
-        binding.tvCaloriesCount.text = uiState.food.calories.roundToInt().toString()
-        binding.tvCaloriesPercentage.text =
-            String.format(
-                "%s %%",
-                uiState.caloriesDailyIntakePercentage.roundToInt()
-            )
+        binding.topAppBar.title = getString(
+            R.string.database_food_item_fragment_top_app_bar_title,
+            uiState.food.title, uiState.food.quantityInG.toString()
+        )
+        binding.cardNutrition.tvCarbsWeight.text = getString(
+            R.string.append_g,
+            uiState.food.carbs.roundToInt().toString()
+        )
+        binding.cardNutrition.tvCarbsPercentage.text = getString(
+            R.string.append_percent_sign,
+            uiState.carbsDailyIntakePercentage.roundToInt().toString()
+        )
+        binding.cardNutrition.tvFatWeight.text = getString(
+            R.string.append_g,
+            uiState.food.fat.roundToInt().toString()
+        )
+        binding.cardNutrition.tvFatPercentage.text = getString(
+            R.string.append_percent_sign,
+            uiState.fatDailyIntakePercentage.roundToInt().toString()
+        )
+        binding.cardNutrition.tvProteinWeight.text = getString(
+            R.string.append_g,
+            uiState.food.protein.roundToInt().toString()
+        )
+        binding.cardNutrition.tvProteinPercentage.text = getString(
+            R.string.append_percent_sign,
+            uiState.proteinDailyIntakePercentage.roundToInt().toString()
+        )
+        binding.cardNutrition.tvCaloriesWeight.text = getString(
+            R.string.append_kcal,
+            uiState.food.calories.roundToInt().toString()
+        )
+        binding.cardNutrition.tvCaloriesPercentage.text = getString(
+            R.string.append_percent_sign,
+            uiState.caloriesDailyIntakePercentage.roundToInt().toString()
+        )
     }
 }

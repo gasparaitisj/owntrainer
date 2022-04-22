@@ -10,7 +10,6 @@
         tools:openDrawer="start">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/coordinator_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -27,21 +26,69 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_et_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:hint="@string/food_search"
+                        app:endIconContentDescription="Search"
+                        app:endIconDrawable="@drawable/baseline_search_24"
+                        app:endIconMode="custom"
+                        app:endIconTint="@color/md_theme_light_primary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_search"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionSearch"
+                            android:inputType="textShortMessage" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/card_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_margin="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toBottomOf="@+id/layout_et_search">
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recycler_view"
                             android:layout_width="match_parent"
-                            android:layout_height="480dp" />
-
+                            android:layout_height="match_parent"
+                            android:layout_margin="8dp" />
                     </com.google.android.material.card.MaterialCardView>
+
+                    <ProgressBar
+                        android:id="@+id/paginationProgressBarTop"
+                        style="?attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:background="@android:color/transparent"
+                        android:visibility="invisible"
+                        app:layout_constraintEnd_toEndOf="@+id/card_recycler_view"
+                        app:layout_constraintStart_toStartOf="@+id/card_recycler_view"
+                        app:layout_constraintTop_toTopOf="@+id/card_recycler_view" />
+
+                    <ProgressBar
+                        android:id="@+id/paginationProgressBarBottom"
+                        style="?attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:background="@android:color/transparent"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="@+id/card_recycler_view"
+                        app:layout_constraintEnd_toEndOf="@+id/card_recycler_view"
+                        app:layout_constraintStart_toStartOf="@+id/card_recycler_view" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.core.widget.NestedScrollView>
 
@@ -57,7 +104,7 @@
                     app:menu="@menu/top_app_bar"
                     app:navigationIcon="@drawable/outline_menu_24"
                     app:navigationIconTint="@color/md_theme_light_onPrimary"
-                    app:title="@string/meals"
+                    app:title="@string/foods"
                     app:titleTextAppearance="@style/TextAppearance.OwnTrainer.ActionBar.Title" />
 
                 <com.google.android.material.tabs.TabLayout
@@ -83,24 +130,14 @@
                         android:layout_height="wrap_content"
                         android:text="@string/meals" />
                 </com.google.android.material.tabs.TabLayout>
-            </com.google.android.material.appbar.AppBarLayout>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="120dp"
-                android:contentDescription="@string/add_new_meal"
-                app:srcCompat="@drawable/baseline_add_24" />
+            </com.google.android.material.appbar.AppBarLayout>
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottom_navigation"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:layout_gravity="bottom"
-                app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
                 app:menu="@menu/bottom_navigation_menu" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -114,5 +151,4 @@
             app:menu="@menu/navigation_drawer" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
-
 </layout>

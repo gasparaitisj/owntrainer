@@ -2,35 +2,27 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dialog_layout_et_quantity"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:boxBackgroundColor="@android:color/transparent"
+        app:boxStrokeColor="@android:color/transparent"
+        app:boxStrokeErrorColor="@android:color/transparent"
+        app:errorEnabled="true"
+        app:suffixText="@string/g">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/dialog_layout_et_quantity"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/dialog_et_quantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
+            android:inputType="number"
             app:boxBackgroundColor="@android:color/transparent"
             app:boxStrokeColor="@android:color/transparent"
-            app:boxStrokeErrorColor="@android:color/transparent"
-            app:errorEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:suffixText="(g)">
+            app:boxStrokeErrorColor="@android:color/transparent" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/dialog_et_quantity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:inputType="number"
-                app:boxBackgroundColor="@android:color/transparent"
-                app:boxStrokeColor="@android:color/transparent"
-                app:boxStrokeErrorColor="@android:color/transparent" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 </layout>

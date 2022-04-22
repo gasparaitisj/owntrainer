@@ -46,13 +46,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_margin="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/card_statistics">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp">
 
@@ -81,17 +82,11 @@
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/recycler_view"
                                 android:layout_width="match_parent"
-                                android:layout_height="480dp"
+                                android:layout_height="0dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/btn_add_food" />
-
-                            <androidx.constraintlayout.widget.Barrier
-                                android:id="@+id/barrier_button_add_food"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:barrierDirection="bottom"
-                                app:constraint_referenced_ids="btn_add_food" />
-
-
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                     </com.google.android.material.card.MaterialCardView>

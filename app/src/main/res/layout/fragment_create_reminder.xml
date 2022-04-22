@@ -54,7 +54,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/layout_et_title"
-                    app:startIconContentDescription="Time"
+                    app:startIconContentDescription="@string/time"
                     app:startIconDrawable="@drawable/ic_baseline_schedule_24">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -69,7 +69,6 @@
                         tools:ignore="KeyboardInaccessibleWidget,UnusedAttribute" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
 
@@ -83,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:menu="@menu/create_meal_top_app_bar"
-                app:navigationContentDescription="Back"
+                app:navigationContentDescription="@string/back"
                 app:navigationIcon="@drawable/baseline_arrow_back_24"
                 app:navigationIconTint="@color/md_theme_light_onPrimary"
                 app:title="@string/new_reminder"

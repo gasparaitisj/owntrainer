@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -72,7 +73,13 @@ class AddMealToDiaryFragment : Fragment(R.layout.fragment_add_meal_to_diary) {
     }
 
     private fun initRecyclerView() {
-        mealAdapter = MealAdapter()
+        mealAdapter = MealAdapter().apply {
+            setFormatStrings(
+                MealAdapter.MealAdapterFormatStrings(
+                    calories = getString(R.string.row_meal_calories)
+                )
+            )
+        }
         mealAdapter.setOnClickListeners(
             singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
                 sharedViewModel.addMealToDiary(mealWithFoodEntries)

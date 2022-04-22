@@ -78,7 +78,7 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
             fatPercentage = uiState.fatPercentage,
             proteinPercentage = uiState.proteinPercentage,
             calories = uiState.calories,
-            pieChart = binding.pieChart,
+            pieChart = binding.cardNutrition.pieChart,
             context = requireContext()
         )
         binding.scrollView.visibility = View.VISIBLE
@@ -95,52 +95,44 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
 
     private fun initNavigation() {
         binding.topAppBar.setNavigationOnClickListener {
-            // Navigate back to FoodFragment manually, because popping back stack will cause
-            // all RecyclerView items to recreate again, which is going to cause lag
-            findNavController().navigate(
-                NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToFoodFragment()
-            )
+            findNavController().popBackStack()
         }
-
-        val callback: OnBackPressedCallback =
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    // Navigate back to FoodFragment manually, because popping back stack will cause
-                    // all RecyclerView items to recreate again, which is going to cause lag
-                    findNavController().navigate(
-                        NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToFoodFragment()
-                    )
-                }
-            }
-        requireActivity().onBackPressedDispatcher.addCallback(callback)
     }
 
     private fun setTextViews(uiState: NetworkFoodItemUiState) {
         binding.topAppBar.title = uiState.title
-        binding.tvCarbsWeight.text = uiState.carbs.roundToInt().toString()
-        binding.tvCarbsPercentage.text =
-            String.format(
-                "%s %%",
-                (uiState.carbs / uiState.user.dailyCarbsIntakeInG * 100).roundToInt()
-            )
-        binding.tvFatWeight.text = uiState.fat.roundToInt().toString()
-        binding.tvFatPercentage.text =
-            String.format(
-                "%s %%",
-                (uiState.fat / uiState.user.dailyFatIntakeInG * 100).roundToInt()
-            )
-        binding.tvProteinWeight.text = uiState.protein.roundToInt().toString()
-        binding.tvProteinPercentage.text =
-            String.format(
-                "%s %%",
-                (uiState.protein / uiState.user.dailyProteinIntakeInG * 100).roundToInt()
-            )
-        binding.tvCaloriesCount.text = uiState.calories.roundToInt().toString()
-        binding.tvCaloriesPercentage.text =
-            String.format(
-                "%s %%",
-                (uiState.calories / uiState.user.dailyKcalIntake * 100).roundToInt()
-            )
+        binding.cardNutrition.tvCarbsWeight.text = getString(
+            R.string.append_g,
+            uiState.carbs.roundToInt().toString()
+        )
+        binding.cardNutrition.tvCarbsPercentage.text = getString(
+            R.string.append_percent_sign,
+            (uiState.carbs / uiState.user.dailyCarbsIntakeInG * 100).roundToInt().toString()
+        )
+        binding.cardNutrition.tvFatWeight.text = getString(
+            R.string.append_g,
+            uiState.fat.roundToInt().toString()
+        )
+        binding.cardNutrition.tvFatPercentage.text = getString(
+            R.string.append_percent_sign,
+            (uiState.fat / uiState.user.dailyFatIntakeInG * 100).roundToInt().toString()
+        )
+        binding.cardNutrition.tvProteinWeight.text = getString(
+            R.string.append_g,
+            uiState.protein.roundToInt().toString()
+        )
+        binding.cardNutrition.tvProteinPercentage.text = getString(
+            R.string.append_percent_sign,
+            (uiState.protein / uiState.user.dailyProteinIntakeInG * 100).roundToInt().toString()
+        )
+        binding.cardNutrition.tvCaloriesWeight.text = getString(
+            R.string.append_kcal,
+            uiState.calories.roundToInt().toString()
+        )
+        binding.cardNutrition.tvCaloriesPercentage.text = getString(
+            R.string.append_percent_sign,
+            (uiState.calories / uiState.user.dailyKcalIntake * 100).roundToInt().toString()
+        )
         binding.etQuantity.setText(sharedViewModel.quantity.toString())
         binding.etQuantity.setOnClickListener {
             val view = layoutInflater.inflate(R.layout.dialog_network_food_item_quantity, null)
@@ -157,7 +149,7 @@ class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {
             }
             MaterialAlertDialogBuilder(requireContext())
                 .setView(view)
-                .setTitle(getString(R.string.quantity_no_colon))
+                .setTitle(getString(R.string.quantity))
                 .setNeutralButton(getString(R.string.cancel)) { dialog, _ ->
                     dialog.dismiss()
                 }

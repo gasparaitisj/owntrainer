@@ -21,6 +21,10 @@ class ReminderAdapter : RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>
         }
     }
 
+    data class ReminderAdapterFormatStrings(
+        val time: String
+    )
+
     private val diffCallback = object : DiffUtil.ItemCallback<Reminder>() {
         override fun areItemsTheSame(
             oldItem: Reminder,
@@ -45,12 +49,20 @@ class ReminderAdapter : RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>
         get() = differ.currentList
         set(value) = differ.submitList(value)
 
+    private lateinit var formatStrings: ReminderAdapterFormatStrings
+
     fun setOnClickListeners(
         singleClickListener: ((reminder: Reminder) -> Unit)? = null,
         longClickListener: ((reminder: Reminder) -> Unit)? = null
     ) {
         this.singleClickListener = singleClickListener
         this.longClickListener = longClickListener
+    }
+
+    fun setFormatStrings(
+        formatStrings: ReminderAdapterFormatStrings
+    ) {
+        this.formatStrings = formatStrings
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReminderViewHolder {
@@ -66,7 +78,10 @@ class ReminderAdapter : RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>
 
         // Display information of each row
         holder.binding.tvTitle.text = title
-        holder.binding.tvTime.text = String.format("Alarm set at %02d:%02d", hour, minute)
+        holder.binding.tvTime.text = String.format(
+            formatStrings.time,
+            hour, minute
+        )
         holder.binding.layoutItem.setOnClickListener {
             singleClickListener?.let { click ->
                 click(items[position])

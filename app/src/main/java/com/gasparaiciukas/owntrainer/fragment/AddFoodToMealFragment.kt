@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -69,7 +70,13 @@ class AddFoodToMealFragment : Fragment(R.layout.fragment_add_food_to_meal) {
     }
 
     private fun initRecyclerView() {
-        mealAdapter = MealAdapter()
+        mealAdapter = MealAdapter().apply {
+            setFormatStrings(
+                MealAdapter.MealAdapterFormatStrings(
+                    calories = getString(R.string.row_meal_calories)
+                )
+            )
+        }
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = mealAdapter

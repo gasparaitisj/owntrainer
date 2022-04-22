@@ -11,292 +11,188 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_navigation">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:orientation="vertical">
+            android:padding="8dp">
 
-            <LinearLayout
-                android:id="@+id/layout_calories"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_calories_text"
+                style="@style/TextAppearance.OwnTrainer.LabelLarge"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center">
+                android:text="@string/calories"
+                app:layout_constraintEnd_toStartOf="@+id/tv_calories_percentage"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintHorizontal_weight="2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="75dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="Calories "
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_calories_percentage"
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="@string/_50"
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="% "
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_calories_consumed"
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="@string/_50"
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="/"
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_calories_intake"
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/_50"
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="35dp"
-                    android:layout_height="wrap_content"
-                    android:text=" kCal"
-
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_protein"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_calories_percentage"
+                style="@style/TextAppearance.OwnTrainer.LabelLarge"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center">
+                android:text="@string/_50"
+                app:layout_constraintEnd_toStartOf="@+id/tv_calories_count"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/tv_calories_text"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="75dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="Protein "
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_protein_percentage"
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="@string/_50"
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="% "
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_protein_consumed"
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="@string/_50"
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="/"
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_protein_intake"
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/_50"
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="35dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text=" g"
-
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_carbs"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_calories_count"
+                style="@style/TextAppearance.OwnTrainer.LabelLarge"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center">
+                android:text="@string/_50"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_weight="2"
+                app:layout_constraintStart_toEndOf="@+id/tv_calories_percentage"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="75dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="Carbs "
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_carbs_percentage"
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="@string/_50"
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="% "
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_carbs_consumed"
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="@string/_50"
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="/"
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_carbs_intake"
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/_50"
-
-                    android:textStyle="bold" />
-
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="35dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text=" g"
-
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_fat"
-                android:layout_width="match_parent"
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier_calories"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center">
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="tv_calories_text,tv_calories_percentage,tv_calories_count" />
 
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="75dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="Fat "
+            <TextView
+                android:id="@+id/tv_protein_text"
+                style="@style/TextAppearance.OwnTrainer.LabelLarge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/protein"
+                app:layout_constraintEnd_toStartOf="@+id/tv_protein_percentage"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintHorizontal_weight="2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/barrier_calories" />
 
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_protein_percentage"
+                style="@style/TextAppearance.OwnTrainer.LabelLarge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/_50"
+                app:layout_constraintEnd_toStartOf="@+id/tv_protein_count"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/tv_protein_text"
+                app:layout_constraintTop_toBottomOf="@+id/barrier_calories" />
 
-                <TextView
-                    android:id="@+id/tv_fat_percentage"
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="@string/_50"
+            <TextView
+                android:id="@+id/tv_protein_count"
+                style="@style/TextAppearance.OwnTrainer.LabelLarge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/_50"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_weight="2"
+                app:layout_constraintStart_toEndOf="@+id/tv_protein_percentage"
+                app:layout_constraintTop_toBottomOf="@+id/barrier_calories" />
 
-                    android:textStyle="bold" />
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier_protein"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="tv_protein_text,tv_protein_percentage,tv_protein_count" />
 
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="% "
+            <TextView
+                android:id="@+id/tv_carbs_text"
+                style="@style/TextAppearance.OwnTrainer.LabelLarge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/carbs"
+                app:layout_constraintEnd_toStartOf="@+id/tv_carbs_percentage"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintHorizontal_weight="2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/barrier_protein" />
 
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_carbs_percentage"
+                style="@style/TextAppearance.OwnTrainer.LabelLarge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/_50"
+                app:layout_constraintEnd_toStartOf="@+id/tv_carbs_count"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/tv_carbs_text"
+                app:layout_constraintTop_toBottomOf="@+id/barrier_protein" />
 
-                <TextView
-                    android:id="@+id/tv_fat_consumed"
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="@string/_50"
+            <TextView
+                android:id="@+id/tv_carbs_count"
+                style="@style/TextAppearance.OwnTrainer.LabelLarge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/_50"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_weight="2"
+                app:layout_constraintStart_toEndOf="@+id/tv_carbs_percentage"
+                app:layout_constraintTop_toBottomOf="@+id/barrier_protein" />
 
-                    android:textStyle="bold" />
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier_carbs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="tv_carbs_text,tv_carbs_percentage,tv_carbs_count" />
 
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="/"
+            <TextView
+                android:id="@+id/tv_fat_text"
+                style="@style/TextAppearance.OwnTrainer.LabelLarge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/fat"
+                app:layout_constraintEnd_toStartOf="@+id/tv_fat_percentage"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintHorizontal_weight="2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/barrier_carbs" />
 
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_fat_percentage"
+                style="@style/TextAppearance.OwnTrainer.LabelLarge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/_50"
+                app:layout_constraintEnd_toStartOf="@+id/tv_fat_count"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/tv_fat_text"
+                app:layout_constraintTop_toBottomOf="@+id/barrier_carbs" />
 
-                <TextView
-                    android:id="@+id/tv_fat_intake"
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/_50"
+            <TextView
+                android:id="@+id/tv_fat_count"
+                style="@style/TextAppearance.OwnTrainer.LabelLarge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/_50"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_weight="2"
+                app:layout_constraintStart_toEndOf="@+id/tv_fat_percentage"
+                app:layout_constraintTop_toBottomOf="@+id/barrier_carbs" />
 
-                    android:textStyle="bold" />
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier_fat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="tv_fat_text,tv_fat_percentage,tv_fat_count" />
 
-                <TextView
-                    style="@style/TextAppearance.OwnTrainer.Caption"
-                    android:layout_width="35dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text=" g"
-
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
 </layout>

@@ -21,6 +21,10 @@ class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
         }
     }
 
+    data class MealAdapterFormatStrings(
+        val calories: String,
+    )
+
     private val diffCallback = object : DiffUtil.ItemCallback<MealWithFoodEntries>() {
         override fun areItemsTheSame(
             oldItem: MealWithFoodEntries,
@@ -45,12 +49,20 @@ class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
         get() = differ.currentList
         set(value) = differ.submitList(value)
 
+    private lateinit var formatStrings: MealAdapterFormatStrings
+
     fun setOnClickListeners(
         singleClickListener: ((mealWithFoodEntries: MealWithFoodEntries, position: Int) -> Unit)? = null,
         longClickListener: ((mealId: Int, position: Int) -> Unit)? = null
     ) {
         this.singleClickListener = singleClickListener
         this.longClickListener = longClickListener
+    }
+
+    fun setFormatStrings(
+        formatStrings: MealAdapterFormatStrings
+    ) {
+        this.formatStrings = formatStrings
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
@@ -65,7 +77,10 @@ class MealAdapter : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
 
         // Display information of each row
         holder.binding.tvTitle.text = title
-        holder.binding.tvCalories.text = calories.toString()
+        holder.binding.tvCalories.text = String.format(
+            formatStrings.calories,
+            calories.toString()
+        )
         holder.binding.layoutItem.setOnClickListener {
             singleClickListener?.let { click ->
                 click(items[position], position)

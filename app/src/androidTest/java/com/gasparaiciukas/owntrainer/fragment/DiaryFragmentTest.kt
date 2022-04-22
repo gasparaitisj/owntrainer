@@ -71,7 +71,7 @@ class DiaryFragmentTest {
             fragmentFactory = fragmentFactory,
             navController = navController
         )
-        onView(withId(R.id.fab)).perform(click())
+        onView(withId(R.id.btn_add_food)).perform(click())
 
         verify(navController).navigate(
             DiaryFragmentDirections.actionDiaryFragmentToAddMealToDiaryFragment()

@@ -3,6 +3,7 @@ package com.gasparaiciukas.owntrainer.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.User
 import com.gasparaiciukas.owntrainer.fragment.DatabaseFoodItemFragmentArgs
 import com.gasparaiciukas.owntrainer.network.Resource
@@ -59,7 +60,7 @@ class DatabaseFoodItemViewModel @Inject internal constructor(
                 )
             )
         }
-        Resource.error("Unknown error", null)
+        Resource.error(msgRes = R.string.unknown_error_occurred)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

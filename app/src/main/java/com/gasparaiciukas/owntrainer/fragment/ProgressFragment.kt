@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentProgressBinding
 
@@ -38,8 +39,17 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
     }
 
     private fun initNavigation() {
-        NavigationUI.setupWithNavController(binding.bottomNavigation, findNavController())
-        NavigationUI.setupWithNavController(binding.navigationView, findNavController())
+        setupBottomNavigation(
+            bottomNavigation = binding.bottomNavigation,
+            navController = findNavController(),
+            checkedItemId = R.id.progressFragment
+        )
+        setupNavigationView(
+            navigationView = binding.navigationView,
+            drawerLayout = binding.drawerLayout,
+            navController = findNavController(),
+            checkedItem = R.id.progressFragment
+        )
         binding.topAppBar.setNavigationOnClickListener {
             binding.drawerLayout.open()
         }

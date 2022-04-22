@@ -43,6 +43,27 @@
 
     </style>
 
+    <style name="TextAppearance.OwnTrainer.LabelLargeBold" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.OwnTrainer.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+
+    <style name="TextAppearance.OwnTrainer.Headline4" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+
+    <style name="TextAppearance.OwnTrainer.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+
     <style name="TextAppearance.OwnTrainer.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="fontFamily">@font/nunito</item>
         <item name="android:fontFamily">@font/nunito</item>

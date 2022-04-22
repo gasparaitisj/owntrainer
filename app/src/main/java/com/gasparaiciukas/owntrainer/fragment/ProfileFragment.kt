@@ -249,11 +249,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         ) {
             findNavController().popBackStack().discard()
         } else {
-            val sex = Sex.values().find { it.value == binding.etSex.text.toString() }
-                ?: Sex.MALE
-            val lifestyle =
-                Lifestyle.values().find { it.value == binding.etLifestyle.text.toString() }
-                    ?: Lifestyle.SEDENTARY
+            val sex = Sex.values().find {
+                it.selectionDescription(requireContext()) == binding.etSex.text.toString()
+            } ?: Sex.MALE
+            val lifestyle = Lifestyle.values().find {
+                it.selectionDescription(requireContext()) == binding.etLifestyle.text.toString()
+            } ?: Lifestyle.SEDENTARY
             sharedViewModel.updateUser(
                 User(
                     userId = uiState.user.userId,

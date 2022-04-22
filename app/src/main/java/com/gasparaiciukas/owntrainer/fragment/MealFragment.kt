@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
@@ -72,8 +72,17 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
     }
 
     private fun initNavigation() {
-        NavigationUI.setupWithNavController(binding.bottomNavigation, findNavController())
-        NavigationUI.setupWithNavController(binding.navigationView, findNavController())
+        setupBottomNavigation(
+            bottomNavigation = binding.bottomNavigation,
+            navController = findNavController(),
+            checkedItemId = R.id.mealFragment
+        )
+        setupNavigationView(
+            navigationView = binding.navigationView,
+            drawerLayout = binding.drawerLayout,
+            navController = findNavController(),
+            checkedItem = R.id.mealFragment
+        )
         binding.layoutTab.getTabAt(1)?.select() // select Meals tab
         binding.topAppBar.setNavigationOnClickListener {
             binding.drawerLayout.open()
@@ -104,7 +113,13 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
     }
 
     private fun initRecyclerView() {
-        mealAdapter = MealAdapter()
+        mealAdapter = MealAdapter().apply {
+            setFormatStrings(
+                MealAdapter.MealAdapterFormatStrings(
+                    calories = getString(R.string.row_meal_calories)
+                )
+            )
+        }
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)

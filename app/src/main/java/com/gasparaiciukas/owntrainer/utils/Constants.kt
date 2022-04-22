@@ -40,15 +40,5 @@ object Constants {
             const val SORT_ORDER_DESCENDING = "desc"
         }
     }
-
-    object EN {
-        const val male = "Male"
-        const val female = "Female"
-        const val sedentary = "Sedentary"
-        const val lightly_active = "Lightly active"
-        const val moderately_active = "Moderately active"
-        const val very_active = "Very active"
-        const val extra_active = "Extra active"
-    }
 }
 

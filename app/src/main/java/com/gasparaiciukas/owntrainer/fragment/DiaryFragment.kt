@@ -1,16 +1,17 @@
 package com.gasparaiciukas.owntrainer.fragment
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.adapter.MealAdapter
@@ -80,14 +81,23 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
     }
 
     fun initNavigation() {
-        setupWithNavController(binding.bottomNavigation, findNavController())
-        setupWithNavController(binding.navigationView, findNavController())
+        setupBottomNavigation(
+            bottomNavigation = binding.bottomNavigation,
+            navController = findNavController(),
+            checkedItemId = R.id.diaryFragment
+        )
+        setupNavigationView(
+            navigationView = binding.navigationView,
+            drawerLayout = binding.drawerLayout,
+            navController = findNavController(),
+            checkedItem = R.id.diaryFragment
+        )
 
         binding.topAppBar.setNavigationOnClickListener {
             binding.drawerLayout.open()
         }
 
-        binding.fab.setOnClickListener {
+        binding.btnAddFood.setOnClickListener {
             findNavController().navigate(
                 DiaryFragmentDirections.actionDiaryFragmentToAddMealToDiaryFragment()
             )
@@ -97,7 +107,7 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
             viewModel.updateUserToPreviousDay()
         }
 
-        binding.cardNavigation.layoutDate.setOnClickListener {
+        binding.cardNavigation.tvDate.setOnClickListener {
             viewModel.updateUserToCurrentDay()
         }
 
@@ -106,46 +116,139 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
         }
     }
 
+
     private fun setStatistics(uiState: DiaryUiState) {
         // Navigation bar
-        binding.cardNavigation.tvDayOfWeek.text =
-            DateFormatter.dayOfWeekToString(uiState.user.dayOfWeek)
-        binding.cardNavigation.tvMonthOfYear.text =
-            DateFormatter.monthOfYearToString(uiState.user.month)
-        binding.cardNavigation.tvDayOfMonth.text = uiState.user.dayOfMonth.toString()
+        binding.cardNavigation.tvDate.text = getString(
+            R.string.date_navigation_formatted,
+            DateFormatter.dayOfWeekToString(uiState.user.dayOfWeek, requireContext()),
+            DateFormatter.monthOfYearToString(uiState.user.month, requireContext()),
+            uiState.user.dayOfMonth.toString()
+        )
 
-        // Intakes
-        binding.cardStatistics.tvCaloriesIntake.text =
-            uiState.user.dailyKcalIntake.roundToInt().toString()
-        binding.cardStatistics.tvProteinIntake.text =
-            uiState.user.dailyProteinIntakeInG.roundToInt().toString()
-        binding.cardStatistics.tvFatIntake.text =
-            uiState.user.dailyFatIntakeInG.roundToInt().toString()
-        binding.cardStatistics.tvCarbsIntake.text =
-            uiState.user.dailyCarbsIntakeInG.roundToInt().toString()
+        binding.cardStatistics.tvCaloriesPercentage.apply {
+            val caloriesPercentage = uiState.caloriesPercentage.roundToInt()
+            text = getString(
+                R.string.append_percent_sign,
+                caloriesPercentage.toString()
+            )
+            if (caloriesPercentage >= 100) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    setTextAppearance(R.style.TextAppearance_OwnTrainer_LabelLargeBold)
+                } else {
+                    @Suppress("DEPRECATION")
+                    setTextAppearance(context, R.style.TextAppearance_OwnTrainer_LabelLargeBold)
+                }
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    setTextAppearance(R.style.TextAppearance_OwnTrainer_LabelLarge)
+                } else {
+                    @Suppress("DEPRECATION")
+                    setTextAppearance(context, R.style.TextAppearance_OwnTrainer_LabelLarge)
+                }
+            }
+        }
 
-        // Total calories of day
-        binding.cardStatistics.tvCaloriesConsumed.text =
-            uiState.caloriesConsumed.roundToInt().toString()
-        binding.cardStatistics.tvProteinConsumed.text =
-            uiState.proteinConsumed.roundToInt().toString()
-        binding.cardStatistics.tvFatConsumed.text = uiState.fatConsumed.roundToInt().toString()
-        binding.cardStatistics.tvCarbsConsumed.text =
-            uiState.carbsConsumed.roundToInt().toString()
-
-        // Percentage of daily intake
-        binding.cardStatistics.tvCaloriesPercentage.text =
-            uiState.caloriesPercentage.roundToInt().toString()
-        binding.cardStatistics.tvProteinPercentage.text =
-            uiState.proteinPercentage.roundToInt().toString()
-        binding.cardStatistics.tvFatPercentage.text =
-            uiState.fatPercentage.roundToInt().toString()
-        binding.cardStatistics.tvCarbsPercentage.text =
-            uiState.carbsPercentage.roundToInt().toString()
+        binding.cardStatistics.tvProteinPercentage.apply {
+            val proteinPercentage = uiState.proteinPercentage.roundToInt()
+            text = getString(
+                R.string.append_percent_sign,
+                proteinPercentage.toString()
+            )
+            if (proteinPercentage >= 100) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    setTextAppearance(R.style.TextAppearance_OwnTrainer_LabelLargeBold)
+                } else {
+                    @Suppress("DEPRECATION")
+                    setTextAppearance(context, R.style.TextAppearance_OwnTrainer_LabelLargeBold)
+                }
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    setTextAppearance(R.style.TextAppearance_OwnTrainer_LabelLarge)
+                } else {
+                    @Suppress("DEPRECATION")
+                    setTextAppearance(context, R.style.TextAppearance_OwnTrainer_LabelLarge)
+                }
+            }
+        }
+        binding.cardStatistics.tvFatPercentage.apply {
+            val fatPercentage = uiState.fatPercentage.roundToInt()
+            text = getString(
+                R.string.append_percent_sign,
+                fatPercentage.toString()
+            )
+            if (fatPercentage >= 100) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    setTextAppearance(R.style.TextAppearance_OwnTrainer_LabelLargeBold)
+                } else {
+                    @Suppress("DEPRECATION")
+                    setTextAppearance(context, R.style.TextAppearance_OwnTrainer_LabelLargeBold)
+                }
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    setTextAppearance(R.style.TextAppearance_OwnTrainer_LabelLarge)
+                } else {
+                    @Suppress("DEPRECATION")
+                    setTextAppearance(context, R.style.TextAppearance_OwnTrainer_LabelLarge)
+                }
+            }
+        }
+        binding.cardStatistics.tvCarbsPercentage.apply {
+            val carbsPercentage = uiState.carbsPercentage.roundToInt()
+            text = getString(
+                R.string.append_percent_sign,
+                carbsPercentage.toString()
+            )
+            if (carbsPercentage >= 100) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    setTextAppearance(R.style.TextAppearance_OwnTrainer_LabelLargeBold)
+                } else {
+                    @Suppress("DEPRECATION")
+                    setTextAppearance(context, R.style.TextAppearance_OwnTrainer_LabelLargeBold)
+                }
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    setTextAppearance(R.style.TextAppearance_OwnTrainer_LabelLarge)
+                } else {
+                    @Suppress("DEPRECATION")
+                    setTextAppearance(context, R.style.TextAppearance_OwnTrainer_LabelLarge)
+                }
+            }
+        }
+        binding.cardStatistics.tvCaloriesCount.text =
+            getString(
+                R.string.calories_count_formatted,
+                uiState.caloriesConsumed.roundToInt().toString(),
+                uiState.user.dailyKcalIntake.roundToInt().toString()
+            )
+        binding.cardStatistics.tvProteinCount.text =
+            getString(
+                R.string.macros_count_formatted,
+                uiState.proteinConsumed.roundToInt().toString(),
+                uiState.user.dailyProteinIntakeInG.roundToInt().toString()
+            )
+        binding.cardStatistics.tvFatCount.text =
+            getString(
+                R.string.macros_count_formatted,
+                uiState.fatConsumed.roundToInt().toString(),
+                uiState.user.dailyFatIntakeInG.roundToInt().toString()
+            )
+        binding.cardStatistics.tvCarbsCount.text =
+            getString(
+                R.string.macros_count_formatted,
+                uiState.carbsConsumed.roundToInt().toString(),
+                uiState.user.dailyCarbsIntakeInG.roundToInt().toString()
+            )
     }
 
     private fun initRecyclerView() {
-        mealAdapter = MealAdapter()
+        mealAdapter = MealAdapter().apply {
+            setFormatStrings(
+                MealAdapter.MealAdapterFormatStrings(
+                    calories = getString(R.string.row_meal_calories)
+                )
+            )
+        }
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)

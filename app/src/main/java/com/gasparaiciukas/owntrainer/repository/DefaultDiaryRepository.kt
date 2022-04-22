@@ -1,5 +1,6 @@
 package com.gasparaiciukas.owntrainer.repository
 
+import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.database.*
 import com.gasparaiciukas.owntrainer.network.DefaultGetService
 import com.gasparaiciukas.owntrainer.network.GetResponse
@@ -70,12 +71,12 @@ class DefaultDiaryRepository @Inject constructor(
             if (response.isSuccessful) {
                 response.body()?.let {
                     return@let Resource.success(it)
-                } ?: Resource.error(response.message(), null)
+                } ?: Resource.error(msg = response.message())
             } else {
-                Resource.error(response.message(), null)
+                Resource.error(msg = response.message())
             }
         } catch (e: Exception) {
-            Resource.error("Couldn't reach the server. Check your internet connection.", null)
+            Resource.error(msgRes = R.string.network_error)
         }
     }
 

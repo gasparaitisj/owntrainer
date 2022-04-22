@@ -64,7 +64,7 @@ class NetworkFoodItemFragmentTest {
     }
 
     @Test
-    fun clickOnNavigationBackButton_navigateToFoodFragment() {
+    fun clickOnNavigationBackButton_popBackStack() {
         launchFragmentInHiltContainer<NetworkFoodItemFragment>(
             fragmentFactory = fragmentFactory,
             navController = navController
@@ -80,9 +80,7 @@ class NetworkFoodItemFragmentTest {
             )
         ).perform(ViewActions.click())
 
-        Mockito.verify(navController).navigate(
-            NetworkFoodItemFragmentDirections.actionNetworkFoodItemFragmentToFoodFragment()
-        )
+        Mockito.verify(navController).popBackStack()
     }
 
     @Test

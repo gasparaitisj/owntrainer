@@ -1,34 +1,37 @@
 package com.gasparaiciukas.owntrainer.utils
 
+import android.content.Context
+import com.gasparaiciukas.owntrainer.R
+
 class DateFormatter {
     companion object {
-        fun dayOfWeekToString(dayOfWeek: Int): String {
+        fun dayOfWeekToString(dayOfWeek: Int, context: Context): String {
             return when (dayOfWeek) {
-                1 -> "Mon"
-                2 -> "Tue"
-                3 -> "Wed"
-                4 -> "Thu"
-                5 -> "Fri"
-                6 -> "Sat"
-                7 -> "Sun"
+                1 -> context.getString(R.string.monday_three_letter)
+                2 -> context.getString(R.string.tuesday_three_letter)
+                3 -> context.getString(R.string.wednesday_three_letter)
+                4 -> context.getString(R.string.thursday_three_letter)
+                5 -> context.getString(R.string.friday_three_letter)
+                6 -> context.getString(R.string.saturday_three_letter)
+                7 -> context.getString(R.string.sunday_three_letter)
                 else -> ""
             }
         }
 
-        fun monthOfYearToString(monthOfYear: Int): String {
+        fun monthOfYearToString(monthOfYear: Int, context: Context): String {
             return when (monthOfYear) {
-                1 -> " January "
-                2 -> " February "
-                3 -> " March "
-                4 -> " April "
-                5 -> " May "
-                6 -> " June "
-                7 -> " July "
-                8 -> " August "
-                9 -> " September "
-                10 -> " October "
-                11 -> " November "
-                12 -> " December "
+                1 -> context.getString(R.string.january)
+                2 -> context.getString(R.string.february)
+                3 -> context.getString(R.string.march)
+                4 -> context.getString(R.string.april)
+                5 -> context.getString(R.string.may)
+                6 -> context.getString(R.string.june)
+                7 -> context.getString(R.string.july)
+                8 -> context.getString(R.string.august)
+                9 -> context.getString(R.string.september)
+                10 -> context.getString(R.string.october)
+                11 -> context.getString(R.string.november)
+                12 -> context.getString(R.string.december)
                 else -> ""
             }
         }

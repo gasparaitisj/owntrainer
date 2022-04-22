@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,121 +19,69 @@
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+            android:text="@string/sample_text"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text="@string/_29"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_calories"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="@string/_29"
+            android:layout_marginStart="4dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.OwnTrainer.Caption"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_quantity"
+            app:layout_constraintStart_toEndOf="@+id/tv_quantity"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
-                <TextView
-                    android:id="@+id/tv_quantity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+        <TextView
+            android:id="@+id/tv_protein"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/_29"
+            android:textAppearance="@style/TextAppearance.OwnTrainer.Caption"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_quantity" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" g "
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                    tools:ignore="HardcodedText" />
+        <TextView
+            android:id="@+id/tv_carbs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/_29"
+            android:layout_marginStart="4dp"
+            android:textAppearance="@style/TextAppearance.OwnTrainer.Caption"
+            app:layout_constraintStart_toEndOf="@+id/tv_protein"
+            app:layout_constraintTop_toBottomOf="@+id/tv_quantity" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="("
-                    android:textAppearance="@style/TextAppearance.OwnTrainer.Caption"
-                    tools:ignore="HardcodedText" />
+        <TextView
+            android:id="@+id/tv_fat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/_29"
+            android:layout_marginStart="4dp"
+            android:textAppearance="@style/TextAppearance.OwnTrainer.Caption"
+            app:layout_constraintStart_toEndOf="@+id/tv_carbs"
+            app:layout_constraintTop_toBottomOf="@+id/tv_quantity" />
 
-                <TextView
-                    android:id="@+id/tv_calories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.OwnTrainer.Caption" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" kCal)"
-                    android:textAppearance="@style/TextAppearance.OwnTrainer.Caption"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Protein "
-                    android:textAppearance="@style/TextAppearance.OwnTrainer.Caption"
-                    tools:ignore="HardcodedText" />
-
-                <TextView
-                    android:id="@+id/tv_protein"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.OwnTrainer.Caption" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" g "
-                    android:textAppearance="@style/TextAppearance.OwnTrainer.Caption"
-                    tools:ignore="HardcodedText" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Carbs "
-                    android:textAppearance="@style/TextAppearance.OwnTrainer.Caption"
-                    tools:ignore="HardcodedText" />
-
-                <TextView
-                    android:id="@+id/tv_carbs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.OwnTrainer.Caption" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" g "
-                    android:textAppearance="@style/TextAppearance.OwnTrainer.Caption"
-                    tools:ignore="HardcodedText" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Fat "
-                    android:textAppearance="@style/TextAppearance.OwnTrainer.Caption"
-                    tools:ignore="HardcodedText" />
-
-                <TextView
-                    android:id="@+id/tv_fat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.OwnTrainer.Caption" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" g"
-                    android:textAppearance="@style/TextAppearance.OwnTrainer.Caption"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
-
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-    </LinearLayout>
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_protein" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

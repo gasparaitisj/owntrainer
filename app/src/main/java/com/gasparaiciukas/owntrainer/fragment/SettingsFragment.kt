@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -105,7 +106,12 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     }
 
     private fun initNavigation() {
-        binding.navigationView.setupWithNavController(findNavController())
+        setupNavigationView(
+            navigationView = binding.navigationView,
+            drawerLayout = binding.drawerLayout,
+            navController = findNavController(),
+            checkedItem = R.id.settingsFragment
+        )
         binding.topAppBar.setNavigationOnClickListener {
             binding.drawerLayout.open()
         }

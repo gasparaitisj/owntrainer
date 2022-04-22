@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -165,7 +166,10 @@ class CreateReminderFragment : Fragment(R.layout.fragment_create_reminder) {
                 sharedViewModel.hour = picker.hour
                 sharedViewModel.minute = picker.minute
                 binding.etTime.setText(
-                    String.format("%02d:%02d", sharedViewModel.hour, sharedViewModel.minute)
+                    getString(
+                        R.string.time_formatted,
+                        sharedViewModel.hour, sharedViewModel.minute
+                    )
                 )
                 sharedViewModel.isTimeCorrect = true
                 binding.layoutEtTime.error = null

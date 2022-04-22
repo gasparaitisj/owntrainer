@@ -57,11 +57,11 @@
     <color name="error">#BA1B1B</color>
 
     <!-- Pie Chart Colors -->
-    <color name="colorSmoke">#FFF5F5F5</color>
+    <color name="colorProtein">#FF00FF00</color>
     <color name="colorSmokeDark">#FFE3E3E3</color>
-    <color name="colorGold">#FFFFD700</color>
+    <color name="colorCarbs">#FFFFD700</color>
     <color name="colorGreen">#FF00FF00</color>
-    <color name="colorOrange">#FFFFA500</color>
+    <color name="colorFat">#FFFFA500</color>
     <color name="colorWhite">#FFFFFFFF</color>
-    <color name="colorRed">#FFFF0000</color>
+    <color name="colorCalories">#FFFF0000</color>
 </resources>

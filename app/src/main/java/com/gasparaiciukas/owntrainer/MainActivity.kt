@@ -14,8 +14,9 @@ import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.databinding.ActivityMainBinding
-import com.gasparaiciukas.owntrainer.fragment.MainFragmentFactoryEntryPoint
+import com.gasparaiciukas.owntrainer.fragment.*
 import com.gasparaiciukas.owntrainer.utils.Constants.NOTIFICATION_REMINDER_ID
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
@@ -68,5 +69,27 @@ class MainActivity : AppCompatActivity() {
             this,
             MainFragmentFactoryEntryPoint::class.java
         ).getFragmentFactory()
+    }
+
+    override fun onBackPressed() {
+        val navHost = supportFragmentManager.findFragmentById(R.id.fragment_container_view)
+        navHost?.let { navFragment ->
+            navFragment.childFragmentManager.primaryNavigationFragment?.let { fragment ->
+                when (fragment) {
+                    is DiaryFragment -> {
+                        finish()
+                    }
+                    is FoodFragment,
+                    is MealFragment,
+                    is ProgressFragment,
+                    is SettingsFragment -> {
+                        navFragment.findNavController().navigate(R.id.action_global_diaryFragment)
+                    }
+                    else -> {
+                        super.onBackPressed()
+                    }
+                }
+            }
+        }
     }
 }

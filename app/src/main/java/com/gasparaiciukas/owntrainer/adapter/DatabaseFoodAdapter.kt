@@ -26,6 +26,14 @@ class DatabaseFoodAdapter @Inject constructor(
         }
     }
 
+    data class DatabaseFoodAdapterFormatStrings(
+        val quantity: String,
+        val calories: String,
+        val protein: String,
+        val carbs: String,
+        val fat: String,
+    )
+
     private val diffCallback = object : DiffUtil.ItemCallback<FoodEntry>() {
         override fun areItemsTheSame(
             oldItem: FoodEntry,
@@ -50,12 +58,20 @@ class DatabaseFoodAdapter @Inject constructor(
         get() = differ.currentList
         set(value) = differ.submitList(value)
 
+    private lateinit var formatStrings: DatabaseFoodAdapterFormatStrings
+
     fun setOnClickListeners(
         singleClickListener: ((foodEntryParcelable: FoodEntryParcelable) -> Unit)? = null,
         longClickListener: ((foodEntry: FoodEntry) -> Unit)? = null
     ) {
         this.singleClickListener = singleClickListener
         this.longClickListener = longClickListener
+    }
+
+    fun setFormatStrings(
+        formatStrings: DatabaseFoodAdapterFormatStrings
+    ) {
+        this.formatStrings = formatStrings
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DatabaseFoodViewHolder {
@@ -66,11 +82,26 @@ class DatabaseFoodAdapter @Inject constructor(
     override fun onBindViewHolder(holder: DatabaseFoodViewHolder, position: Int) {
         // Display information of each row
         holder.binding.tvTitle.text = items[position].title
-        holder.binding.tvCalories.text = items[position].calories.roundToInt().toString()
-        holder.binding.tvQuantity.text = items[position].quantityInG.roundToInt().toString()
-        holder.binding.tvCarbs.text = items[position].carbs.roundToInt().toString()
-        holder.binding.tvProtein.text = items[position].protein.roundToInt().toString()
-        holder.binding.tvFat.text = items[position].fat.roundToInt().toString()
+        holder.binding.tvQuantity.text = String.format(
+            formatStrings.quantity,
+            items[position].quantityInG.roundToInt().toString()
+        )
+        holder.binding.tvCalories.text = String.format(
+            formatStrings.calories,
+            items[position].calories.roundToInt().toString()
+        )
+        holder.binding.tvProtein.text = String.format(
+            formatStrings.protein,
+            items[position].protein.roundToInt().toString()
+        )
+        holder.binding.tvCarbs.text = String.format(
+            formatStrings.carbs,
+            items[position].carbs.roundToInt().toString()
+        )
+        holder.binding.tvFat.text = String.format(
+            formatStrings.fat,
+            items[position].fat.roundToInt().toString()
+        )
         holder.binding.layoutItem.setOnClickListener {
             singleClickListener?.let { click ->
                 click(

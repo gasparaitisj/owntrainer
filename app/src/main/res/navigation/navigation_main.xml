@@ -72,6 +72,32 @@
         android:label="ReminderFragment" />
 
     <action
+        android:id="@+id/action_global_diaryFragment"
+        app:destination="@id/diaryFragment"
+        app:popUpTo="@+id/diaryFragment" />
+
+    <action
+        android:id="@+id/action_global_foodFragment"
+        app:destination="@id/foodFragment"
+        app:popUpTo="@+id/diaryFragment" />
+
+    <action
+        android:id="@+id/action_global_mealFragment"
+        app:destination="@id/mealFragment"
+        app:popUpTo="@+id/diaryFragment" />
+
+    <action
+        android:id="@+id/action_global_progressFragment"
+        app:destination="@id/progressFragment"
+        app:popUpTo="@+id/diaryFragment" />
+
+    <action
+        android:id="@+id/action_global_settingsFragment"
+        app:destination="@id/settingsFragment"
+        app:popUpTo="@+id/diaryFragment" />
+
+
+    <action
         android:id="@+id/action_addMealToDiaryFragment_to_diaryFragment"
         app:destination="@id/diaryFragment" />
     <action
