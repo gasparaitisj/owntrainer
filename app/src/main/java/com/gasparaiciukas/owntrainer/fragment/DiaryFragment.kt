@@ -132,7 +132,7 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
                 R.string.append_percent_sign,
                 caloriesPercentage.toString()
             )
-            if (caloriesPercentage >= 100) {
+            if (uiState.caloriesPercentage >= 100) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     setTextAppearance(R.style.TextAppearance_OwnTrainer_LabelLargeBold)
                 } else {
@@ -155,7 +155,7 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
                 R.string.append_percent_sign,
                 proteinPercentage.toString()
             )
-            if (proteinPercentage >= 100) {
+            if (uiState.proteinPercentage >= 100) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     setTextAppearance(R.style.TextAppearance_OwnTrainer_LabelLargeBold)
                 } else {
@@ -177,7 +177,7 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
                 R.string.append_percent_sign,
                 fatPercentage.toString()
             )
-            if (fatPercentage >= 100) {
+            if (uiState.fatPercentage >= 100) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     setTextAppearance(R.style.TextAppearance_OwnTrainer_LabelLargeBold)
                 } else {
@@ -199,7 +199,7 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
                 R.string.append_percent_sign,
                 carbsPercentage.toString()
             )
-            if (carbsPercentage >= 100) {
+            if (uiState.carbsPercentage >= 100) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     setTextAppearance(R.style.TextAppearance_OwnTrainer_LabelLargeBold)
                 } else {

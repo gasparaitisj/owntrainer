@@ -97,9 +97,6 @@ dependencies {
     // Pie chart
     implementation "com.github.PhilJay:MPAndroidChart:$rootProject.pieChartVersion"
 
-    // App Intro
-    implementation "com.github.AppIntro:AppIntro:$rootProject.appIntroVersion"
-
     // Timber for Logging
     implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
 
@@ -125,7 +122,6 @@ dependencies {
     testImplementation "junit:junit:$rootProject.junitCoreVersion"
     testImplementation "org.hamcrest:hamcrest-all:$rootProject.hamcrestVersion"
     testImplementation "androidx.arch.core:core-testing:$rootProject.archCoreTestingVersion"
-    testImplementation "org.robolectric:robolectric:$rootProject.robolectricVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$rootProject.coroutineTestVersion"
     testImplementation "com.google.truth:truth:$rootProject.truthVersion"
     testImplementation "org.mockito:mockito-core:$rootProject.mockitoCoreVersion"
