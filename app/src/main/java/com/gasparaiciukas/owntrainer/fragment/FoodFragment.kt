@@ -8,13 +8,14 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.AbsListView
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,8 +26,6 @@ import com.gasparaiciukas.owntrainer.network.Food
 import com.gasparaiciukas.owntrainer.network.Status
 import com.gasparaiciukas.owntrainer.utils.Constants
 import com.gasparaiciukas.owntrainer.viewmodel.FoodViewModel
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -117,7 +116,6 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
                 }
             }
         }
-
         initUi()
     }
 
@@ -175,39 +173,14 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
                 reloadRecyclerView(listOf())
             }
         }
-
-        // Tabs (foods or meals)
-        binding.layoutTab.addOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                if (tab.position == 1) {
-                    findNavController().navigate(
-                        FoodFragmentDirections.actionFoodFragmentToMealFragment()
-                    )
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {}
-        })
     }
 
     private fun initNavigation() {
-        findNavController().addOnDestinationChangedListener { _, _, _ ->
-            viewModel.clearFoods()
-        }
-        setupBottomNavigation(
-            bottomNavigation = binding.bottomNavigation,
-            navController = findNavController(),
-            checkedItemId = R.id.mealFragment
-        )
-        setupNavigationView(
-            navigationView = binding.navigationView,
-            drawerLayout = binding.drawerLayout,
-            navController = findNavController(),
-            checkedItem = R.id.foodFragment
-        )
-        binding.topAppBar.setNavigationOnClickListener {
-            binding.drawerLayout.open()
+        findNavController().addOnDestinationChangedListener { controller, destination, arguments ->
+            if (destination.id != R.id.foodAndMealFragment) {
+                println("foods cleared!")
+                viewModel.clearFoods()
+            }
         }
     }
 

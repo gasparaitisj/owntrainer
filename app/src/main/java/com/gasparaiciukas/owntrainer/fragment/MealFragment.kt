@@ -61,7 +61,6 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
     }
 
     private fun initUi() {
-        initNavigation()
         setListeners()
         initRecyclerView()
     }
@@ -71,24 +70,6 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
         binding.scrollView.visibility = View.VISIBLE
     }
 
-    private fun initNavigation() {
-        setupBottomNavigation(
-            bottomNavigation = binding.bottomNavigation,
-            navController = findNavController(),
-            checkedItemId = R.id.mealFragment
-        )
-        setupNavigationView(
-            navigationView = binding.navigationView,
-            drawerLayout = binding.drawerLayout,
-            navController = findNavController(),
-            checkedItem = R.id.mealFragment
-        )
-        binding.layoutTab.getTabAt(1)?.select() // select Meals tab
-        binding.topAppBar.setNavigationOnClickListener {
-            binding.drawerLayout.open()
-        }
-    }
-
     private fun setListeners() {
         // Set up FAB
         binding.fab.setOnClickListener {
@@ -96,20 +77,6 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
                 MealFragmentDirections.actionMealFragmentToCreateMealItemFragment()
             )
         }
-
-        // Tabs (foods or meals)
-        binding.layoutTab.addOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                if (tab.position == 0) {
-                    findNavController().navigate(
-                        MealFragmentDirections.actionMealFragmentToFoodFragment()
-                    )
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {}
-        })
     }
 
     private fun initRecyclerView() {
@@ -140,8 +107,7 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
                     binding.coordinatorLayout,
                     R.string.snackbar_meal_deleted,
                     Snackbar.LENGTH_SHORT
-                ).setAnchorView(binding.bottomNavigation)
-                    .show()
+                ).show()
             }
         )
     }
