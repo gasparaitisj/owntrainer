@@ -1,6 +1,7 @@
 package com.gasparaiciukas.owntrainer.fragment
 
 import android.content.Context
+import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.annotation.IdRes
@@ -8,6 +9,8 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.viewpager2.widget.ViewPager2
+import com.gasparaiciukas.owntrainer.NavigationMainDirections
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.utils.NutrientValueFormatter
 import com.github.mikephil.charting.charts.PieChart
@@ -84,7 +87,7 @@ fun Fragment.setupBottomNavigation(
             }
             R.id.mealFragment -> {
                 navController.navigate(
-                    R.id.action_global_mealFragment
+                    NavigationMainDirections.actionGlobalFoodAndMealFragment(index = 1)
                 )
                 true
             }
@@ -100,6 +103,7 @@ fun Fragment.setupBottomNavigation(
 }
 
 fun Fragment.setupNavigationView(
+    viewPager: ViewPager2? = null,
     navigationView: NavigationView,
     drawerLayout: DrawerLayout,
     navController: NavController,
@@ -110,6 +114,7 @@ fun Fragment.setupNavigationView(
         override fun onDrawerClosed(drawerView: View) {
             selectedMenuItem?.let { menuItem ->
                 navigateToNavigationViewMenuItem(
+                    viewPager = viewPager,
                     menuItem = menuItem,
                     navController = navController
                 )
@@ -127,7 +132,11 @@ fun Fragment.setupNavigationView(
     }
 }
 
-private fun navigateToNavigationViewMenuItem(menuItem: MenuItem, navController: NavController): Boolean {
+private fun navigateToNavigationViewMenuItem(
+    viewPager: ViewPager2? = null,
+    menuItem: MenuItem,
+    navController: NavController
+): Boolean {
     when (menuItem.itemId) {
         R.id.diaryFragment -> {
             navController.navigate(
@@ -136,15 +145,25 @@ private fun navigateToNavigationViewMenuItem(menuItem: MenuItem, navController: 
             return true
         }
         R.id.foodFragment -> {
-            navController.navigate(
-                R.id.action_global_foodFragment
-            )
+            val index = 0
+            if (viewPager != null) {
+                viewPager.setCurrentItem(index, true)
+            } else {
+                navController.navigate(
+                    NavigationMainDirections.actionGlobalFoodAndMealFragment(index = index)
+                )
+            }
             return true
         }
         R.id.mealFragment -> {
-            navController.navigate(
-                R.id.action_global_mealFragment
-            )
+            val index = 1
+            if (viewPager != null) {
+                viewPager.setCurrentItem(index, true)
+            } else {
+                navController.navigate(
+                    NavigationMainDirections.actionGlobalFoodAndMealFragment(index = index)
+                )
+            }
             return true
         }
         R.id.progressFragment -> {

@@ -82,7 +82,7 @@ class FoodViewModel @Inject internal constructor(
 
 
     private val _response: MutableStateFlow<Resource<GetResponse>> =
-        MutableStateFlow(Resource.loading(null))
+        MutableStateFlow(Resource.success())
     val response: StateFlow<Resource<GetResponse>> = _response.asStateFlow()
 
     var pageNumber = 1

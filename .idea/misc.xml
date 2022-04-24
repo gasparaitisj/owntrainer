@@ -14,7 +14,7 @@
         <entry key="app/src/main/res/font/nunito.xml" value="0.2828125" />
         <entry key="app/src/main/res/layout-h480dp-land/fragment_food.xml" value="0.2" />
         <entry key="app/src/main/res/layout-h480dp/fragment_diary.xml" value="0.25" />
-        <entry key="app/src/main/res/layout-h480dp/fragment_food.xml" value="0.33" />
+        <entry key="app/src/main/res/layout-h480dp/fragment_food.xml" value="0.22" />
         <entry key="app/src/main/res/layout-h480dp/fragment_meal.xml" value="0.25" />
         <entry key="app/src/main/res/layout-land/fragment_food.xml" value="0.33" />
         <entry key="app/src/main/res/layout-v23/fragment_profile.xml" value="0.23854166666666668" />
@@ -41,9 +41,10 @@
         <entry key="app/src/main/res/layout/fragment_database_food_item.xml" value="0.22777777777777777" />
         <entry key="app/src/main/res/layout/fragment_diary.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_food.xml" value="0.23076923076923078" />
+        <entry key="app/src/main/res/layout/fragment_food_and_meal.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_food_item.xml" value="0.21041666666666667" />
         <entry key="app/src/main/res/layout/fragment_intro_details.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_meal.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_meal.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_meal_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_network_food_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.14754098360655737" />

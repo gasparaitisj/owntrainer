@@ -12,6 +12,7 @@ import javax.inject.Inject
 class MealViewModel @Inject internal constructor(
     val diaryRepository: DiaryRepository
 ) : ViewModel() {
+
     val meals = diaryRepository.getAllMealsWithFoodEntries()
 
     var title = ""
