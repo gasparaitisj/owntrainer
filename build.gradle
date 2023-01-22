@@ -16,7 +16,7 @@ buildscript {
         desugaringVersion = '1.1.5'
         espressoVersion = '3.3.0' // upgrading to 3.4.0 will break tests
         fragmentVersion = '1.4.1'
-        gradleVersion = '7.1.2'
+        gradleVersion = '7.3.0'
         hamcrestVersion = '1.3'
         hiltVersion = '2.41'
         hiltKaptCompilerVersion = '1.0.0'
