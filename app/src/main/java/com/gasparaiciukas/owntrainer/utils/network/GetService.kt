@@ -13,6 +13,6 @@ interface GetService {
         pageNumber: Int? = null,
         sortBy: String? = null,
         sortOrder: String? = null,
-        requireAllWords: Boolean? = null,
+        requireAllWords: Boolean? = null
     ): Response<GetResponse>
 }

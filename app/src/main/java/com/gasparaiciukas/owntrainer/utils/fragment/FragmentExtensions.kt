@@ -26,7 +26,7 @@ fun Fragment.setPieChart(
     proteinPercentage: Float,
     calories: Float,
     pieChart: PieChart,
-    context: Context,
+    context: Context
 ) {
     val colors = listOf(
         getColor(context, R.color.colorCarbs),

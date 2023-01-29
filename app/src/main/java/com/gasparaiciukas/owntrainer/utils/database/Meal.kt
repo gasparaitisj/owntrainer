@@ -4,12 +4,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-
 @Entity(tableName = "meal")
 data class Meal(
     @PrimaryKey(autoGenerate = true) var mealId: Int = 0,
     @ColumnInfo(name = "title") var title: String,
-    @ColumnInfo(name = "instructions") var instructions: String,
+    @ColumnInfo(name = "instructions") var instructions: String
 ) {
     @ColumnInfo(name = "calories")
     var calories: Double = 0.0

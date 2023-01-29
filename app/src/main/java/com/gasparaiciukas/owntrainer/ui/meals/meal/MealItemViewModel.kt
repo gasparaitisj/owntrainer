@@ -26,7 +26,7 @@ data class MealItemUiState(
     val carbsDailyIntakePercentage: Float,
     val fatDailyIntakePercentage: Float,
     val proteinDailyIntakePercentage: Float,
-    val caloriesDailyIntakePercentage: Float,
+    val caloriesDailyIntakePercentage: Float
 )
 
 @HiltViewModel

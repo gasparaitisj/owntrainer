@@ -12,7 +12,6 @@ object Constants {
     const val QUANTITY_MINIMUM = 1
     const val QUANTITY_MAXIMUM = 10000
 
-
     const val NOTIFICATION_REMINDER_ID = 1
     const val NOTIFICATION_REMINDER_TITLE_EXTRA = "NOTIFICATION_REMINDER_TITLE_EXTRA"
     const val REMINDER_WAKE_LOCK_TAG = "owntrainer::ReminderWakeLock"
@@ -41,4 +40,3 @@ object Constants {
         }
     }
 }
-

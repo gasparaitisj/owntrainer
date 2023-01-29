@@ -15,5 +15,5 @@ data class DiaryEntry(
     @ColumnInfo(name = "dayOfYear") var dayOfYear: Int,
     @ColumnInfo(name = "dayOfWeek") var dayOfWeek: Int,
     @ColumnInfo(name = "monthOfYear") var monthOfYear: Int,
-    @ColumnInfo(name = "dayOfMonth") var dayOfMonth: Int,
+    @ColumnInfo(name = "dayOfMonth") var dayOfMonth: Int
 )

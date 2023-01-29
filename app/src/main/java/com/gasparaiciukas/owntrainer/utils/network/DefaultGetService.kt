@@ -17,6 +17,6 @@ interface DefaultGetService : GetService {
         @Query("pageNumber") pageNumber: Int?,
         @Query("sortBy") sortBy: String?,
         @Query("sortOrder") sortOrder: String?,
-        @Query("requireAllWords") requireAllWords: Boolean?,
+        @Query("requireAllWords") requireAllWords: Boolean?
     ): Response<GetResponse>
 }

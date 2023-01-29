@@ -7,7 +7,7 @@ data class MealWithFoodEntries(
     @Embedded val meal: Meal,
     @Relation(
         parentColumn = "mealId",
-        entityColumn = "mealId",
+        entityColumn = "mealId"
     )
     var foodEntries: List<FoodEntry>
 ) {

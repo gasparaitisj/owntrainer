@@ -16,7 +16,6 @@ import com.gasparaiciukas.owntrainer.utils.Constants.NOTIFICATION_REMINDER_ID
 import com.gasparaiciukas.owntrainer.utils.Constants.NOTIFICATION_REMINDER_TITLE_EXTRA
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-
 @ExperimentalCoroutinesApi
 class ReminderNotification : BroadcastReceiver() {
     @SuppressLint("UnspecifiedImmutableFlag")
@@ -56,8 +55,8 @@ class ReminderNotification : BroadcastReceiver() {
         powerManager.run {
             newWakeLock(
                 PowerManager.FULL_WAKE_LOCK or
-                        PowerManager.ACQUIRE_CAUSES_WAKEUP or
-                        PowerManager.ON_AFTER_RELEASE,
+                    PowerManager.ACQUIRE_CAUSES_WAKEUP or
+                    PowerManager.ON_AFTER_RELEASE,
                 Constants.REMINDER_WAKE_LOCK_TAG
             ).apply {
                 acquire(1000L)

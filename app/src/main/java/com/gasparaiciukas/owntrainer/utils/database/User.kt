@@ -6,7 +6,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.gasparaiciukas.owntrainer.R
 
-
 @Entity(tableName = "user")
 data class User(
     @PrimaryKey(autoGenerate = true) var userId: Int = 0,
@@ -19,7 +18,7 @@ data class User(
     @ColumnInfo(name = "month") var month: Int,
     @ColumnInfo(name = "dayOfYear") var dayOfYear: Int,
     @ColumnInfo(name = "dayOfMonth") var dayOfMonth: Int,
-    @ColumnInfo(name = "dayOfWeek") var dayOfWeek: Int,
+    @ColumnInfo(name = "dayOfWeek") var dayOfWeek: Int
 ) {
     @ColumnInfo(name = "kcalBurnedPerStep")
     var kcalBurnedPerStep: Double = 0.0

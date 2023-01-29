@@ -59,7 +59,7 @@ class DatabaseFoodItemViewModel @Inject internal constructor(
                     fatDailyIntakePercentage = (lFood.fat / u.dailyFatIntakeInG * 100).toFloat(),
                     proteinPercentage = (lFood.protein / sum * 100).toFloat(),
                     proteinDailyIntake = u.dailyProteinIntakeInG.toFloat(),
-                    proteinDailyIntakePercentage = (lFood.protein / u.dailyProteinIntakeInG * 100).toFloat(),
+                    proteinDailyIntakePercentage = (lFood.protein / u.dailyProteinIntakeInG * 100).toFloat()
                 )
             )
         }
