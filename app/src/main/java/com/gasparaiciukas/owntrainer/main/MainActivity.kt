@@ -17,12 +17,16 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.ActivityMainBinding
-import com.gasparaiciukas.owntrainer.fragment.*
+import com.gasparaiciukas.owntrainer.diary.DiaryFragment
 import com.gasparaiciukas.owntrainer.utils.Constants.NOTIFICATION_REMINDER_ID
+import com.gasparaiciukas.owntrainer.utils.fragment.FoodFragment
+import com.gasparaiciukas.owntrainer.utils.fragment.MainFragmentFactoryEntryPoint
+import com.gasparaiciukas.owntrainer.utils.fragment.MealFragment
+import com.gasparaiciukas.owntrainer.utils.fragment.ProgressFragment
+import com.gasparaiciukas.owntrainer.utils.fragment.SettingsFragment
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint

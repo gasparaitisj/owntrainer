@@ -5,23 +5,23 @@
     app:startDestination="@id/diaryFragment">
     <fragment
         android:id="@+id/addMealToDiaryFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.AddMealToDiaryFragment"
+        android:name="com.gasparaiciukas.owntrainer.utils.fragment.AddMealToDiaryFragment"
         android:label="AddMealToDiaryFragment" />
     <fragment
         android:id="@+id/createMealItemFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.CreateMealItemFragment"
+        android:name="com.gasparaiciukas.owntrainer.utils.fragment.CreateMealItemFragment"
         android:label="CreateMealItemFragment" />
     <fragment
         android:id="@+id/diaryFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.DiaryFragment"
+        android:name="com.gasparaiciukas.owntrainer.diary.DiaryFragment"
         android:label="DiaryFragment" />
     <fragment
         android:id="@+id/mealFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.MealFragment"
+        android:name="com.gasparaiciukas.owntrainer.utils.fragment.MealFragment"
         android:label="MealFragment" />
     <fragment
         android:id="@+id/mealItemFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.MealItemFragment"
+        android:name="com.gasparaiciukas.owntrainer.utils.fragment.MealItemFragment"
         android:label="MealItemFragment">
         <argument
             android:name="mealId"
@@ -34,27 +34,27 @@
     </fragment>
     <fragment
         android:id="@+id/progressFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.ProgressFragment"
+        android:name="com.gasparaiciukas.owntrainer.utils.fragment.ProgressFragment"
         android:label="ProgressFragment" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.ProfileFragment"
+        android:name="com.gasparaiciukas.owntrainer.utils.fragment.ProfileFragment"
         android:label="ProfileFragment" />
     <fragment
         android:id="@+id/foodFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.FoodFragment"
+        android:name="com.gasparaiciukas.owntrainer.utils.fragment.FoodFragment"
         android:label="FoodFragment" />
     <fragment
         android:id="@+id/networkFoodItemFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.NetworkFoodItemFragment"
+        android:name="com.gasparaiciukas.owntrainer.utils.fragment.NetworkFoodItemFragment"
         android:label="NetworkFoodItemFragment" />
     <fragment
         android:id="@+id/addFoodToMealFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.AddFoodToMealFragment"
+        android:name="com.gasparaiciukas.owntrainer.utils.fragment.AddFoodToMealFragment"
         android:label="AddFoodToMealFragment" />
     <fragment
         android:id="@+id/databaseFoodItemFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.DatabaseFoodItemFragment"
+        android:name="com.gasparaiciukas.owntrainer.utils.fragment.DatabaseFoodItemFragment"
         android:label="DatabaseFoodItemFragment">
         <argument
             android:name="food"
@@ -64,11 +64,11 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.SettingsFragment"
+        android:name="com.gasparaiciukas.owntrainer.utils.fragment.SettingsFragment"
         android:label="SettingsFragment" />
     <fragment
         android:id="@+id/reminderFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.ReminderFragment"
+        android:name="com.gasparaiciukas.owntrainer.utils.fragment.ReminderFragment"
         android:label="ReminderFragment" />
 
     <action
@@ -234,11 +234,11 @@
         app:destination="@id/foodFragment" />
     <fragment
         android:id="@+id/createReminderFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.CreateReminderFragment"
+        android:name="com.gasparaiciukas.owntrainer.utils.fragment.CreateReminderFragment"
         android:label="CreateReminderFragment" />
     <fragment
         android:id="@+id/foodAndMealFragment"
-        android:name="com.gasparaiciukas.owntrainer.fragment.FoodAndMealFragment"
+        android:name="com.gasparaiciukas.owntrainer.utils.fragment.FoodAndMealFragment"
         android:label="FoodAndMealFragment">
 
         <argument
