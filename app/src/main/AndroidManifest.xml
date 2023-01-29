@@ -6,14 +6,14 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name=".MainApplication"
+        android:name=".main.MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.OwnTrainer.Starting">
         <activity
-            android:name=".MainActivity"
+            android:name=".main.MainActivity"
             android:configChanges="uiMode"
             android:exported="true"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <receiver
-            android:name=".notif.ReminderNotification"
+            android:name=".utils.notif.ReminderNotification"
             android:enabled="true" />
     </application>
 
