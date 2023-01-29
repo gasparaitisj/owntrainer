@@ -61,7 +61,6 @@ buildscript {
 }
 
 plugins {
-    id "com.diffplug.spotless" version "5.2.0"
     id 'org.jetbrains.kotlin.android' version '1.6.20' apply false
 }
 
@@ -74,9 +73,3 @@ allprojects {
     }
 }
 
-spotless {
-    kotlin {
-        target "**/*.kt"
-        ktlint(ktlintVersion).userData(['max_line_length': '100'])
-    }
-}

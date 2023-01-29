@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OwnTrainer.Starting">
         <activity
-            android:name=".MainActivity"
+            android:name=".main.MainActivity"
             android:configChanges="uiMode"
             android:exported="true"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
