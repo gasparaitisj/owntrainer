@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.utils.fragment
+package com.gasparaiciukas.owntrainer.ui.meals.food
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,9 +15,8 @@ import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.DialogNetworkFoodItemQuantityBinding
 import com.gasparaiciukas.owntrainer.databinding.FragmentNetworkFoodItemBinding
 import com.gasparaiciukas.owntrainer.utils.Constants
+import com.gasparaiciukas.owntrainer.utils.fragment.setPieChart
 import com.gasparaiciukas.owntrainer.utils.network.Status
-import com.gasparaiciukas.owntrainer.utils.viewmodel.FoodViewModel
-import com.gasparaiciukas.owntrainer.utils.viewmodel.NetworkFoodItemUiState
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest

@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.utils.fragment
+package com.gasparaiciukas.owntrainer.progress
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentProgressBinding
+import com.gasparaiciukas.owntrainer.utils.fragment.setupBottomNavigation
+import com.gasparaiciukas.owntrainer.utils.fragment.setupNavigationView
 
 class ProgressFragment : Fragment(R.layout.fragment_progress) {
     private var _binding: FragmentProgressBinding? = null

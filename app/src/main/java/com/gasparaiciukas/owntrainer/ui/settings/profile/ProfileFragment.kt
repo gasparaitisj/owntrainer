@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.utils.fragment
+package com.gasparaiciukas.owntrainer.ui.settings.profile
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -18,6 +18,8 @@ import com.gasparaiciukas.owntrainer.databinding.DialogProfileAgeBinding
 import com.gasparaiciukas.owntrainer.databinding.DialogProfileHeightBinding
 import com.gasparaiciukas.owntrainer.databinding.DialogProfileWeightBinding
 import com.gasparaiciukas.owntrainer.databinding.FragmentProfileBinding
+import com.gasparaiciukas.owntrainer.settings.SettingsUiState
+import com.gasparaiciukas.owntrainer.settings.SettingsViewModel
 import com.gasparaiciukas.owntrainer.utils.Constants.AGE_MAXIMUM
 import com.gasparaiciukas.owntrainer.utils.Constants.AGE_MINIMUM
 import com.gasparaiciukas.owntrainer.utils.Constants.HEIGHT_MAXIMUM
@@ -28,8 +30,6 @@ import com.gasparaiciukas.owntrainer.utils.database.Lifestyle
 import com.gasparaiciukas.owntrainer.utils.database.Sex
 import com.gasparaiciukas.owntrainer.utils.database.User
 import com.gasparaiciukas.owntrainer.utils.discard
-import com.gasparaiciukas.owntrainer.utils.viewmodel.SettingsUiState
-import com.gasparaiciukas.owntrainer.utils.viewmodel.SettingsViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest

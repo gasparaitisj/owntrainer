@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.utils.viewmodel
+package com.gasparaiciukas.owntrainer.settings
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel

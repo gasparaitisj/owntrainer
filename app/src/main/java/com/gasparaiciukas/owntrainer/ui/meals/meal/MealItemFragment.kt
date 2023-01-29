@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.utils.fragment
+package com.gasparaiciukas.owntrainer.ui.meals.meal
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
@@ -17,9 +17,8 @@ import com.gasparaiciukas.owntrainer.databinding.FragmentMealItemBinding
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 import com.gasparaiciukas.owntrainer.utils.adapter.DatabaseFoodAdapter
 import com.gasparaiciukas.owntrainer.utils.database.FoodEntry
+import com.gasparaiciukas.owntrainer.utils.fragment.setPieChart
 import com.gasparaiciukas.owntrainer.utils.network.Status
-import com.gasparaiciukas.owntrainer.utils.viewmodel.MealItemUiState
-import com.gasparaiciukas.owntrainer.utils.viewmodel.MealItemViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest

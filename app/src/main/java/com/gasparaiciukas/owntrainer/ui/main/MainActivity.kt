@@ -18,12 +18,12 @@ import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.ActivityMainBinding
 import com.gasparaiciukas.owntrainer.home.DiaryFragment
+import com.gasparaiciukas.owntrainer.progress.ProgressFragment
+import com.gasparaiciukas.owntrainer.settings.SettingsFragment
+import com.gasparaiciukas.owntrainer.ui.meals.food.FoodFragment
+import com.gasparaiciukas.owntrainer.ui.meals.meal.MealFragment
 import com.gasparaiciukas.owntrainer.utils.Constants.NOTIFICATION_REMINDER_ID
-import com.gasparaiciukas.owntrainer.utils.fragment.FoodFragment
 import com.gasparaiciukas.owntrainer.utils.fragment.MainFragmentFactoryEntryPoint
-import com.gasparaiciukas.owntrainer.utils.fragment.MealFragment
-import com.gasparaiciukas.owntrainer.utils.fragment.ProgressFragment
-import com.gasparaiciukas.owntrainer.utils.fragment.SettingsFragment
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.ExperimentalCoroutinesApi

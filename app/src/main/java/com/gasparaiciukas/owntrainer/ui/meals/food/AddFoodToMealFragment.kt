@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.utils.fragment
+package com.gasparaiciukas.owntrainer.ui.meals.food
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,54 +12,47 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.databinding.FragmentMealBinding
+import com.gasparaiciukas.owntrainer.databinding.FragmentAddFoodToMealBinding
 import com.gasparaiciukas.owntrainer.utils.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.utils.database.MealWithFoodEntries
-import com.gasparaiciukas.owntrainer.utils.viewmodel.MealViewModel
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MealFragment : Fragment(R.layout.fragment_meal) {
-    private var _binding: FragmentMealBinding? = null
+class AddFoodToMealFragment : Fragment(R.layout.fragment_add_food_to_meal) {
+    private var _binding: FragmentAddFoodToMealBinding? = null
     private val binding get() = _binding!!
 
     lateinit var mealAdapter: MealAdapter
 
-    lateinit var viewModel: MealViewModel
+    lateinit var sharedViewModel: FoodViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMealBinding.inflate(inflater, container, false)
+        _binding = FragmentAddFoodToMealBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity())[MealViewModel::class.java]
+        sharedViewModel = ViewModelProvider(requireActivity())[FoodViewModel::class.java]
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.meals.collectLatest { meals ->
-                    meals?.let { refreshUi(it) }
+                sharedViewModel.meals.collectLatest {
+                    it?.let { refreshUi(it) }
                 }
             }
         }
         initUi()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    private fun initUi() {
-        setListeners()
+    fun initUi() {
+        initNavigation()
         initRecyclerView()
     }
 
@@ -68,12 +61,9 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
         binding.scrollView.visibility = View.VISIBLE
     }
 
-    private fun setListeners() {
-        // Set up FAB
-        binding.fab.setOnClickListener {
-            findNavController().navigate(
-                MealFragmentDirections.actionMealFragmentToCreateMealItemFragment()
-            )
+    private fun initNavigation() {
+        binding.topAppBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
@@ -86,27 +76,21 @@ class MealFragment : Fragment(R.layout.fragment_meal) {
             )
         }
         binding.recyclerView.apply {
-            setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             adapter = mealAdapter
         }
         mealAdapter.setOnClickListeners(
             singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
-                findNavController().navigate(
-                    MealFragmentDirections.actionMealFragmentToMealItemFragment(
-                        mealId = mealWithFoodEntries.meal.mealId,
-                        diaryEntryId = -1
-                    )
-                )
-            },
-            longClickListener = { mealId, _ ->
-                viewModel.deleteMeal(mealId)
-                Snackbar.make(
-                    binding.coordinatorLayout,
-                    R.string.snackbar_meal_deleted,
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                viewLifecycleOwner.lifecycleScope.launch {
+                    sharedViewModel.addFoodToMeal(mealWithFoodEntries)
+                    findNavController().popBackStack()
+                }
             }
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

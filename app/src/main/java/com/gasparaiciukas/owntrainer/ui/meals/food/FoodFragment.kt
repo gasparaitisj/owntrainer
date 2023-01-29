@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.utils.fragment
+package com.gasparaiciukas.owntrainer.ui.meals.food
 
 import android.os.Bundle
 import android.text.TextUtils
@@ -23,7 +23,6 @@ import com.gasparaiciukas.owntrainer.utils.Constants
 import com.gasparaiciukas.owntrainer.utils.adapter.NetworkFoodAdapter
 import com.gasparaiciukas.owntrainer.utils.network.Food
 import com.gasparaiciukas.owntrainer.utils.network.Status
-import com.gasparaiciukas.owntrainer.utils.viewmodel.FoodViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

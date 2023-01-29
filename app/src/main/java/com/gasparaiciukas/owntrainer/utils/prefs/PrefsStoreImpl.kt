@@ -5,8 +5,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.gasparaiciukas.owntrainer.settings.AppearanceMode
 import com.gasparaiciukas.owntrainer.utils.prefs.PreferencesKeys.SETTINGS_PREFERENCE_NAME
-import com.gasparaiciukas.owntrainer.utils.viewmodel.AppearanceMode
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map

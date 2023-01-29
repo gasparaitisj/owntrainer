@@ -1,11 +1,10 @@
-package com.gasparaiciukas.owntrainer.utils.viewmodel
+package com.gasparaiciukas.owntrainer.ui.meals.meal
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gasparaiciukas.owntrainer.utils.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.utils.database.User
-import com.gasparaiciukas.owntrainer.utils.fragment.MealItemFragmentArgs
 import com.gasparaiciukas.owntrainer.utils.network.Resource
 import com.gasparaiciukas.owntrainer.utils.repository.DiaryRepository
 import com.gasparaiciukas.owntrainer.utils.repository.UserRepository

@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.utils.viewmodel
+package com.gasparaiciukas.owntrainer.ui.meals.food
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.utils.FoodEntryParcelable
 import com.gasparaiciukas.owntrainer.utils.database.User
-import com.gasparaiciukas.owntrainer.utils.fragment.DatabaseFoodItemFragmentArgs
 import com.gasparaiciukas.owntrainer.utils.network.Resource
 import com.gasparaiciukas.owntrainer.utils.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

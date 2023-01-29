@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.utils.fragment
+package com.gasparaiciukas.owntrainer.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,9 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentSettingsBinding
-import com.gasparaiciukas.owntrainer.utils.viewmodel.AppearanceMode
-import com.gasparaiciukas.owntrainer.utils.viewmodel.SettingsUiState
-import com.gasparaiciukas.owntrainer.utils.viewmodel.SettingsViewModel
+import com.gasparaiciukas.owntrainer.utils.fragment.setupNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest

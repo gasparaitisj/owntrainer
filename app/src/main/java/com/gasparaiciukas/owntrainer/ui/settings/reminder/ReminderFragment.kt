@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.utils.fragment
+package com.gasparaiciukas.owntrainer.ui.settings.reminder
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -19,12 +19,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentReminderBinding
+import com.gasparaiciukas.owntrainer.settings.SettingsUiState
+import com.gasparaiciukas.owntrainer.settings.SettingsViewModel
 import com.gasparaiciukas.owntrainer.utils.Constants
 import com.gasparaiciukas.owntrainer.utils.adapter.ReminderAdapter
 import com.gasparaiciukas.owntrainer.utils.database.Reminder
 import com.gasparaiciukas.owntrainer.utils.notif.ReminderNotification
-import com.gasparaiciukas.owntrainer.utils.viewmodel.SettingsUiState
-import com.gasparaiciukas.owntrainer.utils.viewmodel.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest

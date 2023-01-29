@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.utils.fragment
+package com.gasparaiciukas.owntrainer.ui.meals.meal
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,7 +16,6 @@ import com.gasparaiciukas.owntrainer.databinding.DialogCreateMealItemInstruction
 import com.gasparaiciukas.owntrainer.databinding.DialogCreateMealItemTitleBinding
 import com.gasparaiciukas.owntrainer.databinding.FragmentCreateMealItemBinding
 import com.gasparaiciukas.owntrainer.utils.database.MealWithFoodEntries
-import com.gasparaiciukas.owntrainer.utils.viewmodel.MealViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest

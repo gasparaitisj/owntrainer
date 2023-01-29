@@ -9,7 +9,7 @@
         android:label="AddMealToDiaryFragment" />
     <fragment
         android:id="@+id/createMealItemFragment"
-        android:name="com.gasparaiciukas.owntrainer.utils.fragment.CreateMealItemFragment"
+        android:name="com.gasparaiciukas.owntrainer.ui.meals.meal.CreateMealItemFragment"
         android:label="CreateMealItemFragment" />
     <fragment
         android:id="@+id/diaryFragment"
@@ -17,11 +17,11 @@
         android:label="DiaryFragment" />
     <fragment
         android:id="@+id/mealFragment"
-        android:name="com.gasparaiciukas.owntrainer.utils.fragment.MealFragment"
+        android:name="com.gasparaiciukas.owntrainer.ui.meals.meal.MealFragment"
         android:label="MealFragment" />
     <fragment
         android:id="@+id/mealItemFragment"
-        android:name="com.gasparaiciukas.owntrainer.utils.fragment.MealItemFragment"
+        android:name="com.gasparaiciukas.owntrainer.ui.meals.meal.MealItemFragment"
         android:label="MealItemFragment">
         <argument
             android:name="mealId"
@@ -34,27 +34,27 @@
     </fragment>
     <fragment
         android:id="@+id/progressFragment"
-        android:name="com.gasparaiciukas.owntrainer.utils.fragment.ProgressFragment"
+        android:name="com.gasparaiciukas.owntrainer.progress.ProgressFragment"
         android:label="ProgressFragment" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.gasparaiciukas.owntrainer.utils.fragment.ProfileFragment"
+        android:name="com.gasparaiciukas.owntrainer.ui.settings.profile.ProfileFragment"
         android:label="ProfileFragment" />
     <fragment
         android:id="@+id/foodFragment"
-        android:name="com.gasparaiciukas.owntrainer.utils.fragment.FoodFragment"
+        android:name="com.gasparaiciukas.owntrainer.ui.meals.food.FoodFragment"
         android:label="FoodFragment" />
     <fragment
         android:id="@+id/networkFoodItemFragment"
-        android:name="com.gasparaiciukas.owntrainer.utils.fragment.NetworkFoodItemFragment"
+        android:name="com.gasparaiciukas.owntrainer.ui.meals.food.NetworkFoodItemFragment"
         android:label="NetworkFoodItemFragment" />
     <fragment
         android:id="@+id/addFoodToMealFragment"
-        android:name="com.gasparaiciukas.owntrainer.utils.fragment.AddFoodToMealFragment"
+        android:name="com.gasparaiciukas.owntrainer.ui.meals.food.AddFoodToMealFragment"
         android:label="AddFoodToMealFragment" />
     <fragment
         android:id="@+id/databaseFoodItemFragment"
-        android:name="com.gasparaiciukas.owntrainer.utils.fragment.DatabaseFoodItemFragment"
+        android:name="com.gasparaiciukas.owntrainer.ui.meals.food.DatabaseFoodItemFragment"
         android:label="DatabaseFoodItemFragment">
         <argument
             android:name="food"
@@ -64,11 +64,11 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.gasparaiciukas.owntrainer.utils.fragment.SettingsFragment"
+        android:name="com.gasparaiciukas.owntrainer.settings.SettingsFragment"
         android:label="SettingsFragment" />
     <fragment
         android:id="@+id/reminderFragment"
-        android:name="com.gasparaiciukas.owntrainer.utils.fragment.ReminderFragment"
+        android:name="com.gasparaiciukas.owntrainer.ui.settings.reminder.ReminderFragment"
         android:label="ReminderFragment" />
 
     <action
@@ -234,11 +234,11 @@
         app:destination="@id/foodFragment" />
     <fragment
         android:id="@+id/createReminderFragment"
-        android:name="com.gasparaiciukas.owntrainer.utils.fragment.CreateReminderFragment"
+        android:name="com.gasparaiciukas.owntrainer.ui.settings.reminder.CreateReminderFragment"
         android:label="CreateReminderFragment" />
     <fragment
         android:id="@+id/foodAndMealFragment"
-        android:name="com.gasparaiciukas.owntrainer.utils.fragment.FoodAndMealFragment"
+        android:name="com.gasparaiciukas.owntrainer.meals.FoodAndMealFragment"
         android:label="FoodAndMealFragment">
 
         <argument

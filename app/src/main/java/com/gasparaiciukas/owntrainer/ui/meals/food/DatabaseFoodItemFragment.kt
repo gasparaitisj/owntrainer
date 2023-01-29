@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.utils.fragment
+package com.gasparaiciukas.owntrainer.ui.meals.food
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,9 +13,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentDatabaseFoodItemBinding
+import com.gasparaiciukas.owntrainer.utils.fragment.setPieChart
 import com.gasparaiciukas.owntrainer.utils.network.Status
-import com.gasparaiciukas.owntrainer.utils.viewmodel.DatabaseFoodItemUiState
-import com.gasparaiciukas.owntrainer.utils.viewmodel.DatabaseFoodItemViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest

@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.utils.fragment
+package com.gasparaiciukas.owntrainer.meals
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodAndMealBinding
 import com.gasparaiciukas.owntrainer.utils.adapter.FoodAndMealAdapter
-import com.gasparaiciukas.owntrainer.utils.viewmodel.FoodAndMealViewModel
+import com.gasparaiciukas.owntrainer.utils.fragment.setupBottomNavigation
+import com.gasparaiciukas.owntrainer.utils.fragment.setupNavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 

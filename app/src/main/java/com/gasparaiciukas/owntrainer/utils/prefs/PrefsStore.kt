@@ -1,6 +1,6 @@
 package com.gasparaiciukas.owntrainer.utils.prefs
 
-import com.gasparaiciukas.owntrainer.utils.viewmodel.AppearanceMode
+import com.gasparaiciukas.owntrainer.settings.AppearanceMode
 import kotlinx.coroutines.flow.Flow
 
 interface PrefsStore {

@@ -1,8 +1,8 @@
 package com.gasparaiciukas.owntrainer.utils.repository
 
+import com.gasparaiciukas.owntrainer.settings.AppearanceMode
 import com.gasparaiciukas.owntrainer.utils.database.Reminder
 import com.gasparaiciukas.owntrainer.utils.database.User
-import com.gasparaiciukas.owntrainer.utils.viewmodel.AppearanceMode
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
