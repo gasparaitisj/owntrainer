@@ -5,7 +5,7 @@
     app:startDestination="@id/diaryFragment">
     <fragment
         android:id="@+id/addMealToDiaryFragment"
-        android:name="com.gasparaiciukas.owntrainer.utils.fragment.AddMealToDiaryFragment"
+        android:name="com.gasparaiciukas.owntrainer.home.AddMealToDiaryFragment"
         android:label="AddMealToDiaryFragment" />
     <fragment
         android:id="@+id/createMealItemFragment"
@@ -13,7 +13,7 @@
         android:label="CreateMealItemFragment" />
     <fragment
         android:id="@+id/diaryFragment"
-        android:name="com.gasparaiciukas.owntrainer.diary.DiaryFragment"
+        android:name="com.gasparaiciukas.owntrainer.home.DiaryFragment"
         android:label="DiaryFragment" />
     <fragment
         android:id="@+id/mealFragment"

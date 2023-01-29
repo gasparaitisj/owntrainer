@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.diary
+package com.gasparaiciukas.owntrainer.home
 
 import android.os.Build
 import android.os.Bundle
@@ -20,8 +20,6 @@ import com.gasparaiciukas.owntrainer.utils.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.utils.fragment.setupBottomNavigation
 import com.gasparaiciukas.owntrainer.utils.fragment.setupNavigationView
 import com.gasparaiciukas.owntrainer.utils.network.Status
-import com.gasparaiciukas.owntrainer.utils.viewmodel.DiaryUiState
-import com.gasparaiciukas.owntrainer.utils.viewmodel.DiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest

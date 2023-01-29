@@ -17,7 +17,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.ActivityMainBinding
-import com.gasparaiciukas.owntrainer.diary.DiaryFragment
+import com.gasparaiciukas.owntrainer.home.DiaryFragment
 import com.gasparaiciukas.owntrainer.utils.Constants.NOTIFICATION_REMINDER_ID
 import com.gasparaiciukas.owntrainer.utils.fragment.FoodFragment
 import com.gasparaiciukas.owntrainer.utils.fragment.MainFragmentFactoryEntryPoint

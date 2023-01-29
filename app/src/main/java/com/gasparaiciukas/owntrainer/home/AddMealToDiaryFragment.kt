@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.utils.fragment
+package com.gasparaiciukas.owntrainer.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,7 +15,6 @@ import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentAddMealToDiaryBinding
 import com.gasparaiciukas.owntrainer.utils.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.utils.database.MealWithFoodEntries
-import com.gasparaiciukas.owntrainer.utils.viewmodel.DiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
