@@ -8,16 +8,16 @@ plugins {
     id("com.github.ben-manes.versions") version Versions.GRADLE_VERSIONS
 }
 android {
-    namespace = "com.gasparaiciukas.owntrainer"
-    compileSdk = Versions.Sdk.COMPILE
+    namespace = Build.PACKAGE_NAME
+    compileSdk = Build.COMPILE_SDK
     defaultConfig {
-        applicationId = "com.gasparaiciukas.owntrainer"
-        minSdk = Versions.Sdk.MIN
-        targetSdk = Versions.Sdk.TARGET
-        versionCode = 1
-        versionName = "0.1.0"
+        applicationId = Build.PACKAGE_NAME
+        minSdk = Build.MIN_SDK
+        targetSdk = Build.TARGET_SDK
+        versionCode = Build.VERSION_CODE
+        versionName = Build.VERSION_NAME
         multiDexEnabled = true
-        testInstrumentationRunner = "com.gasparaiciukas.owntrainer.HiltTestRunner"
+        testInstrumentationRunner = Build.TEST_INSTRUMENTATION_RUNNER
         vectorDrawables.useSupportLibrary = true
         val apiKey = "\"${com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(rootDir).getProperty("key.properties")}\""
         buildConfigField("String", "API_KEY", apiKey)

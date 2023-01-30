@@ -1,10 +1,4 @@
 object Versions {
-    object Sdk {
-        const val COMPILE = 33
-        const val MIN = 21
-        const val TARGET = 33
-    }
-
     const val GRADLE = "7.4.0"
     const val GRADLE_VERSIONS = "0.44.0"
     const val HILT = "2.44.2"
@@ -46,4 +40,15 @@ object Versions {
     const val truth = "1.1.3"
     const val turbine = "0.7.0"
     const val work = "2.7.1"
+}
+
+object Build {
+    const val VERSION_CODE = 1
+    const val VERSION_NAME = "0.1.0"
+    const val TEST_INSTRUMENTATION_RUNNER = "com.gasparaiciukas.owntrainer.HiltTestRunner"
+    const val PACKAGE_NAME = "com.gasparaiciukas.owntrainer"
+
+    const val COMPILE_SDK = 33
+    const val MIN_SDK = 21
+    const val TARGET_SDK = 33
 }
