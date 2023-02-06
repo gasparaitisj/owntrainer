@@ -23,6 +23,8 @@ android {
         buildConfigField("String", "API_KEY", apiKey)
     }
     buildFeatures.dataBinding = true
+    buildFeatures.compose = true
+    composeOptions.kotlinCompilerExtensionVersion = "1.4.0"
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
@@ -35,6 +37,18 @@ android {
 }
 
 dependencies {
+    // Compose
+    val composeBom = platform("androidx.compose:compose-bom:2023.01.00")
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation("androidx.activity:activity-compose:${Versions.activity}")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.viewModel}")
+
     // Core KTX
     implementation("androidx.core:core-ktx:${Versions.ktx}")
 
@@ -104,7 +118,7 @@ dependencies {
     implementation("androidx.test:core:${Versions.testCore}")
     testImplementation("junit:junit:${Versions.junitCore}")
     testImplementation("org.hamcrest:hamcrest-all:${Versions.hamcrest}")
-    testImplementation("androidx.arch.core:core-testing:${Versions.archcoretesting}")
+    testImplementation("androidx.arch.core:core-testing:${Versions.archCoreTesting}")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutineTest}")
     testImplementation("com.google.truth:truth:${Versions.truth}")
     testImplementation("org.mockito:mockito-core:${Versions.mockitoCore}")
@@ -113,7 +127,7 @@ dependencies {
     androidTestImplementation("junit:junit:${Versions.junitCore}")
     androidTestImplementation("com.linkedin.dexmaker:dexmaker-mockito:${Versions.mockitoDexmaker}")
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutineTest}")
-    androidTestImplementation("androidx.arch.core:core-testing:${Versions.archcoretesting}")
+    androidTestImplementation("androidx.arch.core:core-testing:${Versions.archCoreTesting}")
     androidTestImplementation("com.google.truth:truth:${Versions.truth}")
     androidTestImplementation("androidx.test.ext:junit:${Versions.junitAndroidX}")
     androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.espresso}")
