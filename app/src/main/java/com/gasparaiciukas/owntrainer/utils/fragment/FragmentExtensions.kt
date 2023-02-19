@@ -103,13 +103,13 @@ fun Fragment.setupBottomNavigation(
 
 fun Fragment.setupNavigationView(
     viewPager: ViewPager2? = null,
-    navigationView: NavigationView,
-    drawerLayout: DrawerLayout,
+    navigationView: NavigationView?,
+    drawerLayout: DrawerLayout?,
     navController: NavController,
     @IdRes checkedItem: Int
 ) {
     var selectedMenuItem: MenuItem? = null
-    drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
+    drawerLayout?.addDrawerListener(object : DrawerLayout.DrawerListener {
         override fun onDrawerClosed(drawerView: View) {
             selectedMenuItem?.let { menuItem ->
                 navigateToNavigationViewMenuItem(
@@ -123,10 +123,10 @@ fun Fragment.setupNavigationView(
         override fun onDrawerOpened(drawerView: View) {}
         override fun onDrawerStateChanged(newState: Int) {}
     })
-    navigationView.setCheckedItem(checkedItem)
-    navigationView.setNavigationItemSelectedListener { menuItem ->
+    navigationView?.setCheckedItem(checkedItem)
+    navigationView?.setNavigationItemSelectedListener { menuItem ->
         selectedMenuItem = menuItem
-        drawerLayout.close()
+        drawerLayout?.close()
         true
     }
 }

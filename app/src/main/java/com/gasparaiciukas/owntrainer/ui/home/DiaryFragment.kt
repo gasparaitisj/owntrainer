@@ -94,7 +94,7 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
         )
 
         binding.topAppBar.setNavigationOnClickListener {
-            binding.drawerLayout.open()
+            binding.drawerLayout?.open()
         }
 
         binding.btnAddFood.setOnClickListener {

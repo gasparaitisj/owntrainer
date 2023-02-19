@@ -1,17 +1,17 @@
-package com.gasparaiciukas.owntrainer.main
+package com.gasparaiciukas.owntrainer.ui.main
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.gasparaiciukas.owntrainer.settings.AppearanceMode
 import com.gasparaiciukas.owntrainer.utils.prefs.PrefsStoreImpl
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 @HiltAndroidApp
 class MainApplication : Application() {
@@ -21,7 +21,7 @@ class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val scope = (CoroutineScope(SupervisorJob()))
+        val scope = CoroutineScope(SupervisorJob())
         scope.launch {
             // Get Appearance Mode from Settings
             var appearanceMode = AppearanceMode.SYSTEM_DEFAULT

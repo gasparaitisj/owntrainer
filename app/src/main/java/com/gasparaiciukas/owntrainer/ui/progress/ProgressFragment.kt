@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentProgressBinding
+import com.gasparaiciukas.owntrainer.ui.progress.ProgressScreen
 import com.gasparaiciukas.owntrainer.utils.fragment.setupBottomNavigation
 import com.gasparaiciukas.owntrainer.utils.fragment.setupNavigationView
 
@@ -19,9 +22,11 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentProgressBinding.inflate(inflater, container, false)
-        return binding.root
+    ): View = ComposeView(requireContext()).apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            ProgressScreen()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

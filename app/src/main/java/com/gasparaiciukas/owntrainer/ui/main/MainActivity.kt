@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.main
+package com.gasparaiciukas.owntrainer.ui.main
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -11,34 +11,32 @@ import android.media.RingtoneManager.TYPE_NOTIFICATION
 import android.media.RingtoneManager.getDefaultUri
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.databinding.ActivityMainBinding
-import com.gasparaiciukas.owntrainer.home.DiaryFragment
-import com.gasparaiciukas.owntrainer.progress.ProgressFragment
-import com.gasparaiciukas.owntrainer.settings.SettingsFragment
-import com.gasparaiciukas.owntrainer.ui.meals.food.FoodFragment
-import com.gasparaiciukas.owntrainer.ui.meals.meal.MealFragment
+import com.gasparaiciukas.owntrainer.ui.utils.ReplyTheme
 import com.gasparaiciukas.owntrainer.utils.Constants.NOTIFICATION_REMINDER_ID
-import com.gasparaiciukas.owntrainer.utils.fragment.MainFragmentFactoryEntryPoint
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMainBinding
+class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setFragmentFactory()
-        super.onCreate(savedInstanceState)
         installSplashScreen()
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        super.onCreate(savedInstanceState)
+        createNotifications()
+        setContent {
+            ReplyTheme {
+                MainScreen()
+            }
+        }
+    }
+
+    private fun createNotifications() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()
         }
@@ -67,34 +65,5 @@ class MainActivity : AppCompatActivity() {
         }
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
-    }
-
-    private fun setFragmentFactory() {
-        supportFragmentManager.fragmentFactory = EntryPointAccessors.fromActivity(
-            this,
-            MainFragmentFactoryEntryPoint::class.java
-        ).getFragmentFactory()
-    }
-
-    override fun onBackPressed() {
-        val navHost = supportFragmentManager.findFragmentById(R.id.fragment_container_view)
-        navHost?.let { navFragment ->
-            navFragment.childFragmentManager.primaryNavigationFragment?.let { fragment ->
-                when (fragment) {
-                    is DiaryFragment -> {
-                        finish()
-                    }
-                    is FoodFragment,
-                    is MealFragment,
-                    is ProgressFragment,
-                    is SettingsFragment -> {
-                        navFragment.findNavController().navigate(R.id.action_global_diaryFragment)
-                    }
-                    else -> {
-                        super.onBackPressed()
-                    }
-                }
-            }
-        }
     }
 }
