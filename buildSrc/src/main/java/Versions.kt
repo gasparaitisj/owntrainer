@@ -1,6 +1,6 @@
 object Versions {
     const val activity = "1.6.1"
-    const val GRADLE = "7.4.0"
+    const val GRADLE = "7.4.1"
     const val GRADLE_VERSIONS = "0.44.0"
     const val HILT = "2.44.2"
     const val KOTLIN = "1.8.0"
@@ -9,6 +9,7 @@ object Versions {
     const val archCoreTesting = "2.1.0"
     const val appCompat = "1.6.0"
     const val circularProgressBar = "3.1.0"
+    const val coil = "2.2.2"
     const val composeBom = "2023.01.00"
     const val constraintLayout = "2.1.4"
     const val coroutine = "1.5.0"
