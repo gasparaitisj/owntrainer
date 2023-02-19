@@ -50,6 +50,9 @@ dependencies {
     implementation("androidx.activity:activity-compose:${Versions.activity}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.viewModel}")
 
+    // Coil
+    implementation("io.coil-kt:coil-compose:${Versions.coil}")
+
     // Core KTX
     implementation("androidx.core:core-ktx:${Versions.ktx}")
 
