@@ -49,6 +49,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.activity:activity-compose:${Versions.activity}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.viewModel}")
+    implementation("androidx.hilt:hilt-navigation-compose:${Versions.hiltNavigationCompose}")
 
     // Coil
     implementation("io.coil-kt:coil-compose:${Versions.coil}")

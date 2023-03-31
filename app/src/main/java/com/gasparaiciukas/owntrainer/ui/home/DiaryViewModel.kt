@@ -11,6 +11,8 @@ import com.gasparaiciukas.owntrainer.utils.network.Resource
 import com.gasparaiciukas.owntrainer.utils.repository.DiaryRepository
 import com.gasparaiciukas.owntrainer.utils.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.LocalDate
+import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -18,8 +20,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import javax.inject.Inject
 
 data class DiaryUiState(
     val meals: List<MealWithFoodEntries>,
@@ -32,14 +32,14 @@ data class DiaryUiState(
     val caloriesPercentage: Double,
     val proteinPercentage: Double,
     val fatPercentage: Double,
-    val carbsPercentage: Double
+    val carbsPercentage: Double,
 )
 
 @ExperimentalCoroutinesApi
 @HiltViewModel
 class DiaryViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    val diaryRepository: DiaryRepository
+    val diaryRepository: DiaryRepository,
 ) : ViewModel() {
     val allMeals = diaryRepository.getAllMealsWithFoodEntries()
     val user = userRepository.user
@@ -86,14 +86,14 @@ class DiaryViewModel @Inject constructor(
                         caloriesPercentage = (caloriesConsumed / lUser.dailyKcalIntake) * 100,
                         proteinPercentage = (proteinConsumed / lUser.dailyProteinIntakeInG) * 100,
                         fatPercentage = (fatConsumed / lUser.dailyFatIntakeInG) * 100,
-                        carbsPercentage = (carbsConsumed / lUser.dailyCarbsIntakeInG) * 100
-                    )
+                        carbsPercentage = (carbsConsumed / lUser.dailyCarbsIntakeInG) * 100,
+                    ),
                 )
             }
         }.stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5000),
-            initialValue = Resource.loading(null)
+            initialValue = Resource.loading(null),
         )
 
     suspend fun createDiaryEntry(user: User) {
@@ -104,7 +104,7 @@ class DiaryViewModel @Inject constructor(
             dayOfYear = currentDay.dayOfYear,
             dayOfWeek = currentDay.dayOfWeek.value,
             monthOfYear = currentDay.monthValue,
-            dayOfMonth = currentDay.dayOfMonth
+            dayOfMonth = currentDay.dayOfMonth,
         )
         diaryRepository.insertDiaryEntry(diaryEntry)
     }
@@ -152,8 +152,8 @@ class DiaryViewModel @Inject constructor(
                 diaryRepository.insertDiaryEntryMealCrossRef(
                     DiaryEntryMealCrossRef(
                         diaryEntryWithMeals.diaryEntry.diaryEntryId,
-                        mealWithFoodEntries.meal.mealId
-                    )
+                        mealWithFoodEntries.meal.mealId,
+                    ),
                 )
             }
         }

@@ -1,5 +1,6 @@
 package com.gasparaiciukas.owntrainer.ui.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,56 +16,87 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.utils.database.Meal
+import com.gasparaiciukas.owntrainer.utils.DateFormatter
+import com.gasparaiciukas.owntrainer.utils.database.MealWithFoodEntries
+import com.gasparaiciukas.owntrainer.utils.network.Status
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    Column {
-        NavigationRow()
-        StatisticsColumn()
-        MealsColumn(viewModel.meals)
+    val uiState = viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+    when (uiState.value?.status) {
+        Status.SUCCESS -> {
+            uiState.value?.data?.let { state ->
+                Column {
+                    NavigationRow(
+                        displayDate = stringResource(
+                            R.string.date_navigation_formatted,
+                            DateFormatter.dayOfWeekToString(state.user.dayOfWeek, context),
+                            DateFormatter.monthOfYearToString(state.user.month, context),
+                            state.user.dayOfMonth.toString(),
+                        ),
+                        onNavigateBack = viewModel::updateUserToPreviousDay,
+                        onNavigateCurrent = viewModel::updateUserToCurrentDay,
+                        onNavigateForward = viewModel::updateUserToNextDay,
+                    )
+                    StatisticsColumn()
+                    MealsColumn(
+                        meals = uiState.value?.data?.meals ?: listOf(),
+                    )
+                }
+            }
+        }
+        Status.LOADING -> {
+        }
+        Status.ERROR, null -> {
+        }
     }
 }
 
 @Composable
-fun NavigationRow() {
+fun NavigationRow(
+    displayDate: String,
+    onNavigateBack: () -> Unit,
+    onNavigateCurrent: () -> Unit,
+    onNavigateForward: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         IconButton(
-            onClick = {
-                // Do nothing.
-            }
+            onClick = onNavigateBack,
         ) {
             Icon(
                 imageVector = Icons.Filled.ArrowBackIos,
-                contentDescription = "Back arrow"
+                contentDescription = "Back arrow",
             )
         }
         Text(
-            text = "Sample Text",
-            style = MaterialTheme.typography.headlineSmall
+            modifier = Modifier.clickable(onClick = onNavigateCurrent),
+            text = displayDate,
+            style = MaterialTheme.typography.headlineSmall,
         )
         IconButton(
-            onClick = {
-                // Do nothing.
-            }
+            onClick = onNavigateForward,
         ) {
             Icon(
                 imageVector = Icons.Filled.ArrowForwardIos,
-                contentDescription = "Forward arrow"
+                contentDescription = "Forward arrow",
             )
         }
     }
@@ -75,7 +107,7 @@ fun StatisticsColumn() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+            .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
     ) {
         HomeStatisticsRow(
             modifier = Modifier.padding(bottom = 8.dp),
@@ -83,8 +115,8 @@ fun StatisticsColumn() {
                 type = NutrientType.ENERGY,
                 title = "Calories",
                 percentage = "50",
-                value = "500"
-            )
+                value = "500",
+            ),
         )
         HomeStatisticsRow(
             modifier = Modifier.padding(bottom = 8.dp),
@@ -92,8 +124,8 @@ fun StatisticsColumn() {
                 type = NutrientType.PROTEIN,
                 title = "Protein",
                 percentage = "50",
-                value = "500"
-            )
+                value = "500",
+            ),
         )
         HomeStatisticsRow(
             modifier = Modifier.padding(bottom = 8.dp),
@@ -101,16 +133,16 @@ fun StatisticsColumn() {
                 type = NutrientType.CARBS,
                 title = "Carbs",
                 percentage = "50",
-                value = "500"
-            )
+                value = "500",
+            ),
         )
         HomeStatisticsRow(
             item = StatisticsItem(
                 type = NutrientType.FAT,
                 title = "Fat",
                 percentage = "50",
-                value = "500"
-            )
+                value = "500",
+            ),
         )
     }
 }
@@ -118,18 +150,18 @@ fun StatisticsColumn() {
 @Composable
 private fun HomeStatisticsRow(
     modifier: Modifier = Modifier,
-    item: StatisticsItem
+    item: StatisticsItem,
 ) {
     Row(modifier = modifier) {
         Text(
             modifier = Modifier.weight(2f),
             text = item.title,
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
         )
         Text(
             modifier = Modifier.weight(1f),
             text = stringResource(R.string.append_percent_sign, item.percentage),
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
         )
         Text(
             modifier = Modifier.weight(2f),
@@ -138,41 +170,40 @@ private fun HomeStatisticsRow(
             } else {
                 stringResource(R.string.append_g, item.value)
             },
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
         )
     }
 }
 
 @Composable
 fun MealsColumn(
-    meals: List<Meal>
+    meals: List<MealWithFoodEntries>,
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         items(
             count = meals.count(),
-            key = { meals[it].mealId }
+            key = { meals[it].meal.mealId },
         ) { index ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
+                    .padding(8.dp),
             ) {
                 Text(
                     modifier = Modifier.padding(bottom = 4.dp),
-                    text = meals[index].title,
-                    style = MaterialTheme.typography.bodyLarge
+                    text = meals[index].meal.title,
+                    style = MaterialTheme.typography.bodyLarge,
                 )
                 Text(
                     text = stringResource(R.string.append_kcal, meals[index].calories),
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.labelMedium,
                 )
             }
         }
     }
 }
-
 
 @Composable
 @Preview(showBackground = true)
@@ -183,7 +214,12 @@ fun HomeScreenPreview() {
 @Composable
 @Preview(showBackground = true)
 fun HomeNavigationPreview() {
-    NavigationRow()
+    NavigationRow(
+        displayDate = "",
+        onNavigateBack = {},
+        onNavigateCurrent = {},
+        onNavigateForward = {},
+    )
 }
 
 @Composable

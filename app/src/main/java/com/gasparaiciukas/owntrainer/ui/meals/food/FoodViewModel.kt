@@ -13,6 +13,7 @@ import com.gasparaiciukas.owntrainer.utils.repository.DiaryRepository
 import com.gasparaiciukas.owntrainer.utils.repository.UserRepository
 import com.gasparaiciukas.owntrainer.utils.safeLet
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 data class NetworkFoodItemUiState(
     val user: User,
@@ -32,13 +32,13 @@ data class NetworkFoodItemUiState(
     val fat: Float,
     val fatPercentage: Float,
     val protein: Float,
-    val proteinPercentage: Float
+    val proteinPercentage: Float,
 )
 
 @HiltViewModel
 class FoodViewModel @Inject internal constructor(
     val diaryRepository: DiaryRepository,
-    userRepository: UserRepository
+    userRepository: UserRepository,
 ) : ViewModel() {
 
     var foodItem: Food? = null
@@ -75,14 +75,14 @@ class FoodViewModel @Inject internal constructor(
                     fat = fat,
                     fatPercentage = fat / sum * 100,
                     protein = protein,
-                    proteinPercentage = protein / sum * 100
-                )
+                    proteinPercentage = protein / sum * 100,
+                ),
             )
         }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = Resource.loading(null)
+        initialValue = Resource.loading(null),
     )
 
     private val _response: MutableStateFlow<Resource<GetResponse>> =
@@ -102,7 +102,7 @@ class FoodViewModel @Inject internal constructor(
                 numberOfResultsPerPage = Constants.Api.QUERY_PAGE_SIZE,
                 pageSize = Constants.Api.QUERY_PAGE_SIZE,
                 pageNumber = pageNumber,
-                requireAllWords = true
+                requireAllWords = true,
             )
             pageNumber++
             if (foodsResponse == null) {
@@ -151,7 +151,7 @@ class FoodViewModel @Inject internal constructor(
                     carbsPer100G = carbs,
                     fatPer100G = fat,
                     proteinPer100G = protein,
-                    quantityInG = quantity.toDouble()
+                    quantityInG = quantity.toDouble(),
                 )
                 diaryRepository.insertFood(foodEntry)
             }

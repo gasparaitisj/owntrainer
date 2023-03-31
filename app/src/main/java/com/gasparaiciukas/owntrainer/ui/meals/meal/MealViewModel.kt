@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.gasparaiciukas.owntrainer.utils.database.Meal
 import com.gasparaiciukas.owntrainer.utils.repository.DiaryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MealViewModel @Inject internal constructor(
-    val diaryRepository: DiaryRepository
+    val diaryRepository: DiaryRepository,
 ) : ViewModel() {
 
     val meals = diaryRepository.getAllMealsWithFoodEntries()
@@ -30,7 +30,7 @@ class MealViewModel @Inject internal constructor(
         viewModelScope.launch {
             val meal = Meal(
                 title = title,
-                instructions = instructions
+                instructions = instructions,
             )
             diaryRepository.insertMeal(meal)
         }

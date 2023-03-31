@@ -10,7 +10,6 @@ import com.gasparaiciukas.owntrainer.utils.database.ReminderDao
 import com.gasparaiciukas.owntrainer.utils.database.UserDao
 import com.gasparaiciukas.owntrainer.utils.network.DefaultGetService
 import com.gasparaiciukas.owntrainer.utils.prefs.PrefsStoreImpl
-import com.gasparaiciukas.owntrainer.utils.repository.DefaultDiaryRepository
 import com.gasparaiciukas.owntrainer.utils.repository.DefaultUserRepository
 import com.gasparaiciukas.owntrainer.utils.repository.DiaryRepository
 import com.gasparaiciukas.owntrainer.utils.repository.UserRepository
@@ -75,13 +74,13 @@ class DatabaseModule {
         mealDao: MealDao,
         foodEntryDao: FoodEntryDao,
         defaultGetService: DefaultGetService
-    ) = DefaultDiaryRepository(
+    ) = DiaryRepository(
         diaryEntryDao,
         diaryEntryWithMealsDao,
         mealDao,
         foodEntryDao,
         defaultGetService
-    ) as DiaryRepository
+    )
 
     @Singleton
     @Provides
