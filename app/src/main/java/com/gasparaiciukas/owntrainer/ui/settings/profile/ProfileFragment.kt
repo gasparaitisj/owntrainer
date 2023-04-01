@@ -20,21 +20,21 @@ import com.gasparaiciukas.owntrainer.databinding.DialogProfileWeightBinding
 import com.gasparaiciukas.owntrainer.databinding.FragmentProfileBinding
 import com.gasparaiciukas.owntrainer.settings.SettingsUiState
 import com.gasparaiciukas.owntrainer.settings.SettingsViewModel
-import com.gasparaiciukas.owntrainer.utils.Constants.AGE_MAXIMUM
-import com.gasparaiciukas.owntrainer.utils.Constants.AGE_MINIMUM
-import com.gasparaiciukas.owntrainer.utils.Constants.HEIGHT_MAXIMUM
-import com.gasparaiciukas.owntrainer.utils.Constants.HEIGHT_MINIMUM
-import com.gasparaiciukas.owntrainer.utils.Constants.WEIGHT_MAXIMUM
-import com.gasparaiciukas.owntrainer.utils.Constants.WEIGHT_MINIMUM
 import com.gasparaiciukas.owntrainer.utils.database.Lifestyle
 import com.gasparaiciukas.owntrainer.utils.database.Sex
 import com.gasparaiciukas.owntrainer.utils.database.User
 import com.gasparaiciukas.owntrainer.utils.discard
+import com.gasparaiciukas.owntrainer.utils.other.Constants.AGE_MAXIMUM
+import com.gasparaiciukas.owntrainer.utils.other.Constants.AGE_MINIMUM
+import com.gasparaiciukas.owntrainer.utils.other.Constants.HEIGHT_MAXIMUM
+import com.gasparaiciukas.owntrainer.utils.other.Constants.HEIGHT_MINIMUM
+import com.gasparaiciukas.owntrainer.utils.other.Constants.WEIGHT_MAXIMUM
+import com.gasparaiciukas.owntrainer.utils.other.Constants.WEIGHT_MINIMUM
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment(R.layout.fragment_profile) {

@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.ui.meals.food
+package com.gasparaiciukas.owntrainer.ui.meals.food.fragment
 
 import android.os.Bundle
 import android.text.TextUtils
@@ -19,10 +19,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentFoodBinding
-import com.gasparaiciukas.owntrainer.utils.Constants
 import com.gasparaiciukas.owntrainer.utils.adapter.NetworkFoodAdapter
 import com.gasparaiciukas.owntrainer.utils.network.Food
 import com.gasparaiciukas.owntrainer.utils.network.Status
+import com.gasparaiciukas.owntrainer.utils.other.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -43,7 +43,7 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentFoodBinding.inflate(inflater, container, false)
         return binding.root
@@ -74,13 +74,13 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
                                         Toast.makeText(
                                             requireContext(),
                                             getString(R.string.could_not_find_any_more_matching_foods),
-                                            Toast.LENGTH_SHORT
+                                            Toast.LENGTH_SHORT,
                                         ).show()
                                     } else {
                                         Toast.makeText(
                                             requireContext(),
                                             getString(R.string.could_not_find_any_matching_foods),
-                                            Toast.LENGTH_SHORT
+                                            Toast.LENGTH_SHORT,
                                         ).show()
                                     }
                                 }
@@ -94,13 +94,13 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
                                 Toast.makeText(
                                     requireContext(),
                                     getString(response.messageRes),
-                                    Toast.LENGTH_SHORT
+                                    Toast.LENGTH_SHORT,
                                 ).show()
                             } else {
                                 Toast.makeText(
                                     requireContext(),
                                     response.message,
-                                    Toast.LENGTH_SHORT
+                                    Toast.LENGTH_SHORT,
                                 ).show()
                             }
                         }
@@ -141,9 +141,9 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
             singleClickListener = { _: Food, position: Int ->
                 viewModel.foodItem = foods[position]
                 findNavController().navigate(
-                    FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment()
+                    FoodFragmentDirections.actionFoodFragmentToNetworkFoodItemFragment(),
                 )
-            }
+            },
         )
     }
 
@@ -192,8 +192,8 @@ class FoodFragment : Fragment(R.layout.fragment_food) {
                     calories = getString(R.string.row_food_calories),
                     protein = getString(R.string.row_food_protein),
                     carbs = getString(R.string.row_food_carbs),
-                    fat = getString(R.string.row_food_fat)
-                )
+                    fat = getString(R.string.row_food_fat),
+                ),
             )
         }
         binding.recyclerView.apply {

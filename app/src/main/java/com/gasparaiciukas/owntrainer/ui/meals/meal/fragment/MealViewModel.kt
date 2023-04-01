@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.ui.meals.meal
+package com.gasparaiciukas.owntrainer.ui.meals.meal.fragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

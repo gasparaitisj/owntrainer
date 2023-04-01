@@ -1,24 +1,23 @@
 package com.gasparaiciukas.owntrainer.utils.di
 
-import com.gasparaiciukas.owntrainer.utils.Constants
-import com.gasparaiciukas.owntrainer.utils.network.DefaultGetService
+import com.gasparaiciukas.owntrainer.utils.network.GetService
+import com.gasparaiciukas.owntrainer.utils.other.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
 class NetworkModule {
-
     @Singleton
     @Provides
-    fun provideGetService(): DefaultGetService {
+    fun provideGetService(): GetService {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             this.level = HttpLoggingInterceptor.Level.BODY
         }
@@ -32,6 +31,6 @@ class NetworkModule {
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
-            .create(DefaultGetService::class.java)
+            .create(GetService::class.java)
     }
 }

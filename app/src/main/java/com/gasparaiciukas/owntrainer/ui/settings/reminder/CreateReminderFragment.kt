@@ -23,18 +23,18 @@ import com.gasparaiciukas.owntrainer.databinding.DialogCreateReminderTitleBindin
 import com.gasparaiciukas.owntrainer.databinding.FragmentCreateReminderBinding
 import com.gasparaiciukas.owntrainer.settings.SettingsUiState
 import com.gasparaiciukas.owntrainer.settings.SettingsViewModel
-import com.gasparaiciukas.owntrainer.utils.Constants.NOTIFICATION_REMINDER_ID
-import com.gasparaiciukas.owntrainer.utils.Constants.NOTIFICATION_REMINDER_TITLE_EXTRA
 import com.gasparaiciukas.owntrainer.utils.database.Reminder
 import com.gasparaiciukas.owntrainer.utils.notif.ReminderNotification
+import com.gasparaiciukas.owntrainer.utils.other.Constants.NOTIFICATION_REMINDER_ID
+import com.gasparaiciukas.owntrainer.utils.other.Constants.NOTIFICATION_REMINDER_TITLE_EXTRA
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.*
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi

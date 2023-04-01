@@ -19,8 +19,7 @@ android {
         multiDexEnabled = true
         testInstrumentationRunner = Build.TEST_INSTRUMENTATION_RUNNER
         vectorDrawables.useSupportLibrary = true
-        val apiKey = "\"${com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(rootDir).getProperty("key.properties")}\""
-        buildConfigField("String", "API_KEY", apiKey)
+        buildConfigField("String", "API_KEY", "\"dfbrShWDKQGhQ3wDcETB9Ge8z2V3HCtf2uFmcRtr\"")
     }
     buildFeatures.dataBinding = true
     buildFeatures.compose = true
@@ -42,6 +41,7 @@ dependencies {
     implementation(composeBom)
     androidTestImplementation(composeBom)
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
@@ -49,6 +49,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.activity:activity-compose:${Versions.activity}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.viewModel}")
+    implementation("androidx.hilt:hilt-navigation-compose:${Versions.hiltNavigationCompose}")
 
     // Coil
     implementation("io.coil-kt:coil-compose:${Versions.coil}")

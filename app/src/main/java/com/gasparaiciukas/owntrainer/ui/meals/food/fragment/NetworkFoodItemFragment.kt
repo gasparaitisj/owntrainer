@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.ui.meals.food
+package com.gasparaiciukas.owntrainer.ui.meals.food.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,14 +14,14 @@ import androidx.navigation.fragment.findNavController
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.DialogNetworkFoodItemQuantityBinding
 import com.gasparaiciukas.owntrainer.databinding.FragmentNetworkFoodItemBinding
-import com.gasparaiciukas.owntrainer.utils.Constants
 import com.gasparaiciukas.owntrainer.utils.fragment.setPieChart
 import com.gasparaiciukas.owntrainer.utils.network.Status
+import com.gasparaiciukas.owntrainer.utils.other.Constants
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class NetworkFoodItemFragment : Fragment(R.layout.fragment_network_food_item) {

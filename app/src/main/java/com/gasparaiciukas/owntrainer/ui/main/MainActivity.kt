@@ -17,7 +17,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.ui.utils.ReplyTheme
-import com.gasparaiciukas.owntrainer.utils.Constants.NOTIFICATION_REMINDER_ID
+import com.gasparaiciukas.owntrainer.utils.other.Constants.NOTIFICATION_REMINDER_ID
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
         val channel = NotificationChannel(
             getString(R.string.notification_reminder_channel_id),
             getString(R.string.notification_channel_daily_reminders_title),
-            NotificationManager.IMPORTANCE_HIGH
+            NotificationManager.IMPORTANCE_HIGH,
         ).apply {
             description = getString(R.string.notification_channel_daily_reminders_description)
             enableLights(true)
@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
             setSound(
                 getDefaultUri(TYPE_NOTIFICATION),
                 AudioAttributes.Builder().setUsage(USAGE_NOTIFICATION_RINGTONE)
-                    .setContentType(CONTENT_TYPE_SONIFICATION).build()
+                    .setContentType(CONTENT_TYPE_SONIFICATION).build(),
             )
         }
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager

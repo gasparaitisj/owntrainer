@@ -8,9 +8,8 @@ import com.gasparaiciukas.owntrainer.utils.database.FoodEntryDao
 import com.gasparaiciukas.owntrainer.utils.database.MealDao
 import com.gasparaiciukas.owntrainer.utils.database.ReminderDao
 import com.gasparaiciukas.owntrainer.utils.database.UserDao
-import com.gasparaiciukas.owntrainer.utils.network.DefaultGetService
+import com.gasparaiciukas.owntrainer.utils.network.GetService
 import com.gasparaiciukas.owntrainer.utils.prefs.PrefsStoreImpl
-import com.gasparaiciukas.owntrainer.utils.repository.DefaultDiaryRepository
 import com.gasparaiciukas.owntrainer.utils.repository.DefaultUserRepository
 import com.gasparaiciukas.owntrainer.utils.repository.DiaryRepository
 import com.gasparaiciukas.owntrainer.utils.repository.UserRepository
@@ -24,7 +23,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 class DatabaseModule {
-
     @Singleton
     @Provides
     fun providePrefsStore(@ApplicationContext context: Context): PrefsStoreImpl {
@@ -74,20 +72,20 @@ class DatabaseModule {
         diaryEntryWithMealsDao: DiaryEntryWithMealsDao,
         mealDao: MealDao,
         foodEntryDao: FoodEntryDao,
-        defaultGetService: DefaultGetService
-    ) = DefaultDiaryRepository(
+        getService: GetService,
+    ) = DiaryRepository(
         diaryEntryDao,
         diaryEntryWithMealsDao,
         mealDao,
         foodEntryDao,
-        defaultGetService
-    ) as DiaryRepository
+        getService,
+    )
 
     @Singleton
     @Provides
     fun provideDefaultUserRepository(
         userDao: UserDao,
         reminderDao: ReminderDao,
-        prefsStore: PrefsStoreImpl
+        prefsStore: PrefsStoreImpl,
     ) = DefaultUserRepository(userDao, reminderDao, prefsStore) as UserRepository
 }

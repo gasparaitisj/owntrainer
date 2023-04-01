@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.meals
+package com.gasparaiciukas.owntrainer.ui.meals.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

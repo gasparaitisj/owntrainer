@@ -2,17 +2,22 @@ package com.gasparaiciukas.owntrainer.utils.network
 
 import com.gasparaiciukas.owntrainer.BuildConfig
 import retrofit2.Response
+import retrofit2.http.GET
+import retrofit2.http.Headers
+import retrofit2.http.Query
 
 interface GetService {
+    @Headers("Content-Type: application/json")
+    @GET("search")
     suspend fun getFoods(
-        apiKey: String = BuildConfig.API_KEY,
-        query: String,
-        dataType: String? = null,
-        numberOfResultsPerPage: Int? = null,
-        pageSize: Int? = null,
-        pageNumber: Int? = null,
-        sortBy: String? = null,
-        sortOrder: String? = null,
-        requireAllWords: Boolean? = null
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        @Query("query") query: String,
+        @Query("dataType") dataType: String? = null,
+        @Query("numberOfResultsPerPage") numberOfResultsPerPage: Int? = null,
+        @Query("pageSize") pageSize: Int? = null,
+        @Query("pageNumber") pageNumber: Int? = null,
+        @Query("sortBy") sortBy: String? = null,
+        @Query("sortOrder") sortOrder: String? = null,
+        @Query("requireAllWords") requireAllWords: Boolean? = null,
     ): Response<GetResponse>
 }

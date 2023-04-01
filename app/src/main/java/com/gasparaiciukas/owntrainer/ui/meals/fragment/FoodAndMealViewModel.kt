@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.meals
+package com.gasparaiciukas.owntrainer.ui.meals.fragment
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

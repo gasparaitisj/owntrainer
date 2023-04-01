@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.home
+package com.gasparaiciukas.owntrainer.ui.home.fragment
 
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentDiaryBinding
+import com.gasparaiciukas.owntrainer.home.DiaryUiState
+import com.gasparaiciukas.owntrainer.home.DiaryViewModel
 import com.gasparaiciukas.owntrainer.utils.DateFormatter
 import com.gasparaiciukas.owntrainer.utils.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.utils.database.MealWithFoodEntries
@@ -21,10 +23,10 @@ import com.gasparaiciukas.owntrainer.utils.fragment.setupBottomNavigation
 import com.gasparaiciukas.owntrainer.utils.fragment.setupNavigationView
 import com.gasparaiciukas.owntrainer.utils.network.Status
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -39,7 +41,7 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentDiaryBinding.inflate(inflater, container, false)
         return binding.root
@@ -84,13 +86,13 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
         setupBottomNavigation(
             bottomNavigation = binding.bottomNavigation,
             navController = findNavController(),
-            checkedItemId = R.id.diaryFragment
+            checkedItemId = R.id.diaryFragment,
         )
         setupNavigationView(
             navigationView = binding.navigationView,
             drawerLayout = binding.drawerLayout,
             navController = findNavController(),
-            checkedItem = R.id.diaryFragment
+            checkedItem = R.id.diaryFragment,
         )
 
         binding.topAppBar.setNavigationOnClickListener {
@@ -99,7 +101,7 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
 
         binding.btnAddFood.setOnClickListener {
             findNavController().navigate(
-                DiaryFragmentDirections.actionDiaryFragmentToAddMealToDiaryFragment()
+                DiaryFragmentDirections.actionDiaryFragmentToAddMealToDiaryFragment(),
             )
         }
 
@@ -122,14 +124,14 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
             R.string.date_navigation_formatted,
             DateFormatter.dayOfWeekToString(uiState.user.dayOfWeek, requireContext()),
             DateFormatter.monthOfYearToString(uiState.user.month, requireContext()),
-            uiState.user.dayOfMonth.toString()
+            uiState.user.dayOfMonth.toString(),
         )
 
         binding.cardStatistics.tvCaloriesPercentage.apply {
             val caloriesPercentage = uiState.caloriesPercentage.roundToInt()
             text = getString(
                 R.string.append_percent_sign,
-                caloriesPercentage.toString()
+                caloriesPercentage.toString(),
             )
             if (uiState.caloriesPercentage >= 100) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -152,7 +154,7 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
             val proteinPercentage = uiState.proteinPercentage.roundToInt()
             text = getString(
                 R.string.append_percent_sign,
-                proteinPercentage.toString()
+                proteinPercentage.toString(),
             )
             if (uiState.proteinPercentage >= 100) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -174,7 +176,7 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
             val fatPercentage = uiState.fatPercentage.roundToInt()
             text = getString(
                 R.string.append_percent_sign,
-                fatPercentage.toString()
+                fatPercentage.toString(),
             )
             if (uiState.fatPercentage >= 100) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -196,7 +198,7 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
             val carbsPercentage = uiState.carbsPercentage.roundToInt()
             text = getString(
                 R.string.append_percent_sign,
-                carbsPercentage.toString()
+                carbsPercentage.toString(),
             )
             if (uiState.carbsPercentage >= 100) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -218,25 +220,25 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
             getString(
                 R.string.calories_count_formatted,
                 uiState.caloriesConsumed.roundToInt().toString(),
-                uiState.user.dailyKcalIntake.roundToInt().toString()
+                uiState.user.dailyKcalIntake.roundToInt().toString(),
             )
         binding.cardStatistics.tvProteinCount.text =
             getString(
                 R.string.macros_count_formatted,
                 uiState.proteinConsumed.roundToInt().toString(),
-                uiState.user.dailyProteinIntakeInG.roundToInt().toString()
+                uiState.user.dailyProteinIntakeInG.roundToInt().toString(),
             )
         binding.cardStatistics.tvFatCount.text =
             getString(
                 R.string.macros_count_formatted,
                 uiState.fatConsumed.roundToInt().toString(),
-                uiState.user.dailyFatIntakeInG.roundToInt().toString()
+                uiState.user.dailyFatIntakeInG.roundToInt().toString(),
             )
         binding.cardStatistics.tvCarbsCount.text =
             getString(
                 R.string.macros_count_formatted,
                 uiState.carbsConsumed.roundToInt().toString(),
-                uiState.user.dailyCarbsIntakeInG.roundToInt().toString()
+                uiState.user.dailyCarbsIntakeInG.roundToInt().toString(),
             )
     }
 
@@ -244,8 +246,8 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
         mealAdapter = MealAdapter().apply {
             setFormatStrings(
                 MealAdapter.MealAdapterFormatStrings(
-                    calories = getString(R.string.row_meal_calories)
-                )
+                    calories = getString(R.string.row_meal_calories),
+                ),
             )
         }
         binding.recyclerView.apply {
@@ -261,16 +263,16 @@ class DiaryFragment : Fragment(R.layout.fragment_diary) {
                 findNavController().navigate(
                     DiaryFragmentDirections.actionDiaryFragmentToMealItemFragment(
                         mealId = mealWithFoodEntries.meal.mealId,
-                        diaryEntryId = uiState.diaryEntryWithMeals.diaryEntry.diaryEntryId
-                    )
+                        diaryEntryId = uiState.diaryEntryWithMeals.diaryEntry.diaryEntryId,
+                    ),
                 )
             },
             longClickListener = { mealId, _ ->
                 viewModel.deleteMealFromDiary(
                     uiState.diaryEntryWithMeals.diaryEntry.diaryEntryId,
-                    mealId
+                    mealId,
                 )
-            }
+            },
         )
         mealAdapter.items = uiState.meals
     }
