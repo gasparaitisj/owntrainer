@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface DiaryEntryWithMealsDao {
     @Transaction
     @Query("SELECT * FROM diaryEntry WHERE year = :year AND dayOfYear = :dayOfYear")
-    fun getDiaryEntryWithMeals(year: Int, dayOfYear: Int): Flow<DiaryEntryWithMeals>
+    fun getDiaryEntryWithMeals(year: Int, dayOfYear: Int): Flow<DiaryEntryWithMeals?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDiaryEntryMealCrossRef(crossRef: DiaryEntryMealCrossRef)

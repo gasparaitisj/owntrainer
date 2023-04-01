@@ -2,6 +2,9 @@ package com.gasparaiciukas.owntrainer.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gasparaiciukas.owntrainer.R
+import com.gasparaiciukas.owntrainer.model.NutrientType
+import com.gasparaiciukas.owntrainer.model.StatisticsItem
 import com.gasparaiciukas.owntrainer.utils.database.DiaryEntry
 import com.gasparaiciukas.owntrainer.utils.database.DiaryEntryMealCrossRef
 import com.gasparaiciukas.owntrainer.utils.database.DiaryEntryWithMeals
@@ -16,6 +19,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
@@ -27,55 +31,70 @@ class HomeViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
     private val userRepository: UserRepository,
 ) : ViewModel() {
-    val allMeals = diaryRepository.getAllMealsWithFoodEntries()
-    val user = userRepository.user
-
-    val diaryEntryWithMeals: Flow<DiaryEntryWithMeals?> = user.flatMapLatest { u ->
+    private val allMeals = diaryRepository.getAllMealsWithFoodEntries()
+    private val user = userRepository.user
+    private val diaryEntryWithMeals: Flow<DiaryEntryWithMeals?> = user.flatMapLatest { u ->
         diaryRepository.getDiaryEntryWithMeals(u.year, u.dayOfYear)
     }
 
-    val uiState =
-        combine(allMeals, user, diaryEntryWithMeals) { _, lUser, lDiaryEntryWithMeals ->
+    val uiState: StateFlow<Resource<HomeUiState>?> =
+        combine(allMeals, user, diaryEntryWithMeals) { lAllMeals, lUser, lDiaryEntryWithMeals ->
             if (lDiaryEntryWithMeals == null) {
                 createDiaryEntry(lUser)
+                return@combine Resource.loading(null)
             }
             val meals = mutableListOf<MealWithFoodEntries>()
             var caloriesConsumed = 0.0
             var proteinConsumed = 0.0
             var fatConsumed = 0.0
             var carbsConsumed = 0.0
-            lDiaryEntryWithMeals?.let { diaryEntryWithMeals ->
-                for (meal in diaryEntryWithMeals.meals) {
-                    val mealWithFoodEntries =
-                        diaryRepository.getMealWithFoodEntriesById(meal.mealId)
-                    mealWithFoodEntries?.let {
-                        it.meal.calories = it.calories
-                        caloriesConsumed += it.calories
-                        it.meal.protein = it.protein
-                        proteinConsumed += it.protein
-                        it.meal.carbs = it.carbs
-                        carbsConsumed += it.carbs
-                        it.meal.fat = it.fat
-                        fatConsumed += it.fat
-                        meals.add(it)
-                    }
+            for (meal in lDiaryEntryWithMeals.meals) {
+                val mealWithFoodEntries =
+                    diaryRepository.getMealWithFoodEntriesById(meal.mealId)
+                mealWithFoodEntries?.let {
+                    it.meal.calories = it.calories
+                    caloriesConsumed += it.calories
+                    it.meal.protein = it.protein
+                    proteinConsumed += it.protein
+                    it.meal.carbs = it.carbs
+                    carbsConsumed += it.carbs
+                    it.meal.fat = it.fat
+                    fatConsumed += it.fat
+                    meals.add(it)
                 }
-                return@combine Resource.success(
-                    HomeUiState(
-                        meals = meals,
-                        user = lUser,
-                        diaryEntryWithMeals = diaryEntryWithMeals,
-                        proteinConsumed = proteinConsumed,
-                        fatConsumed = fatConsumed,
-                        carbsConsumed = carbsConsumed,
-                        caloriesConsumed = caloriesConsumed,
-                        caloriesPercentage = (caloriesConsumed / lUser.dailyKcalIntake) * 100,
-                        proteinPercentage = (proteinConsumed / lUser.dailyProteinIntakeInG) * 100,
-                        fatPercentage = (fatConsumed / lUser.dailyFatIntakeInG) * 100,
-                        carbsPercentage = (carbsConsumed / lUser.dailyCarbsIntakeInG) * 100,
-                    ),
-                )
             }
+            return@combine Resource.success(
+                HomeUiState(
+                    allMeals = lAllMeals,
+                    meals = meals,
+                    user = lUser,
+                    diaryEntryWithMeals = lDiaryEntryWithMeals,
+                    proteinItem = StatisticsItem(
+                        type = NutrientType.PROTEIN,
+                        title = R.string.protein,
+                        percentage = ((proteinConsumed / lUser.dailyProteinIntakeInG) * 100).toString(),
+                        value = proteinConsumed.toString(),
+                    ),
+                    fatItem = StatisticsItem(
+                        type = NutrientType.FAT,
+                        title = R.string.fat,
+                        percentage = ((fatConsumed / lUser.dailyFatIntakeInG) * 100).toString(),
+                        value = fatConsumed.toString(),
+                    ),
+                    carbsItem = StatisticsItem(
+                        type = NutrientType.CARBS,
+                        title = R.string.carbs,
+                        percentage = ((carbsConsumed / lUser.dailyCarbsIntakeInG) * 100).toString(),
+                        value = carbsConsumed.toString(),
+                    ),
+                    energyItem = StatisticsItem(
+                        type = NutrientType.ENERGY,
+                        title = R.string.calories,
+                        percentage = ((caloriesConsumed / lUser.dailyKcalIntake) * 100).toString(),
+                        value = caloriesConsumed.toString(),
+                    ),
+                ),
+            )
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),

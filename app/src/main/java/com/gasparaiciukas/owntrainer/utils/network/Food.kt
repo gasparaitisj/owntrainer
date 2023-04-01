@@ -1,6 +1,7 @@
 package com.gasparaiciukas.owntrainer.utils.network
 
 import android.os.Parcelable
+import com.gasparaiciukas.owntrainer.model.FoodItem
 import com.squareup.moshi.Json
 import kotlinx.parcelize.Parcelize
 
@@ -46,5 +47,13 @@ data class Food(
     var score: Double? = null,
 
     @field:Json(name = "foodNutrients")
-    var foodNutrients: List<FoodNutrient>? = null
-) : Parcelable
+    var foodNutrients: List<FoodNutrient>? = null,
+) : Parcelable {
+    fun toFoodItem() = FoodItem(
+        title = description ?: "",
+        calories = foodNutrients?.firstOrNull { it.nutrientId == 1008 }?.value ?: 0.0,
+        protein = foodNutrients?.firstOrNull { it.nutrientId == 1003 }?.value ?: 0.0,
+        fat = foodNutrients?.firstOrNull { it.nutrientId == 1004 }?.value ?: 0.0,
+        carbs = foodNutrients?.firstOrNull { it.nutrientId == 1005 }?.value ?: 0.0,
+    )
+}

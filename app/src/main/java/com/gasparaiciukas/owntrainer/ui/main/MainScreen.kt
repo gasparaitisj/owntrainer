@@ -34,16 +34,16 @@ fun MainScreen() {
     val items = listOf(
         BottomNavigationItem(
             label = "Home",
-            icon = Icons.Filled.Home
+            icon = Icons.Filled.Home,
         ),
         BottomNavigationItem(
             label = "Meals",
-            icon = Icons.Filled.RestaurantMenu
+            icon = Icons.Filled.RestaurantMenu,
         ),
         BottomNavigationItem(
             label = "Progress",
-            icon = Icons.Filled.AutoGraph
-        )
+            icon = Icons.Filled.AutoGraph,
+        ),
     )
     Scaffold(
         topBar = { TopAppBar(title = { Text(items[selectedItem].label) }) },
@@ -54,16 +54,16 @@ fun MainScreen() {
                         icon = { Icon(item.icon, item.label) },
                         label = { Text(item.label) },
                         selected = selectedItem == index,
-                        onClick = { selectedItem = index }
+                        onClick = { selectedItem = index },
                     )
                 }
             }
-        }
+        },
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(paddingValues),
         ) {
             when (selectedItem) {
                 0 -> HomeScreen()
@@ -76,5 +76,5 @@ fun MainScreen() {
 
 data class BottomNavigationItem(
     val label: String,
-    val icon: ImageVector
+    val icon: ImageVector,
 )

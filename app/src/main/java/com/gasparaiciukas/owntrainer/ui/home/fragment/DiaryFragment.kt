@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.home
+package com.gasparaiciukas.owntrainer.ui.home.fragment
 
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.databinding.FragmentDiaryBinding
+import com.gasparaiciukas.owntrainer.home.DiaryUiState
+import com.gasparaiciukas.owntrainer.home.DiaryViewModel
 import com.gasparaiciukas.owntrainer.utils.DateFormatter
 import com.gasparaiciukas.owntrainer.utils.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.utils.database.MealWithFoodEntries

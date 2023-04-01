@@ -2,6 +2,7 @@ package com.gasparaiciukas.owntrainer.ui.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +25,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.gasparaiciukas.owntrainer.R
+import com.gasparaiciukas.owntrainer.model.NutrientType
+import com.gasparaiciukas.owntrainer.model.StatisticsItem
 import com.gasparaiciukas.owntrainer.utils.DateFormatter
 import com.gasparaiciukas.owntrainer.utils.database.MealWithFoodEntries
 import com.gasparaiciukas.owntrainer.utils.network.Status
@@ -32,28 +37,36 @@ import com.gasparaiciukas.owntrainer.utils.network.Status
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
+    navController: NavController = rememberNavController(),
 ) {
     val uiState = viewModel.uiState.collectAsState()
     val context = LocalContext.current
     when (uiState.value?.status) {
         Status.SUCCESS -> {
             uiState.value?.data?.let { state ->
-                Column {
-                    NavigationRow(
-                        displayDate = stringResource(
-                            R.string.date_navigation_formatted,
-                            DateFormatter.dayOfWeekToString(state.user.dayOfWeek, context),
-                            DateFormatter.monthOfYearToString(state.user.month, context),
-                            state.user.dayOfMonth.toString(),
-                        ),
-                        onNavigateBack = viewModel::updateUserToPreviousDay,
-                        onNavigateCurrent = viewModel::updateUserToCurrentDay,
-                        onNavigateForward = viewModel::updateUserToNextDay,
-                    )
-                    StatisticsColumn()
-                    MealsColumn(
-                        meals = uiState.value?.data?.meals ?: listOf(),
-                    )
+                Box {
+                    Column {
+                        NavigationRow(
+                            displayDate = stringResource(
+                                R.string.date_navigation_formatted,
+                                DateFormatter.dayOfWeekToString(state.user.dayOfWeek, context),
+                                DateFormatter.monthOfYearToString(state.user.month, context),
+                                state.user.dayOfMonth.toString(),
+                            ),
+                            onNavigateBack = viewModel::updateUserToPreviousDay,
+                            onNavigateCurrent = viewModel::updateUserToCurrentDay,
+                            onNavigateForward = viewModel::updateUserToNextDay,
+                        )
+                        StatisticsColumn(
+                            energyItem = state.energyItem,
+                            proteinItem = state.proteinItem,
+                            carbsItem = state.carbsItem,
+                            fatItem = state.fatItem,
+                        )
+                        MealsColumn(
+                            meals = uiState.value?.data?.meals ?: listOf(),
+                        )
+                    }
                 }
             }
         }
@@ -103,7 +116,12 @@ fun NavigationRow(
 }
 
 @Composable
-fun StatisticsColumn() {
+fun StatisticsColumn(
+    energyItem: StatisticsItem,
+    proteinItem: StatisticsItem,
+    carbsItem: StatisticsItem,
+    fatItem: StatisticsItem,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -111,38 +129,18 @@ fun StatisticsColumn() {
     ) {
         HomeStatisticsRow(
             modifier = Modifier.padding(bottom = 8.dp),
-            item = StatisticsItem(
-                type = NutrientType.ENERGY,
-                title = "Calories",
-                percentage = "50",
-                value = "500",
-            ),
+            item = energyItem,
         )
         HomeStatisticsRow(
             modifier = Modifier.padding(bottom = 8.dp),
-            item = StatisticsItem(
-                type = NutrientType.PROTEIN,
-                title = "Protein",
-                percentage = "50",
-                value = "500",
-            ),
+            item = proteinItem,
         )
         HomeStatisticsRow(
             modifier = Modifier.padding(bottom = 8.dp),
-            item = StatisticsItem(
-                type = NutrientType.CARBS,
-                title = "Carbs",
-                percentage = "50",
-                value = "500",
-            ),
+            item = carbsItem,
         )
         HomeStatisticsRow(
-            item = StatisticsItem(
-                type = NutrientType.FAT,
-                title = "Fat",
-                percentage = "50",
-                value = "500",
-            ),
+            item = fatItem,
         )
     }
 }
@@ -155,7 +153,7 @@ private fun HomeStatisticsRow(
     Row(modifier = modifier) {
         Text(
             modifier = Modifier.weight(2f),
-            text = item.title,
+            text = stringResource(item.title),
             style = MaterialTheme.typography.bodyLarge,
         )
         Text(
@@ -225,5 +223,16 @@ fun HomeNavigationPreview() {
 @Composable
 @Preview(showBackground = true)
 fun HomeStatisticsPreview() {
-    StatisticsColumn()
+    val statisticsItem = StatisticsItem(
+        type = NutrientType.ENERGY,
+        title = R.string.calories,
+        percentage = "50",
+        value = "500",
+    )
+    StatisticsColumn(
+        statisticsItem,
+        statisticsItem,
+        statisticsItem,
+        statisticsItem,
+    )
 }

@@ -11,9 +11,9 @@ import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import com.gasparaiciukas.owntrainer.R
 import com.gasparaiciukas.owntrainer.ui.main.MainActivity
-import com.gasparaiciukas.owntrainer.utils.Constants
-import com.gasparaiciukas.owntrainer.utils.Constants.NOTIFICATION_REMINDER_ID
-import com.gasparaiciukas.owntrainer.utils.Constants.NOTIFICATION_REMINDER_TITLE_EXTRA
+import com.gasparaiciukas.owntrainer.utils.other.Constants
+import com.gasparaiciukas.owntrainer.utils.other.Constants.NOTIFICATION_REMINDER_ID
+import com.gasparaiciukas.owntrainer.utils.other.Constants.NOTIFICATION_REMINDER_TITLE_EXTRA
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi

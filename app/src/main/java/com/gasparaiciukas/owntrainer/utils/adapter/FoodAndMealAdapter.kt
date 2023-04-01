@@ -3,8 +3,8 @@ package com.gasparaiciukas.owntrainer.utils.adapter
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.gasparaiciukas.owntrainer.ui.meals.food.FoodFragment
-import com.gasparaiciukas.owntrainer.ui.meals.meal.MealFragment
+import com.gasparaiciukas.owntrainer.ui.meals.food.fragment.FoodFragment
+import com.gasparaiciukas.owntrainer.ui.meals.meal.fragment.MealFragment
 
 class FoodAndMealAdapter(
     fragmentManager: FragmentManager,

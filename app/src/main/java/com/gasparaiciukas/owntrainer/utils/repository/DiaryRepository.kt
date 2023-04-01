@@ -9,12 +9,13 @@ import com.gasparaiciukas.owntrainer.utils.database.FoodEntry
 import com.gasparaiciukas.owntrainer.utils.database.FoodEntryDao
 import com.gasparaiciukas.owntrainer.utils.database.Meal
 import com.gasparaiciukas.owntrainer.utils.database.MealDao
-import com.gasparaiciukas.owntrainer.utils.network.DefaultGetService
 import com.gasparaiciukas.owntrainer.utils.network.GetResponse
+import com.gasparaiciukas.owntrainer.utils.network.GetService
 import com.gasparaiciukas.owntrainer.utils.network.Resource
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
+import timber.log.Timber
 
 @Singleton
 class DiaryRepository @Inject constructor(
@@ -22,7 +23,7 @@ class DiaryRepository @Inject constructor(
     private val diaryEntryWithMealsDao: DiaryEntryWithMealsDao,
     private val mealDao: MealDao,
     private val foodEntryDao: FoodEntryDao,
-    private val defaultGetService: DefaultGetService,
+    private val getService: GetService,
 ) {
     suspend fun insertDiaryEntry(diaryEntry: DiaryEntry) =
         diaryEntryDao.insertDiaryEntry(diaryEntry)
@@ -65,7 +66,7 @@ class DiaryRepository @Inject constructor(
         requireAllWords: Boolean? = null,
     ): Resource<GetResponse> {
         return try {
-            val response = defaultGetService.getFoods(
+            val response = getService.getFoods(
                 query = query,
                 dataType = dataType,
                 pageSize = pageSize,
@@ -83,6 +84,7 @@ class DiaryRepository @Inject constructor(
                 Resource.error(msg = response.message())
             }
         } catch (e: Exception) {
+            Timber.e(e)
             Resource.error(msgRes = R.string.network_error)
         }
     }

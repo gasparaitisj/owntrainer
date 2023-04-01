@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.home
+package com.gasparaiciukas.owntrainer.ui.meals.food.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,40 +12,39 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gasparaiciukas.owntrainer.R
-import com.gasparaiciukas.owntrainer.databinding.FragmentAddMealToDiaryBinding
+import com.gasparaiciukas.owntrainer.databinding.FragmentAddFoodToMealBinding
 import com.gasparaiciukas.owntrainer.utils.adapter.MealAdapter
 import com.gasparaiciukas.owntrainer.utils.database.MealWithFoodEntries
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-@ExperimentalCoroutinesApi
-class AddMealToDiaryFragment : Fragment(R.layout.fragment_add_meal_to_diary) {
-    private var _binding: FragmentAddMealToDiaryBinding? = null
+class AddFoodToMealFragment : Fragment(R.layout.fragment_add_food_to_meal) {
+    private var _binding: FragmentAddFoodToMealBinding? = null
     private val binding get() = _binding!!
 
     lateinit var mealAdapter: MealAdapter
 
-    lateinit var sharedViewModel: DiaryViewModel
+    lateinit var sharedViewModel: FoodViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddMealToDiaryBinding.inflate(inflater, container, false)
+        _binding = FragmentAddFoodToMealBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedViewModel = ViewModelProvider(requireActivity())[DiaryViewModel::class.java]
+        sharedViewModel = ViewModelProvider(requireActivity())[FoodViewModel::class.java]
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.allMeals.collect { meals ->
-                    meals?.let { refreshUi(it) }
+                sharedViewModel.meals.collectLatest {
+                    it?.let { refreshUi(it) }
                 }
             }
         }
@@ -55,18 +54,16 @@ class AddMealToDiaryFragment : Fragment(R.layout.fragment_add_meal_to_diary) {
     fun initUi() {
         initNavigation()
         initRecyclerView()
-        binding.scrollView.visibility = View.VISIBLE
     }
 
-    fun refreshUi(items: List<MealWithFoodEntries>) {
+    private fun refreshUi(items: List<MealWithFoodEntries>) {
         mealAdapter.items = items
+        binding.scrollView.visibility = View.VISIBLE
     }
 
     private fun initNavigation() {
         binding.topAppBar.setNavigationOnClickListener {
-            findNavController().navigate(
-                AddMealToDiaryFragmentDirections.actionAddMealToDiaryFragmentToDiaryFragment()
-            )
+            findNavController().popBackStack()
         }
     }
 
@@ -78,18 +75,18 @@ class AddMealToDiaryFragment : Fragment(R.layout.fragment_add_meal_to_diary) {
                 )
             )
         }
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = mealAdapter
+        }
         mealAdapter.setOnClickListeners(
             singleClickListener = { mealWithFoodEntries: MealWithFoodEntries, _: Int ->
-                sharedViewModel.addMealToDiary(mealWithFoodEntries)
-                findNavController().navigate(
-                    AddMealToDiaryFragmentDirections.actionAddMealToDiaryFragmentToDiaryFragment()
-                )
+                viewLifecycleOwner.lifecycleScope.launch {
+                    sharedViewModel.addFoodToMeal(mealWithFoodEntries)
+                    findNavController().popBackStack()
+                }
             }
         )
-        binding.recyclerView.apply {
-            adapter = mealAdapter
-            layoutManager = LinearLayoutManager(context)
-        }
     }
 
     override fun onDestroyView() {

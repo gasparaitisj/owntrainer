@@ -2,99 +2,52 @@ package com.gasparaiciukas.owntrainer.ui.meals.food
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gasparaiciukas.owntrainer.utils.Constants
-import com.gasparaiciukas.owntrainer.utils.database.FoodEntry
-import com.gasparaiciukas.owntrainer.utils.database.MealWithFoodEntries
-import com.gasparaiciukas.owntrainer.utils.database.User
-import com.gasparaiciukas.owntrainer.utils.network.Food
+import com.gasparaiciukas.owntrainer.model.FoodItem
 import com.gasparaiciukas.owntrainer.utils.network.GetResponse
 import com.gasparaiciukas.owntrainer.utils.network.Resource
+import com.gasparaiciukas.owntrainer.utils.other.Constants
 import com.gasparaiciukas.owntrainer.utils.repository.DiaryRepository
-import com.gasparaiciukas.owntrainer.utils.repository.UserRepository
-import com.gasparaiciukas.owntrainer.utils.safeLet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class NetworkFoodItemUiState(
-    val user: User,
-    val foodItem: Food,
-    val title: String,
-    val carbs: Float,
-    val carbsPercentage: Float,
-    val calories: Float,
-    val fat: Float,
-    val fatPercentage: Float,
-    val protein: Float,
-    val proteinPercentage: Float,
-)
-
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class FoodViewModel @Inject internal constructor(
     val diaryRepository: DiaryRepository,
-    userRepository: UserRepository,
 ) : ViewModel() {
+    val foods: MutableStateFlow<List<FoodItem>> = MutableStateFlow(emptyList())
 
-    var foodItem: Food? = null
-    var quantity = 100
-
-    val meals = diaryRepository.getAllMealsWithFoodEntries()
-    val user = userRepository.user
-
-    val networkFoodItemUiState = combine(meals, user) { lMeals, lUser ->
-        safeLet(lMeals, foodItem) { _, foodItem ->
-            // Get nutrients from food item
-            val nutrients = foodItem.foodNutrients
-            var protein = 0f
-            var fat = 0f
-            var carbs = 0f
-            var calories = 0f
-            nutrients?.forEach { nutrient ->
-                val nutrientValue = (nutrient.value ?: 0.0).toFloat()
-                if (nutrient.nutrientId == 1003) protein = nutrientValue
-                if (nutrient.nutrientId == 1004) fat = nutrientValue
-                if (nutrient.nutrientId == 1005) carbs = nutrientValue
-                if (nutrient.nutrientId == 1008) calories = nutrientValue
-            }
-            // Calculate percentage of each item
-            val sum = carbs + fat + protein
-            return@combine Resource.success(
-                NetworkFoodItemUiState(
-                    user = lUser,
-                    foodItem = foodItem,
-                    title = foodItem.description.toString(),
-                    carbs = carbs,
-                    carbsPercentage = carbs / sum * 100,
-                    calories = calories,
-                    fat = fat,
-                    fatPercentage = fat / sum * 100,
-                    protein = protein,
-                    proteinPercentage = protein / sum * 100,
-                ),
-            )
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = Resource.loading(null),
-    )
-
-    private val _response: MutableStateFlow<Resource<GetResponse>> =
-        MutableStateFlow(Resource.success())
-    val response: StateFlow<Resource<GetResponse>> = _response.asStateFlow()
+    private val _textSearch = MutableStateFlow("")
+    private val textSearch: StateFlow<String> = _textSearch.asStateFlow()
 
     var pageNumber = 1
     var foodsResponse: Resource<GetResponse>? = null
 
+    init {
+        viewModelScope.launch {
+            textSearch
+                .debounce(DEBOUNCE_TIMEOUT_MILLIS)
+                .collect { query ->
+                    pageNumber = 1
+                    foodsResponse = null
+                    getFoods(query)
+                }
+        }
+    }
+
+    fun onQueryChanged(text: String) {
+        _textSearch.update { text }
+    }
+
     fun getFoods(query: String) {
         viewModelScope.launch {
-            _response.value = Resource.loading(null)
             val response = diaryRepository.getFoods(
                 query = query,
                 dataType = Constants.Api.DataType.DATATYPE_BRANDED + "," +
@@ -114,47 +67,13 @@ class FoodViewModel @Inject internal constructor(
                     oldFoods?.addAll(newFoods)
                 }
             }
-            _response.value = foodsResponse ?: response
+            foods.value = foodsResponse?.data?.foods?.map { it.toFoodItem() }
+                ?: response.data?.foods?.map { it.toFoodItem() }
+                ?: listOf()
         }
     }
 
-    fun clearFoods() {
-        _response.value = Resource.success(null)
-    }
-
-    fun onQueryChanged() {
-        pageNumber = 1
-        foodsResponse = null
-    }
-
-    fun addFoodToMeal(mealWithFoodEntries: MealWithFoodEntries) {
-        viewModelScope.launch {
-            foodItem?.let { foodItem ->
-                var protein = 0.0
-                var fat = 0.0
-                var carbs = 0.0
-                var calories = 0.0
-
-                val nutrients = foodItem.foodNutrients
-                if (nutrients != null) {
-                    for (nutrient in nutrients) {
-                        if (nutrient.nutrientId == 1003) protein = (nutrient.value ?: 0.0)
-                        if (nutrient.nutrientId == 1004) fat = (nutrient.value ?: 0.0)
-                        if (nutrient.nutrientId == 1005) carbs = (nutrient.value ?: 0.0)
-                        if (nutrient.nutrientId == 1008) calories = (nutrient.value ?: 0.0)
-                    }
-                }
-                val foodEntry = FoodEntry(
-                    mealId = mealWithFoodEntries.meal.mealId,
-                    title = foodItem.description.toString(),
-                    caloriesPer100G = calories,
-                    carbsPer100G = carbs,
-                    fatPer100G = fat,
-                    proteinPer100G = protein,
-                    quantityInG = quantity.toDouble(),
-                )
-                diaryRepository.insertFood(foodEntry)
-            }
-        }
+    companion object {
+        const val DEBOUNCE_TIMEOUT_MILLIS = 1000L
     }
 }

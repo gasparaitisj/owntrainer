@@ -10,7 +10,7 @@ object Versions {
     const val appCompat = "1.6.0"
     const val circularProgressBar = "3.1.0"
     const val coil = "2.2.2"
-    const val composeBom = "2023.01.00"
+    const val composeBom = "2023.03.00"
     const val constraintLayout = "2.1.4"
     const val coroutine = "1.5.0"
     const val coroutineTest = "1.6.4"
