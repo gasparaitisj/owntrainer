@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
-class FoodViewModel @Inject internal constructor(
+class FoodViewModel @Inject constructor(
     val diaryRepository: DiaryRepository,
 ) : ViewModel() {
     val foods: MutableStateFlow<List<FoodItem>> = MutableStateFlow(emptyList())
@@ -42,9 +42,7 @@ class FoodViewModel @Inject internal constructor(
         }
     }
 
-    fun onQueryChanged(text: String) {
-        _textSearch.update { text }
-    }
+    fun onQueryChanged(text: String) = _textSearch.update { text }
 
     fun getFoods(query: String) {
         viewModelScope.launch {
