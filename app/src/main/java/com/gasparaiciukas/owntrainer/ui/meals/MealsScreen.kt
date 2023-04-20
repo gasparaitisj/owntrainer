@@ -17,7 +17,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MealsScreen() {
+fun MealsScreen(
+    onNavigateToMealDetails: (Int) -> Unit,
+) {
     val tabs = listOf("Foods", "Meals")
     val pagerState = rememberPagerState(initialPage = 0)
     val tabIndex = pagerState.currentPage
@@ -52,7 +54,9 @@ fun MealsScreen() {
             ) {
                 when (page) {
                     0 -> FoodScreen()
-                    1 -> MealScreen()
+                    1 -> MealScreen(
+                        onNavigateToMealDetails = onNavigateToMealDetails,
+                    )
                 }
             }
         }

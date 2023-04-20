@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class MealViewModel @Inject constructor(
-    val diaryRepository: DiaryRepository,
+    private val diaryRepository: DiaryRepository,
 ) : ViewModel() {
     val meals: MutableStateFlow<List<MealWithFoodEntries>> = MutableStateFlow(mutableListOf())
     private val localMeals: Flow<List<MealWithFoodEntries>> = diaryRepository.getAllMealsWithFoodEntries()

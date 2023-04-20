@@ -50,6 +50,7 @@ dependencies {
     implementation("androidx.activity:activity-compose:${Versions.activity}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.viewModel}")
     implementation("androidx.hilt:hilt-navigation-compose:${Versions.hiltNavigationCompose}")
+    implementation("androidx.navigation:navigation-compose:${Versions.navigation}")
 
     // Coil
     implementation("io.coil-kt:coil-compose:${Versions.coil}")
@@ -76,11 +77,6 @@ dependencies {
 
     // ConstraintLayout
     implementation("androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}")
-
-    // Navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:${Versions.navigation}")
-    implementation("androidx.navigation:navigation-ui-ktx:${Versions.navigation}")
-    implementation("androidx.navigation:navigation-testing:${Versions.navigation}")
 
     // Transition
     implementation("androidx.transition:transition-ktx:${Versions.transition}")
