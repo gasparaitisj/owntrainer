@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.ui.meals.food
+package com.gasparaiciukas.owntrainer.ui.meals.food.fragment
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -9,13 +9,13 @@ import com.gasparaiciukas.owntrainer.utils.database.User
 import com.gasparaiciukas.owntrainer.utils.network.Resource
 import com.gasparaiciukas.owntrainer.utils.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
 
 data class DatabaseFoodItemUiState(
     val food: FoodEntryParcelable,

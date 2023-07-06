@@ -1,4 +1,4 @@
-package com.gasparaiciukas.owntrainer.utils
+package com.gasparaiciukas.owntrainer.utils.other
 
 object Constants {
     const val DATABASE_NAME = "owntrainer"
